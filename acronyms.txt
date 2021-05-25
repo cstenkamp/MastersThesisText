@@ -1,1 +1,2 @@
-Coordinated Universal Time (UTC)
+Universal Time Coordinated (UTC)
+Machine Learning (ML)

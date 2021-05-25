@@ -19,7 +19,7 @@ If you have docker on your machine, you can easily write your thesis inside a co
 that has all the necessary software already installed.
 Install the [Remote Development Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
 for VSCode. Then type <kbd>F1</kbd> > `Remote-Containers: Reopen in Container`.
-A new instance of VSCode should open. Open `thesis.txt` and press <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>b</kbd>
+A new instance of VSCode should open. Open `thesis.tex` and press <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>b</kbd>
 to build the latex document.
 
 ### Using Native Installation
