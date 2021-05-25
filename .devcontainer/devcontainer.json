@@ -1,0 +1,10 @@
+{
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "workspace",
+	"workspaceFolder": "/workspace",
+	"extensions": [
+		"James-Yu.latex-workshop",
+		"tecosaur.latex-utilities"
+	],
+	"shutdownAction": "stopCompose",
+}

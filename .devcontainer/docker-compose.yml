@@ -1,0 +1,21 @@
+version: '3'
+services:
+
+  workspace:
+    build:
+      context: .
+      args:
+        - uid=${COMPOSE_UID:-1000}
+        - gid=${COMPOSE_GID:-1000}
+    security_opt: ['label:disable']
+    volumes:
+      - ../:/workspace:Z
+      - vscode-remote:/home/developer/.vscode-server:Z
+      - ~/.gitconfig:/home/developer/.gitconfig:ro,z
+      - ~/.ssh:/home/developer/.ssh:z
+    command: sleep infinity
+    environment:
+      - PAR_GLOBAL_TEMP=/workspace/tmp
+
+volumes:
+  vscode-remote:
