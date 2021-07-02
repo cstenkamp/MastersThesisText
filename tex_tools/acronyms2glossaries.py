@@ -28,7 +28,7 @@ def main():
     if args.writeout:
         START_TXT = "% START Acronym definitions"
         END_TXT = "% END Acronym definitions"
-        write_file = join(dirname(__file__), 'thesis.tex')
+        write_file = join(dirname(__file__), "..", 'thesis.tex')
         with open(write_file, "r") as wfile:
             # lines = [i.strip("\n") for i in wfile.readlines()]
             lines = "".join(wfile.readlines())

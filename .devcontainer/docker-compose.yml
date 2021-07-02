@@ -10,12 +10,9 @@ services:
     security_opt: ['label:disable']
     volumes:
       - ../:/workspace:Z
-      - vscode-remote:/home/developer/.vscode-server:Z
+      - ../.vscode-server:/home/developer/.vscode-server:Z
       - ~/.gitconfig:/home/developer/.gitconfig:ro,z
       - ~/.ssh:/home/developer/.ssh:z
     command: sleep infinity
     environment:
       - PAR_GLOBAL_TEMP=/workspace/tmp
-
-volumes:
-  vscode-remote:

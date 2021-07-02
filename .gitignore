@@ -1,6 +1,14 @@
 *.bib
 !Masterarbeit.bib
 
+.vscode-server/*
+!.vscode-server/data/
+.vscode-server/data/*
+!.vscode-server/data/Machine/
+.vscode-server/data/Machine/*
+!.vscode-server/data/Machine/settings.json
+
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof

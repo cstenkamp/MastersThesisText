@@ -1,0 +1,82 @@
+{
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "latexmk 🔃",
+      "tools": [
+        "bib_add_howpublished",
+        "acronyms2glossary",
+        "latexmk"
+      ]
+    },
+    // {
+    //   "name": "pdflatex ➞ bibtex ➞ pdflatex`×2",
+    //   "tools": [
+    //     "bib_add_howpublished",
+    //     "acronyms2glossary",
+    //     "pdflatex",
+    //     "bibtex",
+    //     "pdflatex",
+    //     "pdflatex",
+    //   ]
+    // }
+  ],
+
+  "latex-workshop.latex.tools": [
+      {
+        "name": "latexmk",
+        "command": "latexmk",
+        "args": [
+          "-synctex=1",
+          "-interaction=nonstopmode",
+          "-file-line-error",
+          "-pdf",
+          "-outdir=%OUTDIR%",
+          "%DOC%"
+        ],
+        "env": {}
+      },
+      {
+        "name": "pdflatex",
+        "command": "pdflatex",
+        "args": [
+          "-synctex=1",
+          "-interaction=nonstopmode",
+          "-file-line-error",
+          "%DOC%"
+        ],
+        "env": {}
+      },
+      {
+        "name": "bibtex",
+        "command": "bibtex",
+        "args": [
+          "%DOCFILE%"
+        ],
+        "env": {}
+      },
+      {
+        "name": "acronyms2glossary",
+        "command": "/usr/bin/env",
+        "args": [
+          "python",
+          "%DIR%/tex_tools/acronyms2glossaries.py",
+          "--filename",
+          "/workspace/acronyms.txt",
+          "-w"
+        ],
+        "env": {}
+      },
+      {
+        "name": "bib_add_howpublished",
+        "command": "/usr/bin/env",
+        "args": [
+          "python",
+          "%DIR%/tex_tools/bib_add_howpublished.py",
+          "/workspace/mendeley_bibs/Masterarbeit.bib"
+        ],
+        "env": {}
+      }
+    ]
+
+
+}

@@ -18,7 +18,7 @@ def main():
     BibTeX export options can be customized via Options -> BibTeX in Mendeley Desktop
     Chris' script ran over it.
 
-    """ + "\n".join(add_howpublished(origtxt))
+""" + ("\n".join(add_howpublished(origtxt)))[1:]
     with open(args.filename, "w") as wfile:
         wfile.write(txt)
 
