@@ -1,0 +1,19 @@
+name: Create PDF
+
+on: 
+  push:
+  workflow_dispatch:
+
+jobs:
+  create_pdf:
+    name: Add 3 and 7
+    runs-on: ubuntu-latest
+    steps:
+      - shell: bash
+        run: |
+          docker-compose -f .devcontainer/docker-compose.yml run workspace bash /workspace/.devcontainer/create_pdf.sh
+      - name: Upload created pdf
+        uses: actions/upload-artifact@v2
+        with:
+          name: Thesis
+          path: thesis.pdf
