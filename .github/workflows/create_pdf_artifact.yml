@@ -9,12 +9,9 @@ jobs:
     name: Create & Add PDF
     runs-on: ubuntu-latest
     steps:
-      - shell: bash
-        run: |
-          echo "USER ID: $(id -u)"
-          echo "GROUP ID: $(id -g)"
       - uses: actions/checkout@v2 # repo now available under $GITHUB_WORKSPACE
-      - shell: bash
+      - name: create PDF inside container
+        shell: bash
         run: |
           docker-compose -f .devcontainer/docker-compose.yml run workspace bash /workspace/.devcontainer/create_pdf.sh
         env:
@@ -25,3 +22,8 @@ jobs:
         with:
           name: Thesis
           path: thesis.pdf
+      - name: help post checkout 
+        shell: bash
+        run: |
+          rmdir .gitconfig
+          touch .gitconfig
