@@ -22,6 +22,7 @@ jobs:
         with:
           name: Thesis
           path: thesis.pdf
+          job_alias: latest
       - name: Help post checkout 
         shell: bash
         run: |
