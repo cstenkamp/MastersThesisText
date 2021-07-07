@@ -17,6 +17,9 @@ jobs:
       - shell: bash
         run: |
           docker-compose -f .devcontainer/docker-compose.yml run workspace bash /workspace/.devcontainer/create_pdf.sh
+        env:
+            COMPOSE_UID: 1001
+            COMPOSE_GID: 121
       - name: Upload created pdf
         uses: actions/upload-artifact@v2
         with:
