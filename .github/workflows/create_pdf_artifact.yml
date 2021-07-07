@@ -10,11 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2 # repo now available under $GITHUB_WORKSPACE
-      - shell: bash
+      - name: Create PDF inside container
+        shell: bash
         run: |
           docker-compose -f .devcontainer/docker-compose.yml run workspace bash /workspace/.devcontainer/create_pdf.sh
+        env:
+            COMPOSE_UID: 1001
+            COMPOSE_GID: 121
       - name: Upload created pdf
         uses: actions/upload-artifact@v2
         with:
           name: Thesis
           path: thesis.pdf
+      - name: Help post checkout 
+        shell: bash
+        run: |
+          rmdir /home/runner/.gitconfig
+          touch /home/runner/.gitconfig
