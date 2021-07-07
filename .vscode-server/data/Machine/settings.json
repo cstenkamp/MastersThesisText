@@ -1,7 +1,7 @@
 {
   "latex-workshop.latex.recipes": [
     {
-      "name": "latexmk 🔃",
+      "name": "Custom stuff -> latexmk 🔃",
       "tools": [
         "bib_add_howpublished",
         "acronyms2glossary",
@@ -19,6 +19,8 @@
     //     "pdflatex",
     //   ]
     // }
+
+    //TODO find the settings that make the original pipeline
   ],
 
   "latex-workshop.latex.tools": [
