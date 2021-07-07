@@ -6,9 +6,10 @@ on:
 
 jobs:
   create_pdf:
-    name: Add 3 and 7
+    name: Create & Add PDF
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2 # repo now available under $GITHUB_WORKSPACE
       - shell: bash
         run: |
           docker-compose -f .devcontainer/docker-compose.yml run workspace bash /workspace/.devcontainer/create_pdf.sh
