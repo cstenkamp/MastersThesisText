@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2 # repo now available under $GITHUB_WORKSPACE
-      - name: create PDF inside container
+      - name: Create PDF inside container
         shell: bash
         run: |
           docker-compose -f .devcontainer/docker-compose.yml run workspace bash /workspace/.devcontainer/create_pdf.sh
@@ -22,8 +22,8 @@ jobs:
         with:
           name: Thesis
           path: thesis.pdf
-      - name: help post checkout 
+      - name: Help post checkout 
         shell: bash
         run: |
-          rmdir .gitconfig
-          touch .gitconfig
+          rmdir /home/runner/.gitconfig
+          touch /home/runner/.gitconfig
