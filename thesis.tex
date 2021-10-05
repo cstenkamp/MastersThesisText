@@ -1,3 +1,4 @@
+%TODO once the text is "finished": Figure out first appearance of all words in the glossary and make sure that the first mention of it is written out with the abbreviation in parantheses
 \documentclass[11pt,
   paper=a4, 
   bibliography=totocnumbered,
@@ -12,7 +13,8 @@
 \usepackage{csquotes} % Context sensitive quotation.
 \usepackage{amsmath} % Standard math.
 \usepackage{amsthm} % Math theorems.
-\usepackage{amssymb} % More math symbols.asd
+\usepackage{amssymb} % More math symbols.
+\usepackage{dsfont} % Render |R and the like
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[chapter]
  
@@ -149,7 +151,7 @@ doi=true,isbn=false,url=false, eprint=false]{biblatex}
 
 
 % TODO Fill with your data.
-\title{My full title}
+\title{Data-Driven Embedding of educational resources in a vector-space with interpretable Dimensions for Explainable Recommendation}
 \author{Christoph Stenkamp}
 
 \begin{document}
@@ -170,7 +172,7 @@ doi=true,isbn=false,url=false, eprint=false]{biblatex}
 			\MyAuthor                          \\
 			955004                             \\
 			Master's Program Cognitive Science \\
-			April 2017 - Dezember 2021
+			April 2017 - January 2021
 		\end{tabular}}
 	\vspace{1cm}
 
@@ -178,7 +180,7 @@ doi=true,isbn=false,url=false, eprint=false]{biblatex}
 		First supervisor:  & Dr. Tobias Thelen          \\
 		                   & Institute of Cognitive Science \\
 		                   & University of Osnabrück  \\\\
-		Second supervisor: & Prof. Dr. Someone Else         \\
+		Second supervisor: & Johannes Schrumpf, M.Sc.         \\
 		                   & Institute of Cognitive Science \\
 		                   & Osnabrück
 	\end{tabular}
@@ -296,12 +298,71 @@ For that, a dataset of courses and their descriptions was obtained as export fro
 		}
 \end{figure}
 
+To see if it is possible to extract any kind of structured data from the unstructured course descriptions, a Neural Network classifier was trained on the dataset, classifying courses to the faculty they run under. 
+The faculty is easily obtainable from the dataset, as the first one or two digits of the course ID correspond to it. The distribution of the faculties is depicted in figure \ref{fig:faculty_plot}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\figwidth]{graphics/figures/faculty_plot.png}
+	\slcaption{
+		\label{fig:faculty_plot}
+		Distribution of faculties in the courses
+		}
+\end{figure}
+
+The purpose of the Neural Network classifier is to check if it is anyhow possible to extract meaningful information from the descriptions: If it is possible to train a classifier on the data that can reasonably predict a qualitative feature, there is enough structure in the data such that the algorithm I'm about to produce can work.
+Also, we have a lower bound for useful data: we can just throw away data that cannot be classified!
+%TODO train a second classifier on something else and throw away data that gets classified by neither and inspect it
+
 
 \section{algorithm??}
 
 %TODO something along the lines of "Da, based on [source die die accuracy von dem gtranslate algorithm mit denen von menschen vergleicht], a gtranslate translation is as good as the average lecturer, it is assumed that translating the texts to english before using an english model can lead to better results
 
+\subsection{Extracting Candidate Terms}
+\label{sec:extract_candidates}
 
+%TODO theoretisch ist es auch möglich bspw nen network mit attention auf gewisse dinge wie fachbereich und anderes zu trainieren und dann rauszusuchen was die wichtigen ausschlaggebenden dinge für das Netzwerk waren
+
+%TODO extract using TF/IDF as well
+
+%TODO a source: https://github.com/MaartenGr/KeyBERT#citation
+
+%TODO after you figure which candidate term appears in which texts, figure out which other terms are frequent in these texts while infrequent in texts of the other class and then add these to the candidate-term-set (other way may even be to classify the texts according to if the candidateterm appears in them, and then take the misclassified one also as positive samples)
+
+\subsection{Calculating the distance to the SVMs Separatrix}
+\label{sec:calculate_distance}
+
+%TODO: before this, explain 
+% * extraction of the candidate term set
+% * how vectors are made from texts
+In order to tell how much a text is prototypical of a category, all texts are split depending on whether they contain words of a set as described in \ref{sec:extract_candidates}, before a linear Support Vector Machine Classifier is trained on the vector-representation of all of the texts, splitting them into two classes: those that contain one of the candidate terms and those which do not. Due to the linear kernel, the SVM finds a hyperplane (\textit{separatrix}) that splits the positive from the negative samples in a way that maximizes the distance between the respective classmembers and the separatrix, using samples close to the margin as \textit{support vectors}. %TODO: what if the data is not linearly seperable?
+
+Following the SVMs logic, one could argue that the further away a sample is from this separatrix, the more prototypical it is of its class. Thus, the distance of a sample to its \textit{orthogonal projection onto the hyperplane} %TODO explain orthogonal projection
+may serve as metric for how prototypical a sample is for the respective category. 
+
+Translated into terms relevant to the aim of this thesis, the classes may be those educational resources whose description contains the word "\textit{hard}" as one class vs. those that do not as the other class. Now according to [TODO] one may use the distance of the sample towards the separatrix as a measure of how hard a class is: For all positive samples, a longer distance means a harder class, for all negative samples a longer distance means an easier one, whereas those samples close to the separatrix can be considered average.
+
+\subsubsection*{How to calculate the distance}
+
+%TODO mention that I'm in a cartesian coordinate system
+%TODO mention that I'm thinking in euclidian coordinates, see https://en.wikipedia.org/wiki/Plane_(geometry)
+\noindent In the following paragraphs, I will visualize how to calculate the orthogonal distance from a sample to the hyperplane exemplary for the case of three-dimensional text-vectors.
+
+Generally, the separatrix splitting positive from negative samples in an $n$-dimensional space $\mathds{R}^n$ is an $n-1$-dimensional subspace (\textit{hyperplane}), which in the case of $\mathds{R}^3$ corresponds to a plane. 
+%https://en.wikipedia.org/wiki/Plane_(geometry)#Representation
+
+The general form of the equation of a plane is given as the following linear equation:
+
+\begin{equation}
+	ax + by + cz = d
+	%TODO source? mein Tafelwerk? :D
+\end{equation}
+
+%TODO explain that it's not even harder in higher-dimensional spaces
+%TODO explain that nicely, in python the separatrix is perfectly specified using the normal and the intercept, so we have everything we need 
+%TODO die handschriftlichen notizen aus den beiden notebooks einbauen
+%TODO die plots aus dem notebook einbauen
 
 \chapter{Results and Discussion}
 
@@ -316,10 +377,15 @@ For that, a dataset of courses and their descriptions was obtained as export fro
 % START Acronym definitions
 \newacronym{utc}{UTC}{Universal Time Coordinated}
 \newacronym{ml}{ML}{Machine Learning}
+\newacronym{svm}{SVM}{Support Vector Machine}
+\newacronym{mds}{MDS}{Multi Dimensional Scaling}
+\newacronym{ppmi}{PPMI}{Positive Pointwise Mutual Information}
+\newacronym{bow}{BOW}{Bag Of Words}
+\newacronym{imdb}{IMDB}{Internet Movie Database}
 % END Acronym definitions
 
 \glsaddall
-\printglossaries
+\printglossaries %TODO let glossary appear in TOC
 
 \printbibliography
 
