@@ -349,20 +349,34 @@ Translated into terms relevant to the aim of this thesis, the classes may be tho
 %TODO mention that I'm thinking in euclidian coordinates, see https://en.wikipedia.org/wiki/Plane_(geometry)
 \noindent In the following paragraphs, I will visualize how to calculate the orthogonal distance from a sample to the hyperplane exemplary for the case of three-dimensional text-vectors.
 
-Generally, the separatrix splitting positive from negative samples in an $n$-dimensional space $\mathds{R}^n$ is an $n-1$-dimensional subspace (\textit{hyperplane}), which in the case of $\mathds{R}^3$ corresponds to a plane. 
+Generally, the separatrix splitting positive from negative samples in an $n$-dimensional space $\mathds{R}^n$ is an $n-1$-dimensional subspace (called \textit{hyperplane}), which in the case of $\mathds{R}^3$ corresponds to a plane. 
 %https://en.wikipedia.org/wiki/Plane_(geometry)#Representation
 
 The general form of the equation of a plane is given as the following linear equation:
 
 \begin{equation}
+	\label{eq:general_plane}
 	ax + by + cz = d
 	%TODO source? mein Tafelwerk? :D
 \end{equation}
+
+This reads as "All points $(x,y,z)$ for which \ref{eq:general_plane} holds are on the plane". Further, the vector $(a,b,c)$ encodes an normal vector orthogonal to this plane, whereas d serves as intercept, encoding the intersection of plane and normal. In higher dimensions, the formula for the hyperplane would become $a_1x_1+a_2x_2+a_3x_3+...+a_nx_n = b$, which means that encoding the hyperplane for a space $\mathds{R}^n$ requires $n+1$ parameters.
 
 %TODO explain that it's not even harder in higher-dimensional spaces
 %TODO explain that nicely, in python the separatrix is perfectly specified using the normal and the intercept, so we have everything we need 
 %TODO die handschriftlichen notizen aus den beiden notebooks einbauen
 %TODO die plots aus dem notebook einbauen
+
+The distance from any point of this $\mathds{R}^n$ to the hyperplane is then calculated as the length of the vector that is the \textit{orthogonal projection} from the point onto the hyperplane. The orthogonal projection from one vector onto another can be calculated as 
+
+\begin{equation}
+	\label{eq:orthogonal_projection}
+	\hat{\vec{a}} = \frac{\vec{a}\cdot\vec{b}}{\vec{b}\cdot\vec{b}}\cdot\vec{b}
+	%TODO source https://en.wikipedia.org/wiki/Vector_projection
+\end{equation}
+
+...as we however have a plane we want to project to, not a vector, what I wrote here is rather useless, isn't it?
+
 
 \chapter{Results and Discussion}
 
