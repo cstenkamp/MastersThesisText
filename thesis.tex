@@ -172,7 +172,7 @@ doi=true,isbn=false,url=false, eprint=false]{biblatex}
 			\MyAuthor                          \\
 			955004                             \\
 			Master's Program Cognitive Science \\
-			April 2017 - January 2021
+			April 2017 - February 2022
 		\end{tabular}}
 	\vspace{1cm}
 
@@ -198,9 +198,9 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 \begin{abstract}
 	\textbf{\LARGE{Abstract}}\\\\
 	%TODO summarize the main objectives and outcomes of your work. The abstract should fit on one page.
-	In this thesis, I want to generate a conceptual space for the domain of university courses, automatically created in data-driven way from their descriptions.
+	In this thesis, I want to generate a conceptual space for the domain of educational reasources such as university courses, automatically created in data-driven way from their descriptions.
 
-	Conceptual Spaces are seen as something that may be able to link sub-symbolic and symbolic approaches by standing in between both. In Conceptual Spaces, Concepts are represented as convex regions in high-dimensional spaces. Optimally, these spaces are cartesian, and the axes correspond to human-interpretable dimensions. If that is the case, you could for example classify the concept of "Apple" as a region that is in the color-dimension somwhere between green and red, and in the form-dimension roughly at "round".
+	Conceptual Spaces are seen as something that may be able to link sub-symbolic and symbolic approaches by standing in between them: In Conceptual Spaces, Concepts are represented as convex regions in high-dimensional spaces. Optimally, these spaces are cartesian, and the axes correspond to human-interpretable dimensions. If that is the case, you could for example classify the concept of "Apple" as a region that is in the color-dimension somwhere between green and red, and in the form-dimension roughly at "round".
 	Creating these concpetual spaces is a very cumbersome task, which is why an automated method may lead to reasonable results. Unfortunately, this is still computationally very complex.
 	The method of [DESC15] uses MDS, blablabla, then a Support-Vector-Machine separating concepts, and the orthogonal of the separating hyperplane is then an axis
 \end{abstract}
@@ -217,15 +217,16 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 \chapter{Introduction}
 \pagenumbering{arabic}
 
-In this thesis, I want to generate a conceptual space for the domain of university courses, automatically created in data-driven way from their descriptions.
+% Broad - "Initialkontextualisierung" - warum mach ich das, aus was für ner domain kommen die daten, was will ich damit machen (use rrecommendation, ich bau AI part, ..)
 
+In this thesis, I want to generate a conceptual space for the domain of university courses, automatically created in data-driven way from their descriptions.
 
 \section{What are conceptual spaces? }
 
 Conceptual spaces (Gärdenfors, blabla) want to stand in between subsymbolic processing and symbolic processing: Like in subsymbolism, concepts are represented in high-dimensional spaces, but because the dimensions of these spaces are not arbitrary but human-interpretable, it allows for symbolistic high-level reasoning.
 
 So, in conceptual spaces, concepts are represented as convex regions in high-dimensional, human interpretable spaces. For example, the concept of "apple" is a region that in the dimension "color" is somewhere between red and green, in the dimension "form" at roughly round, in the dimension "taste" somwhere between sweet and sour, etc. 
-Every instance of an apple is thus a vector that lies inside the high-dimensional region of the concept. This allows for high-level reasoning, such as the question "does concept X fit into my bag?" -> If the "size" dimension of the size is smaller than the size of my bag, it will.
+Every instance of an apple is thus a vector that lies inside the high-dimensional region of the concept. This allows for high-level reasoning, such as the question "does any Instance of concept X fit into my bag?" -> If the "size" dimension of the whole region is smaller than the size of my bag, it will.
 
 Conceptual spaces sounds similar to word2vec or other word embedding approaches, however there are a few important distinctions - first, the domain of a conceptual space does not include all kinds of words or concepts, but only concepts of a certain domain (like movies or university courses). 
 Second, conceptual spaces are convex regions, not mere vectors (which allows for easy extraction of is-a and part-of relations or prototypical examples vs edge examples, but makes the generation computationally vastly more expensive). And, most importantly, while the geometry of word2vec is roughly euclidian (otherwise the famous vec(king)-vec(man)+vec(woman)==vec(queen) wouldn't work), the dimensions are not interpretable but arbitrarily depend on the random initial setup, so the concepts king and queen differ not only in a single "gender" dimension [..and also its not really euclidian, is it?! sonst wäre die betweeness doch nicht so special, oder?].
@@ -266,10 +267,22 @@ To find these dimensions, the authors look for these words (as well as similar w
 % A citation looks like this \cite{hadash2018estimate}. To embed a citation in the text flow use textcite,
 % \eg \textcite{hadash2018estimate} said you should use a lot of citations.
 
-\chapter{Methods}
+\chapter{Theoretical Background}
+% (zuspitzung von generell auf spezifisch, sowohl technisch (conceputalspaces -> was macht das paper konkret), (und bei dem anderen teil was sind educational resources, was sind die schwierigkeiten dabei, warum möchte man überhaupt empfehlen))
 
+\section{Use Case: Educaional Resources}
+% Anwendungsfall (->e-learning, recommenden von bildungsressourcen, ...) -> nicht-technisch, aber nötig zum verstehen wo passiert das 
+
+\section{Conceptual Spaces}
+
+\section{Automatic Data-Driven Generation of Conceptual Spaces}
+%Wie funktioniert die Idee des data-driven generieren 
+
+\chapter{Methods}
+%(Algorithmus & Datensatz)
 
 \section{Dataset}
+% Empirie, auch specifics über den Datensatz
 
 %To write:
 % * where does the data come from
@@ -315,12 +328,15 @@ Also, we have a lower bound for useful data: we can just throw away data that ca
 %TODO train a second classifier on something else and throw away data that gets classified by neither and inspect it
 
 
-\section{algorithm??}
+\section{Algorithm}
+%Was für Schritte hat der Algo 
 
 %TODO something along the lines of "Da, based on [source die die accuracy von dem gtranslate algorithm mit denen von menschen vergleicht], a gtranslate translation is as good as the average lecturer, it is assumed that translating the texts to english before using an english model can lead to better results
 
 \subsection{Extracting Candidate Terms}
 \label{sec:extract_candidates}
+
+* KeyBERT
 
 %TODO theoretisch ist es auch möglich bspw nen network mit attention auf gewisse dinge wie fachbereich und anderes zu trainieren und dann rauszusuchen was die wichtigen ausschlaggebenden dinge für das Netzwerk waren
 
@@ -328,7 +344,7 @@ Also, we have a lower bound for useful data: we can just throw away data that ca
 
 %TODO a source: https://github.com/MaartenGr/KeyBERT#citation
 
-%TODO after you figure which candidate term appears in which texts, figure out which other terms are frequent in these texts while infrequent in texts of the other class and then add these to the candidate-term-set (other way may even be to classify the texts according to if the candidateterm appears in them, and then take the misclassified one also as positive samples)
+* After you figure out which candidate term appears in which texts, figure out which other terms are frequent in these texts while infrequent in texts of the other class and then add these to the candidate-term-set (other way may even be to classify the texts according to if the candidateterm appears in them, and then take the misclassified one also as positive samples)
 
 \subsection{Calculating the distance to the SVMs Separatrix}
 \label{sec:calculate_distance}
@@ -336,12 +352,12 @@ Also, we have a lower bound for useful data: we can just throw away data that ca
 %TODO: before this, explain 
 % * extraction of the candidate term set
 % * how vectors are made from texts
-In order to tell how much a text is prototypical of a category, all texts are split depending on whether they contain words of a set as described in \ref{sec:extract_candidates}, before a linear Support Vector Machine Classifier is trained on the vector-representation of all of the texts, splitting them into two classes: those that contain one of the candidate terms and those which do not. Due to the linear kernel, the SVM finds a hyperplane (\textit{separatrix}) that splits the positive from the negative samples in a way that maximizes the distance between the respective classmembers and the separatrix, using samples close to the margin as \textit{support vectors}. %TODO: what if the data is not linearly seperable?
+In order to tell how much a text is prototypical of a category, all texts are split depending on whether they contain words of a set as described in \ref{sec:extract_candidates}, before a linear Support Vector Machine Classifier is trained on the vector-representation of all of the texts, splitting them into two classes: those that contain one of the candidate terms and those that do not. Due to the linear kernel, the SVM finds a hyperplane (\textit{separatrix}) that splits the positive from the negative samples in a way that maximizes the distance between the respective classmembers and the separatrix, using samples close to the margin as \textit{support vectors}. %TODO: what if the data is not linearly seperable?
 
 Following the SVMs logic, one could argue that the further away a sample is from this separatrix, the more prototypical it is of its class. Thus, the distance of a sample to its \textit{orthogonal projection onto the hyperplane} %TODO explain orthogonal projection
 may serve as metric for how prototypical a sample is for the respective category. 
 
-Translated into terms relevant to the aim of this thesis, the classes may be those educational resources whose description contains the word "\textit{hard}" as one class vs. those that do not as the other class. Now according to [TODO] one may use the distance of the sample towards the separatrix as a measure of how hard a class is: For all positive samples, a longer distance means a harder class, for all negative samples a longer distance means an easier one, whereas those samples close to the separatrix can be considered average.
+Translated into terms relevant to the aim of this thesis, the classes may be those educational resources whose description contains the word "\textit{hard}" as one class vs. those that do not as the other class. Now according to [TODO], one may use the distance of the sample towards the separatrix as a measure of how hard a class is: For all positive samples, a longer distance means a harder class, for all negative samples a longer distance means an easier one, whereas those samples close to the separatrix can be considered average.
 
 \subsubsection*{How to calculate the distance}
 
@@ -349,10 +365,10 @@ Translated into terms relevant to the aim of this thesis, the classes may be tho
 %TODO mention that I'm thinking in euclidian coordinates, see https://en.wikipedia.org/wiki/Plane_(geometry)
 \noindent In the following paragraphs, I will visualize how to calculate the orthogonal distance from a sample to the hyperplane exemplary for the case of three-dimensional text-vectors.
 
-Generally, the separatrix splitting positive from negative samples in an $n$-dimensional space $\mathds{R}^n$ is an $n-1$-dimensional subspace (called \textit{hyperplane}), which in the case of $\mathds{R}^3$ corresponds to a plane. 
+Generally, the separatrix splitting positive from negative samples for an $n$-dimensional space $\mathds{R}^n$ is an $n-1$-dimensional subspace (called \textit{hyperplane}), which in the case of $\mathds{R}^3$ corresponds to a plane. 
 %https://en.wikipedia.org/wiki/Plane_(geometry)#Representation
 
-The general form of the equation of a plane is given as the following linear equation:
+The general form of the equation of a plane is given as the following linear equation, where parameters $a, b, c$ and $d$ encode the position of the plane:
 
 \begin{equation}
 	\label{eq:general_plane}
@@ -360,28 +376,51 @@ The general form of the equation of a plane is given as the following linear equ
 	%TODO source? mein Tafelwerk? :D
 \end{equation}
 
-This reads as "All points $(x,y,z)$ for which \ref{eq:general_plane} holds are on the plane". Further, the vector $(a,b,c)$ encodes an normal vector orthogonal to this plane, whereas d serves as intercept, encoding the intersection of plane and normal. In higher dimensions, the formula for the hyperplane would become $a_1x_1+a_2x_2+a_3x_3+...+a_nx_n = b$, which means that encoding the hyperplane for a space $\mathds{R}^n$ requires $n+1$ parameters.
+This reads as "All points $(x,y,z)$ for which \ref{eq:general_plane} holds are on the plane". 
+
+In this representation of the plane, the vector $(a,b,c)$ encodes a normal vector orthogonal to this plane, whereas $d$ serves as intercept, encoding the intersection of plane and normal. (specifically: the perpendicular distance you would need to translate the plane along its normal to have the plane pass through the origin) In higher dimensions, the formula for the hyperplane would become $a_1x_1+a_2x_2+a_3x_3+...+a_nx_n = b$, which means that encoding the hyperplane for a space $\mathds{R}^n$ requires $n+1$ parameters.
+% one rough quote in this paragraph from https://stackoverflow.com/a/17661431
 
 %TODO explain that it's not even harder in higher-dimensional spaces
 %TODO explain that nicely, in python the separatrix is perfectly specified using the normal and the intercept, so we have everything we need 
 %TODO die handschriftlichen notizen aus den beiden notebooks einbauen
 %TODO die plots aus dem notebook einbauen
 
-The distance from any point of this $\mathds{R}^n$ to the hyperplane is then calculated as the length of the vector that is the \textit{orthogonal projection} from the point onto the hyperplane. The orthogonal projection from one vector onto another can be calculated as 
+% The distance from any point of this $\mathds{R}^n$ to the hyperplane is then calculated as the length of the vector that is the \textit{orthogonal projection} from that point onto the hyperplane. The orthogonal projection from one vector onto another can be calculated as 
 
-\begin{equation}
-	\label{eq:orthogonal_projection}
-	\hat{\vec{a}} = \frac{\vec{a}\cdot\vec{b}}{\vec{b}\cdot\vec{b}}\cdot\vec{b}
-	%TODO source https://en.wikipedia.org/wiki/Vector_projection
-\end{equation}
+% \begin{equation}
+% 	\label{eq:orthogonal_projection}
+% 	\hat{\vec{a}} = \frac{\vec{a}\cdot\vec{b}}{\vec{b}\cdot\vec{b}}\cdot\vec{b}
+% 	%TODO source https://en.wikipedia.org/wiki/Vector_projection
+% \end{equation}
 
-...as we however have a plane we want to project to, not a vector, what I wrote here is rather useless, isn't it?
-
-
-\chapter{Results and Discussion}
+% ...as we however have a plane we want to project to, not a vector, what I wrote here is rather useless, isn't it?
 
 
-\chapter{Conclusion}
+The distance from any point of this $\mathds{R}^n$ to the hyperplane can then be calculated as 
+% As... * dist(point, point_projected_onplane)     						 (`project[1,3]_pre`)
+%       * abs(trafo(point)[0])     										 (`protoypicality_pre`)
+%       * np.dot(plane.normal, point) + plane.d							 (`project2_pre')
+% ...normiert sind die alle gleich, aber for some reason differn die um nen multiplicator..?!
+% And the projections...:
+%       * back_trafo([0, trafo(point)[1], trafo(point)[2]]
+% 		* plane.project(point): k = (ax+by+cz+d)/(a²+b²+c²); result = [x-ka, y-kb, z-kc]
+%       * point - distance * plane.normal  (...aber nur mit protoypicality_pre als distance! )
+% 		...note that second and third are basically equal - both calculate "how much do I need to go into the direction of the orthogonal" and then do so  (point - distance * normal). The difference is that in plane.project the distance is divided by (a²+b²+c²). Originally sagt der typ von SO (https://stackoverflow.com/a/17661431) die distance ist einfach n*p-d, dann fehlt nur der normierungsterm. 
+% TODO: figure out the explanation of the difference from this to the result of using forward and backward??
+% See get_svm_decisionboundary.ipynb, den kram zwischen `#deleteme from here', commit d46a8300dae81adee
+
+
+
+
+
+\chapter{Results}
+
+
+\chapter{Discussion and Conclusion}
+% (was sind die broaden takeaways von meinem Kram)
+% * Nochmal nen theoretisches Embedding, Kontextualisieren für Bildungsressourcen
+% * ...and conclusion
 
 
 \chapter*{Acknowledgements}
