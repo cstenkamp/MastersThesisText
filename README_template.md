@@ -91,3 +91,16 @@ request.
 
 * https://libguides.rhul.ac.uk/c.php?g=380520&p=4650349
 * https://github.com/James-Yu/LaTeX-Workshop/wiki/Compile#latex-recipes
+* `docker run --pull always -it --rm --name pandoc_cont -v $(realpath .):/opt/data pandoc/latex -o /opt/data/out.tex /opt/data/in.md` to convert md to latex to include ;)
+
+### pandoc-stuff:
+
+
+
+INPUTS: echo $(ls ../pandoc_markdown_base/) | sed 's/[^ ]* */\/opt\/input_data\/&/g'
+OUTPUTS: echo $(ls ../pandoc_markdown_base/) | sed 's/[^ ]* */\/opt\/input_data\/&/g' | sed 's/.md/.tex/g;s/input_data/output_data/g''
+FULL: docker exec -it devcontainer_pandoc_1 pandoc -t latex $(echo $(ls ../pandoc_markdown_base/) | sed 's/[^ ]* */\/opt\/input_data\/&/g') -o $(echo $(ls ../pandoc_markdown_base/) | sed 's/[^ ]* */\/opt\/input_data\/&/g' | sed 's/.md/.tex/g;s/input_data/output_data/g')
+WORKING: for s in $(ls ../pandoc_markdown_base/ | sed 's/[^ ]* */\/opt\/input_data\/&/g'); do docker exec -it devcontainer_pandoc_1 pandoc -t latex $s -o $(echo $s | sed 's/.md/.tex/g;s/input_data/output_data/g'); done
+WORKING INSIDE CONTAINER: for s in $(ls /opt/input_data/); do docker exec -it devcontainer_pandoc_1 pandoc -t latex /opt/input_data/$s -o /opt/output_data/$(echo $s | sed 's/.md/.tex/g'); done
+
+see https://forums.docker.com/t/execute-command-from-a-container-to-another-container/19492/5

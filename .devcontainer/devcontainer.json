@@ -1,6 +1,7 @@
 {
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "workspace",
+	"runServices": ["workspace", "pandoc"],
 	"workspaceFolder": "/workspace",
 	"extensions": [
 		"James-Yu.latex-workshop",

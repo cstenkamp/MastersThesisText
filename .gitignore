@@ -1,3 +1,4 @@
+pandoc_generated_latex
 *.bib
 !Masterarbeit.bib
 
