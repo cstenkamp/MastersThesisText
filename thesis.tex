@@ -1,4 +1,3 @@
-%TODO once the text is "finished": Figure out first appearance of all words in the glossary and make sure that the first mention of it is written out with the abbreviation in parantheses
 \documentclass[11pt,
   paper=a4, 
   bibliography=totocnumbered,
@@ -8,7 +7,14 @@
 
 \usepackage[utf8]{inputenc}
  
- 
+%TODO once the text is "finished": Figure out first appearance of all words in the glossary and make sure that the first mention of it is written out with the abbreviation in parantheses
+
+\usepackage{makecell} % linebreaks in tables, see https://tex.stackexchange.com/a/176780/108199
+\renewcommand{\cellalign}{vh}
+\usepackage{lscape} % landscape tables
+\usepackage{footnote}
+\makesavenoteenv{tabular} % this line and line above see https://tex.stackexchange.com/a/109471/108199
+
 \usepackage[onehalfspacing]{setspace}
 \usepackage{csquotes} % Context sensitive quotation.
 \usepackage{amsmath} % Standard math.
@@ -142,6 +148,9 @@ doi=true,isbn=false,url=false, eprint=false]{biblatex}
 \def \figwidth {0.9\linewidth}
 \graphicspath{ {./graphics/figures/}{./graphics/figures/} } % Path to figures and images.
 
+% Pandoc creates tightlists (https://tex.stackexchange.com/a/258486/108199)
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 % Customizations of existing commands.
 \renewcommand{\vec}[1]{\mathbf{#1}}
@@ -245,7 +254,11 @@ This PPMI-weighted BOW is however not yet a euclidian space yet, which is why th
 With such a space, the concepts of betweeness already makes sense, but so far, the dimensions are not interpretable. So how does one automatically find such directions? In the case of movies, good dimensions may be "scariness", "funniness", "epicness", "family-friendlyness" etc. 
 To find these dimensions, the authors look for these words (as well as similar words thanks to clustering) in the reviews. Then the movies are grouped into those that contain the words from the cluster often enough vs those that don't. A support-vector-machine subsquently finds a hyperplane that best divides the two groups (eg. scary and non-scary), and the orthogonal of that hyperplane is used as one axis of the new coordinate basis. 
 
+% * Dass der tatsächliche Anwendungsbereich von CS noch sehr begrenzt ist - RaZb20 mention "they are commonly used in perceptual domains, e.g. for music cognition [Forth et al., 2010; Chella, 2015], where quality dimensions are carefully chosen to maximize how well the resulting conceptual spaces can predict human similarity judgements"
+% * Dass Word Embeddings ja relativ nah an CS sind - For ex- ample, a well-known property of word embeddings is that many syntactic and semantic relationships can be captured in terms of word vector differences [Mikolov et al., 2013].
 % TODO: Ist word2vec schon nen euclidian space? Why/Why not?
+
+
 
 % \begin{figure}[H]
 % 	\centering
@@ -273,6 +286,18 @@ To find these dimensions, the authors look for these words (as well as similar w
 % A citation looks like this \cite{hadash2018estimate}. To embed a citation in the text flow use textcite,
 % \eg \textcite{hadash2018estimate} said you should use a lot of citations.
 
+\section{What do I want to do in this thesis?}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{graphics/stolenfigures/movietuner.png}
+	\slcaption{
+		The Movie-Tuner Interface from \cite{Vig2012}
+		\label{fig:movetuner}}
+\end{figure}
+
+
 \chapter{Theoretical Background}
 % (zuspitzung von generell auf spezifisch, sowohl technisch (conceputalspaces -> was macht das paper konkret), (und bei dem anderen teil was sind educational resources, was sind die schwierigkeiten dabei, warum möchte man überhaupt empfehlen))
 
@@ -286,10 +311,41 @@ To find these dimensions, the authors look for these words (as well as similar w
 \section{Automatic Data-Driven Generation of Conceptual Spaces}
 %Wie funktioniert die Idee des data-driven generieren 
 
+% Base idea: [Derrac and Schockaert, 2015] proposed an unsupervised method which uses text descriptions of the considered entities to identify se- mantic features that can be characterized as directions. Their core assumption is that words describing semantically mean- ingful features can be identified by learning for each candi- date word w a linear classifier which separates the embed- dings of entities that have w in their description from the oth- ers. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature. 
+% This method trains for each word w in the vocab- ulary a linear classifier which predicts from the embedding of an entity whether w occurs in its description. The words w1, ..., wn for which this classifier performs sufficiently well are then used as basic features. To assess classifier perfor- mance, Cohen’s Kappa score, which can be seen as a correc- tion of classification accuracy to deal with class imbalance, is used. Each of the basic features w is associated with a cor- responding vector dw (i.e. the normal vector of the separat- ing hyperplane learned by the classifier). These directions are subsequently clustered, which serves to reduce the total num- ber of features.
+
+\section{Types of Reasoning}
+
+\@input{pandoc_generated_latex/chapter_theobg_section_reasoning}
+
+\chapter{Related Work}
+
+% dass das alles vergleichbar mit InfoGAN etc für Bilder ist..
+
+\@input{pandoc_generated_latex/chapter_related_work}
+
 \chapter{Methods}
 %(Algorithmus & Datensatz)
 
 \section{Dataset}
+
+% \begin{landscape}
+	\begin{table}[]
+		\resizebox{\textwidth}{!}{%
+		\begin{tabular}{@{}llllll@{}}
+			\toprule
+			\textbf{dataset} &
+			\textbf{contents} &
+			\textbf{preprocessing} &
+			\textbf{size} &
+			\textbf{classification classes} &
+			\textbf{candidate word threshold} \\ \midrule
+		\end{tabular}
+		\caption{All datasets. Extends similar table in \cite{Alshaikh2020}}
+		\label{tab:all_datasets}
+	\end{table}
+% \end{landscape}	
+
 % Empirie, auch specifics über den Datensatz
 
 %To write:
@@ -336,10 +392,45 @@ Also, we have a lower bound for useful data: we can just throw away data that ca
 %TODO train a second classifier on something else and throw away data that gets classified by neither and inspect it
 
 
+\section{Required Algorithms and Techniques}
+
+The Paper uses the following PPMI definition:\\ 
+
+\noindent $e \in E$ is an entity, $D_e$ a document (bag of words) where that entity occurs.\\
+We want to quantify for each term occuring in the corpus $\{D_e | e \in E\}$ how strongly it is associated with $e$.\\
+$c(e,t)$ is the number of times term $t$ occurs in document $D_e$. \\
+The weight $ppmi(e,t)$ for term $t$ in the vector representing $e$ is then:
+\begin{align*}
+ppmi(e,t) &= max\left(0, log\left( \frac{p_{et}}{p_{e*}*p_{*t}} \right) \right) \\
+          &= max\left(0, pmi(e,t) \right) \\
+ pmi(e,t) &= log\left( \frac{p_{et}}{p_{e*}*p_{*t}} \right) \\          
+   p_{et} &= \frac{c(e,t)}{\sum_{e'}\sum_{t'} c(e',t')} \\
+   p_{e*} &= \sum_{t'}p_{et'} \\
+   p_{*t} &= \sum_{e'}p_{e't} \\
+\end{align*}
+
+\noindent log of the probability of the $e$-$t$-combination (count of this vs count of all), normalized by the probability of this $e$ with any $t$ times this $t$ with any $e$.\\
+To quote the paper: "PPMI will favor terms which are frequently associated with the entity $e$ while being relatively infrequent in the corpus overall"
+
+\vspace{30px}
+
+I found this definition:
+\begin{align*}
+ppmi(X,i,j) &= max(0, pmi(X,i,j)) \\
+pmi(X,i,j)  &= log\left( \frac{X_{ij}}{expected(X,i,j)} \right) \\
+            &= log\left( \frac{P(X_{ij})}{P(X_{i*}) * P(X_{*j})} \right)
+\end{align*}
+
+
+
+\@input{pandoc_generated_latex/chapter_methods_section_required_algorithms}
+
+
 \section{Algorithm}
 %Was für Schritte hat der Algo 
 
 %TODO something along the lines of "Da, based on [source die die accuracy von dem gtranslate algorithm mit denen von menschen vergleicht], a gtranslate translation is as good as the average lecturer, it is assumed that translating the texts to english before using an english model can lead to better results
+
 
 \subsection{Extracting Candidate Terms}
 \label{sec:extract_candidates}
@@ -353,6 +444,19 @@ Also, we have a lower bound for useful data: we can just throw away data that ca
 %TODO a source: https://github.com/MaartenGr/KeyBERT#citation
 
 * After you figure out which candidate term appears in which texts, figure out which other terms are frequent in these texts while infrequent in texts of the other class and then add these to the candidate-term-set (other way may even be to classify the texts according to if the candidateterm appears in them, and then take the misclassified one also as positive samples)
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\figwidth]{graphics/figures/keyphrases_histogram.png}
+	%plot created with scripts/create_siddata_dataset.py filter-keyphrases /home/chris/Documents/UNI_neu/Masterarbeit/DATA_CLONE --verbose
+	\slcaption{
+		\label{fig:keyphrases_histogram}
+		Occurances in all Documents per Keyphrase (for all keyphrases that occur $\geq$ 5 times, cut off at the 93th percentile).
+		7007 of 45295 terms occur at least 5 times.
+		Most frequent phrases: seminar (4173), course (3722), students (2923), it (2671), language (2071), work (1980), event (1842), research (1731), lecture (1723), law (1719).
+		}
+\end{figure}
+
 
 \subsection{Calculating the distance to the SVMs Separatrix}
 \label{sec:calculate_distance}
