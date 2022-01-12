@@ -1,5 +1,6 @@
 \documentclass[11pt,
   paper=a4, 
+  hidelinks,
   bibliography=totocnumbered,
 	captions=tableheading,
 	BCOR=10mm
@@ -14,6 +15,12 @@
 \usepackage{lscape} % landscape tables
 \usepackage{footnote}
 \makesavenoteenv{tabular} % this line and line above see https://tex.stackexchange.com/a/109471/108199
+\newcommand{\specialcell}[2][l]{%
+  \begin{tabular}[#1]{@{}l@{}}#2\end{tabular}} %https://tex.stackexchange.com/a/19678/108199
+\newcommand{\tabitem}{\textbullet~~}
+
+\usepackage{caption}  % https://tex.stackexchange.com/a/176175/108199
+\captionsetup[table]{position=below} 
 
 \usepackage[onehalfspacing]{setspace}
 \usepackage{csquotes} % Context sensitive quotation.
@@ -158,6 +165,15 @@ doi=true,isbn=false,url=false, eprint=false]{biblatex}
 \renewcommand*{\chapterautorefname}{Chapter}
 \renewcommand*{\sectionautorefname}{Section}
 
+%have multiple references to the same footnote, see https://tex.stackexchange.com/a/35044/108199
+\usepackage{cleveref}
+\crefformat{footnote}{#2\footnotemark[#1]#3} %https://tex.stackexchange.com/a/10116/108199
+\makeatletter 
+\newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}
+\makeatother
+%....but the above doesn't work for tables, so we need something else as well, see https://tex.stackexchange.com/a/95905/108199
+\usepackage{scrextend}
+
 
 % TODO Fill with your data.
 \title{Data-Driven Embedding of educational resources in a vector-space with interpretable Dimensions for Explainable Recommendation}
@@ -293,7 +309,7 @@ To find these dimensions, the authors look for these words (as well as similar w
 	\centering
 	\includegraphics[width=0.7\textwidth]{graphics/stolenfigures/movietuner.png}
 	\slcaption{
-		The Movie-Tuner Interface from \cite{Vig2012}
+		The Movie-Tuner Interface from \cite{VISR12}
 		\label{fig:movetuner}}
 \end{figure}
 
@@ -329,22 +345,87 @@ To find these dimensions, the authors look for these words (as well as similar w
 
 \section{Dataset}
 
-% \begin{landscape}
+%TODO https://tex.stackexchange.com/questions/526198/table-resize-table-and-automatic-line-breaks
+\begin{landscape}
 	\begin{table}[]
 		\resizebox{\textwidth}{!}{%
-		\begin{tabular}{@{}llllll@{}}
-			\toprule
-			\textbf{dataset} &
-			\textbf{contents} &
-			\textbf{preprocessing} &
-			\textbf{size} &
-			\textbf{classification classes} &
-			\textbf{candidate word threshold} \\ \midrule
-		\end{tabular}
-		\caption{All datasets. Extends similar table in \cite{Alshaikh2020}}
-		\label{tab:all_datasets}
+			\begin{tabular}{@{}llllll@{}}
+				\toprule
+					\textbf{dataset} &
+					\textbf{contents} &
+					\textbf{preprocessing} &
+					\textbf{size} &
+					\textbf{classification classes} &
+					\textbf{candidate word threshold} \\ \midrule
+				\textbf{movies\footnote{\label{origdsets}\url{https://www.cs.cf.ac.uk/semanticspaces/}} \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020} } &
+					grouped-by-movie-concatenated reviews for movies &
+					&
+					\specialcell[l]{\cite{Ager2018}: 15000 movies (-1022 dups)\\ \cite{Alshaikh2020}: 13978 movies } &
+					\specialcell[l]{ \tabitem genre (23 classes)\\ \tabitem plot keywords (eg. \textit{suicide, beach}) (100 classes) \\ \tabitem age-rating certificates (6 classes)} &
+					$\geq$ 100 occurences 
+					\\ \midrule
+				\textbf{place types\footref{origdsets} \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020} } &
+					bag-of-tags to describe places of that place-type on Flickr &
+					&
+					1383 place-types &
+					\specialcell[l]{ \tabitem category from Geonames (7 classes)\\ \tabitem category from Foursquare (9 classes)\\ \tabitem category from OpenCYC (20 classes) } &
+					$\geq$ 50 occurences 
+					\\ \midrule
+				\textbf{wines\footref{origdsets} \cite{Derrac2015} } &
+					TODO &
+					&
+					&
+					&
+					\\ \midrule
+				\textbf{20 newsgroups\footnote{\url{http://qwone.com/~jason/20Newsgroups}} \cite{Ager2018}} &
+					posts partitioned (nearly) evenly across 20 different newsgroups &
+					\specialcell[l]{ \tabitem Headers, footers and quote metadata removed using scikit-learn \footnote{\url{https://scikit-learn.org/0.19/datasets/twenty_newsgroups.html}} \\ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem lowercased text\\ \tabitem candidate terms: all textual and numerical tokens} &
+					18446 posts &
+					\tabitem newgroup post was submitted to (20 classes) &
+					$\geq$ 30 occurences 
+					\\ \midrule
+				\textbf{imdb sentiment\footnote{\url{http://ai.stanford.edu/~amaas/data/sentiment/} \cite{maas-EtAl:2011:ACL-HLT2011}} \cite{Ager2018}} &
+					highly polar movie reviews for binary sentiment classification  &
+					\specialcell[l]{ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem lowercased text\\ \tabitem candidate terms: all textual and numerical tokens} &
+					50000 reviews &
+					\tabitem sentiment of the review (2 classes) &
+					$\geq$ 50 occurences
+					\\ \midrule
+				\textbf{Bands \cite{Alshaikh2020}} &
+					TODO &
+					&
+					11448 & \specialcell[l]{ \tabitem Genres (22 classes) \\ \tabitem Country of origin (6 classes) \\ \tabitem Loc. of formation (4 classes) }  & 
+					\\ \midrule
+				\textbf{Organisations \cite{Alshaikh2020}} &
+					TODO &
+					&
+					11800 &
+					\specialcell[l]{ \tabitem Country (4 classes)\\ \tabitem Headquarter Loc. (2 classes)} &
+					\\ \midrule
+				\textbf{Buildings \cite{Alshaikh2020}} &
+					TODO &
+					&
+					3721 &
+					\specialcell[l]{ \tabitem Country (2 classes)\\ \tabitem Administrative loc. (2 classes)} &
+					\\ \midrule \midrule
+				\textbf{Siddata-Courses} &
+					TODO &
+					&
+					&
+					\tabitem Faculty (10 classes) &	
+					\\ \midrule 
+				\textbf{100K Coursera reviews}\footnote{\url{https://www.kaggle.com/septa97/100k-courseras-course-reviews-dataset}} &
+					TODO &
+					&
+					&
+					\specialcell[l]{ \tabitem Rating (5 classes) \\ \textit{\tabitem Major, Category, Offered-By,... (tbd)} }&
+					\\ 
+			\end{tabular}
+			\caption{All datasets. Extends similar table in \cite{Alshaikh2020}}
+			\label{tab:all_datasets}
+		}
 	\end{table}
-% \end{landscape}	
+\end{landscape}	
 
 % Empirie, auch specifics über den Datensatz
 
@@ -392,6 +473,12 @@ Also, we have a lower bound for useful data: we can just throw away data that ca
 %TODO train a second classifier on something else and throw away data that gets classified by neither and inspect it
 
 
+\subsection{Other Datasets}
+
+Also tried a dataset of 100.000 coursera course reviews from \url{https://www.kaggle.com/septa97/100k-courseras-course-reviews-dataset}. Why? Because it's also eduactional resources, but as it's reviews it seems closer to the movies dataset
+See \url{https://www.kaggle.com/roshansharma/coursera-course-reviews} for exploratory analysis of the dataset (there he also has another dataset he writes about, but you cannot merge them unfortunately, so besides course name the only possible task is the rating)
+%TODO I could try to merge it with this one https://www.kaggle.com/siddharthm1698/coursera-course-dataset or another one (see https://www.kaggle.com/mihirs16/coursera-course-data which links names to links, https://www.kaggle.com/search?q=coursera+in%3Adatasets for other places)
+
 \section{Required Algorithms and Techniques}
 
 The Paper uses the following PPMI definition:\\ 
@@ -427,6 +514,48 @@ pmi(X,i,j)  &= log\left( \frac{X_{ij}}{expected(X,i,j)} \right) \\
 
 
 \section{Algorithm}
+
+\begin{landscape}
+	\begin{table}[]
+		%Preprocessing siehe other table
+		\resizebox{\textwidth}{!}{%
+			\begin{tabular}{llll}
+			& \cite{Derrac2015} & \cite{Ager2018} & \cite{Alshaikh2020} \\
+			\textbf{Step 1: Generate Vector Spaces from Descriptions} &
+			MDS trained with the angular differences between the PPMI weighted BoW Vectors &
+			\specialcell[l]{ \tabitem like \cite{Derrac2015} \\ \tabitem PCA from PPMI weighted BoW vectors \\ \tabitem Doc2Vec \\ \tabitem thresholded\footnote{Only words that occur more than 2 times (15 for movies-dataset)}, averaged pre-trained GloVe word embeddings \\ \tabitem thresholded, ppmi-weighted-averaged pre-trained GloVe word embeddings \\
+			Number of dimensions one of (50, 100, 200) } &
+			\specialcell[l]{ \tabitem Document Embeddings } \\ \midrule
+			\textbf{Step 2: Generate Candidate Words for Features} & 
+			&                 
+			All sufficiently frequent words\footnote{For the thresholds, see table \ref{tab:all_datasets}} (use PPMI in a later step so possibly PPMI?!) &
+			\\ \midrule
+			\textbf{Step 3: Filter Candidate Words} &                   
+			&                 
+			\specialcell[l]{ Performance of the weighted LogRegClassifier compared to the ranking induced by the PPMI, as measured by \\ \tabitem Cohen's Kappa \\ \tabitem Accuracy \\ \tabitem Normalized Discounted Cumulative Gain (NDCG) } &                     
+			\\ \midrule
+			\textbf{Step 4: Merge Candidate Word Feature Directions} &   
+			&                 
+			\specialcell[l]{Weighted logistic regression to find candidate directions \\ 
+			Input-ndims for clustering algorithm one of (500, 1000, 2000) \\
+			Number of clusters one of (ndims, 2*ndims) \\
+			Centroid of the cluster computed as $v_{C_j} = \frac{1}{|C_j|}\sum_{w_l \in C_j} v_l$, provided vectors all normalized} &         
+			\\  \midrule
+			\textbf{Step 5: Post-Processing} &                   
+			None &                 
+			TODO describe fine-tuning! &                    
+			\end{tabular}%
+		}
+		\caption{Compared algorithms from \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020}}
+		\label{tab:compared_algos}
+	\end{table}
+\end{landscape}
+
+\subsection{Preprocessing}
+
+There are issues with using stop-word lists, see \cite{nothman-etal-2018-stop} ( SkLearn references this paper why their own/stopwordslists in general suck)
+
+
 %Was für Schritte hat der Algo 
 
 %TODO something along the lines of "Da, based on [source die die accuracy von dem gtranslate algorithm mit denen von menschen vergleicht], a gtranslate translation is as good as the average lecturer, it is assumed that translating the texts to english before using an english model can lead to better results
@@ -529,10 +658,27 @@ The distance from any point of this $\mathds{R}^n$ to the hyperplane can then be
 \chapter{Results}
 
 
+\section{Qualitative Analysis}
+
+\begin{itemize}
+	\item In 3D ists immer ne Kugel, und ich würde behaupten in höheren Dimensionen ist es nicht extrem viel besser. dadrin ne SVM zu machen bringt echt wenig bis gar nix (Ich hab ja sogar Plots die zeigen dass die Movies viel besser clustern - TODO: die einbringen)
+\end{itemize}
+
+
 \chapter{Discussion and Conclusion}
 % (was sind die broaden takeaways von meinem Kram)
 % * Nochmal nen theoretisches Embedding, Kontextualisieren für Bildungsressourcen
 % * ...and conclusion
+
+\section{Future Work}
+\begin{itemize}
+	\item Evaluation in Stud.IP (which may then even be used for training something like \cite{VISR12}'s algorithm or the fine-tuing step of \cite{Ager2018})
+\end{itemize}
+
+\section{Discussion}
+
+In die Conclusion auch die Frage inwieweit das jetzt conceptual spaces sind (sehr viele vereinfachende sachen, like no convex regions but simply dots)
+[AGKS18] ist da auch mehr humble als [DESC15] und sagt "The idea of learning semantic spaces with accurate fea- ture directions can be seen as a first step towards methods for learning conceptual space representa- tions from data"
 
 
 \chapter*{Acknowledgements}
