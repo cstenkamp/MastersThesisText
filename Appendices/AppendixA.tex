@@ -1,0 +1,46 @@
+% Appendix A
+
+% \newgeometry{
+% 	a4paper,
+% 	top=21mm,
+% 	bottom=11mm,
+% 	inner=24mm,
+% 	outer=9mm,
+% } %bindingoffset=.5cm
+
+%\newgeometry{
+%	a4paper, inner=1.9cm, outer=1.9cm, bindingoffset=1.3cm, top=1.5cm, bottom=1.5cm, 
+%} %bindingoffset=.5cm
+
+
+\lstset{
+	numberblanklines=false
+	,basicstyle=\ttfamily%
+	,breaklines=true%
+	,tabsize=1%
+	,showstringspaces=false%
+	,numbers=left%
+	,numbersep=\lstnumbersep%
+	,numberstyle=\lstnumberstyle%
+	,framesep=0pt%
+	,xleftmargin=\lstnumberwidth%
+	,framexleftmargin=\lsthorizontalpadding%
+	,xrightmargin=\lsthorizontalpadding%
+	,framexrightmargin=\lsthorizontalpadding%
+	,backgroundcolor=\color{verylightgray}%
+	,postbreak=\ding{229}\space%
+	,escapeinside={*(}{*)}
+	\linespread{1.0}
+}
+
+
+\chapter{Code Use-Cases (and how to call it)} % Main appendix title
+
+\label{AppendixA} 
+
+\vspace{-0.8cm}
+
+\@input{pandoc_generated_latex/appendix_a}
+
+%\lstinputlisting[language=Python, firstline=29]{codes/dqn.txt}
+

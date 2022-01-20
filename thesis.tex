@@ -1,3 +1,7 @@
+%TODO once the text is "finished": 
+% * Figure out first appearance of all words in the glossary and make sure that the first mention of it is written out with the abbreviation in parantheses
+% * Ensure all links to the repo of the code refer to a signed commit and not just to the main-branch 
+
 \documentclass[11pt,
   paper=a4, 
   hidelinks,
@@ -8,7 +12,6 @@
 
 \usepackage[utf8]{inputenc}
  
-%TODO once the text is "finished": Figure out first appearance of all words in the glossary and make sure that the first mention of it is written out with the abbreviation in parantheses
 
 \usepackage{makecell} % linebreaks in tables, see https://tex.stackexchange.com/a/176780/108199
 \renewcommand{\cellalign}{vh}
@@ -19,6 +22,7 @@
   \begin{tabular}[#1]{@{}l@{}}#2\end{tabular}} %https://tex.stackexchange.com/a/19678/108199
 \newcommand{\tabitem}{\textbullet~~}
 
+%\usepackage[text={7in,10in},centering]{geometry}  %such that appendices etc can define new margins etc
 \usepackage{caption}  % https://tex.stackexchange.com/a/176175/108199
 \captionsetup[table]{position=below} 
 
@@ -105,6 +109,7 @@ doi=true,isbn=false,url=false, eprint=false]{biblatex}
 \newcommand{\ie}{i.\,e.~}
 \newcommand{\eg}{e.\,g.~}
 \newcommand{\ind}{\mathbbm{1}}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert} 
 % Functions
 \newcommand{\tpow}[1]{\cdot 10^{#1}}
 \newcommand{\figref}[1]{(Figure \ref{#1})}
@@ -160,7 +165,17 @@ doi=true,isbn=false,url=false, eprint=false]{biblatex}
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 % Customizations of existing commands.
-\renewcommand{\vec}[1]{\mathbf{#1}}
+
+% vec-command to be used in text and mathmode. If called with \vec[m]{a} it's math-mode, default text.
+\renewcommand{\vec}[2][t]{%
+	\IfEqCase{#1}{%
+		{m}{\mathbf{#2}}%
+		{t}{\textbf{#2}}%
+	}[\PackageError{tree}{Undefined option to vec: #1}{}]%
+}%
+
+
+
 % Capitalized \autoref names.
 \renewcommand*{\chapterautorefname}{Chapter}
 \renewcommand*{\sectionautorefname}{Section}
@@ -251,6 +266,16 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 % Broad - "Initialkontextualisierung" - warum mach ich das, aus was für ner domain kommen die daten, was will ich damit machen (use rrecommendation, ich bau AI part, ..)
 
 In this thesis, I want to generate a conceptual space for the domain of university courses, automatically created in data-driven way from their descriptions.
+
+\section{Motivation}
+
+feature directions allow us to rank objects according to how much they have the corresponding feature, and can thus play an important role in interpretable classifiers, recommendation systems, or entity-oriented search engines, among others  [AGKS18] has many sources for these!!
+	* Recommender systems (gerade critique-based ones thanks to the keyword-extraction etc)
+		-> see example of [VIGSR12]
+	* Semantic Search Engines (can use directions in case of gradual and possibly ill-defined features, like "popular holiday destinations")
+	* Represent examples in classification tasks
+	* Rule-Based Classifiers from the rankings
+
 
 \section{What are conceptual spaces? }
 
@@ -359,23 +384,24 @@ To find these dimensions, the authors look for these words (as well as similar w
 					\textbf{candidate word threshold} \\ \midrule
 				\textbf{movies\footnote{\label{origdsets}\url{https://www.cs.cf.ac.uk/semanticspaces/}} \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020} } &
 					grouped-by-movie-concatenated reviews for movies &
-					&
-					\specialcell[l]{\cite{Ager2018}: 15000 movies (-1022 dups)\\ \cite{Alshaikh2020}: 13978 movies } &
+					\cite{Derrac2015}: removed stop-words\footnote{\label{stopwordlist}\url{http://snowball.tartarus.org/algorithms/english/stop.txt}}, lower-cased all, removed diacritics and punctuation &
+					\specialcell[l]{\cite{Derrac2015}: 15000 movies \\ \cite{Ager2018}/\cite{Alshaikh2020}: 13978 movies } & %Ager2018 says 15.000 - 1022 duplicates, that's the number of Alshaikh2020
 					\specialcell[l]{ \tabitem genre (23 classes)\\ \tabitem plot keywords (eg. \textit{suicide, beach}) (100 classes) \\ \tabitem age-rating certificates (6 classes)} &
-					$\geq$ 100 occurences 
+					$\geq$ 100 occurences (doq-freq) \textrightarrow around 22k candidates
 					\\ \midrule
 				\textbf{place types\footref{origdsets} \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020} } &
-					bag-of-tags to describe places of that place-type on Flickr &
-					&
-					1383 place-types &
-					\specialcell[l]{ \tabitem category from Geonames (7 classes)\\ \tabitem category from Foursquare (9 classes)\\ \tabitem category from OpenCYC (20 classes) } &
-					$\geq$ 50 occurences 
+					bag-of-tags from Flickr used to describe places of a certain place-type & 
+					None &
+					1383 place-types & %both in DESC15 and the follow-up paper
+					\specialcell[l]{ \tabitem category from Geonames (7 classes)\\ \tabitem category from Foursquare (9 classes)\\ \tabitem category from OpenCYC (\cite{Derrac2015}: 93 classes, \cite{Ager2018} \cite{Alshaikh2020}: 20 classes) } &
+					$\geq$ 50 occurences (doq-freq) \textrightarrow around 22k candidates
 					\\ \midrule
-				\textbf{wines\footref{origdsets} \cite{Derrac2015} } &
-					TODO &
-					&
-					&
-					&
+				\textbf{wines\footref{origdsets}\footnote{\url{https://snap.stanford.edu/data/web-CellarTracker.html}} \cite{Derrac2015}} &
+					grouped-by-wine-variant concatenated reviews for wines &
+					removed stop-words\footnoteref{stopwordlist}, lower-cased all, removed diacritics and punctuation &
+					330 wine-variants &
+					\textit{not performed} &
+					$\geq$ 50 occurences (doq-freq) \textrightarrow around 6k candidates
 					\\ \midrule
 				\textbf{20 newsgroups\footnote{\url{http://qwone.com/~jason/20Newsgroups}} \cite{Ager2018}} &
 					posts partitioned (nearly) evenly across 20 different newsgroups &
@@ -436,7 +462,10 @@ To find these dimensions, the authors look for these words (as well as similar w
 % * Does it cluster and look nice?
 % * Verteilung der Sprachen
 % * Preprocessing in kurzem Fließtext beschreiben - "After throwing out all descriptions shorter than xyz chars, 2323 courses where left. 223 of these were ..."
-
+% * That the type of dataset differs from DESC15 and followups - mainly used movie-dataset consists of concatenated reviews (which means relevant words occur more often!) 
+%     (TODO: look/think was die anderen auszeichnet - bei dem placetypedataset ists ja gar kein fließtext sondern direkt ein bag-of-tags)
+% Dass mein Datensatz kleiin ist! Bei keinem sonderlichen min-word-per-desc threshold hab ich halt 7588 samples, bei 50 schon nur noch 4123, das ist wirklich little
+% Dass auch die Descriptions echt kurz sind! Ich hab rund 8k samples, um das selbe samples-to-threshold verhältnis zu haben wie DESC15 wäre rechnerisch ein wert von 2 bis 25 sinnvoll (wobei man beachten muss das 2 schon richtig kacke ist weil dann die SVM 2 vs 8000 klassifizieren muss and that will never work -> 25 ist minimum), ABER wenn ich dann 25 nehme hab ich nur 2.4k candidates statt the 22k DESC15 aimed at, which also sucks!! --> CONCLUSION: Datensatz scheint zu klein.
 
 The main goal of this thesis was to create a conceptual space of courses, automatically generated by course descriptions.
 
@@ -472,6 +501,7 @@ The purpose of the Neural Network classifier is to check if it is anyhow possibl
 Also, we have a lower bound for useful data: we can just throw away data that cannot be classified!
 %TODO train a second classifier on something else and throw away data that gets classified by neither and inspect it
 
+(-> 91\% test accuracy)
 
 \subsection{Other Datasets}
 
@@ -512,8 +542,30 @@ pmi(X,i,j)  &= log\left( \frac{X_{ij}}{expected(X,i,j)} \right) \\
 
 \@input{pandoc_generated_latex/chapter_methods_section_required_algorithms}
 
+\section{Architecture}
+%Doing this section before Algorithm-section such that I can reference how plots are created or general code examples with the real thing, including how what you're seeing was generated and can be reproduced
+
+%TODO: Also in this chapter:
+% * Source-code is ofc open, available under github under this link, it is referred to the signed commit xyz
+% * Reference Snakemake-Paper (and at least look a the abstract of that, they also talk about that in science you need reproducible, adaptable and transparency including definitions of what that means!)
+\cite{Molder2021a}
+% 		* good way to bash the original paper who either didn't publish their sourcecode or link a github-repo in their paper that is fucking empty, or did at least opensource their code but have just one fucking file in there that expects >40 unnamed command-line-args
+
+
+\@input{pandoc_generated_latex/chapter_methods_section_architecture}
+
+
 
 \section{Algorithm}
+
+
+Regarding optimal Parameters:
+* Candidate word threshold: 
+	* Candidate-Word-Threshold: movies has samples-to-threshold value of 100, placetypes has 35, 20newsgrups has 614 so for 8000 courses any threshold from 2 to 25 seems reasonable?
+ 		* \cite{Derrac2015} say they intentionally kept the number of candidateterms approximate equal (at around 22.000), so to do the same I'd need a threshold of [TODO: optimal value]
+
+
+
 
 \begin{landscape}
 	\begin{table}[]
@@ -521,21 +573,29 @@ pmi(X,i,j)  &= log\left( \frac{X_{ij}}{expected(X,i,j)} \right) \\
 		\resizebox{\textwidth}{!}{%
 			\begin{tabular}{llll}
 			& \cite{Derrac2015} & \cite{Ager2018} & \cite{Alshaikh2020} \\
-			\textbf{Step 1: Generate Vector Spaces from Descriptions} &
-			MDS trained with the angular differences between the PPMI weighted BoW Vectors &
+			\textbf{Step 1: Generate Vector Spaces from Descriptions} & 
+			\specialcell[l]{MDS trained with the angular differences $\frac{2}{\pi}* arccos\left(\frac{\vec{v}_{e_i}*\vec{v}_{e_j}}{\norm{\vec{v}_{e_i}}*\norm{\vec{v}_{e_j}}}\right)$ \\
+			between the PPMI weighted BoW Vectors (all terms) \\
+			Spaces of dim 20, 50, 100 and 200 \\
+			Previous Experiments also considered SVD and Isomap} &
 			\specialcell[l]{ \tabitem like \cite{Derrac2015} \\ \tabitem PCA from PPMI weighted BoW vectors \\ \tabitem Doc2Vec \\ \tabitem thresholded\footnote{Only words that occur more than 2 times (15 for movies-dataset)}, averaged pre-trained GloVe word embeddings \\ \tabitem thresholded, ppmi-weighted-averaged pre-trained GloVe word embeddings \\
-			Number of dimensions one of (50, 100, 200) } &
+			Number of dimensions one of (50, 100, 200)} &
 			\specialcell[l]{ \tabitem Document Embeddings } \\ \midrule
 			\textbf{Step 2: Generate Candidate Words for Features} & 
-			&                 
+			\specialcell[l]{ All sufficiently frequent\footnote{For the placetypes-dataset: all tags that co-occur with at least 50 place types} adjectives, nouns, adjective phrases and noun phrases \\
+			(using POS-Tagger and Chunker from openNLP) } &  
 			All sufficiently frequent words\footnote{For the thresholds, see table \ref{tab:all_datasets}} (use PPMI in a later step so possibly PPMI?!) &
 			\\ \midrule
 			\textbf{Step 3: Filter Candidate Words} &                   
-			&                 
-			\specialcell[l]{ Performance of the weighted LogRegClassifier compared to the ranking induced by the PPMI, as measured by \\ \tabitem Cohen's Kappa \\ \tabitem Accuracy \\ \tabitem Normalized Discounted Cumulative Gain (NDCG) } &                     
+			\specialcell[l]{ linear SVM for all candidates (pos samples: $\forall e: c \in e$) with pos/neg-count-ratio as instance cost \\
+			Only take candidates where the correlation according to Cohen's Kappa between the ranking induced by the SVM's hyperplane and count(t, e) is $\geq \lambda$ (0.5/0.1)\\
+			also tried Spearman's and Kendall's correlation coeffcients }&
+			\specialcell[l]{ Performance of the weighted LogRegClassifier compared to the ranking induced by the PPMI, as measured by \\ \tabitem Cohen's Kappa \\ \tabitem Accuracy \\ \tabitem Normalized Discounted Cumulative Gain (NDCG) } 
+			&
 			\\ \midrule
 			\textbf{Step 4: Merge Candidate Word Feature Directions} &   
-			&                 
+			\specialcell[l]{ Cluster centers: Select Term with highest $\kappa$, then i=2*ndims times select the term from $T^{0.5}$ minimizing $max_{j<i}cos(\vec[m]{v_{t_j}},\vec[m]{v_t})$ \\ 
+			Others: assign all terms from $T^{0.1}$ to the closest cluster and define $\vec[m]{v^*_i} = \frac{1}{|C_i|} \sum_{t\in C_i} \vec[m]{v_t}$ as cluster direction} &
 			\specialcell[l]{Weighted logistic regression to find candidate directions \\ 
 			Input-ndims for clustering algorithm one of (500, 1000, 2000) \\
 			Number of clusters one of (ndims, 2*ndims) \\
@@ -652,10 +712,26 @@ The distance from any point of this $\mathds{R}^n$ to the hyperplane can then be
 % See get_svm_decisionboundary.ipynb, den kram zwischen `#deleteme from here', commit d46a8300dae81adee
 
 
+\subsection{Clustering the extracted candidates}
 
+An analysis of \cite{Carmel2009} showed that a statistical method to extract features from clustered text corpora identified the labels of human annotators as one of the top five most important terms in only 15\% of cases, implying ``that human labels are not necessarily significant from a statistical perspective" \cite[139]{Carmel2009}
+%TODO: die eigentliche Methode (JSD) mehr erklären!!
+%(the JSD method for feature selection identifies human labels as “significant” (appearing in the top five most important terms) for only 15% of the categories. This result implies that human labels are not necessarily significant from a statistical perspective.z)
 
 
 \chapter{Results}
+
+\section{Evaluation} %TODO what is this for a title? it sucks
+
+
+* This is clustering and looking if it corresponds to human judgement, which unfortunately doesn't allow for a simple accuracy and be done with it.
+* So, the papers that did this come up with a few things
+* [TODO: the shallow decisiontrees of one of the followups]
+* DESC15 "evaluate the practical usefulness of the considered semantic relations" by checking "their use in commonsense reasoning based classifiers", like interpolation and a fortiori inference (chap 5)
+
+
+* DESC15 tests like this: Section 6.1: Evaluate whether the derived relations are sufficiently accurate for classification, and 6.2 is then comparison with crowdsourcing experiments (more subjective aspects, the question “are the relations useful explanations?”)
+
 
 
 \section{Qualitative Analysis}
@@ -697,6 +773,19 @@ In die Conclusion auch die Frage inwieweit das jetzt conceptual spaces sind (seh
 
 \glsaddall
 \printglossaries %TODO let glossary appear in TOC
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - APPENDICES
+%----------------------------------------------------------------------------------------
+	
+	\appendix % Cue to tell LaTeX that the following "chapters" are Appendices
+	
+	% Include the appendices of the thesis as separate files from the Appendices folder
+	% Uncomment the lines as you write the Appendices
+	
+	\include{Appendices/AppendixA}
+	% \restoregeometry %TODO do I need separate geometries for the appendices? Bc if I use the package I have to change how I set margins etc!
+
 
 \printbibliography
 
