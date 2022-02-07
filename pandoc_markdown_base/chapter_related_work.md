@@ -1,3 +1,5 @@
+main idea is to learn a representation in terms of salient features, where each of these features is described using a cluster of natural language terms. "This is somewhat similar to Latent Dirichlet Allocation (LDA) which learns a representation of text documents as multinomial distributions over latent topics, where each of these topics corresponds to a multinomial distribution over words (Blei et al., 2003). Topics tend to correspond to salient features, and are typically labelled with the most probable words according to the corre- sponding distribution" [quote: AGKS18]
+
 * Obvious candidates:
     * Well, first of all of course I'm basing my stuff on [DESC15]
     * I hope that I can also bring in some stuff of the follow-up papers of this, eg [1, 2, 3]

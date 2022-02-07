@@ -42,6 +42,7 @@ and $N$ being the total number of documents
 
 
 ### Latent Semantic Analysis (LSA) / Latend Semantic Indexing (LSI)
+
 * LSI is alternative name for LSA in linguistics
 * *"applies rank-reduced singular value decomposition to a term-document matrix in order to express the documents and terms in a lower dimensional concept space*" (Quote [VISR12])
 * [VISR12] use it to find relationships between tags and documents by the cosine similiarity in this concept space: the closeness of a document to a tag is the cosine similarity of the LSI-embedded document and an LSI-embedded pseudo-document that consists of only that tag
@@ -51,30 +52,33 @@ and $N$ being the total number of documents
 * Sources: [39] of [DESC15]
 
 0) https://www.datacamp.com/community/tutorials/discovering-hidden-topics-python
-	* Latent semantic analysis (LSA)
-		* Analyses realationships between a set of documents and the terms they contain.
-		* When applied to Information retrieval, it's sometimes called LSI (latent semantic indexing).	
-			* LSI used SVD to identify patterns in the relationships between the terms and concepts contained in an unstructured collection of text.Distributaitnal Hypothesis.
-			* Correlate semantically related terms that are latent in a collection of text
-			* Queries against a set of documents that have undergone LSI will return results that are conceptually similar in meaning to the search criteria even if the results don’t share specific word(s) with the search criteria. 
-		* IN LSI, the term-dcoument-matrix is created, and ON THAT you run SVD to reduce the #rows:
-			* https://en.wikipedia.org/wiki/Latent_semantic_analysis#Rank-reduced_singular_value_decomposition
+* Latent semantic analysis (LSA)
+    * Analyses realationships between a set of documents and the terms they contain.
+    * When applied to Information retrieval, it's sometimes called LSI (latent semantic indexing).	
+        * LSI used SVD to identify patterns in the relationships between the terms and concepts contained in an unstructured collection of text.Distributaitnal Hypothesis.
+        * Correlate semantically related terms that are latent in a collection of text
+        * Queries against a set of documents that have undergone LSI will return results that are conceptually similar in meaning to the search criteria even if the results don’t share specific word(s) with the search criteria. 
+    * IN LSI, the term-dcoument-matrix is created, and ON THAT you run SVD to reduce the #rows:
+        * https://en.wikipedia.org/wiki/Latent_semantic_analysis#Rank-reduced_singular_value_decomposition
 
-		* See https://www.datacamp.com/community/tutorials/discovering-hidden-topics-python: 
-		 	* LSA is typically used as a dimension reduction or noise reducing technique.
-		 	Steps:
-			* 1) make term-document-matrix (rows terms, columns docs)
-			* 2) matrix decomposition on the document-term matrix using Singular value decomposition to learn latent topics
-				 -> m = #terms; n = #topics
-				    Term-Document-Matrix (m*m) = words-per-topic (m*n) * topic-importance (n*n diagonal) * topics-distribution-across-docs (n*n singular)
-				* SVD is a matrix factorization method that represents a matrix in the product of two matrices.
-					* M (m*m) = U (m*n left singular) * E (n*n diagonal with pos real vals) * V* (n*m; transpose of m*n right singular)
-						(diagonal: values not on main diag = 0; singular: singular if determinant=0 or a square matrix that does not have a matrix inverse.)
-				* Regarding optimal #topics: consider each topic as a cluster and find out the effectiveness of a cluster using the Silhouette coefficient.
-				* or topic coherence (see https://www.datacamp.com/community/tutorials/discovering-hidden-topics-python for details)
+    * See https://www.datacamp.com/community/tutorials/discovering-hidden-topics-python: 
+        * LSA is typically used as a dimension reduction or noise reducing technique.
+        Steps:
+        * 1) make term-document-matrix (rows terms, columns docs)
+        * 2) matrix decomposition on the document-term matrix using Singular value decomposition to learn latent topics
+                -> m = #terms; n = #topics
+                Term-Document-Matrix (m*m) = words-per-topic (m*n) * topic-importance (n*n diagonal) * topics-distribution-across-docs (n*n singular)
+            * SVD is a matrix factorization method that represents a matrix in the product of two matrices.
+                -> M (m*m) = U (m*n left singular) * E (n*n diagonal with pos real vals) * V* (n*m; transpose of m*n right singular)
+                    (diagonal: values not on main diag = 0; singular: singular if determinant=0 or a square matrix that does not have a matrix inverse.)
+            * Regarding optimal #topics: consider each topic as a cluster and find out the effectiveness of a cluster using the Silhouette coefficient.
+            * or topic coherence (see https://www.datacamp.com/community/tutorials/discovering-hidden-topics-python for details)
 
 
 ### Latent Dirichlet Allocation (LDA)
+
+main idea is to learn a representation in terms of salient features, where each of these features is described using a cluster of natural language terms. "This is somewhat similar to Latent Dirichlet Allocation (LDA) which learns a representation of text documents as multinomial distributions over latent topics, where each of these topics corresponds to a multinomial distribution over words (Blei et al., 2003). Topics tend to correspond to salient features, and are typically labelled with the most probable words according to the corre- sponding distribution" [quote: AGKS18]
+
 (there would be a link here) https://towardsdatascience.com/2-latent-methods-for-dimension-reduction-and-topic-modeling-20ff6d7d547
 * unsupervised learning, often used for topic modeling.
 * Assumption in text: in each text, there are various topics, and each topic consists of various keywords (two layers of aggregation: documents to topics and topics to categories)

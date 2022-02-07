@@ -374,20 +374,24 @@ To find these dimensions, the authors look for these words (as well as similar w
 \begin{landscape}
 	\begin{table}[]
 		\resizebox{\textwidth}{!}{%
-			\begin{tabular}{@{}llllll@{}}
+			\begin{tabular}{@{}lllllll@{}}
 				\toprule
 					\textbf{dataset} &
 					\textbf{contents} &
 					\textbf{preprocessing} &
 					\textbf{size} &
 					\textbf{classification classes} &
-					\textbf{candidate word threshold} \\ \midrule
+					\textbf{candidate word threshold} &
+					\textbf{key feature sizes} \\ \midrule
 				\textbf{movies\footnote{\label{origdsets}\url{https://www.cs.cf.ac.uk/semanticspaces/}} \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020} } &
 					grouped-by-movie-concatenated reviews for movies &
 					\cite{Derrac2015}: removed stop-words\footnote{\label{stopwordlist}\url{http://snowball.tartarus.org/algorithms/english/stop.txt}}, lower-cased all, removed diacritics and punctuation &
 					\specialcell[l]{\cite{Derrac2015}: 15000 movies \\ \cite{Ager2018}/\cite{Alshaikh2020}: 13978 movies } & %Ager2018 says 15.000 - 1022 duplicates, that's the number of Alshaikh2020
 					\specialcell[l]{ \tabitem genre (23 classes)\\ \tabitem plot keywords (eg. \textit{suicide, beach}) (100 classes) \\ \tabitem age-rating certificates (6 classes)} &
-					$\geq$ 100 occurences (doq-freq) \textrightarrow around 22k candidates
+					$\geq$ 100 occurences (doq-freq) \textrightarrow around 22k candidates & \specialcell[l]{ movies: 15.000\\
+					ppmi-weighted feature vectors: 38649 keys with between 0 words and 33k (mostly ~3-6k) unique words, all in all 589727 unique terms\\
+					candidate-terms: 22903 (unclustered)\\
+					clusters: ndims*2 clusters with all in all (for 20d) 9389 values (so 9429 words in $T^0.1$)}		
 					\\ \midrule
 				\textbf{place types\footref{origdsets} \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020} } &
 					bag-of-tags from Flickr used to describe places of a certain place-type & 
