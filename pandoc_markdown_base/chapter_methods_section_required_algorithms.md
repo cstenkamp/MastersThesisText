@@ -1,5 +1,11 @@
 ## Absolute basis
 
+### Bag-of-Words
+
+\label{sec:techniques:bow}
+
+* Write how a Bag-Of-Words is created and what it shortcomings are and find a source that compares how good a Bag-Of-Words (that necessarily doesn't contain and information about their position) can be, compared to better document embeddings like LSTMs, Doc2Vec or whatever else there is (I mean after all, a "not" may be ignored and the meaning inversed which should be supergau), and also how much better it becomes if one also consideres 2-grams, 3-grams, ...
+
 ### [truncated] Singular Value Decomposition (SVD)
 * Matrix Decomposition algorithm (factorizes a matric into a product of matrices)
 * Idea: find the most valuable information and use a lower dimension to represent the same thing
