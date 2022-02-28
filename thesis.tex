@@ -22,26 +22,40 @@
   \begin{tabular}[#1]{@{}l@{}}#2\end{tabular}} %https://tex.stackexchange.com/a/19678/108199
 \newcommand{\tabitem}{\textbullet~~}
 
+
 %\usepackage[text={7in,10in},centering]{geometry}  %such that appendices etc can define new margins etc
 \usepackage{caption}  % https://tex.stackexchange.com/a/176175/108199
 \captionsetup[table]{position=below} 
 
+\usepackage[anythingbreaks]{breakurl}
 \usepackage[onehalfspacing]{setspace}
 \usepackage{csquotes} % Context sensitive quotation.
 \usepackage{amsmath} % Standard math.
 \usepackage{amsthm} % Math theorems.
 \usepackage{amssymb} % More math symbols.
 \usepackage{dsfont} % Render |R and the like
+\usepackage[english]{babel}
+\usepackage{underscore} % I need underscore to not have to write "\_" for underscores, but that would break labels with unterscores in it unless I also include babel, see https://tex.stackexchange.com/a/121438/108199
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[chapter]
  
+% for https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_latex.html, https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.to_latex.html:
+\usepackage{booktabs} 
+\usepackage{multirow} 
+\usepackage[table]{xcolor}
+\usepackage{siunitx}
+\colorlet{lightgreen}{green!40!white}
+\usepackage{etoolbox}
+\robustify\bfseries
+\robustify\itshape
+
 \usepackage{url}
 \usepackage[section]{placeins} % Keep floats in the section they were defined in.
 \usepackage{tabularx}
 \usepackage{booktabs} % Scientific table styling.
 \usepackage{floatrow} % Option for keeping floats in the place they were defined in the code.
 \floatsetup[table]{style=plaintop}
-\usepackage{hyperref} % Hyperlinks.
+\usepackage[breaklinks=true]{hyperref} % Hyperlinks.
 \usepackage[all]{nowidow} % Prevent widows and orphans.
 \usepackage{xstring} % logic string operations
 \usepackage{bbm} % \mathbb on numerals.
@@ -128,7 +142,7 @@ doi=true,isbn=false,url=false, eprint=false]{biblatex}
 			Section \ref{#1}}%
 			{[\PackageError{sectionref}{Undefined option to sectionref: #1}{}]}}}
 \newcommand{\chapref}[1]{(see chapter \ref{#1})}
-\newcommand{\unit}[1]{\,\mathrm{#1}}
+% \newcommand{\unit}[1]{\,\mathrm{#1}}
 \newcommand{\unitfrac}[2]{\,\mathrm{\frac{#1}{#2}}}
 \newcommand{\codeil}[1]{\lstinline{#1}}{} % wrapper for preventing syntax highlight error
 \newcommand{\techil}[1]{\texttt{#1}}
@@ -190,9 +204,22 @@ doi=true,isbn=false,url=false, eprint=false]{biblatex}
 \usepackage{scrextend}
 
 
-% TODO Fill with your data.
 \title{Data-Driven Embedding of Educational Resources in a Vector Space with Interpretable Dimensions for Explainable Recommendation}
 \author{Christoph Stenkamp}
+
+
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% see https://github.com/jgm/pandoc/issues/4941#issuecomment-425975499, https://github.com/jgm/pandoc/issues/4384#issuecomment-367585913
 
 % ################################################################################## 
 % ################################################################################## 
@@ -201,6 +228,7 @@ doi=true,isbn=false,url=false, eprint=false]{biblatex}
 \makeatletter
 
 \begin{document}
+
 
 \begin{titlepage}
 	\begin{flushleft}
@@ -218,7 +246,7 @@ doi=true,isbn=false,url=false, eprint=false]{biblatex}
 			\MyAuthor                          \\
 			955004                             \\
 			Master's Program Cognitive Science \\
-			April 2017 - February 2022
+			April 2017 - April 2022
 		\end{tabular}}
 	\vspace{1cm}
 
@@ -275,6 +303,8 @@ feature directions allow us to rank objects according to how much they have the 
 	* Semantic Search Engines (can use directions in case of gradual and possibly ill-defined features, like "popular holiday destinations")
 	* Represent examples in classification tasks
 	* Rule-Based Classifiers from the rankings
+
+TODO: direkt repeatability problems ansprechen, see \url{https://cs.carleton.edu/cs_comps/1920/replication/index.php} (the paper states there is problem X, makes a claim that algorithm Y may be good at problem X, create datasets Z for X, and then test the code on these datasets. " In that test of performance, the goal is typically to identify how well the proposed algorithm works versus alternative approaches and additionally to explore what kinds of examples one's algorithm can successfully classify versus what examples it makes errors on  Future research and applications often build on these experiments, relying on their results when deciding what algorithm is most appropriate for a new task or determining whether a new algorithm is better than existing work. For instance, based on the paper above, one might conclude that to test if one has a better sarcasm detector, one need only compare against the new algorithm, since the older approach performed less well in their experiments. Yet, it's rare that people directly try to replicate other's work to confirm that the results are valid and evaluate whether the trends in the results hold in other datasets. In psychology, there has been concern in recent years that many purported psychological phenomena may be overblown, as some attempts to replicate them have been unsuccessful. While computer science experiments are not the same as psychology experiments, there is still reason to be concerned about the lack of work focused on replicating computer science experiments. Often, the details of experiments in published work are opaque, and sometimes important information for reproducing the work in not included. Replicating previous work offers the opportunity to better understand that work, and to investigate the robustness of the algorithm to changes in parameters or dataset. If the exact parameters used have major impacts on the results or the same approach on a different dataset produces very different results, it suggests that caution should be used in generalizing the results and adding nuance to the original conclusions." [quote from webpage])
 
 
 \section{What are conceptual spaces? }
@@ -359,9 +389,24 @@ Principles of open science (TODO: which are: [see thisandthis paper]) are very i
 
 \section{Conceptual Spaces}
 
+% \cite{Alshaikh2019} (verbatim!):
+% * vector space models that are aimed at representing the entities of a given kind (e.g. movies), to- gether with their associated properties (e.g. scary) and concepts (e.g. thrillers).
+% * As such, they are similar in spirit to the vector space models that have been proposed in information retrieval (Deer- wester et al., 1990) and natural language pro- cessing (Turney and Pantel, 2010; Mikolov et al., 2013), but there are also notable differences.
+% * First, in the context of conceptual spaces, an explicit dis- tinction is made between the entities from the do- main of discourse, which are represented as vec- tors, and the corresponding properties and con- cepts, which are represented as regions (e.g. poly- topes) or soft regions (e.g. characterized by a Gaussian). 
+% * Second, conceptual spaces are organ- ised into a set of facets [domains], each of which captures a different aspect of meaning. For instance, in a conceptual space of movies, we may have facets such as genre, language, geographic location, etc. Each facet is associated with its own vector space, which intuitively captures similarity w.r.t. the corresponding facet. Most of these facet spaces tend to be low-dimensional (e.g. modelling budget only needs a single dimension). This clearly dif- ferentiates them from traditional semantic spaces, which often have hundreds of dimensions
+
+
+
+
+
+
 \@input{pandoc_generated_latex/chapter_theobg_section_cs}
 
+
 \section{Automatic Data-Driven Generation of Conceptual Spaces}
+
+% \cite{Alshaikh2019} geht drauf ein warum man infoGAN und VAEs für bilder als pretty much sowas betrachten kann
+
 %Wie funktioniert die Idee des data-driven generieren 
 
 % Base idea: [Derrac and Schockaert, 2015] proposed an unsupervised method which uses text descriptions of the considered entities to identify se- mantic features that can be characterized as directions. Their core assumption is that words describing semantically mean- ingful features can be identified by learning for each candi- date word w a linear classifier which separates the embed- dings of entities that have w in their description from the oth- ers. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature. 
@@ -373,7 +418,7 @@ Principles of open science (TODO: which are: [see thisandthis paper]) are very i
 
 \chapter{Related Work}
 
-% dass das alles vergleichbar mit InfoGAN etc für Bilder ist..
+% dass das alles vergleichbar mit InfoGAN etc für Bilder ist.. (siehe auch text von \cite{Alshaikh2019})
 
 \@input{pandoc_generated_latex/chapter_related_work}
 
@@ -383,41 +428,40 @@ Principles of open science (TODO: which are: [see thisandthis paper]) are very i
 \section{Dataset}
 
 %TODO https://tex.stackexchange.com/questions/526198/table-resize-table-and-automatic-line-breaks
+%TODO add back key feature sizes?!
 \begin{landscape}
 	\begin{table}[]
 		\resizebox{\textwidth}{!}{%
-			\begin{tabular}{@{}lllllll@{}}
+			\begin{tabular}{@{}llllll@{}} %l
 				\toprule
 					\textbf{dataset} &
 					\textbf{contents} &
 					\textbf{preprocessing} &
 					\textbf{size} &
 					\textbf{classification classes} &
-					\textbf{candidate word threshold} &
-					\textbf{key feature sizes} \\ \midrule
+					\textbf{candidate word threshold}
+					% & \textbf{key feature sizes} 
+					 \\ \midrule
 				\textbf{movies\footnote{\label{origdsets}\url{https://www.cs.cf.ac.uk/semanticspaces/}} \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020} } &
 					grouped-by-movie-concatenated reviews for movies &
-					\cite{Derrac2015}: removed stop-words\footnote{\label{stopwordlist}\url{http://snowball.tartarus.org/algorithms/english/stop.txt}}, lower-cased all, removed diacritics and punctuation &
+					\cite{Derrac2015}: removed stop-words\footnote{\label{fnote:stopwordlist}\url{http://snowball.tartarus.org/algorithms/english/stop.txt}}, lower-cased all, removed diacritics and punctuation &
 					\specialcell[l]{\cite{Derrac2015}: 15000 movies \\ \cite{Ager2018}/\cite{Alshaikh2020}: 13978 movies } & %Ager2018 says 15.000 - 1022 duplicates, that's the number of Alshaikh2020
-					\specialcell[l]{ \tabitem genre (23 classes)\\ \tabitem plot keywords (eg. \textit{suicide, beach}) (100 classes) \\ \tabitem age-rating certificates (6 classes)} &
-					$\geq$ 100 occurences (doq-freq) \textrightarrow around 22k candidates & \specialcell[l]{ movies: 15.000\\
-					ppmi-weighted feature vectors: 38649 keys with between 0 words and 33k (mostly ~3-6k) unique words, all in all 589727 unique terms\\
-					candidate-terms: 22903 (unclustered)\\
-					clusters: ndims*2 clusters with all in all (for 20d) 9389 values (so 9429 words in $T^0.1$)}		
+					\specialcell[l]{ \tabitem genre (23 classes)\\ \tabitem plot keywords (eg. \textit{suicide, beach}) (100 classes) \\ \tabitem age-rating certificates (6 classes)} & \specialcell[l]{$\geq$ 100 occurences (doq-freq) \\ \textrightarrow around 22k candidates \\ variable-length \textbf{n-grams} considered}
+					% & \specialcell[l]{feature vectors: 38649 keys with 0-33k (mostly ~3-6k) unique terms each (in sum 589727 terms) \\ candidate-terms: 22903 (unclustered)\\ clusters: ndims*2 clusters with all in all (for 20d) 9389 values (so 9429 words in $T^{0.1}$)}		
 					\\ \midrule
 				\textbf{place types\footref{origdsets} \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020} } &
 					bag-of-tags from Flickr used to describe places of a certain place-type & 
 					None &
 					1383 place-types & %both in DESC15 and the follow-up paper
 					\specialcell[l]{ \tabitem category from Geonames (7 classes)\\ \tabitem category from Foursquare (9 classes)\\ \tabitem category from OpenCYC (\cite{Derrac2015}: 93 classes, \cite{Ager2018} \cite{Alshaikh2020}: 20 classes) } &
-					$\geq$ 50 occurences (doq-freq) \textrightarrow around 22k candidates
+					\specialcell[l]{ $\geq$ 50 occurences (doq-freq) \\ \textrightarrow around 22k candidates \\ (all words from the BoW) \\ \textbf{n-grams}: squashed all words of a tag}
 					\\ \midrule
 				\textbf{wines\footref{origdsets}\footnote{\url{https://snap.stanford.edu/data/web-CellarTracker.html}} \cite{Derrac2015}} &
 					grouped-by-wine-variant concatenated reviews for wines &
-					removed stop-words\footnoteref{stopwordlist}, lower-cased all, removed diacritics and punctuation &
+					removed stop-words\footnoteref{fnote:stopwordlist}, lower-cased all, removed diacritics and punctuation &
 					330 wine-variants &
 					\textit{not performed} &
-					$\geq$ 50 occurences (doq-freq) \textrightarrow around 6k candidates
+					\specialcell[l] {$\geq$ 50 occurences (doq-freq) \\  \textrightarrow around 6k candidates }
 					\\ \midrule
 				\textbf{20 newsgroups\footnote{\url{http://qwone.com/~jason/20Newsgroups}} \cite{Ager2018}} &
 					posts partitioned (nearly) evenly across 20 different newsgroups &
@@ -434,39 +478,40 @@ Principles of open science (TODO: which are: [see thisandthis paper]) are very i
 					$\geq$ 50 occurences
 					\\ \midrule
 				\textbf{Bands \cite{Alshaikh2020}} &
-					TODO &
-					&
-					11448 & \specialcell[l]{ \tabitem Genres (22 classes) \\ \tabitem Country of origin (6 classes) \\ \tabitem Loc. of formation (4 classes) }  & 
-					\\ \midrule
-				\textbf{Organisations \cite{Alshaikh2020}} &
-					TODO &
-					&
-					11800 &
+					\specialcell[l]{All Wikipedia pages ($\geq$ 200 words) whose \\ WikiData semantic type is "Band"} &
+					\specialcell[l]{ \tabitem removed HTML-tags and references \\ \tabitem \textit{"standard preprocessing strategy"} \cite[137]{Alshaikh2019} \\ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem POS-tagging and keeping only nouns and adjectives \\ \tabitem remove words with a rel. doc-freq  $>$ 60\% or abs. doc-freq $<$ 10 } &
+					11448 bands & \specialcell[l]{ \tabitem Genres (22 classes) \\ \tabitem Country of origin (6 classes) \\ \tabitem Loc. of formation (4 classes) }  & 
+					\specialcell[l]{ 10 $<$ doc-freq $<$ 6869 \\ (all words from the BoW)}\\ \midrule
+				\textbf{Organisations\footnote{\label{fnote:for_alshaikh2019} Originally created in and for \cite{Alshaikh2019}} \cite{Alshaikh2020}} &
+					\specialcell[l]{All Wikipedia pages ($\geq$ 200 words) whose \\ WikiData semantic type is "Organisation"} &
+					\specialcell[l]{ \tabitem removed HTML-tags and references \\ \tabitem \textit{"standard preprocessing strategy"} \cite[137]{Alshaikh2019} \\ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem POS-tagging and keeping only nouns and adjectives \\ \tabitem remove words with a rel. doc-freq  $>$ 60\% or abs. doc-freq $<$ 10 } &
+					11800 organisations &
 					\specialcell[l]{ \tabitem Country (4 classes)\\ \tabitem Headquarter Loc. (2 classes)} &
-					\\ \midrule
-				\textbf{Buildings \cite{Alshaikh2020}} &
-					TODO &
-					&
-					3721 &
+					\specialcell[l]{ 10 $<$ doc-freq $<$ 7080 \\ (all words from the BoW)} \\ \midrule
+				\textbf{Buildings\footnoteref{fnote:for_alshaikh2019} \cite{Alshaikh2020}} &
+					\specialcell[l]{All Wikipedia pages ($\geq$ 200 words) whose \\ WikiData semantic type is "Building"} &
+					\specialcell[l]{ \tabitem removed HTML-tags and references \\ \tabitem \textit{"standard preprocessing strategy"} \cite[137]{Alshaikh2019} \\ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem POS-tagging and keeping only nouns and adjectives \\ \tabitem remove words with a rel. doc-freq  $>$ 60\% or abs. doc-freq $<$ 10 } &
+					3721 buildings &
 					\specialcell[l]{ \tabitem Country (2 classes)\\ \tabitem Administrative loc. (2 classes)} &
-					\\ \midrule \midrule
+					\specialcell[l]{10 $<$ doc-freq $<$ 2233 \\ (all words from the BoW) }\\ \midrule \midrule
 				\textbf{Siddata-Courses} &
 					TODO &
 					&
 					&
-					\tabitem Faculty (10 classes) &	
+					\tabitem Faculty (10 classes) 
 					\\ \midrule 
 				\textbf{100K Coursera reviews}\footnote{\url{https://www.kaggle.com/septa97/100k-courseras-course-reviews-dataset}} &
 					TODO &
 					&
 					&
-					\specialcell[l]{ \tabitem Rating (5 classes) \\ \textit{\tabitem Major, Category, Offered-By,... (tbd)} }&
+					\specialcell[l]{ \tabitem Rating (5 classes) \\ \textit{\tabitem Major, Category, Offered-By,... (tbd)} }
 					\\ 
 			\end{tabular}
 			\caption{All datasets. Extends similar table in \cite{Alshaikh2020}}
 			\label{tab:all_datasets}
 		}
 	\end{table}
+	% TODO was ist mit n>1-grams? Movies used them, placetypes used tags so it kinda has them... and stuff liek buildings/organizations?
 \end{landscape}	
 
 % Empirie, auch specifics über den Datensatz
@@ -489,6 +534,7 @@ The main goal of this thesis was to create a conceptual space of courses, automa
 For that, a dataset of courses and their descriptions was obtained as export from the Stud.IP system as used at the universities of Osnabrück, Hannover and Bremen.
 %TODO wait, woher kam der datensatz überhaupt? Tobias hat mir den geschickt, aber kam er zustande im Rahmen von Siddata?
 
+The dataset comes from Johannes' Repo at \url{https://git.siddata.de/jschrumpf/study_behavior_analysis} (requires authentification over UOS!)
 
 \begin{figure}[H]
 	\centering
@@ -515,15 +561,47 @@ The faculty is easily obtainable from the dataset, as the first one or two digit
 
 The purpose of the Neural Network classifier is to check if it is anyhow possible to extract meaningful information from the descriptions: If it is possible to train a classifier on the data that can reasonably predict a qualitative feature, there is enough structure in the data such that the algorithm I'm about to produce can work.
 Also, we have a lower bound for useful data: we can just throw away data that cannot be classified!
-%TODO train a second classifier on something else and throw away data that gets classified by neither and inspect it
+%TODO: train a second classifier on something else and throw away data that gets classified by neither and inspect it
 
 (-> 91\% test accuracy)
 
 \subsection{Other Datasets}
 
+%TODO: write IN THE ALGORITHM & ARCHITECTURE SECTIONS that I of course tried the placetypes-dataset as sanity-check to find errors - for that dataset, stuff like the good-candidates is known so as long as I don't reach their performances for that dataset I know my code is the problem, but as soon as I reach their performance I can savely say that the actual algorithm is correct and if it's still bad on the siddata dataset it's just not applicable to this kind of data
+
+Also tried the Plactypes-Dataset used by all main-paper-authors. When doing so I noticed that there are definitely duplicates (which are consistently recognized as closest-terms in embedding):
+  abandoned rail road and abandoned railroad
+  boat yard and boatyard
+  coral reef and reef
+  court house and courthouse
+  grass land and grassland
+  sheep fold and sheepfold
+  skate park and skatepark
+  steak house and steakhouse
+  water fall and waterfall
+  wind mill and windmill
+
+Next to that, the embedding however also sees very similar ones as very similar, which is a nice sanity-check, eg.
+
+  abandoned farm and abandoned home
+  airfield and airport
+  airport and airport terminal
+  ancient site and archaeological site
+  arch and arch bridge
+  art gallery and art museum
+  coffee house and coffee shop
+  aircraft cabin and airplane cabin
+  apartment and apartment building
+  bank and bank building
+  field hockey field and hockey field
+
+
 Also tried a dataset of 100.000 coursera course reviews from \url{https://www.kaggle.com/septa97/100k-courseras-course-reviews-dataset}. Why? Because it's also eduactional resources, but as it's reviews it seems closer to the movies dataset
 See \url{https://www.kaggle.com/roshansharma/coursera-course-reviews} for exploratory analysis of the dataset (there he also has another dataset he writes about, but you cannot merge them unfortunately, so besides course name the only possible task is the rating)
-%TODO I could try to merge it with this one https://www.kaggle.com/siddharthm1698/coursera-course-dataset or another one (see https://www.kaggle.com/mihirs16/coursera-course-data which links names to links, https://www.kaggle.com/search?q=coursera+in%3Adatasets for other places)
+%TODO: I could try to merge it with this one https://www.kaggle.com/siddharthm1698/coursera-course-dataset or another one (see https://www.kaggle.com/mihirs16/coursera-course-data which links names to links, https://www.kaggle.com/search?q=coursera+in%3Adatasets for other places)
+
+Also, there's the Large Movie Review Dataset\footnote{\url{http://ai.stanford.edu/~amaas/data/sentiment/}, \url{https://scikit-learn.org/0.19/datasets/twenty_newsgroups.html}}, also used by \cite{Ager2018}.
+
 
 \section{Required Algorithms and Techniques}
 
@@ -573,25 +651,49 @@ pmi(X,i,j)  &= log\left( \frac{X_{ij}}{expected(X,i,j)} \right) \\
 
 \section{Algorithm}
 
-The algorithm that is implemented in the scope of the thesis is in principle the one from \cite{Derrac2015}, but includes some changes from \cite{Ager2018} \cite{Alshaikh2020}. 
+The algorithm that is implemented in the scope of the thesis is in principle the one from \cite{Derrac2015}, but includes some changes from \cite{Ager2018} \cite{Alshaikh2020}. All of these share Prof. Steven Schockaert as last author, which makes me assume a) the latter ones are legit improvements upon the first, b) at least to a certain degree they can share code and data, c) afaik there are no other imlementations of this anywhere
+% General idea of the algorithm: Alshaikh2020: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candidate word w a linear classifier which separates the embeddings of entities that have w in their description from the others. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature" (TODO: my concise formulation)
+% TODO: despite my citation style, write the names of the three main papers at least once
+
+Das haupt-ziel der algorithmen ist es, am ende die entities "feature-based" darstellen zu können, also als high-dim-vector mit floats per human-interpretable dimension. Alshaikh2020 hat dafür wegen den subfeatures noch kleine specials
+
+Important features:
+\begin{itemize}
+	\item Unsupervised (in constrast to \cite{VISR12})
+\end{itemize}
+
+%TODO: maybe describe shortly what the improvements from  \cite{Ager2018} and \cite{Alshaikh2020} were? 
+% Alshaikh2020: 
+% * "When representing a particular entity in a conceptual space, we need to specify which domains it belongs to, and for each of these domains we need to provide a corresponding vector." 
+% * then they show their example of something that is not seperable with a hyperplane unless we specify subdomains, maybe just steal their plot that explains their one contribution to 99%
+% * The "Disentangled" from their title means "feature-based"
+
+The core idea of the algorithm is to (unsupervised, data-driven) find a a set of features which can be modelled as directions for a vector-space representation of the respetive entities. For that, the steps are:
+\begin{enumerate}
+	\item preprocess the descriptions using default techniques and create a bag-of-words representation for the texts
+	\item extract candidate features from these texts (easist variant is to just consider each sufficiently frequent word as candidate)
+	\item create an fixed-dimensional embedding for the texts (optimally a metric space, optimally based on their dissimilarity)
+	\item for each candidate term, train a linear classifier to seperate the vector representationgs of the entities that contain the term vs those that don't
+	\item if some metric for this classifier is sufficiently high, assume that the candidate term captures a salient feature - it's direction is then characterized by the normal vector for that hyperplane (for an intuition see \ref{fig:3d_hyperplane_ortho})
+	\item Cluster the candidates and calculate the direction of the cluster from the directions of it's contents
+\end{enumerate}
+
+\begin{figure}
+	\begin{center}
+	  \includegraphics[width=0.9\textwidth]{3dplot_hyperplane_and_orthogonal}
+	  \caption[Visual representation of the Hyperplane of an SVM splitting a dataset]{ \label{fig:3d_hyperplane_ortho} Visual representation of the Hyperplane of a Support-Vector-Machine splitting a dataset, as well as it's orthogonal and the orthogonal projection of a set of samples onto the plane. For an interactive version of this plot, visit  {\small \url{https://nbviewer.org/github/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/hyperplane_orthogonal_3d.ipynb?flush_cache}}}
+	\end{center}
+\end{figure}
 
 \begin{figure}[htp]
 	\begin{center}
 	  \includegraphics[width=0.9\textwidth]{dependency_graph_2022-02-14_11-36-45}
-	  \caption{(automatically generated) dependency-graph, displaying the individual steps of the algorithm as well as their dependencies and where selected important parameters are first used.}
+	  \caption[Dependency-Graph of the Algorithm]{(automatically generated) dependency-graph, displaying the individual steps of the algorithm as well as their dependencies and where selected important parameters are first used.}
 	  \label{fig:depdendency_graph}
 	\end{center}
 \end{figure}
 
 \@input{pandoc_generated_latex/section_algorithm}
-
-
-
-
-Regarding optimal Parameters:
-* Candidate word threshold: 
-	* Candidate-Word-Threshold: movies has samples-to-threshold value of 100, placetypes has 35, 20newsgrups has 614 so for 8000 courses any threshold from 2 to 25 seems reasonable?
- 		* \cite{Derrac2015} say they intentionally kept the number of candidateterms approximate equal (at around 22.000), so to do the same I'd need a threshold of [TODO: optimal value]
 
 
 
@@ -620,25 +722,32 @@ Regarding optimal Parameters:
 			Only take candidates where the correlation according to Cohen's Kappa between the ranking induced by the SVM's hyperplane and count(t, e) is $\geq \lambda$ (0.5/0.1)\\
 			also tried Spearman's and Kendall's correlation coeffcients }&
 			\specialcell[l]{ Performance of the weighted LogRegClassifier compared to the ranking induced by the PPMI, as measured by \\ \tabitem Cohen's Kappa \\ \tabitem Accuracy \\ \tabitem Normalized Discounted Cumulative Gain (NDCG) } 
-			&
+			& "we used logistic regression classifiers instead of SVMs, which we found to perform similarly but were faster to train."
 			\\ \midrule
 			\textbf{Step 4: Merge Candidate Word Feature Directions} &   
-			\specialcell[l]{ Cluster centers: Select Term with highest $\kappa$, then i=2*ndims times select the term from $T^{0.5}$ minimizing $max_{j<i}cos(\vec[m]{v_{t_j}},\vec[m]{v_t})$ \\ 
-			Others: assign all terms from $T^{0.1}$ to the closest cluster and define $\vec[m]{v^*_i} = \frac{1}{|C_i|} \sum_{t\in C_i} \vec[m]{v_t}$ as cluster direction} &
+			\specialcell[l]{ According to \cite{Alshaikh2020} "a variant of \textit{k}-means" \\ Cluster centers: Select Term with highest $\kappa$, then i=2*ndims times select the term from $T^{0.5}$ minimizing $max_{j<i}cos(\vec[m]{v_{t_j}},\vec[m]{v_t})$ \\ 
+			Others: assign all terms from $T^{0.1}$ to the closest cluster and define $\vec[m]{v^*_i} = \frac{1}{|C_i|} \sum_{t\in C_i} \vec[m]{v_t}$ as cluster direction (average direction of cluster's elements)} &
 			\specialcell[l]{Weighted logistic regression to find candidate directions \\ 
 			Input-ndims for clustering algorithm one of (500, 1000, 2000) \\
 			Number of clusters one of (ndims, 2*ndims) \\
-			Centroid of the cluster computed as $v_{C_j} = \frac{1}{|C_j|}\sum_{w_l \in C_j} v_l$, provided vectors all normalized} &         
+			Centroid of the cluster computed as $v_{C_j} = \frac{1}{|C_j|}\sum_{w_l \in C_j} v_l$, provided vectors all normalized} & \specialcell[l]{  \textbullet\, \textbf{sub, ortho, primary}:   
+			Affinity propagation instead of \textit{k}-means (no need to specify the ndims, helps with the issue that there are some non-informative clusters in \cite{Derrac2015}'s algorithm) \\ ~~ n-dims for this not directly configurable, only over preference parameter relative to median $\mu$, tried for (0.7$\mu$, 0.9$\mu$, $\mu$, 1.1$\mu$, 1.3$\mu$) \\  \textbullet\, \textbf{AHC}: Agglomerative Hierachical Clustering to cluster word directions with distance cut-offs  \\  \textbullet\, also tried Hierachical LDA \\ Cluster direction (both AHC and Affinity Propagation): normal vector of the hyperplane of a linear classifier separating entities whose description contains at least one of the words from the cluster from the others  } %TODO find a short-term notation for "entities whose description contains at least one of the words from XYZ" ("for a Cluster C, we write pos_C and neg_C for the set of positively and negatively classified entities")
 			\\  \midrule
 			\textbf{Step 5: Post-Processing} &                   
 			None &                 
-			TODO describe fine-tuning! &                    
-			\end{tabular}%
+			TODO describe fine-tuning! & \specialcell[l]{
+			Perform steps 1-4 a second time (only for positively classified entities), such that there are primary features (domains) and sub-features \\ representation kept flat (values for the sub-features is same dot-product as for domains) \\ \textbullet\, \textbf{sub}: sub-features extracted equal to first-order-features \\ \textbullet\, \textbf{ortho}: sub-feature directions orthogonal to corresponding primary feature direction (enforce complementary information) \\ ~~ by computing orthogonal decomposition of feature w.r.t. its domain (pg. 4, equation 1) \\ \textbullet\, also tried to combine mother-domain with sub-feature, but that performed poorly \\ \textbullet\, \textbf{primary}: model with only primary features}
+			\end{tabular}
 		}
 		\caption{Compared algorithms from \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020}}
 		\label{tab:compared_algos}
 	\end{table}
 \end{landscape}
+
+% Alshaikh2020 say: "It may seem counter-intuitive to use binary classifiers to learn representations of ordinal features. However, the occurrence or non- occurrence of a word in the description is binary, and this is the most important available signal. We experimented with statistics such as pointwise mutual information, which did not lead to better results." -> does that mean DCM_QUANT_MEASURE or QUANTIFICATION_MEASURE or both? and also does that mean they use binary or count as this measure?
+
+% Alshaikh2020 use: sub, ortho, primary, random (coordinates uniformly random), 
+
 
 \subsection{Preprocessing}
 
@@ -667,9 +776,9 @@ There are issues with using stop-word lists, see \cite{nothman-etal-2018-stop} (
 	\centering
 	\includegraphics[width=\figwidth]{graphics/figures/keyphrases_histogram.png}
 	%plot created with scripts/create_siddata_dataset.py filter-keyphrases /home/chris/Documents/UNI_neu/Masterarbeit/DATA_CLONE --verbose
-	\slcaption{
+	\caption[Occurences in all Documents per Keyphrase]{
 		\label{fig:keyphrases_histogram}
-		Occurances in all Documents per Keyphrase (for all keyphrases that occur $\geq$ 5 times, cut off at the 93th percentile).
+		Occurences in all Documents per Keyphrase (for all keyphrases that occur $\geq$ 5 times, cut off at the 93th percentile).
 		7007 of 45295 terms occur at least 5 times.
 		Most frequent phrases: seminar (4173), course (3722), students (2923), it (2671), language (2071), work (1980), event (1842), research (1731), lecture (1723), law (1719).
 		}
@@ -750,6 +859,37 @@ An analysis of \cite{Carmel2009} showed that a statistical method to extract fea
 
 \chapter{Results}
 
+
+\begin{table}
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{lllllrrrrrrrrr}
+	\toprule
+	 &  &  &  &  & \rotatebox{45}{\textbf{k_r2r_d}} & \rotatebox{45}{\textbf{k_r2r_min}} & \rotatebox{45}{\textbf{k_dig}} & \rotatebox{45}{\textbf{k_c2r+}} & \rotatebox{45}{\textbf{k_r2r+_d}} & \rotatebox{45}{\textbf{k_r2r+_min}} & \rotatebox{45}{\textbf{k_r2r+_max}} & \rotatebox{45}{\textbf{k_dig+_2}} & \rotatebox{45}{\textbf{mean}} \\
+	\rotatebox{45}{\textbf{pp_components}} & \rotatebox{45}{\textbf{quantification_measure}} & \rotatebox{45}{\textbf{embed_dimensions}} & \rotatebox{45}{\textbf{dcm_quant_measure}} & \rotatebox{45}{\textbf{kappa_weights}} &  &  &  &  &  &  &  &  &  \\
+	\midrule
+	\multirow[t]{5}{*}{\textbf{mfauhcsd2}} & \multirow[t]{5}{*}{\textbf{count}} & \multirow[t]{5}{*}{\textbf{3}} & \multirow[t]{2}{*}{\textbf{count}} & \textbf{linear} & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 0 & 0 \\
+	 &  &  &  & \textbf{quadratic} & 0 & {\cellcolor{lightgreen}} 1 & 0 & 0 & 0 & 28 & 13 & 0 & 5 \\
+	\cline{4-5}
+	 &  &  & \multirow[t]{2}{*}{\textbf{ppmi}} & \textbf{linear} & 0 & 0 & 0 & - & 9 & 30 & 74 & 7 & 17 \\
+	 &  &  &  & \textbf{quadratic} & 0 & {\cellcolor{lightgreen}} 1 & 0 & - & {\cellcolor{lightgreen}} 145 & {\cellcolor{lightgreen}} 370 & {\cellcolor{lightgreen}} 510 & {\cellcolor{lightgreen}} 191 & {\cellcolor{lightgreen}} 174 \\
+	\cline{4-5}
+	 &  &  & \textbf{tfidf} & \textbf{linear} & 0 & 0 & 0 & - & 5 & 18 & 24 & 2 & 7 \\
+	\bottomrule
+	\end{tabular}
+	}
+\end{table}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
 \section{Evaluation} %TODO what is this for a title? it sucks
 
 
@@ -773,11 +913,16 @@ What can you look at for such a qualitative analysis?
 	\item You can do the whole thing for only three dimensions instead of the 50/100/200 because there you can plot the stuff and interpret it
 \end{itemize}
 
+\begin{itemize}
+	\item  Man kann ja schon nach dem Embedding anhand der nächsten Entities sehen ob das was werden kann - bei 100D sind dann halt "airplane cabin" und "aircraft cabin" die nächsten entities, bei 3D dann halt eher kram wie "area" and "moor", was schon eindeutig zeigt dass 3D offensichtlich nicht so der Hit ist
+	\item Die vielen Sanity Checks die man machen kann, bspw dass ich ja in 3D gucken kann (und auch in höher-D ausrechnen) ob eben diese dinge (von item 1) im Embedding nah sind, und ob die SVM Dinge schön trennt ("howto_embed.ipynb")
+	\item "placetypes_origconf.ipynb", was einfach von vorne bis hinten die original-config (ist ja auch im yaml) von DESC15 ausführt und interpretiert	
+\end{itemize}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\figwidth]{svm_mathematik_highlight_infoAB.png}
-	\slcaption{
+	\caption[3D-Plot with an SVM for the term "Mathematik"]{
 		\label{fig:3dplot_mathe_infoab}
 		3D-Plot with an SVM for the term "Mathematik", also highlighting the courses "Informatik A" and "Informatik B"
 	}
@@ -794,6 +939,8 @@ In figure \ref{fig:3dplot_mathe_infoab} we see a 3D-Embedding for courses, split
 \section{Quanitative Results}
 
 Here I'll add the results of the low-depth-decision-trees for Fachbereich, and also compare the results of throwing my code onto their datasets and how my results compare to theirs
+
+Both \cite{Ager2018} and \cite{Alshaikh2020} train shallow decision-trees (depth 1 and depth 3 each), on their feature-based representations (such that the 1 or 3 most distinct interpretable dimensions are used) on a known property of the data (genres for movies, category in some taxonomy for placetypes, fachbereich for mine) - in the assumption that these eg in the movie domain the genre (or rather *terms accurately predicting it*) is among the features.
 
 
 

@@ -134,7 +134,7 @@ TODO: Write just the right amount about KeyBERT (I mean the algorithm, not how I
 -->
 
 
-## Step 7: Creating Candidate SVMs
+### Step 7: Creating Candidate SVMs
 
 This step is the most important one of the algorithm, where we bring together the embedding of the individual entities and the extracted keyphrases. Here we try to split those samples where a keyphrase occurs from those where it doesn't, using a linear classifier. The orthotogonal to the resulting decision-hyperplane is then used as axis, onto which the entities are mapped - the further away from the plane the mapping of a point onto the orthogonal, the more the entity is said to have the attribute encoded by the phrase responsible for the hyperplane. A score function compares the ranking induced by this to the ranking induced by number of occurences (or quantification-value) of the respective keyphrase of all documents, such that only those terms where the correspondance of these rankings exceeds a certain threshold are considered as candidate directions henceforth.
 
@@ -150,11 +150,16 @@ Configs influencing this Step:
 * `classifier` (SVM, SVM-with-squared-hinge)
 * (later: which metric to be used)
 
-## Step 8: Clustering the directions etc
+### Step 8: Clustering the directions etc
 
 
 
 
 ## Regarding Parameter-Choices
 ### Preprocessing
+
 * Translate-policy (TODO: rather write here about the accuracy of langdetect and translate and the like): Obviously the translation won't be perfect, so we lose quality from translating, but on the other hand if it's in english you can use wordnet, which is a lot better than GermaNet (https://uni-tuebingen.de/fakultaeten/philosophische-fakultaet/fachbereiche/neuphilologie/seminar-fuer-sprachwissenschaft/arbeitsbereiche/allg-sprachwissenschaft-computerlinguistik/ressourcen/lexica/germanet-1/)
+
+* Kappa-Weighting-Algorithm: Yet another point where \cite{Derrac2015} are really low on information what parameters they used. Sklearn allows different weighting types\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.cohen_kappa_score.html\#sklearn.metrics.cohen_kappa_score}} - TODO: explain what that changes respectively!!}, and as this plot: ![kappa_weighting_funcs](graphics/figures/which_weigthing_algo.png){#fig:which_weighting_algo} TODO: also generally write about if Kappa is a good choice (see eg \url{https://en.wikipedia.org/wiki/Cohen%27s_kappa})
+
+* Candidate word threshold: movies has samples-to-threshold value of 100, placetypes has 35, 20newsgrups has 614 so for 8000 courses any threshold from 2 to 25 seems reasonable? \cite{Derrac2015} say they intentionally kept the number of candidateterms approximate equal (at around 22.000), so to do the same I'd need a threshold of [TODO: optimal value]
