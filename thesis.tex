@@ -71,10 +71,17 @@
 \usepackage[automake, nopostdot, nonumberlist]{glossaries} % glossary for definitions and acronyms, without dot after entry and page reference 
 \makeglossaries % Generate the glossary
 
+% ================== biblatex stuff ==================
+
 % \PassOptionsToPackage{obeyspaces}{url}%
-\usepackage[backend=bibtex,% 
-style=nature,% 
-doi=true,isbn=false,url=false, eprint=false]{biblatex}
+\usepackage[
+	backend=bibtex,% 
+	style=nature,% 
+	doi=true,
+	isbn=false,
+	url=false, 
+	eprint=false
+	]{biblatex}
 % \renewbibmacro*{url}{\printfield{urlraw}}
 
 \addbibresource{mendeley_bibs/Masterarbeit.bib}
@@ -92,6 +99,8 @@ doi=true,isbn=false,url=false, eprint=false]{biblatex}
     }
   }
 }
+
+% ================== END biblatex stuff ==================
 
 %\linespread{1.5} % set line spacing
  
@@ -297,6 +306,16 @@ In this thesis, I want to generate a conceptual space for the domain of universi
 
 \section{Motivation}
 
+Dass die paar leute die in dem Bereich veröffentlichen echt aktiv sind and all und coole Ideen haben, dass die aber immer nur sich selbst zitieren (und alle auf DESC15 basieren und einen der autoren als co-author haben), und das es sinnvoll ist da mal nen sanity-check reinzubringen und als externe person die validität vom DESC15 algorithmus zu prüfen (...und dass sie ja auch alle die selben 2 datensätze nutzen und dass man eben da auch mal prüfen sollte ob deren kram so sinnvoll ist BEYOND this one dataset) - also in kurz "If this algorithm is as good as they claim, that would be great, but we have reasons to not trust their claim so we're checking them." Im Prozess dafür soll halt auch eine Pipeline rauskommen die es future research leichter macht ebengenau das zu tun was ich hier tu und die validiät der claims zu prüfen etc.
+
+Es gibt auch arbeiten bei denen die formulierte These ein Beispiel-Anwendungsfall für die Software-Grundlage ist
+
+in meinem Fall "Meine Ausgangsfrage war ob man die Methoden von diesem einem Paper auf educational resources anwenden kann um regelmäßigkeiten zu finden für recommendations für educational resources. Um das rauszufinden war es wichtig den Algorithmus zu entwickeln, und im verlauf der thesis ist rausgekommen das ein system dafür zu entwickeln sehr komplex ist (...dass dafür halt eine solide Software-Grundlage gegeben sein muss), also ist diese thesis primär dafür da um das system zu beshcreiben um dann mit diesem system prototypisch die fragestellung anzugehen, und die results für die originalfrage sind dann eher als priliminary results zu betrachten - fokus-shift von results zu methodik".
+
+Das ist eine Motivation für die Thesis ganz klar ist "der Algorithmus den ich da gesehen habe ist ganz nice, das wäre doch cool wenn der so modular und reproduzierbar undundund wäre dass jemand wie ich ankommen kann und den auf andere Datensätze schmeißen kann, aber leider sind die bei open source/open data/details nennen leider nicht so super, so I'm making that instead - the delivarable is a scalable, modular, ... system that makes it easy to exchange components of it, has many analysis-scripts, etc etc etc" 
+
+Das was ich mache ist ja eine Replikationsstudie -> Dann darf ich auch gerne diese Dinge über die Architektur undso schreiben. "Ist ja schon irgendwie ingeneurwissenschaft", dazu gehört also auch mal mehr detail wie man das gemacht hat - hängt natürlich von der gewünschten seitenzahl und dem raum den ich hab ab. In der Arbeit sollte alles drinstehen was man für die Beurteilung braucht, also quellcode oder so darf auch gerne mal im Hauptteil stehen
+
 feature directions allow us to rank objects according to how much they have the corresponding feature, and can thus play an important role in interpretable classifiers, recommendation systems, or entity-oriented search engines, among others  [AGKS18] has many sources for these!!
 	* Recommender systems (gerade critique-based ones thanks to the keyword-extraction etc)
 		-> see example of [VIGSR12]
@@ -381,7 +400,7 @@ Principles of open science (TODO: which are: [see thisandthis paper]) are very i
 % TODO: also make the data available somewhere open!
 
 
-\chapter{Theoretical Background}
+\chapter{Background}
 % (zuspitzung von generell auf spezifisch, sowohl technisch (conceputalspaces -> was macht das paper konkret), (und bei dem anderen teil was sind educational resources, was sind die schwierigkeiten dabei, warum möchte man überhaupt empfehlen))
 
 \section{Use Case: Educational Resources}
@@ -416,103 +435,73 @@ Principles of open science (TODO: which are: [see thisandthis paper]) are very i
 
 \@input{pandoc_generated_latex/chapter_theobg_section_reasoning}
 
-\chapter{Related Work}
+\section{Related Work}
 
 % dass das alles vergleichbar mit InfoGAN etc für Bilder ist.. (siehe auch text von \cite{Alshaikh2019})
 
 \@input{pandoc_generated_latex/chapter_related_work}
 
+
+
+\section{Required Algorithms and Techniques}
+
+\subsubsection*{Germanet}
+
+\cite{hamp-feldweg-1997-germanet}
+\cite{Henrich}
+
+The Paper uses the following PPMI definition:\\ 
+
+\noindent $e \in E$ is an entity, $D_e$ a document (bag of words) where that entity occurs.\\
+We want to quantify for each term occuring in the corpus $\{D_e | e \in E\}$ how strongly it is associated with $e$.\\
+$c(e,t)$ is the number of times term $t$ occurs in document $D_e$. \\
+The weight $ppmi(e,t)$ for term $t$ in the vector representing $e$ is then:
+\begin{align*}
+ppmi(e,t) &= max\left(0, log\left( \frac{p_{et}}{p_{e*}*p_{*t}} \right) \right) \\
+          &= max\left(0, pmi(e,t) \right) \\
+ pmi(e,t) &= log\left( \frac{p_{et}}{p_{e*}*p_{*t}} \right) \\          
+   p_{et} &= \frac{c(e,t)}{\sum_{e'}\sum_{t'} c(e',t')} \\
+   p_{e*} &= \sum_{t'}p_{et'} \\
+   p_{*t} &= \sum_{e'}p_{e't} \\
+\end{align*}
+
+\noindent log of the probability of the $e$-$t$-combination (count of this vs count of all), normalized by the probability of this $e$ with any $t$ times this $t$ with any $e$.\\
+To quote the paper: "PPMI will favor terms which are frequently associated with the entity $e$ while being relatively infrequent in the corpus overall"
+
+\vspace{30px}
+
+I found this definition:
+\begin{align*}
+ppmi(X,i,j) &= max(0, pmi(X,i,j)) \\
+pmi(X,i,j)  &= log\left( \frac{X_{ij}}{expected(X,i,j)} \right) \\
+            &= log\left( \frac{P(X_{ij})}{P(X_{i*}) * P(X_{*j})} \right)
+\end{align*}
+
+
+\@input{pandoc_generated_latex/chapter_methods_section_required_algorithms}
+
+
 \chapter{Methods}
 %(Algorithmus & Datensatz)
 
-\section{Dataset}
+Direkt am Anfang schreiben dass ich halt auf den main algorithmus eingehe und das laut meiner research diese 3 paper am besten den main algo beschreiben (bzw sinnvoll erweitern) - was nicht heißt dass das die einzigen in dem kontext sind, Alshaikh2019 bspw nutzen ja den main algorithmus, aber ja nur als komponente, und haben andere Ziele was sie dann damit machen
 
-%TODO https://tex.stackexchange.com/questions/526198/table-resize-table-and-automatic-line-breaks
-%TODO add back key feature sizes?!
-\begin{landscape}
-	\begin{table}[]
-		\resizebox{\textwidth}{!}{%
-			\begin{tabular}{@{}llllll@{}} %l
-				\toprule
-					\textbf{dataset} &
-					\textbf{contents} &
-					\textbf{preprocessing} &
-					\textbf{size} &
-					\textbf{classification classes} &
-					\textbf{candidate word threshold}
-					% & \textbf{key feature sizes} 
-					 \\ \midrule
-				\textbf{movies\footnote{\label{origdsets}\url{https://www.cs.cf.ac.uk/semanticspaces/}} \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020} } &
-					grouped-by-movie-concatenated reviews for movies &
-					\cite{Derrac2015}: removed stop-words\footnote{\label{fnote:stopwordlist}\url{http://snowball.tartarus.org/algorithms/english/stop.txt}}, lower-cased all, removed diacritics and punctuation &
-					\specialcell[l]{\cite{Derrac2015}: 15000 movies \\ \cite{Ager2018}/\cite{Alshaikh2020}: 13978 movies } & %Ager2018 says 15.000 - 1022 duplicates, that's the number of Alshaikh2020
-					\specialcell[l]{ \tabitem genre (23 classes)\\ \tabitem plot keywords (eg. \textit{suicide, beach}) (100 classes) \\ \tabitem age-rating certificates (6 classes)} & \specialcell[l]{$\geq$ 100 occurences (doq-freq) \\ \textrightarrow around 22k candidates \\ variable-length \textbf{n-grams} considered}
-					% & \specialcell[l]{feature vectors: 38649 keys with 0-33k (mostly ~3-6k) unique terms each (in sum 589727 terms) \\ candidate-terms: 22903 (unclustered)\\ clusters: ndims*2 clusters with all in all (for 20d) 9389 values (so 9429 words in $T^{0.1}$)}		
-					\\ \midrule
-				\textbf{place types\footref{origdsets} \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020} } &
-					bag-of-tags from Flickr used to describe places of a certain place-type & 
-					None &
-					1383 place-types & %both in DESC15 and the follow-up paper
-					\specialcell[l]{ \tabitem category from Geonames (7 classes)\\ \tabitem category from Foursquare (9 classes)\\ \tabitem category from OpenCYC (\cite{Derrac2015}: 93 classes, \cite{Ager2018} \cite{Alshaikh2020}: 20 classes) } &
-					\specialcell[l]{ $\geq$ 50 occurences (doq-freq) \\ \textrightarrow around 22k candidates \\ (all words from the BoW) \\ \textbf{n-grams}: squashed all words of a tag}
-					\\ \midrule
-				\textbf{wines\footref{origdsets}\footnote{\url{https://snap.stanford.edu/data/web-CellarTracker.html}} \cite{Derrac2015}} &
-					grouped-by-wine-variant concatenated reviews for wines &
-					removed stop-words\footnoteref{fnote:stopwordlist}, lower-cased all, removed diacritics and punctuation &
-					330 wine-variants &
-					\textit{not performed} &
-					\specialcell[l] {$\geq$ 50 occurences (doq-freq) \\  \textrightarrow around 6k candidates }
-					\\ \midrule
-				\textbf{20 newsgroups\footnote{\url{http://qwone.com/~jason/20Newsgroups}} \cite{Ager2018}} &
-					posts partitioned (nearly) evenly across 20 different newsgroups &
-					\specialcell[l]{ \tabitem Headers, footers and quote metadata removed using scikit-learn \footnote{\url{https://scikit-learn.org/0.19/datasets/twenty_newsgroups.html}} \\ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem lowercased text\\ \tabitem candidate terms: all textual and numerical tokens} &
-					18446 posts &
-					\tabitem newgroup post was submitted to (20 classes) &
-					$\geq$ 30 occurences 
-					\\ \midrule
-				\textbf{imdb sentiment\footnote{\url{http://ai.stanford.edu/~amaas/data/sentiment/} \cite{maas-EtAl:2011:ACL-HLT2011}} \cite{Ager2018}} &
-					highly polar movie reviews for binary sentiment classification  &
-					\specialcell[l]{ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem lowercased text\\ \tabitem candidate terms: all textual and numerical tokens} &
-					50000 reviews &
-					\tabitem sentiment of the review (2 classes) &
-					$\geq$ 50 occurences
-					\\ \midrule
-				\textbf{Bands \cite{Alshaikh2020}} &
-					\specialcell[l]{All Wikipedia pages ($\geq$ 200 words) whose \\ WikiData semantic type is "Band"} &
-					\specialcell[l]{ \tabitem removed HTML-tags and references \\ \tabitem \textit{"standard preprocessing strategy"} \cite[137]{Alshaikh2019} \\ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem POS-tagging and keeping only nouns and adjectives \\ \tabitem remove words with a rel. doc-freq  $>$ 60\% or abs. doc-freq $<$ 10 } &
-					11448 bands & \specialcell[l]{ \tabitem Genres (22 classes) \\ \tabitem Country of origin (6 classes) \\ \tabitem Loc. of formation (4 classes) }  & 
-					\specialcell[l]{ 10 $<$ doc-freq $<$ 6869 \\ (all words from the BoW)}\\ \midrule
-				\textbf{Organisations\footnote{\label{fnote:for_alshaikh2019} Originally created in and for \cite{Alshaikh2019}} \cite{Alshaikh2020}} &
-					\specialcell[l]{All Wikipedia pages ($\geq$ 200 words) whose \\ WikiData semantic type is "Organisation"} &
-					\specialcell[l]{ \tabitem removed HTML-tags and references \\ \tabitem \textit{"standard preprocessing strategy"} \cite[137]{Alshaikh2019} \\ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem POS-tagging and keeping only nouns and adjectives \\ \tabitem remove words with a rel. doc-freq  $>$ 60\% or abs. doc-freq $<$ 10 } &
-					11800 organisations &
-					\specialcell[l]{ \tabitem Country (4 classes)\\ \tabitem Headquarter Loc. (2 classes)} &
-					\specialcell[l]{ 10 $<$ doc-freq $<$ 7080 \\ (all words from the BoW)} \\ \midrule
-				\textbf{Buildings\footnoteref{fnote:for_alshaikh2019} \cite{Alshaikh2020}} &
-					\specialcell[l]{All Wikipedia pages ($\geq$ 200 words) whose \\ WikiData semantic type is "Building"} &
-					\specialcell[l]{ \tabitem removed HTML-tags and references \\ \tabitem \textit{"standard preprocessing strategy"} \cite[137]{Alshaikh2019} \\ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem POS-tagging and keeping only nouns and adjectives \\ \tabitem remove words with a rel. doc-freq  $>$ 60\% or abs. doc-freq $<$ 10 } &
-					3721 buildings &
-					\specialcell[l]{ \tabitem Country (2 classes)\\ \tabitem Administrative loc. (2 classes)} &
-					\specialcell[l]{10 $<$ doc-freq $<$ 2233 \\ (all words from the BoW) }\\ \midrule \midrule
-				\textbf{Siddata-Courses} &
-					TODO &
-					&
-					&
-					\tabitem Faculty (10 classes) 
-					\\ \midrule 
-				\textbf{100K Coursera reviews}\footnote{\url{https://www.kaggle.com/septa97/100k-courseras-course-reviews-dataset}} &
-					TODO &
-					&
-					&
-					\specialcell[l]{ \tabitem Rating (5 classes) \\ \textit{\tabitem Major, Category, Offered-By,... (tbd)} }
-					\\ 
-			\end{tabular}
-			\caption{All datasets. Extends similar table in \cite{Alshaikh2020}}
-			\label{tab:all_datasets}
-		}
-	\end{table}
-	% TODO was ist mit n>1-grams? Movies used them, placetypes used tags so it kinda has them... and stuff liek buildings/organizations?
-\end{landscape}	
+Im folgenden gibt es neben Datasets 2 main sections: algoritm and architecture. Dass Algorithm und Architecture 2 subsection von methods sind ist halt "Der allgemeine Algorithmus und die spezifische Anwendung" Warum Architecture session? es kostet extrem viel zeit die schwammigen formulierungen in den papern genau zu verstehen, man probiert super oft falsche parameter-kombinationen aus etc etc, es ist halt ein riesiger ewig langer lernprozess den man von vorne machen müsste wenn man es nachimplementieren möchte, ich hätte mir gewünscht die authors hätten darüber mehr worte verloren, and also the scalable reproducible open-science part. And also - it took me a shitton of time, way more than working on the algorithm (but NOW it can run so easily on the grid and all param-combis simultaneously, ..), so this is what you'll get.
+
+
+\section{Datasets}
+
+% * Steht ja schon woanders dass mein Datensatz anders ist als concatenated-movie-reviews und ich deswegen nicht einfach "je öfter 'scary' desco scarier" machen kann. Da gibt's several ways mit umzugehen
+	% * Das sich-die-richtigen-wörter-per-candidate-svm-bootstrappen
+	% * Mit LSI rausfinden welche Terme genausogut in dem Text hätten vorkommen können (hab ich auch irgendwo schon)
+	% * Explizit einfach zu gucken "Welche Terme kommen oft in den gleichen dokumenten vor" (und das inverse (steht iwo im code)), und dann ne candidate SVM für grouped terms anstelle von einzelterms machen (auch schon iwo als code)
+	% * Mit Wordnet hypernyms/hyponyns und synonyms zu finden damit ebenfalls zu arbeiten (kann man wit wordnet angeben welches abstraktionsniveau ich haben will?)
+	%     * Abstraktionsniveau gibt's nicht in wordnet, das heißt das richtige layer zu finden ist schwer. Was man auf jeden Fall machen kann ist die Terme zu den bases ihrer synsets umzuwandeln (dadurch wird aus "math" und "mathematics" das gleiche), aber in anderen Fällen ist es halt so dass ich die Candidate-Terms schon vorher brauche und nur sagen kann "diese entity enhält X wörter die halt hyponyms von dem Term sind"
+
+their algorithm is tailored to concatenated-reviews or concatenated-bags-of-tags. Take their success-metric for the SVMs splitting the embedding. The more often the word "scary" comes in the concatenated reviews, the more scary the movie is. Sounds legit. The more often the people that took pictures at a particular place mentioned the "nature" of that, the more relevant "nature" is to that place. Also legit. But in the descriptions for courses that involve a lot of mathematics, it is not necessarily the case that the term "mathematics" occurs often. So due to the different nature of my dataset I have to go beyond their algorithm at some points - in this case it is probably the case that different kinds of mathematical terms actually do occur more often, so I'd need calculate these kinds of kappas not based oon a single term but ALREADY on a cluster of terms (... and I can bootstrap my way there, because after I do this I get more words to add to my cluster, rinse and repeat!)
+
+\input{include/dataset_table}
+
 
 % Empirie, auch specifics über den Datensatz
 
@@ -547,7 +536,7 @@ The dataset comes from Johannes' Repo at \url{https://git.siddata.de/jschrumpf/s
 		}
 \end{figure}
 
-To see if it is possible to extract any kind of structured data from the unstructured course descriptions, a Neural Network classifier was trained on the dataset, classifying courses to the faculty they run under. 
+
 The faculty is easily obtainable from the dataset, as the first one or two digits of the course ID correspond to it. The distribution of the faculties is depicted in figure \ref{fig:faculty_plot}.
 
 \begin{figure}[H]
@@ -564,6 +553,27 @@ Also, we have a lower bound for useful data: we can just throw away data that ca
 %TODO: train a second classifier on something else and throw away data that gets classified by neither and inspect it
 
 (-> 91\% test accuracy)
+
+% =============== Besonderheiten vom Siddata-datensatz
+
+....len([i for i in descriptions._descriptions if "kompetenzen entwickelt befahigen akademischen berufstypischen" in i.processed_as_string()]) == 25  ... weil es genau 25 exakt gleiche Beschreibungen gibt, für die Fremdsprachkurse. Deswegen ist up to jede 5-wort-kombination davon ein extracted keyword
+(und das obwohl sie verschiedene Namen haben! merging them doesn't make sense but they are almost equal)
+
+% =============== Schreiben zum Thema Datensatz-Vergleich:
+
+...ist es richtig dass nur 6000 verschiedene Terms >= 25 mal vorkommen?! 6000?!
+=> auch in groß ist mein datensatz ja noch deutlich kleiner als placetypes, die haben immerhin 22k candidates
+--> n-docs: 7596
+--> 1-grams >= 25 times: 5054, 1-5-grams >= 25 times: 6717
+--> unique 1-grams: 106235
+
+bei placetypes sind es 
+* unique 1-grams: 746180, davon 41320 >= 25 mal und 21833 >= 50 mal (their threshold)
+
+--> das verhältnis Anzahl Texte zu Länge Texte ist bei mir halt komplett off 
+
+% =============== 
+
 
 \subsection{Other Datasets}
 
@@ -602,38 +612,6 @@ See \url{https://www.kaggle.com/roshansharma/coursera-course-reviews} for explor
 
 Also, there's the Large Movie Review Dataset\footnote{\url{http://ai.stanford.edu/~amaas/data/sentiment/}, \url{https://scikit-learn.org/0.19/datasets/twenty_newsgroups.html}}, also used by \cite{Ager2018}.
 
-
-\section{Required Algorithms and Techniques}
-
-The Paper uses the following PPMI definition:\\ 
-
-\noindent $e \in E$ is an entity, $D_e$ a document (bag of words) where that entity occurs.\\
-We want to quantify for each term occuring in the corpus $\{D_e | e \in E\}$ how strongly it is associated with $e$.\\
-$c(e,t)$ is the number of times term $t$ occurs in document $D_e$. \\
-The weight $ppmi(e,t)$ for term $t$ in the vector representing $e$ is then:
-\begin{align*}
-ppmi(e,t) &= max\left(0, log\left( \frac{p_{et}}{p_{e*}*p_{*t}} \right) \right) \\
-          &= max\left(0, pmi(e,t) \right) \\
- pmi(e,t) &= log\left( \frac{p_{et}}{p_{e*}*p_{*t}} \right) \\          
-   p_{et} &= \frac{c(e,t)}{\sum_{e'}\sum_{t'} c(e',t')} \\
-   p_{e*} &= \sum_{t'}p_{et'} \\
-   p_{*t} &= \sum_{e'}p_{e't} \\
-\end{align*}
-
-\noindent log of the probability of the $e$-$t$-combination (count of this vs count of all), normalized by the probability of this $e$ with any $t$ times this $t$ with any $e$.\\
-To quote the paper: "PPMI will favor terms which are frequently associated with the entity $e$ while being relatively infrequent in the corpus overall"
-
-\vspace{30px}
-
-I found this definition:
-\begin{align*}
-ppmi(X,i,j) &= max(0, pmi(X,i,j)) \\
-pmi(X,i,j)  &= log\left( \frac{X_{ij}}{expected(X,i,j)} \right) \\
-            &= log\left( \frac{P(X_{ij})}{P(X_{i*}) * P(X_{*j})} \right)
-\end{align*}
-
-
-\@input{pandoc_generated_latex/chapter_methods_section_required_algorithms}
 
 \section{Architecture}
 %Doing this section before Algorithm-section such that I can reference how plots are created or general code examples with the real thing, including how what you're seeing was generated and can be reproduced
@@ -695,59 +673,7 @@ The core idea of the algorithm is to (unsupervised, data-driven) find a a set of
 
 \@input{pandoc_generated_latex/section_algorithm}
 
-
-
-
-\begin{landscape}
-	\begin{table}[]
-		%Preprocessing siehe other table
-		\resizebox{\textwidth}{!}{%
-			\begin{tabular}{llll}
-			& \cite{Derrac2015} & \cite{Ager2018} & \cite{Alshaikh2020} \\
-			\textbf{Step 1: Generate Vector Spaces from Descriptions} & 
-			\specialcell[l]{MDS trained with the angular differences $\frac{2}{\pi}* arccos\left(\frac{\vec{v}_{e_i}*\vec{v}_{e_j}}{\norm{\vec{v}_{e_i}}*\norm{\vec{v}_{e_j}}}\right)$ \\
-			between the PPMI weighted BoW Vectors (all terms) \\
-			Spaces of dim 20, 50, 100 and 200 \\
-			Previous Experiments also considered SVD and Isomap} &
-			\specialcell[l]{ \tabitem like \cite{Derrac2015} \\ \tabitem PCA from PPMI weighted BoW vectors \\ \tabitem Doc2Vec \\ \tabitem thresholded\footnote{Only words that occur more than 2 times (15 for movies-dataset)}, averaged pre-trained GloVe word embeddings \\ \tabitem thresholded, ppmi-weighted-averaged pre-trained GloVe word embeddings \\
-			Number of dimensions one of (50, 100, 200)} &
-			\specialcell[l]{ \tabitem Document Embeddings } \\ \midrule
-			\textbf{Step 2: Generate Candidate Words for Features} & 
-			\specialcell[l]{ All sufficiently frequent\footnote{For the placetypes-dataset: all tags that co-occur with at least 50 place types} adjectives, nouns, adjective phrases and noun phrases \\
-			(using POS-Tagger and Chunker from openNLP) } &  
-			All sufficiently frequent words\footnote{For the thresholds, see table \ref{tab:all_datasets}} (use PPMI in a later step so possibly PPMI?!) &
-			\\ \midrule
-			\textbf{Step 3: Filter Candidate Words} &                   
-			\specialcell[l]{ linear SVM for all candidates (pos samples: $\forall e: c \in e$) with pos/neg-count-ratio as instance cost \\
-			Only take candidates where the correlation according to Cohen's Kappa between the ranking induced by the SVM's hyperplane and count(t, e) is $\geq \lambda$ (0.5/0.1)\\
-			also tried Spearman's and Kendall's correlation coeffcients }&
-			\specialcell[l]{ Performance of the weighted LogRegClassifier compared to the ranking induced by the PPMI, as measured by \\ \tabitem Cohen's Kappa \\ \tabitem Accuracy \\ \tabitem Normalized Discounted Cumulative Gain (NDCG) } 
-			& "we used logistic regression classifiers instead of SVMs, which we found to perform similarly but were faster to train."
-			\\ \midrule
-			\textbf{Step 4: Merge Candidate Word Feature Directions} &   
-			\specialcell[l]{ According to \cite{Alshaikh2020} "a variant of \textit{k}-means" \\ Cluster centers: Select Term with highest $\kappa$, then i=2*ndims times select the term from $T^{0.5}$ minimizing $max_{j<i}cos(\vec[m]{v_{t_j}},\vec[m]{v_t})$ \\ 
-			Others: assign all terms from $T^{0.1}$ to the closest cluster and define $\vec[m]{v^*_i} = \frac{1}{|C_i|} \sum_{t\in C_i} \vec[m]{v_t}$ as cluster direction (average direction of cluster's elements)} &
-			\specialcell[l]{Weighted logistic regression to find candidate directions \\ 
-			Input-ndims for clustering algorithm one of (500, 1000, 2000) \\
-			Number of clusters one of (ndims, 2*ndims) \\
-			Centroid of the cluster computed as $v_{C_j} = \frac{1}{|C_j|}\sum_{w_l \in C_j} v_l$, provided vectors all normalized} & \specialcell[l]{  \textbullet\, \textbf{sub, ortho, primary}:   
-			Affinity propagation instead of \textit{k}-means (no need to specify the ndims, helps with the issue that there are some non-informative clusters in \cite{Derrac2015}'s algorithm) \\ ~~ n-dims for this not directly configurable, only over preference parameter relative to median $\mu$, tried for (0.7$\mu$, 0.9$\mu$, $\mu$, 1.1$\mu$, 1.3$\mu$) \\  \textbullet\, \textbf{AHC}: Agglomerative Hierachical Clustering to cluster word directions with distance cut-offs  \\  \textbullet\, also tried Hierachical LDA \\ Cluster direction (both AHC and Affinity Propagation): normal vector of the hyperplane of a linear classifier separating entities whose description contains at least one of the words from the cluster from the others  } %TODO find a short-term notation for "entities whose description contains at least one of the words from XYZ" ("for a Cluster C, we write pos_C and neg_C for the set of positively and negatively classified entities")
-			\\  \midrule
-			\textbf{Step 5: Post-Processing} &                   
-			None &                 
-			TODO describe fine-tuning! & \specialcell[l]{
-			Perform steps 1-4 a second time (only for positively classified entities), such that there are primary features (domains) and sub-features \\ representation kept flat (values for the sub-features is same dot-product as for domains) \\ \textbullet\, \textbf{sub}: sub-features extracted equal to first-order-features \\ \textbullet\, \textbf{ortho}: sub-feature directions orthogonal to corresponding primary feature direction (enforce complementary information) \\ ~~ by computing orthogonal decomposition of feature w.r.t. its domain (pg. 4, equation 1) \\ \textbullet\, also tried to combine mother-domain with sub-feature, but that performed poorly \\ \textbullet\, \textbf{primary}: model with only primary features}
-			\end{tabular}
-		}
-		\caption{Compared algorithms from \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020}}
-		\label{tab:compared_algos}
-	\end{table}
-\end{landscape}
-
-% Alshaikh2020 say: "It may seem counter-intuitive to use binary classifiers to learn representations of ordinal features. However, the occurrence or non- occurrence of a word in the description is binary, and this is the most important available signal. We experimented with statistics such as pointwise mutual information, which did not lead to better results." -> does that mean DCM_QUANT_MEASURE or QUANTIFICATION_MEASURE or both? and also does that mean they use binary or count as this measure?
-
-% Alshaikh2020 use: sub, ortho, primary, random (coordinates uniformly random), 
-
+\input{include/algorithm_compare_table}
 
 \subsection{Preprocessing}
 
@@ -860,31 +786,9 @@ An analysis of \cite{Carmel2009} showed that a statistical method to extract fea
 \chapter{Results}
 
 
-\begin{table}
-	\resizebox{\textwidth}{!}{%
-	\begin{tabular}{lllllrrrrrrrrr}
-	\toprule
-	 &  &  &  &  & \rotatebox{45}{\textbf{k_r2r_d}} & \rotatebox{45}{\textbf{k_r2r_min}} & \rotatebox{45}{\textbf{k_dig}} & \rotatebox{45}{\textbf{k_c2r+}} & \rotatebox{45}{\textbf{k_r2r+_d}} & \rotatebox{45}{\textbf{k_r2r+_min}} & \rotatebox{45}{\textbf{k_r2r+_max}} & \rotatebox{45}{\textbf{k_dig+_2}} & \rotatebox{45}{\textbf{mean}} \\
-	\rotatebox{45}{\textbf{pp_components}} & \rotatebox{45}{\textbf{quantification_measure}} & \rotatebox{45}{\textbf{embed_dimensions}} & \rotatebox{45}{\textbf{dcm_quant_measure}} & \rotatebox{45}{\textbf{kappa_weights}} &  &  &  &  &  &  &  &  &  \\
-	\midrule
-	\multirow[t]{5}{*}{\textbf{mfauhcsd2}} & \multirow[t]{5}{*}{\textbf{count}} & \multirow[t]{5}{*}{\textbf{3}} & \multirow[t]{2}{*}{\textbf{count}} & \textbf{linear} & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 0 & 0 \\
-	 &  &  &  & \textbf{quadratic} & 0 & {\cellcolor{lightgreen}} 1 & 0 & 0 & 0 & 28 & 13 & 0 & 5 \\
-	\cline{4-5}
-	 &  &  & \multirow[t]{2}{*}{\textbf{ppmi}} & \textbf{linear} & 0 & 0 & 0 & - & 9 & 30 & 74 & 7 & 17 \\
-	 &  &  &  & \textbf{quadratic} & 0 & {\cellcolor{lightgreen}} 1 & 0 & - & {\cellcolor{lightgreen}} 145 & {\cellcolor{lightgreen}} 370 & {\cellcolor{lightgreen}} 510 & {\cellcolor{lightgreen}} 191 & {\cellcolor{lightgreen}} 174 \\
-	\cline{4-5}
-	 &  &  & \textbf{tfidf} & \textbf{linear} & 0 & 0 & 0 & - & 5 & 18 & 24 & 2 & 7 \\
-	\bottomrule
-	\end{tabular}
-	}
-\end{table}
+\input{include/results_table_1}
 	
-	
-	
-	
-	
-	
-	
+		
 	
 	
 	
@@ -938,7 +842,15 @@ In figure \ref{fig:3dplot_mathe_infoab} we see a 3D-Embedding for courses, split
 
 \section{Quanitative Results}
 
-Here I'll add the results of the low-depth-decision-trees for Fachbereich, and also compare the results of throwing my code onto their datasets and how my results compare to theirs
+% Schreiben was die paper denen ich mostly folge zur evaluation gemacht haben! ("To evaluate whether the discovered features are semantically meaningful, we test how similar they are to natural categories, by training depth-1 decision trees")
+% Ein anderer Weg zum testen wäre auch ein classifier der nur anhand der most salient generated features versucht den kurs wiederherzustellen (das zeigt natürlich nicht ob es similar to how humans do it but part of it)
+
+Here I'll add the results of the low-depth-decision-trees for Fachbereich, and also compare the results of throwing my code onto their placetypes-dataset and how my results compare to theirs 
+(set overlap of candidate terms!)
+
+To see if it is possible to extract any kind of structured data from the unstructured course descriptions, a Neural Network classifier was trained on the dataset, classifying courses to the faculty they run under. 
+$\rightarrow$ Der FB-Classifier kommt auf $95.33\%$ train, $90.96\%$ Test accuracy nach 10 epochs, that's a lot!!
+
 
 Both \cite{Ager2018} and \cite{Alshaikh2020} train shallow decision-trees (depth 1 and depth 3 each), on their feature-based representations (such that the 1 or 3 most distinct interpretable dimensions are used) on a known property of the data (genres for movies, category in some taxonomy for placetypes, fachbereich for mine) - in the assumption that these eg in the movie domain the genre (or rather *terms accurately predicting it*) is among the features.
 
@@ -950,9 +862,10 @@ Both \cite{Ager2018} and \cite{Alshaikh2020} train shallow decision-trees (depth
 % * ...and conclusion
 
 \section{Future Work}
-\begin{itemize}
-	\item Evaluation in Stud.IP (which may then even be used for training something like \cite{VISR12}'s algorithm or the fine-tuing step of \cite{Ager2018})
-\end{itemize}
+
+\@input{pandoc_generated_latex/section_future_work}
+
+
 
 \section{Discussion}
 

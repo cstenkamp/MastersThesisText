@@ -1,5 +1,16 @@
 # Usecases Pipeline 
 
+
+<!--
+* Per Click (-> command, subcommand, subsubcommand, every subcommand can load more stuff to the json-persistor)
+* In a Jupyter-Notebook (Settings werden festgelegt)
+* In Snakemake for:
+    * default (with and without env-vars)
+    * explicit filenames
+    * all / all_for
+    * from_config  
+-->
+
 [//]: # TODO: The purpose of this chapter is listing complete and working commands for all ways of how to invoke it! -> Focus on the actual commands and keep it SHORT!!
 
 You can also run stuff from the docker-container, if you want to install it it is referred to \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/doc/install_docker.md}, blablabla

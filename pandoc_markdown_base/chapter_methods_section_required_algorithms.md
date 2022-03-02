@@ -100,3 +100,17 @@ main idea is to learn a representation in terms of salient features, where each 
 * Used by [DESC15] because distances stay equal
 * builds a vector-space representation from pairwise similiarity judgements
 * Sources: [40] of [DESC15]
+
+
+### Projecting and playing around with coordinate system
+
+So how do we project the point onto the plane?
+* [https://stackoverflow.com/a/17661431] all you have to do is find the perpendicular (abbr here |_) distance from the point P to the plane, then translate P back by the perpendicular distance in the direction of the plane normal. The result is the translated P sits in the plane.
+
+
+
+### Other stuff
+
+I can take a bit of the definitions from here:
+  https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction 
+  ("We call vectorization the general process of turning a collection of text documents into numerical feature vectors. This specific strategy (tokenization, counting and normalization) is called the Bag of Words or “Bag of n-grams” representation. Documents are described by word occurrences while completely ignoring the relative position information of the words in the document.")

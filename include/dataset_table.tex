@@ -1,0 +1,90 @@
+%TODO https://tex.stackexchange.com/questions/526198/table-resize-table-and-automatic-line-breaks
+%TODO add back key feature sizes?!
+\begin{landscape}
+	\begin{table}[]
+		\resizebox{\textwidth}{!}{%
+			\begin{tabular}{@{}lllllll@{}} 
+				\toprule
+					\textbf{dataset} &
+					\textbf{contents} &
+					\textbf{preprocessing} &
+					\textbf{size} &
+					\textbf{classification classes} &
+					\textbf{candidate word threshold}
+					& \textbf{key feature sizes} 
+					 \\ \midrule
+				\textbf{movies\footnote{\label{origdsets}\url{https://www.cs.cf.ac.uk/semanticspaces/}} \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020} } &
+					grouped-by-movie-concatenated reviews for movies &
+					\cite{Derrac2015}: removed stop-words\footnote{\label{fnote:stopwordlist}\url{http://snowball.tartarus.org/algorithms/english/stop.txt}}, lower-cased all, removed diacritics and punctuation &
+					\specialcell[l]{\cite{Derrac2015}: 15000 movies \\ \cite{Ager2018}/\cite{Alshaikh2020}: 13978 movies } & %Ager2018 says 15.000 - 1022 duplicates, that's the number of Alshaikh2020
+					\specialcell[l]{ \tabitem genre (23 classes)\\ \tabitem plot keywords (eg. \textit{suicide, beach}) (100 classes) \\ \tabitem age-rating certificates (6 classes)} & \specialcell[l]{$\geq$ 100 occurences (doq-freq) \\ \textrightarrow around 22k candidates \\ variable-length \textbf{n-grams} considered}
+					& \specialcell[l]{feature vecs: 38649 keys with 0-33k terms each (sum: 589727 terms) \\ candidate-terms: 22903 (unclustered)\\ clusters: ndims*2  $\rightarrow$ for 20D: 9389 ($\rightarrow$ 9429 words in $T^{0.1}$)}		
+					% movies: 15.000
+					% ppmi-weighted feature vectors: 38649 keys with bag-of-words between 0 words and 33k words (but mostly couple 1000s), all in all 589727 unique terms
+					% candidate-terms: 22903 (unclustered)
+					% clusters: ndims*2 clusters with all in all (for 20d) 9389 values (->9429 words have kappa>=0.5)
+					\\ \midrule
+				\textbf{place types\footref{origdsets} \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020} } &
+					bag-of-tags from Flickr used to describe places of a certain place-type & 
+					None &
+					1383 place-types & %both in DESC15 and the follow-up paper
+					\specialcell[l]{ \tabitem category from Geonames (7 classes)\\ \tabitem category from Foursquare (9 classes)\\ \tabitem category from OpenCYC (\cite{Derrac2015}: 93 classes, \cite{Ager2018} \cite{Alshaikh2020}: 20 classes) } &
+					\specialcell[l]{ $\geq$ 50 occurences (doq-freq) \\ \textrightarrow around 22k candidates \\ (all words from the BoW) \\ \textbf{n-grams}: squashed all words of a tag}
+					\\ \midrule
+				\textbf{wines\footref{origdsets}\footnote{\url{https://snap.stanford.edu/data/web-CellarTracker.html}} \cite{Derrac2015}} &
+					grouped-by-wine-variant concatenated reviews for wines &
+					removed stop-words\footnoteref{fnote:stopwordlist}, lower-cased all, removed diacritics and punctuation &
+					330 wine-variants &
+					\textit{not performed} &
+					\specialcell[l] {$\geq$ 50 occurences (doq-freq) \\  \textrightarrow around 6k candidates }
+					\\ \midrule
+				\textbf{20 newsgroups\footnote{\url{http://qwone.com/~jason/20Newsgroups}} \cite{Ager2018}} &
+					posts partitioned (nearly) evenly across 20 different newsgroups &
+					\specialcell[l]{ \tabitem Headers, footers and quote metadata removed using scikit-learn \footnote{\url{https://scikit-learn.org/0.19/datasets/twenty_newsgroups.html}} \\ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem lowercased text\\ \tabitem candidate terms: all textual and numerical tokens} &
+					18446 posts &
+					\tabitem newgroup post was submitted to (20 classes) &
+					$\geq$ 30 occurences 
+					\\ \midrule
+				\textbf{imdb sentiment\footnote{\url{http://ai.stanford.edu/~amaas/data/sentiment/} \cite{maas-EtAl:2011:ACL-HLT2011}} \cite{Ager2018}} &
+					highly polar movie reviews for binary sentiment classification  &
+					\specialcell[l]{ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem lowercased text\\ \tabitem candidate terms: all textual and numerical tokens} &
+					50000 reviews &
+					\tabitem sentiment of the review (2 classes) &
+					$\geq$ 50 occurences
+					\\ \midrule
+				\textbf{Bands \cite{Alshaikh2020}} &
+					\specialcell[l]{All Wikipedia pages ($\geq$ 200 words) whose \\ WikiData semantic type is "Band"} &
+					\specialcell[l]{ \tabitem removed HTML-tags and references \\ \tabitem \textit{"standard preprocessing strategy"} \cite[137]{Alshaikh2019} \\ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem POS-tagging and keeping only nouns and adjectives \\ \tabitem remove words with a rel. doc-freq  $>$ 60\% or abs. doc-freq $<$ 10 } &
+					11448 bands & \specialcell[l]{ \tabitem Genres (22 classes) \\ \tabitem Country of origin (6 classes) \\ \tabitem Loc. of formation (4 classes) }  & 
+					\specialcell[l]{ 10 $<$ doc-freq $<$ 6869 \\ (all words from the BoW)}\\ \midrule
+				\textbf{Organisations\footnote{\label{fnote:for_alshaikh2019} Originally created in and for \cite{Alshaikh2019}} \cite{Alshaikh2020}} &
+					\specialcell[l]{All Wikipedia pages ($\geq$ 200 words) whose \\ WikiData semantic type is "Organisation"} &
+					\specialcell[l]{ \tabitem removed HTML-tags and references \\ \tabitem \textit{"standard preprocessing strategy"} \cite[137]{Alshaikh2019} \\ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem POS-tagging and keeping only nouns and adjectives \\ \tabitem remove words with a rel. doc-freq  $>$ 60\% or abs. doc-freq $<$ 10 } &
+					11800 organisations &
+					\specialcell[l]{ \tabitem Country (4 classes)\\ \tabitem Headquarter Loc. (2 classes)} &
+					\specialcell[l]{ 10 $<$ doc-freq $<$ 7080 \\ (all words from the BoW)} \\ \midrule
+				\textbf{Buildings\footnoteref{fnote:for_alshaikh2019} \cite{Alshaikh2020}} &
+					\specialcell[l]{All Wikipedia pages ($\geq$ 200 words) whose \\ WikiData semantic type is "Building"} &
+					\specialcell[l]{ \tabitem removed HTML-tags and references \\ \tabitem \textit{"standard preprocessing strategy"} \cite[137]{Alshaikh2019} \\ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem POS-tagging and keeping only nouns and adjectives \\ \tabitem remove words with a rel. doc-freq  $>$ 60\% or abs. doc-freq $<$ 10 } &
+					3721 buildings &
+					\specialcell[l]{ \tabitem Country (2 classes)\\ \tabitem Administrative loc. (2 classes)} &
+					\specialcell[l]{10 $<$ doc-freq $<$ 2233 \\ (all words from the BoW) }\\ \midrule \midrule
+				\textbf{Siddata-Courses} &
+					TODO &
+					&
+					&
+					\tabitem Faculty (10 classes) 
+					\\ \midrule 
+				\textbf{100K Coursera reviews}\footnote{\url{https://www.kaggle.com/septa97/100k-courseras-course-reviews-dataset}} &
+					TODO &
+					&
+					&
+					\specialcell[l]{ \tabitem Rating (5 classes) \\ \textit{\tabitem Major, Category, Offered-By,... (tbd)} }
+					\\ 
+			\end{tabular}
+			\slcaption{All datasets. Extends similar table in \cite{Alshaikh2020}}
+			\label{tab:all_datasets}
+		}
+	\end{table}
+	% TODO was ist mit n>1-grams? Movies used them, placetypes used tags so it kinda has them... and stuff liek buildings/organizations?
+\end{landscape}	

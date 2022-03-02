@@ -1,3 +1,5 @@
+TODO: Selbst für sachen wie bag-of-words oder tokenization kann ich entsprechend auf definitionen in section-required-algorithms verweisen
+
 * In principle Derrac2015, but with some components from Ager2018 and Alshaikh2020 as well as some own stuff
     * Because of the nature of the dataset I need to do some things differently 
         * I'm not working with reviews or collections-of-tags, that means their "how does this dimension correspond to the count in the reviews" doesn't make sense
@@ -27,9 +29,9 @@
     * Optionally remove HTML-Tags from texts
     * Optionally tokenize sentences (such that n-grams across sentences are not considered)
     * Optionally convert all tokens to lower-case
-    * Optionally remove stopwords\footnote{Grains of salt concerning stopword-lists}
-    * Tokenize the words in the texts
-    * Optionally lemmatize\footnote{explain lemmatization} the words in the texts
+    * Optionally remove stopwords\footnote{Grains of salt concerning stopword-lists} (Alshaikh2019 just removed too-high-docfreq)
+    * Tokenize the words in the texts 
+    * Optionally lemmatize\footnote{explain lemmatization} the words in the texts (TODO: write about it and that I use HanTa for german etc etc)
     * Optionally remove diacritics\footnote{explain}
     * Optionally remove punctuation
 * The above can be done manually step-by-step mostly based on NLTK tools, or in one step using `sklearn`'s `CountVectorizer`. 
