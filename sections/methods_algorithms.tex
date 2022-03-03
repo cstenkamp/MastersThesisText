@@ -1,0 +1,201 @@
+
+The algorithm that is implemented in the scope of the thesis is in principle the one from \textcite{Derrac2015}, but includes some improvements from \textcite{Ager2018} and \textcite{Alshaikh2020} - both of which directly builing on the work of the former. As all of these publications share Prof. Steven Schockaert as last author, it seems plausible that a) the latter ones are legit improvements upon the first, b) at least to a certain degree they can share code and data, c) this field of work is constrained to a small community, without any alternative implementations or substantial improvements from outside of it.
+% sollte ja schon vorher erwähnt haben dass das thema leider nicht über diese small community hinaus geht
+
+
+% * from Alshaikh2020: "Their core assumption is that words describing semantically mean- ingful features can be identified by learning for each candi- date word w a linear classifier which separates the embed- dings of entities that have w in their description from the oth- ers. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
+% * from Alshaikh2020: "The learned vectors will be referred to as feature directions to emphasize the fact that only the ordering induced by the dot product d_i · e matters"
+
+
+% * Yamls für die Configs von DESC15 und den anderen beiden in den Text packen
+% * Im Text link zu binder bei results section der auf die notebooks/analyze_results/analyze_pipeline_results.ipynb referenziert, und für die tables auch!
+% * Schreiben dass ich einige Claims oder nonclaims von denen prüfe, bspw nutzen sie immer PPMI ohne je tf-idf zu testen
+% * RaZb20 tried Doc2Vec instead of MDS and it performed worse!
+% * Wie lange der ganze Kram dauert - MDS hat quadratic complexity etc
+% * [AGKS18] haben den candidate-filter-teil konfigurierbar (und sagen bei denen ist accuracy even better than kappa)
+% * Das mit dem Koordinatensystem drehen passiert gar nicht so wie ich dachte dass es passiert...?!
+% * Tabelle
+% 	* Die Parameter von [AGKS18] und [RaZb20] sowohl in die Tabelle als auch ins yaml packen
+% 	* Einduetig rausschreiben welche der 3 paper [DESC15] [AGKS18] [RaZb20] welche parameter-werte verlangen und !!welche optimal waren!! angucken welche Kombi die Beste Performance hatte und die entsprechend markieren (und im yaml haben!)!
+% * Regarding DESC15 vs AGKS18 vs RaZb20:
+% 	* didn't somebody say that cohen's kappa sucks!?!
+% 	* RaZb20: 
+% 		* use affinity propagation "for getting rid of the clusters of informative words", similar to how they did it in their 2019 paper
+% 			-> affinity propagation has a so-called preference parameter, den als config lassen - usual, this parameter is chosen relative to the median µ of the affinity scores. For the methods Sub and Or- tho, we considered values from {0.7µ, 0.9µ, µ, 1.1µ, 1.3µ}
+% 		* do kappa ON BINARY!!!
+% 		* say that for them, the binary "does the word occur in the description" is the only sensible signal, no ppmi or anything! (page 2, footnote 1 of RaZb20)
+% 	* DESC15: 
+% 		* "Here we use the assumption that the better Ht separates entities to which t applies from the others in S,the better \vec{v_t} models the term t." --> allein von der aussage muss man das mit den induzierten rankings echt nicht machen, sondern halt nur auf classification quality (-> metrics like accuracy) gucken, bzw kappa anhand der binären klasse berechnen --> the ranking induced by count, or the baremetal count?
+
+% 	* POSSIBLE EXTRA-STEPS FOR ALGORITHM
+% 		* BOOTSTRAP MORE CANDIDATES (AFTER EXTRACT CANDIDATES)
+% 			* [VISR12]: LSI
+% 				* Options:
+% 					* What to take for the term-document-matrix
+% 						* [VISR12]: 
+% 							* tag-applied
+% 							* tag-count
+% 							* tag-share (the number of times tag t has been applied to item i, divided by the number of times any tag has been applied to item i)
+% 						* relative-tag-count (tag-count / text-len) or tag-count / distinct-words-in-text
+% 						* tf-idf (!!)
+% 						* See also: https://en.wikipedia.org/wiki/Latent_semantic_analysis#Term-document_matrix
+% 				* Parameters:
+% 					#dims for the rank reduction (see https://en.wikipedia.org/wiki/Latent_semantic_analysis#Rank-reduced_singular_value_decomposition)
+
+% * Schritte des Algorithmus bewerten:
+% 	* "that the better Ht separates entities to which t applies from the others in S,the better \vec{v_t} models the term t." --> wie sinnvoll ist diese measure wenn das verhältnis literally 14.900 zu 100 ist, dann haben halt 99.33% der Daten einen rank von 0 ?!
+% 	* DESC15 write they select Kappa "due to its tolerance to class imbalance." -> Does that mean I have to set the weight?! Außerdem weiß ich ja superviel ebennicht, like which weighting they use! I don't like
+% 	* Der letzte Schritt mit dem Clustern der good-kappa-ones ist wirklich very basic und hat very much room for improvement
+
+
+% General idea of the algorithm: Alshaikh2020: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candidate word w a linear classifier which separates the embeddings of entities that have w in their description from the others. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature" (TODO: my concise formulation)
+% TODO: despite my citation style, write the names of the three main papers at least once
+
+Das haupt-ziel der algorithmen ist es, am ende die entities "feature-based" darstellen zu können, also als high-dim-vector mit floats per human-interpretable dimension. Alshaikh2020 hat dafür wegen den subfeatures noch kleine specials
+
+Important features:
+\begin{itemize}
+	\item Unsupervised (in contrast to \textcite{VISR12})
+\end{itemize}
+
+%TODO: maybe describe shortly what the improvements from  \cite{Ager2018} and \cite{Alshaikh2020} were? 
+% Alshaikh2020: 
+% * "When representing a particular entity in a conceptual space, we need to specify which domains it belongs to, and for each of these domains we need to provide a corresponding vector." 
+% * then they show their example of something that is not seperable with a hyperplane unless we specify subdomains, maybe just steal their plot that explains their one contribution to 99%
+% * The "Disentangled" from their title means "feature-based"
+
+The core idea of the algorithm is to (unsupervised, data-driven) find a a set of features which can be modelled as directions for a vector-space representation of the respetive entities. For that, the steps are:
+\begin{enumerate}
+	\item preprocess the descriptions using default techniques and create a bag-of-words representation for the texts
+	\item extract candidate features from these texts (easist variant is to just consider each sufficiently frequent word as candidate)
+	\item create an fixed-dimensional embedding for the texts (optimally a metric space, optimally based on their dissimilarity)
+	\item for each candidate term, train a linear classifier to seperate the vector representationgs of the entities that contain the term vs those that don't
+	\item if some metric for this classifier is sufficiently high, assume that the candidate term captures a salient feature - it's direction is then characterized by the normal vector for that hyperplane (for an intuition see \ref{fig:3d_hyperplane_ortho})
+	\item Cluster the candidates and calculate the direction of the cluster from the directions of it's contents
+\end{enumerate}
+
+\begin{figure}
+	\begin{center}
+	  \includegraphics[width=0.9\textwidth]{3dplot_hyperplane_and_orthogonal}
+	  \caption[Visual representation of the Hyperplane of an SVM splitting a dataset]{ \label{fig:3d_hyperplane_ortho} Visual representation of the Hyperplane of a Support-Vector-Machine splitting a dataset, as well as it's orthogonal and the orthogonal projection of a set of samples onto the plane. For an interactive version of this plot, visit  {\small \url{https://nbviewer.org/github/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/hyperplane_orthogonal_3d.ipynb?flush_cache}}}
+	\end{center}
+\end{figure}
+
+\begin{figure}[htp]
+	\begin{center}
+	  \includegraphics[width=0.9\textwidth]{dependency_graph_2022-02-14_11-36-45}
+	  \caption[Dependency-Graph of the Algorithm]{(automatically generated) dependency-graph, displaying the individual steps of the algorithm as well as their dependencies and where selected important parameters are first used.}
+	  \label{fig:depdendency_graph}
+	\end{center}
+\end{figure}
+
+\@input{pandoc_generated_latex/section_algorithm}
+
+\input{include/algorithm_compare_table}
+
+\subsection{Preprocessing}
+
+There are issues with using stop-word lists, see \cite{nothman-etal-2018-stop} ( SkLearn references this paper why their own/stopwordslists in general suck)
+
+
+%Was für Schritte hat der Algo 
+
+%TODO something along the lines of "Da, based on [source die die accuracy von dem gtranslate algorithm mit denen von menschen vergleicht], a gtranslate translation is as good as the average lecturer, it is assumed that translating the texts to english before using an english model can lead to better results
+
+
+\subsection{Extracting Candidate Terms}
+\label{sec:extract_candidates}
+
+* KeyBERT
+
+%TODO theoretisch ist es auch möglich bspw nen network mit attention auf gewisse dinge wie fachbereich und anderes zu trainieren und dann rauszusuchen was die wichtigen ausschlaggebenden dinge für das Netzwerk waren
+
+%TODO extract using TF/IDF as well
+
+%TODO a source: https://github.com/MaartenGr/KeyBERT#citation
+
+* After you figure out which candidate term appears in which texts, figure out which other terms are frequent in these texts while infrequent in texts of the other class and then add these to the candidate-term-set (other way may even be to classify the texts according to if the candidateterm appears in them, and then take the misclassified one also as positive samples)
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\figwidth]{graphics/figures/keyphrases_histogram.png}
+	%plot created with scripts/create_siddata_dataset.py filter-keyphrases /home/chris/Documents/UNI_neu/Masterarbeit/DATA_CLONE --verbose
+	\caption[Occurences in all Documents per Keyphrase]{
+		\label{fig:keyphrases_histogram}
+		Occurences in all Documents per Keyphrase (for all keyphrases that occur $\geq$ 5 times, cut off at the 93th percentile).
+		7007 of 45295 terms occur at least 5 times.
+		Most frequent phrases: seminar (4173), course (3722), students (2923), it (2671), language (2071), work (1980), event (1842), research (1731), lecture (1723), law (1719).
+		}
+\end{figure}
+
+
+\subsection{Calculating the distance to the SVMs Separatrix}
+\label{sec:calculate_distance}
+
+%TODO: before this, explain 
+% * extraction of the candidate term set
+% * how vectors are made from texts
+In order to tell how much a text is prototypical of a category, all texts are split depending on whether they contain words of a set as described in \ref{sec:extract_candidates}, before a linear Support Vector Machine Classifier is trained on the vector-representation of all of the texts, splitting them into two classes: those that contain one of the candidate terms and those that do not. Due to the linear kernel, the SVM finds a hyperplane (\textit{separatrix}) that splits the positive from the negative samples in a way that maximizes the distance between the respective classmembers and the separatrix, using samples close to the margin as \textit{support vectors}. %TODO: what if the data is not linearly seperable?
+
+Following the SVMs logic, one could argue that the further away a sample is from this separatrix, the more prototypical it is of its class. Thus, the distance of a sample to its \textit{orthogonal projection onto the hyperplane} %TODO explain orthogonal projection
+may serve as metric for how prototypical a sample is for the respective category. 
+
+Translated into terms relevant to the aim of this thesis, the classes may be those educational resources whose description contains the word "\textit{hard}" as one class vs. those that do not as the other class. Now according to [TODO], one may use the distance of the sample towards the separatrix as a measure of how hard a class is: For all positive samples, a longer distance means a harder class, for all negative samples a longer distance means an easier one, whereas those samples close to the separatrix can be considered average.
+
+\subsubsection*{How to calculate the distance}
+
+%TODO mention that I'm in a cartesian coordinate system
+%TODO mention that I'm thinking in euclidian coordinates, see https://en.wikipedia.org/wiki/Plane_(geometry)
+\noindent In the following paragraphs, I will visualize how to calculate the orthogonal distance from a sample to the hyperplane exemplary for the case of three-dimensional text-vectors.
+
+Generally, the separatrix splitting positive from negative samples for an $n$-dimensional space $\mathds{R}^n$ is an $n-1$-dimensional subspace (called \textit{hyperplane}), which in the case of $\mathds{R}^3$ corresponds to a plane. 
+%https://en.wikipedia.org/wiki/Plane_(geometry)#Representation
+
+The general form of the equation of a plane is given as the following linear equation, where parameters $a, b, c$ and $d$ encode the position of the plane:
+
+\begin{equation}
+	\label{eq:general_plane}
+	ax + by + cz = d
+	%TODO source? mein Tafelwerk? :D
+\end{equation}
+
+This reads as "All points $(x,y,z)$ for which \ref{eq:general_plane} holds are on the plane". 
+
+In this representation of the plane, the vector $(a,b,c)$ encodes a normal vector orthogonal to this plane, whereas $d$ serves as intercept, encoding the intersection of plane and normal. (specifically: the perpendicular distance you would need to translate the plane along its normal to have the plane pass through the origin) In higher dimensions, the formula for the hyperplane would become $a_1x_1+a_2x_2+a_3x_3+...+a_nx_n = b$, which means that encoding the hyperplane for a space $\mathds{R}^n$ requires $n+1$ parameters.
+% one rough quote in this paragraph from https://stackoverflow.com/a/17661431
+
+%TODO explain that it's not even harder in higher-dimensional spaces
+%TODO explain that nicely, in python the separatrix is perfectly specified using the normal and the intercept, so we have everything we need 
+%TODO die handschriftlichen notizen aus den beiden notebooks einbauen
+%TODO die plots aus dem notebook einbauen
+
+% The distance from any point of this $\mathds{R}^n$ to the hyperplane is then calculated as the length of the vector that is the \textit{orthogonal projection} from that point onto the hyperplane. The orthogonal projection from one vector onto another can be calculated as 
+
+% \begin{equation}
+% 	\label{eq:orthogonal_projection}
+% 	\hat{\vec{a}} = \frac{\vec{a}\cdot\vec{b}}{\vec{b}\cdot\vec{b}}\cdot\vec{b}
+% 	%TODO source https://en.wikipedia.org/wiki/Vector_projection
+% \end{equation}
+
+% ...as we however have a plane we want to project to, not a vector, what I wrote here is rather useless, isn't it?
+
+
+The distance from any point of this $\mathds{R}^n$ to the hyperplane can then be calculated as 
+% As... * dist(point, point_projected_onplane)     						 (`project[1,3]_pre`)
+%       * abs(trafo(point)[0])     										 (`protoypicality_pre`)
+%       * np.dot(plane.normal, point) + plane.d							 (`project2_pre')
+% ...normiert sind die alle gleich, aber for some reason differn die um nen multiplicator..?!
+% And the projections...:
+%       * back_trafo([0, trafo(point)[1], trafo(point)[2]]
+% 		* plane.project(point): k = (ax+by+cz+d)/(a²+b²+c²); result = [x-ka, y-kb, z-kc]
+%       * point - distance * plane.normal  (...aber nur mit protoypicality_pre als distance! )
+% 		...note that second and third are basically equal - both calculate "how much do I need to go into the direction of the orthogonal" and then do so  (point - distance * normal). The difference is that in plane.project the distance is divided by (a²+b²+c²). Originally sagt der typ von SO (https://stackoverflow.com/a/17661431) die distance ist einfach n*p-d, dann fehlt nur der normierungsterm. 
+% TODO: figure out the explanation of the difference from this to the result of using forward and backward??
+% See get_svm_decisionboundary.ipynb, den kram zwischen `#deleteme from here', commit d46a8300dae81adee
+
+
+\subsection{Clustering the extracted candidates}
+
+An analysis of \cite{Carmel2009} showed that a statistical method to extract features from clustered text corpora identified the labels of human annotators as one of the top five most important terms in only 15\% of cases, implying ``that human labels are not necessarily significant from a statistical perspective" \cite[139]{Carmel2009}
+%TODO: die eigentliche Methode (JSD) mehr erklären!!
+%(the JSD method for feature selection identifies human labels as “significant” (appearing in the top five most important terms) for only 15% of the categories. This result implies that human labels are not necessarily significant from a statistical perspective.z)

@@ -5,40 +5,87 @@
 	\begin{table}[]
 		%Preprocessing siehe other table
 		\resizebox{\textwidth}{!}{%
-			\begin{tabular}{llll}
-			& \cite{Derrac2015} & \cite{Ager2018} & \cite{Alshaikh2020} \\
-			\textbf{Step 1: Generate Vector Spaces from Descriptions} & 
+			\begin{tabular}{lllll} % statt textcite mit \fancyquotecite https://tex.stackexchange.com/a/468286/108199
+			& \textbf{\textcite{Derrac2015}} & \textbf{\textcite{Ager2018}} & \textbf{\textcite{Alshaikh2020}} & \textbf{This codebase} \\
+
+			\textbf{Step 1: Generate Vector Spaces (Embeddings) from Descriptions} 
+			& 
 			\specialcell[l]{MDS trained with the angular differences $\frac{2}{\pi}* arccos\left(\frac{\vec{v}_{e_i}*\vec{v}_{e_j}}{\norm{\vec{v}_{e_i}}*\norm{\vec{v}_{e_j}}}\right)$ \\
-			between the PPMI weighted BoW Vectors (all terms) \\
-			Spaces of dim 20, 50, 100 and 200 \\
-			Previous Experiments also considered SVD and Isomap} &
-			\specialcell[l]{ \tabitem like \cite{Derrac2015} \\ \tabitem PCA from PPMI weighted BoW vectors (no quadratic complexity) \\ \tabitem Doc2Vec\footnote{TODO: Explain and cite!} Document Embeddings \\ \tabitem thresholded\footnote{\label{foot:threshold}Only words that occur more than 2 times (15 for movies-dataset)}, averaged pre-trained GloVe word embeddings \\ \tabitem thresholded\footref{foot:threshold}, PPMI-weighted-averaged pre-trained GloVe word embeddings \\
-			Number of dimensions one of (50, 100, 200)} &
-			\specialcell[l]{ \tabitem Document Embeddings } \\ \midrule
-			\specialcell[l]{ \textbf{Step 2: Generate Candidate Words} \\ \textbf{for Feature Directions} } & 
+				between the PPMI weighted BoW Vectors (all terms) \\
+				Spaces of dim 20, 50, 100 and 200 \\
+				Previous Experiments also considered SVD and Isomap}
+			&
+			\specialcell[l]{ \tabitem like \cite{Derrac2015} 
+				\\ \tabitem PCA from PPMI weighted BoW vectors (no quadratic complexity) \\ \tabitem Doc2Vec\footnote{\label{foot:doc2vec} TODO: Explain and cite!} Document Embeddings \\ \tabitem thresholded\footnote{\label{foot:threshold}Only words that occur more than 2 times (15 for movies-dataset)}, averaged pre-trained GloVe word embeddings \\ \tabitem thresholded\footref{foot:threshold}, PPMI-weighted-averaged pre-trained GloVe word embeddings \\
+				Number of dimensions one of (50, 100, 200)}
+			&
+			\specialcell[l]{ \textbf{movies and placetypes:} Re-used the 100D-embeddings of \textcite{Derrac2015} \\ \textbf{other datasets}: \\ \tabitem 100d Document Embeddings from angular differences and MDS\\  \tabitem 100d-Doc2Vec\footref{foot:doc2vec} }
+			& 
+			\specialcell[l]{ \tabitem MDS, \tabitem t-SNE or \tabitem Isomap with arbitrary number of dimensions \\ on a dissimilarity-matrix based on \tabitem BoW (raw counts), \tabitem BoW (binarized), \tabitem tf-idf-weighted BoW, \tabitem ppmi-weighted BoW, \tabitem tf-weighted BoW \\ distance measure \tabitem normalized angular distance \tabitem cosine distance \tabitem TODO: the other distance measures}
+			\\ \midrule
+
+			\specialcell[l]{ \textbf{Step 2: Generate Candidate Words} \\ \textbf{for Feature Directions} } 
+			& 
 			\specialcell[l]{ All sufficiently frequent\footnote{For the placetypes-dataset: all tags that co-occur with at least 50 place types} adjectives, nouns, adjective phrases and noun phrases \\
-			(using POS-Tagger and Chunker from openNLP) } &  
-			\specialcell[l]{All sufficiently frequent words\footnote{For the thresholds, see table \ref{tab:all_datasets}} (use PPMI in a later step so possibly PPMI?!) \\ weighted Logitistic Regression Classifier for Vector Direction} &
+				(using POS-Tagger and Chunker from openNLP) } 
+			&  
+			\specialcell[l]{All sufficiently frequent words\footnote{For the thresholds, see table \ref{tab:all_datasets}} (use PPMI in a later step so possibly PPMI?!) \\ weighted Logitistic Regression Classifier for Vector Direction} 
+			&
+			\specialcell[l]{ 
+				\textbf{Candidates:} movies and placetypes: see \textcite{Derrac2015}, other datasets: all occuring\footnote{see Datasets-Table} 1-grams \\
+				\textbf{Classifier:} logistic regression classifier (similar performance to SVM but faster training)
+			}
+			&
+			\specialcell[l]{ Keywords extracted using \\ KeyBERT (on \tabitem raw or on \tabitem preprocessed texts) \\ \tabitem all sufficiently frequent phrases \\ Those with a minimal score for \tabitem PPMI \tabitem tf-idf \tabitem tf}
 			\\ \midrule
-			\textbf{Step 3: Filter Candidate Feature Directions} &                   
+
+
+			\textbf{Step 3: Filter Candidate Feature Directions} 
+			&                   
 			\specialcell[l]{ linear SVM for all candidates (pos samples: $\forall e: c \in e$) with pos/neg-count-ratio as instance cost \\
-			Only take candidates where the correlation according to Cohen's Kappa between the ranking induced by the SVM's hyperplane and count(t, e) is $\geq \lambda$ (0.5/0.1)\\
-			also tried Spearman's and Kendall's correlation coeffcients }&
-			\specialcell[l]{ Classifier-Performance as measured by \\ \tabitem Cohen's Kappa (compared to the ranking induced by the PPMI) \\ \tabitem Accuracy (binary)\\ \tabitem Normalized Discounted Cumulative Gain (NDCG) (TODO: binary? ranking?) } 
-			& "we used logistic regression classifiers instead of SVMs, which we found to perform similarly but were faster to train."
+				Only take candidates where the correlation according to Cohen's Kappa between the ranking induced by the SVM's hyperplane and count(t, e) is $\geq \lambda$ (0.5/0.1)\\
+				also tried Spearman's and Kendall's correlation coeffcients }
+			&
+			\specialcell[l]{ Classifier-Performance as measured by \\ 
+				\tabitem Cohen's Kappa (compared to the ranking induced by the PPMI) \\ \tabitem Accuracy (binary)\\ \tabitem Normalized Discounted Cumulative Gain (NDCG) (TODO: binary? ranking?) } 
+			& 
+			\specialcell[l]{
+				Cohen's Kappa (threshold=0.3 in iteration 1 and 0.1 in iteration 2), only the top 5000 scoring features
+			}
+			& 
+			\specialcell[l]{ 
+				Various classifiers such as \tabitem linear SVM \tabitem squared-hinge-loss-SVC \\ %TODO: add SVC to acronyms. TODO: see Complexities of SVM implementations in python: https://stackoverflow.com/a/64274403/5122790 TODO: it's really easy to add the classifiers of \cite{Ager2018} & \cite{Alshaikh2020}, low-hanging fruit! 
+				Compare classifier performance with \tabitem count \tabitem tf-idf \tabitem PPMI \tabitem \dots \\
+				Comparison Functions: \tabitem Accuracy, Precision, Recall, F1 \tabitem Cohen's Kappa (rank2rank) \tabitem Cohen's Kappa (various other ways)
+			}
 			\\ \midrule
-			\textbf{Step 4: Merge Feature Directions} &   
+
+
+			\textbf{Step 4: Merge Feature Directions} 
+			&   
 			\specialcell[l]{ According to \cite{Alshaikh2020} "a variant of \textit{k}-means" \\ Cluster centers: Select Term with highest $\kappa$, then i=2*ndims times select the term from $T^{0.5}$ minimizing $max_{j<i}cos(\vec[m]{v_{t_j}},\vec[m]{v_t})$ \\ 
-			Others: assign all terms from $T^{0.1}$ to the closest cluster and define $\vec[m]{v^*_i} = \frac{1}{|C_i|} \sum_{t\in C_i} \vec[m]{v_t}$ as cluster direction (average direction of cluster's elements)} &
+				Others: assign all terms from $T^{0.1}$ to the closest cluster and define $\vec[m]{v^*_i} = \frac{1}{|C_i|} \sum_{t\in C_i} \vec[m]{v_t}$ as cluster direction (average direction of cluster's elements)} 
+			&
 			\specialcell[l]{Input-ndims for clustering algorithm one of (500, 1000, 2000) \\
 			Number of clusters one of (ndims, 2*ndims) \\
-			Centroid of the cluster computed as $v_{C_j} = \frac{1}{|C_j|}\sum_{w_l \in C_j} v_l$, provided $\vec[m]{v_w}$ all normalized} & \specialcell[l]{  \textbullet\, \textbf{sub, ortho, primary}:   
-			Affinity propagation instead of \textit{k}-means (no need to specify the ndims, helps with the issue that there are some non-informative clusters in \cite{Derrac2015}'s algorithm) \\ ~~ n-dims for this not directly configurable, only over preference parameter relative to median $\mu$, tried for (0.7$\mu$, 0.9$\mu$, $\mu$, 1.1$\mu$, 1.3$\mu$) \\  \textbullet\, \textbf{AHC}: Agglomerative Hierachical Clustering to cluster word directions with distance cut-offs  \\  \textbullet\, also tried Hierachical LDA \\ Cluster direction (AHC and Affinity Propagation): normal vector of the hyperplane of a linear classifier separating entities whose description contains at least one of the words from the cluster from the others  } %TODO find a short-term notation for "entities whose description contains at least one of the words from XYZ" ("for a Cluster C, we write pos_C and neg_C for the set of positively and negatively classified entities")
+				Centroid of the cluster computed as $v_{C_j} = \frac{1}{|C_j|}\sum_{w_l \in C_j} v_l$, provided $\vec[m]{v_w}$ all normalized} 
+			& 
+			\specialcell[l]{  \textbullet\, \textbf{sub, ortho, primary}:   
+				Affinity propagation instead of \textit{k}-means (no need to specify the ndims, helps with the issue that there are some non-informative clusters in \cite{Derrac2015}'s algorithm) \\ ~~ n-dims for this not directly configurable, only over preference parameter relative to median $\mu$, tried for (0.7$\mu$, 0.9$\mu$, $\mu$, 1.1$\mu$, 1.3$\mu$) \\  \textbullet\, \textbf{AHC}: Agglomerative Hierachical Clustering to cluster word directions with distance cut-offs  \\ \textbullet\, also tried Hierachical LDA \\ Cluster direction (AHC and Affinity Propagation): normal vector of the hyperplane of a linear classifier separating entities whose description contains at least one of the words from the cluster from the others  } %TODO find a short-term notation for "entities whose description contains at least one of the words from XYZ" ("for a Cluster C, we write pos_C and neg_C for the set of positively and negatively classified entities")
+			&
+			TODO: my stuff
 			\\  \midrule
-			\textbf{Step 5: Post-Processing} &                   
-			None &                 
-			TODO describe fine-tuning! & \specialcell[l]{
-			Perform steps 1-4 a second time (only for positively classified entities), such that there are primary features (domains) and sub-features \\ representation kept flat (values for the sub-features is same dot-product as for domains) \\ \textbullet\, \textbf{sub}: sub-features extracted equal to first-order-features \\ \textbullet\, \textbf{ortho}: sub-feature directions orthogonal to corresponding primary feature direction (enforce complementary information) \\ ~~ by computing orthogonal decomposition of feature w.r.t. its domain (pg. 4, equation 1) \\ \textbullet\, also tried to combine mother-domain with sub-feature, but that performed poorly \\ \textbullet\, \textbf{primary}: model with only primary features}
+
+			\textbf{Step 5: Post-Processing} 
+			&                   
+			None 
+			&                 
+			TODO describe fine-tuning! 
+			& 
+			\specialcell[l]{
+				Perform steps 1-4 a second time (only for positively classified entities), such that there are primary features (domains) and sub-features \\ representation kept flat (values for the sub-features is same dot-product as for domains) \\ \textbullet\, \textbf{sub}: sub-features extracted equal to first-order-features \\ \textbullet\, \textbf{ortho}: sub-feature directions orthogonal to corresponding primary feature direction (enforce complementary information) \\ ~~ by computing orthogonal decomposition of feature w.r.t. its domain (pg. 4, equation 1) \\ \textbullet\, also tried to combine mother-domain with sub-feature, but that performed poorly \\ \textbullet\, \textbf{primary}: model with only primary features}
+			&
+			TODO: my stuff
 			\end{tabular}
 		}
 		\caption{Compared algorithms from \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020}}
