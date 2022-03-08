@@ -29,4 +29,3 @@ services:
       - ../pandoc_markdown_base:/opt/input_data
       - ../pandoc_generated_latex:/opt/output_data
     entrypoint: /bin/sh -c 'while sleep 3600; do :; done'
-    container_name: mastersthesistext_devcontainer_pandoc_1

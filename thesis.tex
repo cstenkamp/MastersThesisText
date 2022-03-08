@@ -41,7 +41,7 @@
 % for https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_latex.html, https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.to_latex.html:
 \usepackage{booktabs} 
 \usepackage{multirow} 
-\usepackage[table]{xcolor}
+\usepackage[table,dvipsnames]{xcolor} %dvipsnames for yaml-code-listings
 \usepackage{siunitx}
 \colorlet{lightgreen}{green!40!white}
 \usepackage{etoolbox}
@@ -270,7 +270,6 @@
 % ##################################################################################
 % YAML code listing (see https://tex.stackexchange.com/a/152856/108199)
 
-\usepackage[dvipsnames]{xcolor}
 \usepackage{listings}
 
 \newcommand\YAMLcolonstyle{\color{red}\mdseries}
@@ -844,6 +843,7 @@ In die Conclusion auch die Frage inwieweit das jetzt conceptual spaces sind (seh
 	% Uncomment the lines as you write the Appendices
 	
 	\include{Appendices/AppendixA}
+	\include{Appendices/AppendixB}
 	% \restoregeometry %TODO do I need separate geometries for the appendices? Bc if I use the package I have to change how I set margins etc!
 
 
