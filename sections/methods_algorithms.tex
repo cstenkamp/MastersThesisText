@@ -33,8 +33,9 @@ In a final step, the candidate-words are clustered according to their similarity
 \end{itemize}
 
 
-Many of the just mentioned components don't refer to a specific algorithms, and the existing implementations \mainalgos differ in many of these implementations. The rest of this sections goes into further detail for each of these components, and an overview of the components supported in the respective implementations is given in \tref{tab:compared_algos}.
+Many of the just mentioned components don't refer to a specific algorithms, and the existing implementations \mainalgos differ in many of these implementations. The rest of this sections goes into further detail for each of these components, and an overview of the components supported in the respective implementations is given in \tref{tab:compared_algos}. Further, configuration files to enable exactly the respective components of the respective papers for the codebase of this thesis are listed in 
 
+\subsection{Steps of the algorithm}
 
 % * Yamls für die Configs von DESC15 und den anderen beiden in den Text packen
 % * Im Text link zu binder bei results section der auf die notebooks/analyze_results/analyze_pipeline_results.ipynb referenziert, und für die tables auch!
@@ -87,6 +88,8 @@ Many of the just mentioned components don't refer to a specific algorithms, and 
 % * "When representing a particular entity in a conceptual space, we need to specify which domains it belongs to, and for each of these domains we need to provide a corresponding vector." 
 % * then they show their example of something that is not seperable with a hyperplane unless we specify subdomains, maybe just steal their plot that explains their one contribution to 99%
 % * The "Disentangled" from their title means "feature-based"
+
+
 
 The core idea of the algorithm is to (unsupervised, data-driven) find a a set of features which can be modelled as directions for a vector-space representation of the respetive entities. For that, the steps are:
 
