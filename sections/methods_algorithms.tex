@@ -2,8 +2,10 @@ The algorithm that is implemented in the scope of the thesis is in principle the
 % sollte ja schon vorher erwähnt haben dass das thema leider nicht über diese small community hinaus geht
 % and includes my own improvements und anpassungen für den speziellen datensatz
 % und ist so modular wie möglich
-\newline
 
+\subsection{Core Idea}
+
+% The core idea of the algorithm is to unsupervisedly find a a set of features which can be modelled as directions for a vector-space representation of the respetive entities.
 The main goal of the algorithm is to unsupervisedly use the considered text-corpora associated with the respective entities from a certain domain % descriptions, reviews, ...
 to embed the entities in to a vector-space where the axes correspond to human concepts, % "concepts" meaning attributes and what-was-the-other-again, according to CS lingo corresponding to nouns and adjectives, TODO: see above where I described that already.
 allowing a \textit{feature-based} representation of them - a high-dimensional vector that numerically encodes the degree % protypicality
@@ -29,11 +31,9 @@ In a final step, the candidate-words are clustered according to their similarity
 	\item Modular (subcomponents may be exchanged)
 	\item Optimize for "looking good to humans", so no straight-forward metrics or obvious way to evaluate
 \end{itemize}
-\newline
+
 
 Many of the just mentioned components don't refer to a specific algorithms, and the existing implementations \mainalgos differ in many of these implementations. The rest of this sections goes into further detail for each of these components, and an overview of the components supported in the respective implementations is given in \tref{tab:compared_algos}.
-\newline
-
 
 
 % * Yamls für die Configs von DESC15 und den anderen beiden in den Text packen
@@ -89,6 +89,7 @@ Many of the just mentioned components don't refer to a specific algorithms, and 
 % * The "Disentangled" from their title means "feature-based"
 
 The core idea of the algorithm is to (unsupervised, data-driven) find a a set of features which can be modelled as directions for a vector-space representation of the respetive entities. For that, the steps are:
+
 \begin{enumerate}
 	\item preprocess the descriptions using default techniques and create a bag-of-words representation for the texts
 	\item extract candidate features from these texts (easist variant is to just consider each sufficiently frequent word as candidate)
