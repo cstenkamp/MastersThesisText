@@ -17,8 +17,8 @@ jobs:
       - name: Compile Pandoc
         run: |
           docker ps -a
-          docker exec mastersthesistext_devcontainer_pandoc_1 ls
-          for s in $(ls pandoc_markdown_base/); do docker exec mastersthesistext_devcontainer_pandoc_1 pandoc -t latex pandoc_markdown_base/$s -o pandoc_generated_latex/$(echo $s | sed 's/.md/.tex/g'); done
+          docker exec mastersthesistext_devcontainer_pandoc_1 pwd
+          for s in $(ls pandoc_markdown_base/); do docker exec mastersthesistext_devcontainer_pandoc_1 pandoc -t latex /opt/input_data/$s -o /opt/output_data/$(echo $s | sed 's/.md/.tex/g'); done
         working-directory: ${{env.workdir}}
       - name: Create PDF inside container
         shell: bash
