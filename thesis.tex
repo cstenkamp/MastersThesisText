@@ -135,17 +135,6 @@
 % ================== END biblatex stuff ==================
 
 %\linespread{1.5} % set line spacing
- 
-\usepackage{listings} % rendering program code
-\lstset{% general command to set parameter(s)
-	basicstyle=\ttfamily\color{grey},          % print whole listing small
-	keywordstyle=\color{black}\bfseries\underbar,
-	% underlined bold black keywords
-	identifierstyle=,           % nothing happens
-	commentstyle=\color{white}, % white comments
-	stringstyle=\ttfamily,      % typewriter type for strings
-	showstringspaces=false}     % no special string spaces
-
 
 \DeclareFontFamily{U}{mathx}{\hyphenchar\font45}
 \DeclareFontShape{U}{mathx}{m}{n}{
@@ -268,9 +257,23 @@
 
 
 % ##################################################################################
+% GENERAL code listing
+
+ 
+\usepackage{listings} % rendering program code
+\lstset{% general command to set parameter(s)
+	basicstyle=\ttfamily\color{grey},          % print whole listing small
+	keywordstyle=\color{black}\bfseries\underbar,
+	% underlined bold black keywords
+	identifierstyle=,           % nothing happens
+	commentstyle=\color{white}, % white comments
+	stringstyle=\ttfamily,      % typewriter type for strings
+	showstringspaces=false}     % no special string spaces
+
+
+
 % YAML code listing (see https://tex.stackexchange.com/a/152856/108199)
 
-\usepackage{listings}
 
 \newcommand\YAMLcolonstyle{\color{red}\mdseries}
 \newcommand\YAMLkeystyle{\color{black}\bfseries}
@@ -811,6 +814,25 @@ Both \cite{Ager2018} and \cite{Alshaikh2020} train shallow decision-trees (depth
 
 
 \section{Discussion}
+
+
+\begin{lstlisting}[language=yaml]
+    ---
+    key: value
+    map:
+        key1: "foo:bar"
+        key2: value2
+    list:
+      - element1
+      - element2
+    # This is a comment
+    listOfMaps:
+      - key1: value1a
+        key2: value1b
+      - key1: value2a
+        key2: value2b
+    ---
+\end{lstlisting}
 
 In die Conclusion auch die Frage inwieweit das jetzt conceptual spaces sind (sehr viele vereinfachende sachen, like no convex regions but simply dots)
 [AGKS18] ist da auch mehr humble als [DESC15] und sagt "The idea of learning semantic spaces with accurate fea- ture directions can be seen as a first step towards methods for learning conceptual space representa- tions from data"
