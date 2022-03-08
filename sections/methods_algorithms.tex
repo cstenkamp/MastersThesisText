@@ -23,14 +23,18 @@ In a final step, the candidate-words are clustered according to their similarity
 % * from Alshaikh2020: "The learned vectors will be referred to as feature directions to emphasize the fact that only the ordering induced by the dot product d_i · e matters"
 \newline
 
-\todoparagraph{Important features:}
+\todoparagraph{Important features:} %TODO:
 \begin{itemize}
-	\item Unsupervised (in contrast to \textcite{VISR12})
+	\item Unsupervised, data-driven (in contrast to \textcite{VISR12})
 	\item Modular (subcomponents may be exchanged)
+	\item Optimize for "looking good to humans", so no straight-forward metrics or obvious way to evaluate
 \end{itemize}
+\newline
+
+Many of the just mentioned components don't refer to a specific algorithms, and the existing implementations \mainalgos differ in many of these implementations. The rest of this sections goes into further detail for each of these components, and an overview of the components supported in the respective implementations is given in \tref{tab:compared_algos}.
+\newline
 
 
-Many of the just mentioned components don't refer to a specific algorithms, and the existing implementations \mainalgos differ in many of these implementations. The rest of this sections goes into further detail for each of these components, and an overview of the components supported in the respective implementations is given in \tref{tab:compared_algos}
 
 % * Yamls für die Configs von DESC15 und den anderen beiden in den Text packen
 % * Im Text link zu binder bei results section der auf die notebooks/analyze_results/analyze_pipeline_results.ipynb referenziert, und für die tables auch!

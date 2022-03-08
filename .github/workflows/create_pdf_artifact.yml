@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2 # repo now available under $GITHUB_WORKSPACE
+      - name: Create Pandoc-Container
+        shell: bash
+        run: docker-compose -f .devcontainer/docker-compose.yml build pandoc
       - name: Create PDF inside container
         shell: bash
         run: |
