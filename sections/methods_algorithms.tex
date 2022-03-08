@@ -1,11 +1,36 @@
-
 The algorithm that is implemented in the scope of the thesis is in principle the one from \textcite{Derrac2015}, but includes some improvements from \textcite{Ager2018} and \textcite{Alshaikh2020} - both of which directly builing on the work of the former. As all of these publications share Prof. Steven Schockaert as last author, it seems plausible that a) the latter ones are legit improvements upon the first, b) at least to a certain degree they can share code and data, c) this field of work is constrained to a small community, without any alternative implementations or substantial improvements from outside of it.
 % sollte ja schon vorher erwähnt haben dass das thema leider nicht über diese small community hinaus geht
+% and includes my own improvements und anpassungen für den speziellen datensatz
+% und ist so modular wie möglich
+\newline
 
+The main goal of the algorithm is to unsupervisedly use the considered text-corpora associated with the respective entities from a certain domain % descriptions, reviews, ...
+to embed the entities in to a vector-space where the axes correspond to human concepts, % "concepts" meaning attributes and what-was-the-other-again, according to CS lingo corresponding to nouns and adjectives, TODO: see above where I described that already.
+allowing a \textit{feature-based} representation of them - a high-dimensional vector that numerically encodes the degree % protypicality
+to which the entity corresponds to a number of appropriate dimensions. % Das haupt-ziel der algorithmen ist es, am ende die entities "feature-based" darstellen zu können, also als high-dim-vector mit floats per human-interpretable dimension. 
+% Alshaikh2020 hat dafür wegen den subfeatures noch kleine specials
+\newline
 
+The general idea to achieve that is as follows: First, the entities %TODO: at this point already defined that entities = texts = descriptions/concatenatedreviews/... 
+are embedded as fixed-dimensional vectors. This already softens the definition of a conceptual space, as the considered entities are modelled as vectors instead of regions. % entities were supposed to be regions, however here we assume vectors because it's computationally a lot easier (TODO: are the reasons mentioned elsewhere? also the distiction between types and tokens?)
+To allow for the types of reasoning mentioned in Section \ref{sec:cs_reasoning}, %TODO: section where the entire mapping from logic-reasoning to CS-reasoning is explained, mostly from DESC15 and Gärdenfors himself
+it is embedded into metric spaces where the concepts of direction and distance are well-defined. \gencite{Derrac2015} original algorithm uses MDS (see \ref{MDS}) for this matter, which enforces equal distances  %TODO: link the distance-matrix-notepad FROM MY REPO in nbviewer+binder
+(however as shown by \textcite{Mikolov:Regularities}, such things are also possible with neural word-embedding techniques such as word2vec \cite{Mikolov:Word2Vec}) %TODO: word2vec cite
+. Additionally, words from the text are extracted as candidates for the names of the semantic dimensions. The core assumption is then, that \q{words describing semantically meaningful features can be identified by learning for each candidate word $w$ a linear classifier which separates the embeddings of entities that have $w$ in their description from the others} \cite[3574]{Alshaikh2020}. The better the performance of that classifier according to a chosen metric, the more evidence there is that $w$ describes a semnatically meaningful feature. 
 % * from Alshaikh2020: "Their core assumption is that words describing semantically mean- ingful features can be identified by learning for each candi- date word w a linear classifier which separates the embed- dings of entities that have w in their description from the oth- ers. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
+% TODO: make the direct quote shorter, such things should only be done "to support an argument", which I don't here.
+In a final step, the candidate-words are clustered according to their similarity to find a fixed set of dimensions. A representative term for the directions is selected, and the entities are re-embedded into a new space comprised of these dimensions, where the individual vector-components correspond to the ranking of an entity with respect to these dimensions.
 % * from Alshaikh2020: "The learned vectors will be referred to as feature directions to emphasize the fact that only the ordering induced by the dot product d_i · e matters"
+\newline
 
+\todoparagraph{Important features:}
+\begin{itemize}
+	\item Unsupervised (in contrast to \textcite{VISR12})
+	\item Modular (subcomponents may be exchanged)
+\end{itemize}
+
+
+Many of the just mentioned components don't refer to a specific algorithms, and the existing implementations \mainalgos differ in many of these implementations. The rest of this sections goes into further detail for each of these components, and an overview of the components supported in the respective implementations is given in \tref{tab:compared_algos}
 
 % * Yamls für die Configs von DESC15 und den anderen beiden in den Text packen
 % * Im Text link zu binder bei results section der auf die notebooks/analyze_results/analyze_pipeline_results.ipynb referenziert, und für die tables auch!
@@ -37,7 +62,6 @@ The algorithm that is implemented in the scope of the thesis is in principle the
 % 							* tag-count
 % 							* tag-share (the number of times tag t has been applied to item i, divided by the number of times any tag has been applied to item i)
 % 						* relative-tag-count (tag-count / text-len) or tag-count / distinct-words-in-text
-% 						* tf-idf (!!)
 % 						* See also: https://en.wikipedia.org/wiki/Latent_semantic_analysis#Term-document_matrix
 % 				* Parameters:
 % 					#dims for the rank reduction (see https://en.wikipedia.org/wiki/Latent_semantic_analysis#Rank-reduced_singular_value_decomposition)
@@ -51,12 +75,8 @@ The algorithm that is implemented in the scope of the thesis is in principle the
 % General idea of the algorithm: Alshaikh2020: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candidate word w a linear classifier which separates the embeddings of entities that have w in their description from the others. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature" (TODO: my concise formulation)
 % TODO: despite my citation style, write the names of the three main papers at least once
 
-Das haupt-ziel der algorithmen ist es, am ende die entities "feature-based" darstellen zu können, also als high-dim-vector mit floats per human-interpretable dimension. Alshaikh2020 hat dafür wegen den subfeatures noch kleine specials
 
-Important features:
-\begin{itemize}
-	\item Unsupervised (in contrast to \textcite{VISR12})
-\end{itemize}
+
 
 %TODO: maybe describe shortly what the improvements from  \cite{Ager2018} and \cite{Alshaikh2020} were? 
 % Alshaikh2020: 

@@ -29,12 +29,11 @@
 
 \usepackage[anythingbreaks]{breakurl}
 \usepackage[onehalfspacing]{setspace}
-\usepackage{csquotes} % Context sensitive quotation.
 \usepackage{amsmath} % Standard math.
 \usepackage{amsthm} % Math theorems.
 \usepackage{amssymb} % More math symbols.
 \usepackage{dsfont} % Render |R and the like
-\usepackage[english]{babel}
+\usepackage[british]{babel} %was [english] (see note of underscore), is now [british] 
 \usepackage{underscore} % I need underscore to not have to write "\_" for underscores, but that would break labels with unterscores in it unless I also include babel, see https://tex.stackexchange.com/a/121438/108199
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[chapter]
@@ -63,7 +62,6 @@
 \usepackage[all]{nowidow} % Prevent widows and orphans.
 \usepackage{xstring} % logic string operations
 \usepackage{bbm} % \mathbb on numerals.
-\usepackage{csquotes}
 \usepackage{mathtools}
 \usepackage[ruled,vlined]{algorithm2e} % Pseudocode
 \usepackage{scrhack} % Make warning go away.
@@ -76,6 +74,8 @@
 \makeglossaries % Generate the glossary
 
 % ================== biblatex stuff ==================
+\newcommand\posscite[1]{\citeauthor{#1}'s \cite{#1}}
+\newcommand\gencite[1]{\citeauthor{#1}'s \cite{#1}} %https://tex.stackexchange.com/a/22279/108199
 
 % \PassOptionsToPackage{obeyspaces}{url}%
 \usepackage[
@@ -124,6 +124,14 @@
 }
 % ================
 
+\usepackage{dirtytalk} %https://de.overleaf.com/learn/latex/Typesetting_quotations
+% \usepackage{csquotes} % Context sensitive quotation.
+\usepackage[autostyle=false, style=english]{csquotes}
+\newcommand{\q}[1]{\enquote{#1}}
+% \MakeOuterQuote{"} %https://tex.stackexchange.com/a/216166/108199 to auto-replace " with `` '' (parity must be given)
+% See also regarding quotation:
+% IEEE Standard: https://libraryguides.vu.edu.au/ieeereferencing/gettingstarted
+% https://de.overleaf.com/learn/latex/Typesetting_quotations, https://www.andy-roberts.net/writing/latex/formatting, https://wiki.carleton.edu/download/attachments/20155418/textguide.pdf?version=1&modificationDate=1387231254000&api=v2
 % ================== END biblatex stuff ==================
 
 %\linespread{1.5} % set line spacing
@@ -149,20 +157,24 @@
 \DeclareFontSubstitution{U}{mathx}{m}{n}
 \DeclareMathSymbol{\bigtimes}{1}{mathx}{"91}
 
+
  
 
 %%% Custom definitions %%%
 % Shorthands
 \newcommand{\ie}{i.\,e.~}
 \newcommand{\eg}{e.\,g.~}
+\newcommand{\wrt}{w.\,r.\,t.~}
 \newcommand{\ind}{\mathbbm{1}}
 \DeclarePairedDelimiter{\norm}{\lVert}{\rVert} 
 % Functions
 \newcommand{\tpow}[1]{\cdot 10^{#1}}
-\newcommand{\figref}[1]{(Figure \ref{#1})}
-\newcommand{\figureref}[1]{Figure \ref{#1}}
-\newcommand{\tabref}[1]{(Table \ref{#1})}
-\newcommand{\tableref}[1]{Table \ref{#1}}
+\newcommand{\fref}[1]{(Figure~\ref{#1})}
+\newcommand{\figref}[1]{(Figure~\ref{#1})}
+\newcommand{\figureref}[1]{Figure~\ref{#1}}
+\newcommand{\tref}[1]{Table~\ref{#1}}
+\newcommand{\tabref}[1]{(Table~\ref{#1})}
+\newcommand{\tableref}[1]{Table~\ref{#1}}
 \newcommand{\secref}[1]{%
 	\IfBeginWith{#1}{chap:}{%
 		(cf. Chapter \ref{#1})}%
@@ -253,6 +265,15 @@
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 % see https://github.com/jgm/pandoc/issues/4941#issuecomment-425975499, https://github.com/jgm/pandoc/issues/4384#issuecomment-367585913
+
+
+% ##################################################################################
+% specialstuff mentioned later
+\newcommand{\mainalgos}{\cite{Derrac2015,Ager2018,Alshaikh2020} }
+
+
+\input{special_highlight.tex}
+\newcommand{\todoparagraph}[1]{\highlight[red]{#1}}
 
 % ################################################################################## 
 % ################################################################################## 
@@ -407,7 +428,7 @@ To find these dimensions, the authors look for these words (as well as similar w
 	\centering
 	\includegraphics[width=0.7\textwidth]{graphics/stolenfigures/movietuner.png}
 	\slcaption{
-		The Movie-Tuner Interface from \cite{VISR12}
+		The Movie-Tuner Interface from \cite{VISR12} %TODO: cite exact figure (" … as seen in [8, Fig. 33]")
 		\label{fig:movetuner}}
 \end{figure}
 
@@ -454,6 +475,10 @@ Principles of open science (TODO: which are: [see thisandthis paper]) are very i
 
 % Base idea: [Derrac and Schockaert, 2015] proposed an unsupervised method which uses text descriptions of the considered entities to identify se- mantic features that can be characterized as directions. Their core assumption is that words describing semantically mean- ingful features can be identified by learning for each candi- date word w a linear classifier which separates the embed- dings of entities that have w in their description from the oth- ers. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature. 
 % This method trains for each word w in the vocab- ulary a linear classifier which predicts from the embedding of an entity whether w occurs in its description. The words w1, ..., wn for which this classifier performs sufficiently well are then used as basic features. To assess classifier perfor- mance, Cohen’s Kappa score, which can be seen as a correc- tion of classification accuracy to deal with class imbalance, is used. Each of the basic features w is associated with a cor- responding vector dw (i.e. the normal vector of the separat- ing hyperplane learned by the classifier). These directions are subsequently clustered, which serves to reduce the total num- ber of features.
+
+% TODO: Have to write here:
+% * that in a CS the axes correspond to human concepts, "concepts" meaning attributes and what-was-the-other-again, according to CS lingo corresponding to nouns and adjectives yadda yadda, darauf referenzier ich mich im Text
+
 
 \section{Types of Reasoning}
 
