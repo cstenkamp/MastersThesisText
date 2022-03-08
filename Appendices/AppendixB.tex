@@ -1,0 +1,46 @@
+% Appendix B
+
+% \newgeometry{
+% 	a4paper,
+% 	top=21mm,
+% 	bottom=11mm,
+% 	inner=24mm,
+% 	outer=9mm,
+% } %bindingoffset=.5cm
+
+%\newgeometry{
+%	a4paper, inner=1.9cm, outer=1.9cm, bindingoffset=1.3cm, top=1.5cm, bottom=1.5cm, 
+%} %bindingoffset=.5cm
+
+
+\chapter{Configurations to run the configs for the cited papers with the accompaning code-base} % Main appendix title
+
+\label{AppendixB} 
+
+\vspace{-0.8cm}
+
+% \lstinputlisting[language=, firstline=29]{codes/dqn.txt}
+
+\section{\textcite{Derrac2015}}
+
+\begin{lstlisting}[language=yaml]
+    pp_components:                mfautcsdp
+    translate_policy:             translate
+    quantification_measure:       ppmi
+    dissim_measure:               norm_ang_dist
+    embed_algo:                   mds
+    embed_dimensions:             [20, 50, 100, 200]
+    extraction_method:            pp_keybert
+    max_ngram:                    5                   
+    dcm_quant_measure:            count
+    classifier:                   SVM
+    kappa_weights:                quadratic
+    
+    classifier_succmetric:        [kappa_count2rank_onlypos, kappa_rank2rank_onlypos_min] 
+    prim_lambda:                  0.5
+    sec_lambda:                   0.1
+    __perdataset__:
+      placetypes:
+        extraction_method: all 
+        pp_components: none
+\end{lstlisting}

@@ -847,38 +847,9 @@ In die Conclusion auch die Frage inwieweit das jetzt conceptual spaces sind (seh
 	% Uncomment the lines as you write the Appendices
 	
 	\include{Appendices/AppendixA}
-	% \input{Appendices/AppendixB}
-	% \restoregeometry %TODO do I need separate geometries for the appendices? Bc if I use the package I have to change how I set margins etc!
+	\input{Appendices/AppendixB}
 
-
-
-	\chapter{Configurations to run the configs for the cited papers with the accompaning code-base} % Main appendix title
-
-	\label{AppendixB} 
 	
-	\vspace{-0.8cm}
-	
-	% \lstinputlisting[language=, firstline=29]{codes/dqn.txt}
-	
-	
-	\begin{lstlisting}[language=yaml]
-		---
-		key: value
-		map:
-			key1: "foo:bar"
-			key2: value2
-		list:
-		  - element1
-		  - element2
-		# This is a comment
-		listOfMaps:
-		  - key1: value1a
-			key2: value1b
-		  - key1: value2a
-			key2: value2b
-		---
-	\end{lstlisting}
-
 	
 \printbibliography[heading=bibintoc]
 
