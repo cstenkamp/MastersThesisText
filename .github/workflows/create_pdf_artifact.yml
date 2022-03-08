@@ -11,9 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2 # repo now available under $GITHUB_WORKSPACE
       - name: Create Pandoc-Container
-        shell: bash
+        run: docker-compose -f .devcontainer/docker-compose.yml up -d
+      - name: Compile Pandox
         run: |
-          docker-compose -f .devcontainer/docker-compose.yml up -d
           for s in $(ls pandoc_markdown_base/); do docker run container:mastersthesistext_devcontainer_pandoc_1 pandoc -t latex pandoc_markdown_base/$s -o pandoc_generated_latex/$(echo $s | sed 's/.md/.tex/g'); done
       - name: Create PDF inside container
         shell: bash
