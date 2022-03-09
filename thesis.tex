@@ -4,7 +4,8 @@
 
 \documentclass[11pt,
   paper=a4, 
-  twoside,  %TODO if it comes to twopage, I have to update the fancyhdr parts (like in my BA)
+%   twoside,
+%   openright,
   hidelinks,
   bibliography=totocnumbered,
 	captions=tableheading,
@@ -14,56 +15,21 @@
 % ====================== /parts from MastersDoctoralThesis.cls ======================
 %	HEADERS AND FOOTERS
 
-\usepackage{scrlayer-scrpage} 
-\clearpairofpagestyles
+
+\usepackage[automark,headsepline]{scrlayer-scrpage} %https://esc-now.de/_/latex-individuelle-kopf--und-fusszeilen-update/?lang=de
 \pagestyle{scrheadings}
- \automark*[subsection]{section}
+\clearpairofpagestyles
+% \automark*[section]{chapter} %[] = right side, {} = left side
+\automark*[chapter]{section} %[] = right side, {} = left side
+% TODO: maybe have a SEPARATE automark for ONE-sided, wo's section ist?!
 \ihead{\headmark}% Inner header
 \ohead[\pagemark]{\pagemark}% Outer header
-
-% \ihead{\rightmark}
-% \ohead{\leftmark}
-% \cfoot{\pagemark}
-
 \ifoot{}% Inner footer
 \ofoot{}% Outer footer
-\KOMAoption{headsepline}{true}
-
-% \RequirePackage[markcase=used]{scrlayer-scrpage}
-% \providepairofpagestyles{thesisSimple}{%
-% 	\clearpairofpagestyles%
-% 	\automark[chapter]{chapter}
-% 	\ihead{\headmark}% Inner header
-% 	\ohead[\pagemark]{\pagemark}% Outer header
-% }
-% \ifoot{}% Inner footer
-% \ofoot{}% Outer footer
-% \pagestyle{thesisSimple}
-% \providepairofpagestyles[thesisSimple]{thesis}{%
-% 	\automark*[subsection]{section} %gives section+subsection as header
-% 	% \automark*[section]{}%  %would give section as header
-% }
-% \providepairofpagestyles[thesisSimple]{review}{%
-% 	\ofoot[\shorttitle/\authorname]{\shorttitle/\authorname}
-% 	\ifoot[\today]{\today}
-% }
-% \pagestyle{thesis}
-% \KOMAoption{headsepline}{true}
-
-% \makeatletter 
-% \NewDocumentCommand{\blank@p@gestyle}{}{empty}
-% \NewDocumentCommand{\blankpagestyle}{ m }{%
-% 	\ClassWarning{\classname}{\string\blankpagestyle\space is
-% 	obsolete,\MessageBreak use \string\setblankpagestyle \space  instead}\DeclareDocumentCommand{\blank@p@gestyle}{}{#1}
-% }
-% \NewDocumentCommand{\setblankpagestyle}{ m }{\DeclareDocumentCommand{\blank@p@gestyle}{}{#1}}
-
-% \DeclareDocumentCommand\cleardoublepage{}{\clearpage\if@twoside \ifodd\c@page\else
-% 	\hbox{}
-% 	\thispagestyle{\blank@p@gestyle}
-% 	\newpage
-% 	\if@twocolumn\hbox{}\newpage\fi\fi\fi%
-% }
+%TODO: check vor dem Drucken, ich bin gerade etwas verwirrt was wo wann. 
+% Ich dachte bei Okular: View Mode -> "Facing Pages, first centered" ist wie ich es gedruckt auch hab, aber scheinbar krieg ich genau die non-facing pages da als facing angezeigt? Und for some reason geht nur \automark[section]{chapter} und nicht \automark[chapter]{section}, was falsch rum aussieht? wie dumm?! Wenn ich das mit Okular wie gesagt anzeige sind halt auch inner und outer head vertauscht... Maybe I need the doc-class-option "openright"?? 
+%TODO: create final PDF at least twice, once with twoside and once without
+%TODO: on the two-sided version, addtitionally have \automark*[section]{chapter}
 
 % ====================== /parts from MastersDoctoralThesis.cls ======================
 
@@ -442,6 +408,7 @@
 
 \begin{document}
 
+\cleardoublepage
 \pagestyle{plain} %for the headers & footers
 
 
@@ -505,8 +472,10 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 
 \pagestyle{scrheadings}
 
+\cleardoublepage
+\pagenumbering{arabic} % https://tex.stackexchange.com/a/313306/108199 https://tex.stackexchange.com/a/154666/108199
 \chapter{Introduction}
-\pagenumbering{arabic}
+
 
 % Broad - "Initialkontextualisierung" - warum mach ich das, aus was für ner domain kommen die daten, was will ich damit machen (use rrecommendation, ich bau AI part, ..)
 
@@ -936,7 +905,7 @@ In die Conclusion auch die Frage inwieweit das jetzt conceptual spaces sind (seh
 [AGKS18] ist da auch mehr humble als [DESC15] und sagt "The idea of learning semantic spaces with accurate fea- ture directions can be seen as a first step towards methods for learning conceptual space representa- tions from data"
 
 
-\chapter*{Acknowledgements}
+% \chapter*{Acknowledgements}
 %TODO A place to say thank you to everybody who helped you.
 
 
@@ -951,7 +920,9 @@ In die Conclusion auch die Frage inwieweit das jetzt conceptual spaces sind (seh
 % END Acronym definitions
 
 \glsaddall
-\printglossaries %TODO let glossary appear in TOC
+\printglossaries %TODO: let glossary appear in TOC
+
+\cleardoublepage
 
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - APPENDICES
@@ -965,7 +936,8 @@ In die Conclusion auch die Frage inwieweit das jetzt conceptual spaces sind (seh
 	\include{Appendices/AppendixA}
 	\input{Appendices/AppendixB}
 
-\pagestyle{plain} %from fancyhdr
+\cleardoublepage
+\pagestyle{plain}
 
 \printbibliography[heading=bibintoc]
 
