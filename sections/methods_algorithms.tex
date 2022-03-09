@@ -33,7 +33,7 @@ In a final step, the candidate-words are clustered according to their similarity
 \end{itemize}
 
 
-Many of the just mentioned components don't refer to a specific algorithms, and the existing implementations \mainalgos differ in many of these implementations. The rest of this sections goes into further detail for each of these components, and an overview of the components supported in the respective implementations is given in \tref{tab:compared_algos}. Further, configuration files to enable exactly the respective components of the respective papers for the codebase of this thesis are listed in \aref{AppendixB}.
+Many of the just mentioned components don't refer to a specific algorithms, and the existing implementations \mainalgos differ in many of these implementations. The rest of this sections goes into further detail for each of these components, and an overview of the components supported in the respective implementations is given in \tref{tab:compared_algos}. Further, configuration files to enable exactly the respective components of the respective papers for the codebase of this thesis are listed in \aref{ap:yamls_for_origalgos}.
 
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
@@ -104,7 +104,8 @@ The core idea of the algorithm is to (unsupervised, data-driven) find a a set of
 %   5) if metric, assume salient:
 %  		* [AGKS18] haben den candidate-filter-teil konfigurierbar (und sagen bei denen ist accuracy even better than kappa)
 
-\fref{fig:depdendency_graph} shows an automatically exported depdendency-graph, displaying the individual steps of the algorithm as done in the codebase of this thesis, also showing where selected important parameters are first used.
+\fref{fig:depdendency_graph} shows an automatically exported depdendency-graph, displaying the individual steps of the algorithm as done in the codebase of this thesis, also showing where selected important parameters are first used. As explained in section \ref{sec:architecture}, the modularity of the provided architecture allows individual components to be exchanged as needed.
+
 
 \begin{figure}[htp]
 	\begin{center}
@@ -129,7 +130,12 @@ As for many NLP algorithms, before any other step can be performed, the text cor
 %     * Some are already mostly preprocessed (placetypes is already a bag-of-words so there's not much to do there, and we skip almost all preprocessing-steps)
 %     * In course-descriptions, I want some parts of the pre-preprocessing be part of the pipeline, like how we merge descriptions of different iterations of the same course that overlap to a high degree (sentwise-merge vs relative-term-frequencies)
 
+As the main considered dataset of university-courses is highly multilingual (see \fref{fig:courses_language_distribution}), one of the first questions that needs to be addressed is how entities of different langauges are handled. The algorithm consists of classical language processing algorithms such as comparing the bag-of-words representation of the entities, which means that the same text in two different languages result in maximally different representations\footnote{\todoparagraph{another reason that makes checking out word2vec worth it!}}. Because of this, before any other processing, the languages of the entities is checked, such that entities of languages other than the demanded may be translated or left out.
 
+The following components are developed for the preprocessing, every one of which can be individually enabled or disabled:
+\begin{itemize}
+	\item 
+\end{itemize}
 
 
 

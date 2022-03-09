@@ -4,11 +4,14 @@
 
 \documentclass[11pt,
   paper=a4, 
+%   twoside,  %TODO if it comes to twopage, I have to update the fancyhdr parts (like in my BA)
   hidelinks,
   bibliography=totocnumbered,
 	captions=tableheading,
 	BCOR=10mm
 ]{scrreprt}
+
+
 
 \usepackage[utf8]{inputenc}
  
@@ -72,6 +75,16 @@
 \usepackage{blindtext} % Placeholder text.
 \usepackage[automake, nopostdot, nonumberlist]{glossaries} % glossary for definitions and acronyms, without dot after entry and page reference 
 \makeglossaries % Generate the glossary
+
+% ================== chapter name in the head of all sections ==================
+\usepackage{fancyhdr}
+
+%from fancyhdr
+\usepackage{etoc}  %this and the 2 below to have fancyhdr (chapter in head) correctly in the TOC (https://tex.stackexchange.com/a/167851/108199)
+\renewcommand{\etocaftertitlehook}{\pagestyle{plain}}
+\renewcommand{\etocaftertochook}{\thispagestyle{plain}}
+
+% fancy page style where new chapters start: https://tex.stackexchange.com/q/117328/108199
 
 % ================== biblatex stuff ==================
 \newcommand\posscite[1]{\citeauthor{#1}'s \cite{#1}}
@@ -258,9 +271,10 @@
 
 
 % ##################################################################################
-% GENERAL code listing
+% === CODE LISTINGS ===
 
 \usepackage{listings} % rendering program code
+
 \lstset{% general command to set parameter(s)
 	basicstyle=\ttfamily\color{grey},          % print whole listing small
 	keywordstyle=\color{black}\bfseries\underbar,
@@ -271,8 +285,41 @@
 	showstringspaces=false}     % no special string spaces
 
 
+% === Taken from my BA ===
+\usepackage{pifont}% http://ctan.org/pkg/pifont for \ding (used in listing)
+\definecolor{verylightgray}{gray}{0.92}
+\definecolor{evenmorelightgray}{gray}{0.95}
 
-% YAML code listing (see https://tex.stackexchange.com/a/152856/108199)
+\newlength\lsthorizontalpadding
+\setlength\lsthorizontalpadding{3pt}
+\newcommand*\lstnumberstyle{\ttfamily\scriptsize}
+\newlength\lstnumbersep
+\setlength\lstnumbersep{8pt}
+\newlength\lstnumberwidth
+\setlength\lstnumberwidth{\widthof{\lstnumberstyle00}+\lstnumbersep+\lsthorizontalpadding}
+
+\lstset{
+	numberblanklines=false
+	,basicstyle=\ttfamily%
+	,breaklines=true%
+	,tabsize=1%
+	,showstringspaces=false%
+	,numbers=left%   
+	,numbersep=\lstnumbersep%
+	,numberstyle=\lstnumberstyle%
+	,framesep=0pt% 
+	,xleftmargin=\lstnumberwidth%
+	,framexleftmargin=\lsthorizontalpadding%
+	,xrightmargin=\lsthorizontalpadding%
+	,framexrightmargin=\lsthorizontalpadding%
+	,backgroundcolor=\color{verylightgray}%
+	,postbreak=\ding{229}\space%
+	,escapeinside={*(}{*)}
+	\linespread{1.0}
+}
+
+% === YAML code listing === 
+% comes from https://tex.stackexchange.com/a/152856/108199)
 
 
 \newcommand\YAMLcolonstyle{\color{red}\mdseries}
@@ -313,17 +360,24 @@
 
 \newcommand\ProcessThreeDashes{\llap{\color{cyan}\mdseries-{-}-}}
 
+% ################################################
+% fonts for code-objects etc (taken from BA)
 
-% taken from BA
-\usepackage{pifont}% http://ctan.org/pkg/pifont for \ding (used in listing)
-\definecolor{verylightgray}{gray}{0.89}
-\newlength\lsthorizontalpadding
-\setlength\lsthorizontalpadding{3pt}
-\newcommand*\lstnumberstyle{\ttfamily\scriptsize}
-\newlength\lstnumbersep
-\setlength\lstnumbersep{8pt}
-\newlength\lstnumberwidth
-\setlength\lstnumberwidth{\widthof{\lstnumberstyle00}+\lstnumbersep+\lsthorizontalpadding}
+\newcommand{\inlinecode}[1]{\colorbox{verylightgray}{\lstinline[basicstyle=\ttfamily\color{white}]{#1}}}
+% \newcommand{\inlinecode}[1]{\colorbox{red}{\lstinline[basicstyle=\ttfamily\color{black}]{#1}}}
+
+
+\newcommand{\term}[1] {{\spaceskip=.95\fontdimen2\font minus \fontdimen4\font
+	\xspaceskip=0pt\relax \large\texttt{#1}}}
+
+\newcommand{\codefunc}[1]{\colorbox{evenmorelightgray}{\lstinline[basicstyle=\ttfamily\color{black},keywordstyle=\ttfamily]{#1}}}
+
+\newcommand{\codeobj}[1]{\colorbox{evenmorelightgray}{{\spaceskip=.95\fontdimen2\font minus \fontdimen4\font	\xspaceskip=0pt\relax \large\texttt{#1}}}}
+
+\newcommand{\codeobjFN}[1]{\colorbox{evenmorelightgray}{{\spaceskip=.95\fontdimen2\font minus \fontdimen4\font	\xspaceskip=0pt\relax \texttt{#1}}}}
+
+\newcommand{\codeother}[1]{\colorbox{evenmorelightgray}{\lstinline[basicstyle=\ttfamily\color{black},keywordstyle=\ttfamily]{#1}}}
+
 
 
 % ##################################################################################
@@ -334,6 +388,7 @@
 \input{special_highlight.tex}
 \newcommand{\todoparagraph}[1]{\highlight[red]{#1}}
 
+
 % ################################################################################## 
 % ################################################################################## 
 % ################################################################################## 
@@ -341,6 +396,19 @@
 \makeatletter
 
 \begin{document}
+
+% ================== chapter name in the head of all pages ==================
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
+\fancyhead[R]{}
+\fancyhead[L]{\chaptername\ \thechapter\ --\ \leftmark}
+% this: https://tex.stackexchange.com/a/66344/108199
+\rhead{\thepage}
+\cfoot{} % get rid of the page number 
+%from fancyhdr
+
+
+
 
 
 \begin{titlepage}
@@ -640,7 +708,7 @@ The dataset comes from Johannes' Repo at \url{https://git.siddata.de/jschrumpf/s
 		\label{fig:courses_language_distribution}
 		Distribution of languages of course descriptions.
 		%TODO figure if this is the correct amount of preprocessing/throwout to have done
-		Of the 21337 courses left after preprocessing, 18,679 were in german language according to the \textit{langdetect} python-package\footnote{\url{https://pypi.org/project/langdetect/}, which is a direct port of a java library\ which claims to have 99.8\% accuracy on longer texts\cite{nakatani2010langdetect}}.
+		Of the 21337 courses left after preprocessing, 18,679 were in german language according to the \textit{langdetect} python-package (for details, see \aref{ap:translating}).
 		}
 \end{figure}
 
@@ -722,6 +790,8 @@ Also, there's the Large Movie Review Dataset\footnote{\url{http://ai.stanford.ed
 
 
 \section{Architecture}
+\label{sec:architecture}
+
 %Doing this section before Algorithm-section such that I can reference how plots are created or general code examples with the real thing, including how what you're seeing was generated and can be reproduced
 
 %TODO: Also in this chapter:
@@ -796,7 +866,7 @@ In figure \ref{fig:3dplot_mathe_infoab} we see a 3D-Embedding for courses, split
 \end{itemize}
 
 
-\section{Quanitative Results}
+\section{Quantiative Results}
 
 % Schreiben was die paper denen ich mostly folge zur evaluation gemacht haben! ("To evaluate whether the discovered features are semantically meaningful, we test how similar they are to natural categories, by training depth-1 decision trees")
 % Ein anderer Weg zum testen wäre auch ein classifier der nur anhand der most salient generated features versucht den kurs wiederherzustellen (das zeigt natürlich nicht ob es similar to how humans do it but part of it)
@@ -859,8 +929,8 @@ In die Conclusion auch die Frage inwieweit das jetzt conceptual spaces sind (seh
 	\include{Appendices/AppendixA}
 	\input{Appendices/AppendixB}
 
-	
-	
+\clearpage %from fancyhdr
+\pagestyle{plain} %from fancyhdr
 \printbibliography[heading=bibintoc]
 
 \end{document}
