@@ -4,14 +4,62 @@
 
 \documentclass[11pt,
   paper=a4, 
-%   twoside,  %TODO if it comes to twopage, I have to update the fancyhdr parts (like in my BA)
+  twoside,  %TODO if it comes to twopage, I have to update the fancyhdr parts (like in my BA)
   hidelinks,
   bibliography=totocnumbered,
 	captions=tableheading,
 	BCOR=10mm
 ]{scrreprt}
 
+% ====================== /parts from MastersDoctoralThesis.cls ======================
+%	HEADERS AND FOOTERS
 
+% \usepackage{scrlayer-scrpage} 
+% \clearscrheadfoot
+% \pagestyle{scrheadings}
+%  \automark[subsection]{section}
+% \ihead{\rightmark}
+% \ohead{\leftmark}
+% \cfoot{\pagemark}
+
+
+\RequirePackage[markcase=used]{scrlayer-scrpage}
+\providepairofpagestyles{thesisSimple}{%
+	\clearpairofpagestyles%
+	\automark[chapter]{chapter}
+	\ihead{\headmark}% Inner header
+	\ohead[\pagemark]{\pagemark}% Outer header
+}
+\ifoot{}% Inner footer
+\ofoot{}% Outer footer
+\pagestyle{thesisSimple}
+\providepairofpagestyles[thesisSimple]{thesis}{%
+	\automark*[subsection]{section} %gives section+subsection as header
+	% \automark*[section]{}%  %would give section as header
+}
+\providepairofpagestyles[thesisSimple]{review}{%
+	\ofoot[\shorttitle/\authorname]{\shorttitle/\authorname}
+	\ifoot[\today]{\today}
+}
+\pagestyle{thesis}
+\KOMAoption{headsepline}{true}
+
+\makeatletter 
+\NewDocumentCommand{\blank@p@gestyle}{}{empty}
+\NewDocumentCommand{\blankpagestyle}{ m }{%
+	\ClassWarning{\classname}{\string\blankpagestyle\space is
+	obsolete,\MessageBreak use \string\setblankpagestyle \space  instead}\DeclareDocumentCommand{\blank@p@gestyle}{}{#1}
+}
+\NewDocumentCommand{\setblankpagestyle}{ m }{\DeclareDocumentCommand{\blank@p@gestyle}{}{#1}}
+
+\DeclareDocumentCommand\cleardoublepage{}{\clearpage\if@twoside \ifodd\c@page\else
+	\hbox{}
+	\thispagestyle{\blank@p@gestyle}
+	\newpage
+	\if@twocolumn\hbox{}\newpage\fi\fi\fi%
+}
+
+% ====================== /parts from MastersDoctoralThesis.cls ======================
 
 \usepackage[utf8]{inputenc}
  
@@ -77,14 +125,14 @@
 \makeglossaries % Generate the glossary
 
 % ================== chapter name in the head of all sections ==================
-\usepackage{fancyhdr}
+% \usepackage{fancyhdr}
 
-%from fancyhdr
-\usepackage{etoc}  %this and the 2 below to have fancyhdr (chapter in head) correctly in the TOC (https://tex.stackexchange.com/a/167851/108199)
-\renewcommand{\etocaftertitlehook}{\pagestyle{plain}}
-\renewcommand{\etocaftertochook}{\thispagestyle{plain}}
+% %from fancyhdr
+% \usepackage{etoc}  %this and the 2 below to have fancyhdr (chapter in head) correctly in the TOC (https://tex.stackexchange.com/a/167851/108199)
+% \renewcommand{\etocaftertitlehook}{\pagestyle{plain}}
+% \renewcommand{\etocaftertochook}{\thispagestyle{plain}}
 
-% fancy page style where new chapters start: https://tex.stackexchange.com/q/117328/108199
+% % fancy page style where new chapters start: https://tex.stackexchange.com/q/117328/108199
 
 % ================== biblatex stuff ==================
 \newcommand\posscite[1]{\citeauthor{#1}'s \cite{#1}}
@@ -397,15 +445,17 @@
 
 \begin{document}
 
-% ================== chapter name in the head of all pages ==================
-\pagestyle{fancy}
-\renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
-\fancyhead[R]{}
-\fancyhead[L]{\chaptername\ \thechapter\ --\ \leftmark}
-% this: https://tex.stackexchange.com/a/66344/108199
-\rhead{\thepage}
-\cfoot{} % get rid of the page number 
-%from fancyhdr
+\pagestyle{plain} %for the headers & footers
+
+% % ================== chapter name in the head of all pages ==================
+% \pagestyle{fancy}
+% \renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
+% \fancyhead[R]{}
+% \fancyhead[L]{\chaptername\ \thechapter\ --\ \leftmark}
+% % this: https://tex.stackexchange.com/a/66344/108199
+% \rhead{\thepage}
+% \cfoot{} % get rid of the page number 
+% %from fancyhdr
 
 
 
@@ -468,6 +518,8 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 \listoftables
 \listofalgorithms
 \lstlistoflistings %TODO: figure out which of these two is correct
+
+\pagestyle{thesis}
 
 \chapter{Introduction}
 \pagenumbering{arabic}
@@ -929,8 +981,9 @@ In die Conclusion auch die Frage inwieweit das jetzt conceptual spaces sind (seh
 	\include{Appendices/AppendixA}
 	\input{Appendices/AppendixB}
 
-\clearpage %from fancyhdr
-\pagestyle{plain} %from fancyhdr
+% \clearpage %from fancyhdr
+% \pagestyle{plain} %from fancyhdr
+
 \printbibliography[heading=bibintoc]
 
 \end{document}
