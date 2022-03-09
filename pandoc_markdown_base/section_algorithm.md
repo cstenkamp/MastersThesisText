@@ -10,8 +10,6 @@ TODO: Selbst für sachen wie bag-of-words oder tokenization kann ich entsprechen
 
 * While [AGKS18] split the algorithm into 4 Steps (their postprocessing being one of them), I'll subdivide it even more. The steps of [AGKS18] are however: Step 1: Generate candidate feature directions, Step 2: Filter Candidate Feature Directions, Step 3: Cluster Candidate feature Directions, Step 4: Fine-Tune feature directions.
 
-...but let's get to my steps. Keep in mind that even the pre-processing here doesn't work on completely raw data but on pre-preprocessed ones, but I don't consider this for the algorithm at is very specific to the respective datasets and also involves having to look at the data manually a lot(which is why I'm doing this in separate juypter notebooks)
-
 [//]: # TODO: Do I want to have a section for every single step of the pipeline containing what paramters there are in this step?!
  
 ### Step 1: Pre-process the texts

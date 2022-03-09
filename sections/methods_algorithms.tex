@@ -33,29 +33,21 @@ In a final step, the candidate-words are clustered according to their similarity
 \end{itemize}
 
 
-Many of the just mentioned components don't refer to a specific algorithms, and the existing implementations \mainalgos differ in many of these implementations. The rest of this sections goes into further detail for each of these components, and an overview of the components supported in the respective implementations is given in \tref{tab:compared_algos}. Further, configuration files to enable exactly the respective components of the respective papers for the codebase of this thesis are listed in 
+Many of the just mentioned components don't refer to a specific algorithms, and the existing implementations \mainalgos differ in many of these implementations. The rest of this sections goes into further detail for each of these components, and an overview of the components supported in the respective implementations is given in \tref{tab:compared_algos}. Further, configuration files to enable exactly the respective components of the respective papers for the codebase of this thesis are listed in \aref{AppendixB}.
+
+% #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
 \subsection{Steps of the algorithm}
 
-% * Yamls für die Configs von DESC15 und den anderen beiden in den Text packen
+%TODO:
+% * reference yamls again
 % * Im Text link zu binder bei results section der auf die notebooks/analyze_results/analyze_pipeline_results.ipynb referenziert, und für die tables auch!
 % * Schreiben dass ich einige Claims oder nonclaims von denen prüfe, bspw nutzen sie immer PPMI ohne je tf-idf zu testen
-% * RaZb20 tried Doc2Vec instead of MDS and it performed worse!
 % * Wie lange der ganze Kram dauert - MDS hat quadratic complexity etc
-% * [AGKS18] haben den candidate-filter-teil konfigurierbar (und sagen bei denen ist accuracy even better than kappa)
 % * Das mit dem Koordinatensystem drehen passiert gar nicht so wie ich dachte dass es passiert...?!
 % * Tabelle
-% 	* Die Parameter von [AGKS18] und [RaZb20] sowohl in die Tabelle als auch ins yaml packen
 % 	* Einduetig rausschreiben welche der 3 paper [DESC15] [AGKS18] [RaZb20] welche parameter-werte verlangen und !!welche optimal waren!! angucken welche Kombi die Beste Performance hatte und die entsprechend markieren (und im yaml haben!)!
-% * Regarding DESC15 vs AGKS18 vs RaZb20:
-% 	* didn't somebody say that cohen's kappa sucks!?!
-% 	* RaZb20: 
-% 		* use affinity propagation "for getting rid of the clusters of informative words", similar to how they did it in their 2019 paper
-% 			-> affinity propagation has a so-called preference parameter, den als config lassen - usual, this parameter is chosen relative to the median µ of the affinity scores. For the methods Sub and Or- tho, we considered values from {0.7µ, 0.9µ, µ, 1.1µ, 1.3µ}
-% 		* do kappa ON BINARY!!!
-% 		* say that for them, the binary "does the word occur in the description" is the only sensible signal, no ppmi or anything! (page 2, footnote 1 of RaZb20)
-% 	* DESC15: 
-% 		* "Here we use the assumption that the better Ht separates entities to which t applies from the others in S,the better \vec{v_t} models the term t." --> allein von der aussage muss man das mit den induzierten rankings echt nicht machen, sondern halt nur auf classification quality (-> metrics like accuracy) gucken, bzw kappa anhand der binären klasse berechnen --> the ranking induced by count, or the baremetal count?
+
 
 % 	* POSSIBLE EXTRA-STEPS FOR ALGORITHM
 % 		* BOOTSTRAP MORE CANDIDATES (AFTER EXTRACT CANDIDATES)
@@ -77,18 +69,21 @@ Many of the just mentioned components don't refer to a specific algorithms, and 
 % 	* Der letzte Schritt mit dem Clustern der good-kappa-ones ist wirklich very basic und hat very much room for improvement
 
 
-% General idea of the algorithm: Alshaikh2020: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candidate word w a linear classifier which separates the embeddings of entities that have w in their description from the others. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature" (TODO: my concise formulation)
-% TODO: despite my citation style, write the names of the three main papers at least once
 
+%TODO: maybe describe shortly what the improvements from  Ager2018 Alshaikh2020 were? 
 
-
-
-%TODO: maybe describe shortly what the improvements from  \cite{Ager2018} and \cite{Alshaikh2020} were? 
-% Alshaikh2020: 
-% * "When representing a particular entity in a conceptual space, we need to specify which domains it belongs to, and for each of these domains we need to provide a corresponding vector." 
-% * then they show their example of something that is not seperable with a hyperplane unless we specify subdomains, maybe just steal their plot that explains their one contribution to 99%
+% * Regarding DESC15 vs AGKS18 vs Alshaikh2020:
+% 	* didn't somebody say that cohen's kappa sucks!?!
+% 	* Alshaikh2020: 
+% 		* use affinity propagation "for getting rid of the clusters of informative words", similar to how they did it in their 2019 paper
+% 			-> affinity propagation has a so-called preference parameter, den als config lassen - usual, this parameter is chosen relative to the median µ of the affinity scores. For the methods Sub and Or- tho, we considered values from {0.7µ, 0.9µ, µ, 1.1µ, 1.3µ}
+% 		* do kappa ON BINARY!!!
+% 		* say that for them, the binary "does the word occur in the description" is the only sensible signal, no ppmi or anything! (page 2, footnote 1 of RaZb20)
+% 		* "When representing a particular entity in a conceptual space, we need to specify which domains it belongs to, and for each of these domains we need to provide a corresponding vector." 
+% 		* then they show their example of something that is not seperable with a hyperplane unless we specify subdomains, maybe just steal their plot that explains their one contribution to 99%
+% 	* DESC15: 
+% 		* "Here we use the assumption that the better Ht separates entities to which t applies from the others in S,the better \vec{v_t} models the term t." --> allein von der aussage muss man das mit den induzierten rankings echt nicht machen, sondern halt nur auf classification quality (-> metrics like accuracy) gucken, bzw kappa anhand der binären klasse berechnen --> the ranking induced by count, or the baremetal count?
 % * The "Disentangled" from their title means "feature-based"
-
 
 
 The core idea of the algorithm is to (unsupervised, data-driven) find a a set of features which can be modelled as directions for a vector-space representation of the respetive entities. For that, the steps are:
@@ -96,18 +91,20 @@ The core idea of the algorithm is to (unsupervised, data-driven) find a a set of
 \begin{enumerate}
 	\item preprocess the descriptions using default techniques and create a bag-of-words representation for the texts
 	\item extract candidate features from these texts (easist variant is to just consider each sufficiently frequent word as candidate)
-	\item create an fixed-dimensional embedding for the texts (optimally a metric space, optimally based on their dissimilarity)
-	\item for each candidate term, train a linear classifier to seperate the vector representationgs of the entities that contain the term vs those that don't
+	\item create a fixed-dimensional embedding for the texts (optimally a metric space, optimally based on their dissimilarity)
+	\item for each candidate term, train a linear classifier to seperate the vector representations of the entities that contain the term vs those that don't
 	\item if some metric for this classifier is sufficiently high, assume that the candidate term captures a salient feature - it's direction is then characterized by the normal vector for that hyperplane (for an intuition see \ref{fig:3d_hyperplane_ortho})
-	\item Cluster the candidates and calculate the direction of the cluster from the directions of it's contents
+	\item Cluster the candidates
+	\item Calculate the direction of the cluster from the directions of it's contents to create a new space to embed the entities into
 \end{enumerate}
 
-\begin{figure}
-	\begin{center}
-	  \includegraphics[width=0.9\textwidth]{3dplot_hyperplane_and_orthogonal}
-	  \caption[Visual representation of the Hyperplane of an SVM splitting a dataset]{ \label{fig:3d_hyperplane_ortho} Visual representation of the Hyperplane of a Support-Vector-Machine splitting a dataset, as well as it's orthogonal and the orthogonal projection of a set of samples onto the plane. For an interactive version of this plot, visit  {\small \url{https://nbviewer.org/github/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/hyperplane_orthogonal_3d.ipynb?flush_cache}}}
-	\end{center}
-\end{figure}
+% MENTION IN STEPS
+%   3) fixed-dimensional embedding: 
+%		* RaZb20 tried Doc2Vec instead of MDS and it performed worse!
+%   5) if metric, assume salient:
+%  		* [AGKS18] haben den candidate-filter-teil konfigurierbar (und sagen bei denen ist accuracy even better than kappa)
+
+\fref{fig:depdendency_graph} shows an automatically exported depdendency-graph, displaying the individual steps of the algorithm as done in the codebase of this thesis, also showing where selected important parameters are first used.
 
 \begin{figure}[htp]
 	\begin{center}
@@ -117,9 +114,55 @@ The core idea of the algorithm is to (unsupervised, data-driven) find a a set of
 	\end{center}
 \end{figure}
 
-\@input{pandoc_generated_latex/section_algorithm}
 
 \input{include/algorithm_compare_table}
+
+Before looking at the steps in turn, it should be noted that even the preprocessing does not work on completely raw data, but on curated and processed corpora. This processing is however not considered part of the algorithm, as it is very specific to the respective datasets and manual dataset exploration, tweaking settings such that they are best for the respective corpora\footnote{Because of this, it was done in sepearate Jupyter Notebooks, such as \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/create_datasets/Preprocess_Siddata2022.ipynb} }. %TODO: instead link to nbviewer/binder!!
+
+
+\subsubsection{Preprocessing}
+
+%TODO: I hate the first sentence hereafter!
+As for many NLP algorithms, before any other step can be performed, the text corpus needs to be preprocessed. The preprocessing itself consists of multiple independent components chained after each other. Which components are necessary also depends on the processed dataset - as for example the \emph{placetypes-dataset} consists not of a collection of tags instead of full sentences, tokenizing sentences or removing punctuation becomes irrelevant. Other datasets may require additional cleaning or are already available in preprocessed form.
+% * some parts of this depend on the dataset 
+%     * Some may just require additional cleaning (remove HTML-Tags and such things)
+%     * Some are already mostly preprocessed (placetypes is already a bag-of-words so there's not much to do there, and we skip almost all preprocessing-steps)
+%     * In course-descriptions, I want some parts of the pre-preprocessing be part of the pipeline, like how we merge descriptions of different iterations of the same course that overlap to a high degree (sentwise-merge vs relative-term-frequencies)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{figure}
+	\begin{center}
+	  \includegraphics[width=0.9\textwidth]{3dplot_hyperplane_and_orthogonal}
+	  \caption[Visual representation of the Hyperplane of an SVM splitting a dataset]{ \label{fig:3d_hyperplane_ortho} Visual representation of the Hyperplane of a Support-Vector-Machine splitting a dataset, as well as it's orthogonal and the orthogonal projection of a set of samples onto the plane. For an interactive version of this plot, visit  {\small \url{https://nbviewer.org/github/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/hyperplane_orthogonal_3d.ipynb?flush_cache}}}
+	\end{center}
+\end{figure}
+
+
+\@input{pandoc_generated_latex/section_algorithm}
+
 
 \subsection{Preprocessing}
 

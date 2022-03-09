@@ -158,10 +158,11 @@
 \DeclarePairedDelimiter{\norm}{\lVert}{\rVert} 
 % Functions
 \newcommand{\tpow}[1]{\cdot 10^{#1}}
-\newcommand{\fref}[1]{(Figure~\ref{#1})}
-\newcommand{\figref}[1]{(Figure~\ref{#1})}
+\newcommand{\fref}[1]{Figure~\ref{#1}}
+\newcommand{\figref}[1]{Figure~\ref{#1}}
 \newcommand{\figureref}[1]{Figure~\ref{#1}}
 \newcommand{\tref}[1]{Table~\ref{#1}}
+\newcommand{\aref}[1]{Appendix~\ref{#1}}
 \newcommand{\tabref}[1]{(Table~\ref{#1})}
 \newcommand{\tableref}[1]{Table~\ref{#1}}
 \newcommand{\secref}[1]{%
@@ -259,7 +260,6 @@
 % ##################################################################################
 % GENERAL code listing
 
- 
 \usepackage{listings} % rendering program code
 \lstset{% general command to set parameter(s)
 	basicstyle=\ttfamily\color{grey},          % print whole listing small
@@ -314,6 +314,16 @@
 \newcommand\ProcessThreeDashes{\llap{\color{cyan}\mdseries-{-}-}}
 
 
+% taken from BA
+\usepackage{pifont}% http://ctan.org/pkg/pifont for \ding (used in listing)
+\definecolor{verylightgray}{gray}{0.89}
+\newlength\lsthorizontalpadding
+\setlength\lsthorizontalpadding{3pt}
+\newcommand*\lstnumberstyle{\ttfamily\scriptsize}
+\newlength\lstnumbersep
+\setlength\lstnumbersep{8pt}
+\newlength\lstnumberwidth
+\setlength\lstnumberwidth{\widthof{\lstnumberstyle00}+\lstnumbersep+\lsthorizontalpadding}
 
 
 % ##################################################################################
