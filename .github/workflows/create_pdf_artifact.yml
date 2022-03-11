@@ -33,7 +33,10 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Thesis
-          path: *.pdf
+          path: |
+            thesis.pdf
+            thesis_twosided.pdf
+            thesis_nomarkdown.pdf
       - name: Help post checkout 
         shell: bash
         run: |
