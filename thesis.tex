@@ -1,5 +1,15 @@
 %TODO: once the text is "finished": [see sublime note]
 
+% NoMarkdown and Twoside are compile-commands, see https://tex.stackexchange.com/a/220101/108199, https://tex.stackexchange.com/a/22525/108199, https://tex.stackexchange.com/a/33577/108199
+% \newcommand*{\TwoSide}{}%
+% \newcommand*{\NoMarkdown}{}%
+% pdflatex -jobname=thesis_twosided '\newcommand*{\TwoSide}{}\input{main}'
+% pdflatex -jobname=thesis_nomarkdown '\newcommand*{\NoMarkdown}{}\input{main}'
+
+\ifdefined\TwoSide
+	\PassOptionsToClass{twoside}{scrreprt}
+\fi
+
 \documentclass[11pt,
   paper=a4, 
 %   twoside,
@@ -10,6 +20,7 @@
 	BCOR=10mm
 ]{scrreprt}
 
+
 % ====================== /parts from MastersDoctoralThesis.cls ======================
 %	HEADERS AND FOOTERS
 
@@ -18,7 +29,11 @@
 \pagestyle{scrheadings}
 \clearpairofpagestyles
 % \automark*[section]{chapter} %[] = right side, {} = left side
-\automark*[chapter]{section} %[] = right side, {} = left side
+\ifdefined\TwoSide
+	\automark*[section]{chapter}
+\else
+	\automark*[chapter]{section}
+\fi
 % TODO: maybe have a SEPARATE automark for ONE-sided, wo's section ist?!
 \ihead{\headmark}% Inner header
 \ohead[\pagemark]{\pagemark}% Outer header
@@ -55,6 +70,8 @@
 \usepackage{amssymb} % More math symbols.
 \usepackage{dsfont} % Render |R and the like
 \usepackage[british]{babel} %was [english] (see note of underscore), is now [british] 
+
+
 \usepackage{underscore} % I need underscore to not have to write "\_" for underscores, but that would break labels with unterscores in it unless I also include babel, see https://tex.stackexchange.com/a/121438/108199
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[chapter]
@@ -409,10 +426,15 @@
 \input{special_highlight.tex}
 \newcommand{\todoparagraph}[1]{\highlight[red]{#1}}
 
+% If we add the \NoMarkdown at compilation, we won't use any of the \@input. See https://tex.stackexchange.com/a/220101/108199, https://tex.stackexchange.com/a/33577/108199
+\ifdefined\NoMarkdown
+	\makeatletter
+	\renewcommand{\@input}[1]{\ignorespaces}
+\fi
 
-% ################################################################################## 
-% ################################################################################## 
-% ################################################################################## 
+
+% #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
+
 
 \makeatletter
 
@@ -548,7 +570,7 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 	% Include the appendices of the thesis as separate files from the Appendices folder
 	% Uncomment the lines as you write the Appendices
 	
-	\input{Appendices/AppendixA}
+	\input{Appendices/AppendixA} %hae to use input and not include, otherwise the order of "Appendix" and the first appendix is wrong
 	\input{Appendices/AppendixB}
 
 

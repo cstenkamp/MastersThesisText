@@ -24,14 +24,16 @@ jobs:
         shell: bash
         run: |
           docker-compose -f .devcontainer/docker-compose.yml run workspace bash /workspace/.devcontainer/create_pdf.sh
+          docker-compose -f .devcontainer/docker-compose.yml run workspace latexmk -synctex=1 -interaction=nonstopmode -file-line-error -pdf -outdir=/workspace /workspace/thesis_nomarkdown.tex
+          docker-compose -f .devcontainer/docker-compose.yml run workspace latexmk -synctex=1 -interaction=nonstopmode -file-line-error -pdf -outdir=/workspace /workspace/thesis_twosided.tex
         env:
             COMPOSE_UID: 1001
             COMPOSE_GID: 121
       - name: Upload created pdf
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Thesis
-          path: thesis.pdf
+          path: *.pdf
       - name: Help post checkout 
         shell: bash
         run: |
