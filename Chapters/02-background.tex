@@ -1,0 +1,101 @@
+\chapter{Background}
+
+
+\section{Use Case: Educational Resources}
+% Anwendungsfall (->e-learning, recommenden von bildungsressourcen, ...) -> nicht-technisch, aber nötig zum verstehen wo passiert das 
+
+% TALK ABOUT that actually, in CS concepts (=types) are regions, BUT we have only one-instance-per, so TOKENS, so it's kiiinda reasonable that we have points! IF we would have the collection of "ALL Computer Science 1 Courses" it would be different
+
+\section{Conceptual Spaces}
+
+% \cite{Alshaikh2019} (verbatim!):
+% * vector space models that are aimed at representing the entities of a given kind (e.g. movies), to- gether with their associated properties (e.g. scary) and concepts (e.g. thrillers).
+% * As such, they are similar in spirit to the vector space models that have been proposed in information retrieval (Deer- wester et al., 1990) and natural language pro- cessing (Turney and Pantel, 2010; Mikolov et al., 2013), but there are also notable differences.
+% * First, in the context of conceptual spaces, an explicit dis- tinction is made between the entities from the do- main of discourse, which are represented as vec- tors, and the corresponding properties and con- cepts, which are represented as regions (e.g. poly- topes) or soft regions (e.g. characterized by a Gaussian). 
+% * Second, conceptual spaces are organ- ised into a set of facets [domains], each of which captures a different aspect of meaning. For instance, in a conceptual space of movies, we may have facets such as genre, language, geographic location, etc. Each facet is associated with its own vector space, which intuitively captures similarity w.r.t. the corresponding facet. Most of these facet spaces tend to be low-dimensional (e.g. modelling budget only needs a single dimension). This clearly dif- ferentiates them from traditional semantic spaces, which often have hundreds of dimensions
+
+
+
+
+
+
+\@input{pandoc_generated_latex/chapter_theobg_section_cs}
+
+
+\section{Automatic Data-Driven Generation of Conceptual Spaces}
+
+% \cite{Alshaikh2019} geht drauf ein warum man infoGAN und VAEs für bilder als pretty much sowas betrachten kann
+
+%Wie funktioniert die Idee des data-driven generieren 
+
+% Base idea: [Derrac and Schockaert, 2015] proposed an unsupervised method which uses text descriptions of the considered entities to identify se- mantic features that can be characterized as directions. Their core assumption is that words describing semantically mean- ingful features can be identified by learning for each candi- date word w a linear classifier which separates the embed- dings of entities that have w in their description from the oth- ers. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature. 
+% This method trains for each word w in the vocab- ulary a linear classifier which predicts from the embedding of an entity whether w occurs in its description. The words w1, ..., wn for which this classifier performs sufficiently well are then used as basic features. To assess classifier perfor- mance, Cohen’s Kappa score, which can be seen as a correc- tion of classification accuracy to deal with class imbalance, is used. Each of the basic features w is associated with a cor- responding vector dw (i.e. the normal vector of the separat- ing hyperplane learned by the classifier). These directions are subsequently clustered, which serves to reduce the total num- ber of features.
+% Zum Thema points vs regions: [CS] where properties and concepts are represented using convex regions, while specific instances of a concept are represented as points. This has a num- ber of important advantages. First, it allows us to distinguish borderline instances of a concept from more prototypical instances, by taking the view that instances which are closer to the center of a region are more typical [9]. A second advantage is that using regions makes it clear whether one concept subsumes another (e.g. every pizzeria is a restaurant), whether two concepts are mutually exclusive (e.g. no restaurant can also be a beach), or whether they are overlapping (e.g. some bars serve wine but not all, some establishments which serve wine are bars but not all). Region based models have been shown to outperform point based models in some natural language processing tasks [41] On the other hand, using regions is computationally more demanding, and learning accurate region boundaries for a given concept would require a prohibitive amount of data. In this paper, we essentially view point based representations as coarse-grained approximations of conceptual spaces, where points correspond to fine-grained categories instead of specific instances, while convex regions are used to model higher-level categories
+%...ansonsten hätte ich immernoch die frage ob wir überhaupt points consideren oder nur vektoren, UND warum wie cosine distance consideren und nicht öfter mal euclidian distance, I mean warum ist unser space metric?!
+
+
+% TODO: Have to write here:
+% * that in a CS the axes correspond to human concepts, "concepts" meaning attributes and what-was-the-other-again, according to CS lingo corresponding to nouns and adjectives yadda yadda, darauf referenzier ich mich im Text
+
+
+\section{Types of Reasoning}
+
+Mostly from \cite{Derrac2015}, but tbh not that important for me. However a short paragraph about reasoning-based classifiers and the respective intutitive explanations for known classifiers may be interesting (think 1-NN is "Y is of the same class as X because X closest to Y", but also more complex ones.)
+
+\@input{pandoc_generated_latex/chapter_theobg_section_reasoning}
+
+\section{Related Work}
+
+% dass das alles vergleichbar mit InfoGAN etc für Bilder ist.. (siehe auch text von \cite{Alshaikh2019})
+
+% \cite{Derrac2015}: "It is convenient to represent the meaning of terms or documents as points,vectors or regions in a Euclidean space. Such representations are known as vector-space models [...].  ==> FUCKING WORD2VEC!!!
+ 
+% \cite{Derrac2015}: some form of dimensionality reduction is typically used to obtain vectors whose components correspond to concepts. One of the most popular techniques, called latent semantic analysis (LSA [39]), uses singular value decomposition (SVD) to this end. Multi-dimensional scaling (MDS [40]) is another popular method for dimen- sionality reduction, which builds a vector-space representation from pairwise similarity judgements.
+
+
+\@input{pandoc_generated_latex/chapter_related_work}
+
+
+
+\section{Required Algorithms and Techniques}
+
+\subsubsection*{Semantic Knowledge Bases}
+
+Lexical databases of semantic relations between words, the most famous of which being WordNet\footnote{\url{https://wordnet.princeton.edu/}}, link words in a graph that encodes explicit semantic relations like synonyms and hyponyms (subtypes/ \emph{is-a}-relationships). While neural %TODO: nicht neural, aber halt data-driven? naja das was word2vec undso sind... by-context-created/trained...?! similarity-based? -> DISTRIBUTIONAL MODELS (ones trained from the co-occurrence patterns of temrs)
+embeddings may encode similar information implicitly, when relying on dictionary-based word encodings they are an important tool when using classical linguistic techniques. For the developed algorithm, the information how many hyponyms of a candidate word for a semantic direction %TODO: did I explain the algorithm well enough before this to throw this much information at the reader?!
+occur in its corresponding text-corpus is highly relevant. To do that, WordNet \cite{Miller1995} and it's german equivalent, GermaNet \cite{hamp-feldweg-1997-germanet,Henrich}, are required in the respective step.
+
+
+\subsubsection*{Word... Count... Techniques?!}
+
+
+The Paper uses the following PPMI definition:\\ 
+
+\noindent $e \in E$ is an entity, $D_e$ a document (bag of words) where that entity occurs.\\
+We want to quantify for each term occuring in the corpus $\{D_e | e \in E\}$ how strongly it is associated with $e$.\\
+$c(e,t)$ is the number of times term $t$ occurs in document $D_e$. \\
+The weight $ppmi(e,t)$ for term $t$ in the vector representing $e$ is then:
+\begin{align*}
+ppmi(e,t) &= max\left(0, log\left( \frac{p_{et}}{p_{e*}*p_{*t}} \right) \right) \\
+          &= max\left(0, pmi(e,t) \right) \\
+ pmi(e,t) &= log\left( \frac{p_{et}}{p_{e*}*p_{*t}} \right) \\          
+   p_{et} &= \frac{c(e,t)}{\sum_{e'}\sum_{t'} c(e',t')} \\
+   p_{e*} &= \sum_{t'}p_{et'} \\
+   p_{*t} &= \sum_{e'}p_{e't} \\
+\end{align*}
+
+\noindent log of the probability of the $e$-$t$-combination (count of this vs count of all), normalized by the probability of this $e$ with any $t$ times this $t$ with any $e$.\\
+To quote the paper: "PPMI will favor terms which are frequently associated with the entity $e$ while being relatively infrequent in the corpus overall"
+
+\vspace{30px}
+
+I found this definition:
+\begin{align*}
+ppmi(X,i,j) &= max(0, pmi(X,i,j)) \\
+pmi(X,i,j)  &= log\left( \frac{X_{ij}}{expected(X,i,j)} \right) \\
+            &= log\left( \frac{P(X_{ij})}{P(X_{i*}) * P(X_{*j})} \right)
+\end{align*}
+
+
+\@input{pandoc_generated_latex/chapter_methods_section_required_algorithms}
+

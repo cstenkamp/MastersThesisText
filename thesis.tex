@@ -1,6 +1,4 @@
-%TODO once the text is "finished": 
-% * Figure out first appearance of all words in the glossary and make sure that the first mention of it is written out with the abbreviation in parantheses
-% * Ensure all links to the repo of the code refer to a signed commit and not just to the main-branch 
+%TODO: once the text is "finished": [see sublime note]
 
 \documentclass[11pt,
   paper=a4, 
@@ -81,7 +79,19 @@
 \usepackage{booktabs} % Scientific table styling.
 \usepackage{floatrow} % Option for keeping floats in the place they were defined in the code.
 \floatsetup[table]{style=plaintop}
-\usepackage[breaklinks=true]{hyperref} % Hyperlinks.
+% \usepackage[breaklinks=true]{hyperref} % Hyperlinks.
+\usepackage[pdftex,
+	   breaklinks=true,%
+       bookmarks=true,%
+       bookmarksopen=true,
+       bookmarksopenlevel=0,
+       bookmarksnumbered=false,
+       plainpages=false,
+       hyperindex=true,
+       pdfstartview=%
+ ]{hyperref} % why so many options? https://golatex.de/viewtopic.php?p=22119&sid=ebe25f27fce1765ab7d8b1d2e91ee979#p22119
+\usepackage{bookmark} %also https://golatex.de/viewtopic.php?p=22119&sid=ebe25f27fce1765ab7d8b1d2e91ee979#p22119
+
 \usepackage[all]{nowidow} % Prevent widows and orphans.
 \usepackage{xstring} % logic string operations
 \usepackage{bbm} % \mathbb on numerals.
@@ -474,435 +484,35 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 
 \cleardoublepage
 \pagenumbering{arabic} % https://tex.stackexchange.com/a/313306/108199 https://tex.stackexchange.com/a/154666/108199
-\chapter{Introduction}
 
+% #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
-% Broad - "Initialkontextualisierung" - warum mach ich das, aus was für ner domain kommen die daten, was will ich damit machen (use rrecommendation, ich bau AI part, ..)
 
-In this thesis, I want to generate a conceptual space for the domain of university courses, automatically created in data-driven way from their descriptions.
-
-\section{Motivation}
-
-Dass die paar leute die in dem Bereich veröffentlichen echt aktiv sind and all und coole Ideen haben, dass die aber immer nur sich selbst zitieren (und alle auf DESC15 basieren und einen der autoren als co-author haben), und das es sinnvoll ist da mal nen sanity-check reinzubringen und als externe person die validität vom DESC15 algorithmus zu prüfen (...und dass sie ja auch alle die selben 2 datensätze nutzen und dass man eben da auch mal prüfen sollte ob deren kram so sinnvoll ist BEYOND this one dataset) - also in kurz "If this algorithm is as good as they claim, that would be great, but we have reasons to not trust their claim so we're checking them." Im Prozess dafür soll halt auch eine Pipeline rauskommen die es future research leichter macht ebengenau das zu tun was ich hier tu und die validiät der claims zu prüfen etc.
-
-Es gibt auch arbeiten bei denen die formulierte These ein Beispiel-Anwendungsfall für die Software-Grundlage ist
-
-in meinem Fall "Meine Ausgangsfrage war ob man die Methoden von diesem einem Paper auf educational resources anwenden kann um regelmäßigkeiten zu finden für recommendations für educational resources. Um das rauszufinden war es wichtig den Algorithmus zu entwickeln, und im verlauf der thesis ist rausgekommen das ein system dafür zu entwickeln sehr komplex ist (...dass dafür halt eine solide Software-Grundlage gegeben sein muss), also ist diese thesis primär dafür da um das system zu beshcreiben um dann mit diesem system prototypisch die fragestellung anzugehen, und die results für die originalfrage sind dann eher als priliminary results zu betrachten - fokus-shift von results zu methodik".
-
-Das ist eine Motivation für die Thesis ganz klar ist "der Algorithmus den ich da gesehen habe ist ganz nice, das wäre doch cool wenn der so modular und reproduzierbar undundund wäre dass jemand wie ich ankommen kann und den auf andere Datensätze schmeißen kann, aber leider sind die bei open source/open data/details nennen leider nicht so super, so I'm making that instead - the delivarable is a scalable, modular, ... system that makes it easy to exchange components of it, has many analysis-scripts, etc etc etc" 
-
-Das was ich mache ist ja eine Replikationsstudie -> Dann darf ich auch gerne diese Dinge über die Architektur undso schreiben. "Ist ja schon irgendwie ingeneurwissenschaft", dazu gehört also auch mal mehr detail wie man das gemacht hat - hängt natürlich von der gewünschten seitenzahl und dem raum den ich hab ab. In der Arbeit sollte alles drinstehen was man für die Beurteilung braucht, also quellcode oder so darf auch gerne mal im Hauptteil stehen
-
-feature directions allow us to rank objects according to how much they have the corresponding feature, and can thus play an important role in interpretable classifiers, recommendation systems, or entity-oriented search engines, among others  [AGKS18] has many sources for these!!
-	* Recommender systems (gerade critique-based ones thanks to the keyword-extraction etc)
-		-> see example of [VIGSR12]
-	* Semantic Search Engines (can use directions in case of gradual and possibly ill-defined features, like "popular holiday destinations")
-	* Represent examples in classification tasks
-	* Rule-Based Classifiers from the rankings
-
-TODO: direkt repeatability problems ansprechen, see \url{https://cs.carleton.edu/cs_comps/1920/replication/index.php} (the paper states there is problem X, makes a claim that algorithm Y may be good at problem X, create datasets Z for X, and then test the code on these datasets. " In that test of performance, the goal is typically to identify how well the proposed algorithm works versus alternative approaches and additionally to explore what kinds of examples one's algorithm can successfully classify versus what examples it makes errors on  Future research and applications often build on these experiments, relying on their results when deciding what algorithm is most appropriate for a new task or determining whether a new algorithm is better than existing work. For instance, based on the paper above, one might conclude that to test if one has a better sarcasm detector, one need only compare against the new algorithm, since the older approach performed less well in their experiments. Yet, it's rare that people directly try to replicate other's work to confirm that the results are valid and evaluate whether the trends in the results hold in other datasets. In psychology, there has been concern in recent years that many purported psychological phenomena may be overblown, as some attempts to replicate them have been unsuccessful. While computer science experiments are not the same as psychology experiments, there is still reason to be concerned about the lack of work focused on replicating computer science experiments. Often, the details of experiments in published work are opaque, and sometimes important information for reproducing the work in not included. Replicating previous work offers the opportunity to better understand that work, and to investigate the robustness of the algorithm to changes in parameters or dataset. If the exact parameters used have major impacts on the results or the same approach on a different dataset produces very different results, it suggests that caution should be used in generalizing the results and adding nuance to the original conclusions." [quote from webpage])
-
-
-\section{What are conceptual spaces? }
-
-Conceptual spaces (Gärdenfors, blabla) want to stand in between subsymbolic processing and symbolic processing: Like in subsymbolism, concepts are represented in high-dimensional spaces, but because the dimensions of these spaces are not arbitrary but human-interpretable, it allows for symbolistic high-level reasoning.
-
-So, in conceptual spaces, concepts are represented as convex regions in high-dimensional, human interpretable spaces. For example, the concept of "apple" is a region that in the dimension "color" is somewhere between red and green, in the dimension "form" at roughly round, in the dimension "taste" somwhere between sweet and sour, etc. 
-Every instance of an apple is thus a vector that lies inside the high-dimensional region of the concept. This allows for high-level reasoning, such as the question "does any Instance of concept X fit into my bag?" -> If the "size" dimension of the whole region is smaller than the size of my bag, it will.
-
-Conceptual spaces sounds similar to word2vec or other word embedding approaches, however there are a few important distinctions - first, the domain of a conceptual space does not include all kinds of words or concepts, but only concepts of a certain domain (like movies or university courses). 
-Second, conceptual spaces are convex regions, not mere vectors (which allows for easy extraction of is-a and part-of relations or prototypical examples vs edge examples, but makes the generation computationally vastly more expensive). And, most importantly, while the geometry of word2vec is roughly euclidian (otherwise the famous vec(king)-vec(man)+vec(woman)==vec(queen) wouldn't work), the dimensions are not interpretable but arbitrarily depend on the random initial setup, so the concepts king and queen differ not only in a single "gender" dimension [..and also its not really euclidian, is it?! sonst wäre die betweeness doch nicht so special, oder?].
-
-Now the standard problem with conceptual spaces is that they would have to be manually generated, which of courses is a lot of work, which is where the work of [Schokeart et al] comes in - to generate them in a data-driven fashion.
-For that, the authors look at three different domains: movies, wines and places. For each of these domains, they collected many samples (like movies) together with descriptions from places where people can leave them (like reviews from IMDB). A representation of a movie is then generated from the bag-of-words of the descriptions of the individual movies, leading to a very high-dimensional, very sparse representation for all movies. 
-To make the representations less sparse and more meaningful, the words in the BOW are subsequently PPMI-weighted, which weights words that appear often in the description of a particular movie while being infrequent in the corpus overall higher while setting the representation of stopwords to almost zero. 
-This PPMI-weighted BOW is however not yet a euclidian space yet, which is why the authors subsequently use multidimensional scaling (MDS). MDS is a diminsionality reduction technique that attempts to create a euclidian space of lower dimensionality than the original one in which the individual distances of the items are preserved as well as possible. 
-
-With such a space, the concepts of betweeness already makes sense, but so far, the dimensions are not interpretable. So how does one automatically find such directions? In the case of movies, good dimensions may be "scariness", "funniness", "epicness", "family-friendlyness" etc. 
-To find these dimensions, the authors look for these words (as well as similar words thanks to clustering) in the reviews. Then the movies are grouped into those that contain the words from the cluster often enough vs those that don't. A support-vector-machine subsquently finds a hyperplane that best divides the two groups (eg. scary and non-scary), and the orthogonal of that hyperplane is used as one axis of the new coordinate basis. 
-
-% * Dass der tatsächliche Anwendungsbereich von CS noch sehr begrenzt ist - RaZb20 mention "they are commonly used in perceptual domains, e.g. for music cognition [Forth et al., 2010; Chella, 2015], where quality dimensions are carefully chosen to maximize how well the resulting conceptual spaces can predict human similarity judgements"
-% * Dass Word Embeddings ja relativ nah an CS sind - For ex- ample, a well-known property of word embeddings is that many syntactic and semantic relationships can be captured in terms of word vector differences [Mikolov et al., 2013].
-% TODO: Ist word2vec schon nen euclidian space? Why/Why not?
-
-
-
-% \begin{figure}[H]
-% 	\centering
-% 	\includegraphics[width=\figwidth]{scientific_paper_graph_quality}
-% 	\slcaption{
-% 		Developmemt of scientific paper graph quality. A dip in the
-% 		quality of scientific graphs is observed from the early 1990s to the early 2010s.
-% 		During this time Microsoft Paint and PowerPoint were often used to create graphs in scientific papers.\label{fig:scientific_graph_quality}}
-% \end{figure}
-
-% \begin{table}[H]
-% 	\begin{tabular}{@{}ll@{}}
-% 		\toprule
-% 		year & quality \\ \midrule
-% 		1985 & good    \\
-% 		2000 & bad     \\ \midrule
-% 		2015 & better  \\ \bottomrule
-% 	\end{tabular}
-% 	\caption{
-% 		Empirical measurements of scientific graph quality. Data points were collected using
-% 		a systematic literature review.\label{tab:scientific_graph_quality}}
-% \end{table}
-% This references a \figref{fig:scientific_graph_quality} while this references a table \tabref{tab:scientific_graph_quality}.
-
-% A citation looks like this \cite{hadash2018estimate}. To embed a citation in the text flow use textcite,
-% \eg \textcite{hadash2018estimate} said you should use a lot of citations.
-
-\section{What do I want to do in this thesis?}
-
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\textwidth]{graphics/stolenfigures/movietuner.png}
-	\slcaption{
-		The Movie-Tuner Interface from \cite{VISR12} %TODO: cite exact figure (" … as seen in [8, Fig. 33]")
-		\label{fig:movetuner}}
-\end{figure}
-
-\subsection{Open Science and Reproducibility}
-
-I think it is absolutely crucial for all branches of science to adhere to the principles of open science and to ensure that all claims that are made in publications are reproducible and testable. This thesis will mostly copy the work of somebody else, but doing so was incredibly tedious, much more so than it would have to be.
-
-Dabei ist mir aufgefallen dass die schon einige DInge machen die ich aus wissenschaftlicher Sicht für ziemlich kritikwürdig halte, zum Beispiel sind die so schwammig in den Formulierungen dass man beim Versuch den Code zu reproduzieren echt viel raten muss, haben geschrieben dass der Code open ist verweisen aber auf ein leeres Repo, haben ihre Daten veröffentlicht aber wenn man damit arbeitet merkt man dass das die selbst definitiv nicht mit dem Datensatz den sie veröffentlicht haben gearbeitet haben könne, sind sehr hart am cherry-picken in ihrer qualitativ  analysis etc etc et
-
-So one main motivation is to reproduce the code for the paper I liked in a way that adheres to the principles of open science, such that others that find it interesting don't have to go through the shit I had to go through.
-
-Principles of open science (TODO: which are: [see thisandthis paper]) are very important to me, so I want to ensure that the claims I am making in this thesis are backed by code that is scalable, reproducible, modular, easily-understood, easily set up and run, well documented, ... . To support this, I will as often as necessary refer to the actual code in this thesis, to allow to understand and reproduce the claims and results, and also highly encourage to critically read everything here and check the respective code (...and let me know if you spot any errors! Just open a Github Issue!)
-
-% TODO: also make the data available somewhere open!
-
-
-\chapter{Background}
-% (zuspitzung von generell auf spezifisch, sowohl technisch (conceputalspaces -> was macht das paper konkret), (und bei dem anderen teil was sind educational resources, was sind die schwierigkeiten dabei, warum möchte man überhaupt empfehlen))
-
-\section{Use Case: Educational Resources}
-% Anwendungsfall (->e-learning, recommenden von bildungsressourcen, ...) -> nicht-technisch, aber nötig zum verstehen wo passiert das 
-
-\section{Conceptual Spaces}
-
-% \cite{Alshaikh2019} (verbatim!):
-% * vector space models that are aimed at representing the entities of a given kind (e.g. movies), to- gether with their associated properties (e.g. scary) and concepts (e.g. thrillers).
-% * As such, they are similar in spirit to the vector space models that have been proposed in information retrieval (Deer- wester et al., 1990) and natural language pro- cessing (Turney and Pantel, 2010; Mikolov et al., 2013), but there are also notable differences.
-% * First, in the context of conceptual spaces, an explicit dis- tinction is made between the entities from the do- main of discourse, which are represented as vec- tors, and the corresponding properties and con- cepts, which are represented as regions (e.g. poly- topes) or soft regions (e.g. characterized by a Gaussian). 
-% * Second, conceptual spaces are organ- ised into a set of facets [domains], each of which captures a different aspect of meaning. For instance, in a conceptual space of movies, we may have facets such as genre, language, geographic location, etc. Each facet is associated with its own vector space, which intuitively captures similarity w.r.t. the corresponding facet. Most of these facet spaces tend to be low-dimensional (e.g. modelling budget only needs a single dimension). This clearly dif- ferentiates them from traditional semantic spaces, which often have hundreds of dimensions
-
-
-
-
-
-
-\@input{pandoc_generated_latex/chapter_theobg_section_cs}
-
-
-\section{Automatic Data-Driven Generation of Conceptual Spaces}
-
-% \cite{Alshaikh2019} geht drauf ein warum man infoGAN und VAEs für bilder als pretty much sowas betrachten kann
-
-%Wie funktioniert die Idee des data-driven generieren 
-
-% Base idea: [Derrac and Schockaert, 2015] proposed an unsupervised method which uses text descriptions of the considered entities to identify se- mantic features that can be characterized as directions. Their core assumption is that words describing semantically mean- ingful features can be identified by learning for each candi- date word w a linear classifier which separates the embed- dings of entities that have w in their description from the oth- ers. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature. 
-% This method trains for each word w in the vocab- ulary a linear classifier which predicts from the embedding of an entity whether w occurs in its description. The words w1, ..., wn for which this classifier performs sufficiently well are then used as basic features. To assess classifier perfor- mance, Cohen’s Kappa score, which can be seen as a correc- tion of classification accuracy to deal with class imbalance, is used. Each of the basic features w is associated with a cor- responding vector dw (i.e. the normal vector of the separat- ing hyperplane learned by the classifier). These directions are subsequently clustered, which serves to reduce the total num- ber of features.
-
-% TODO: Have to write here:
-% * that in a CS the axes correspond to human concepts, "concepts" meaning attributes and what-was-the-other-again, according to CS lingo corresponding to nouns and adjectives yadda yadda, darauf referenzier ich mich im Text
-
-
-\section{Types of Reasoning}
-
-\@input{pandoc_generated_latex/chapter_theobg_section_reasoning}
-
-\section{Related Work}
-
-% dass das alles vergleichbar mit InfoGAN etc für Bilder ist.. (siehe auch text von \cite{Alshaikh2019})
-
-\@input{pandoc_generated_latex/chapter_related_work}
-
-
-
-\section{Required Algorithms and Techniques}
-
-\subsubsection*{Germanet}
-
-\cite{hamp-feldweg-1997-germanet}
-\cite{Henrich}
-
-The Paper uses the following PPMI definition:\\ 
-
-\noindent $e \in E$ is an entity, $D_e$ a document (bag of words) where that entity occurs.\\
-We want to quantify for each term occuring in the corpus $\{D_e | e \in E\}$ how strongly it is associated with $e$.\\
-$c(e,t)$ is the number of times term $t$ occurs in document $D_e$. \\
-The weight $ppmi(e,t)$ for term $t$ in the vector representing $e$ is then:
-\begin{align*}
-ppmi(e,t) &= max\left(0, log\left( \frac{p_{et}}{p_{e*}*p_{*t}} \right) \right) \\
-          &= max\left(0, pmi(e,t) \right) \\
- pmi(e,t) &= log\left( \frac{p_{et}}{p_{e*}*p_{*t}} \right) \\          
-   p_{et} &= \frac{c(e,t)}{\sum_{e'}\sum_{t'} c(e',t')} \\
-   p_{e*} &= \sum_{t'}p_{et'} \\
-   p_{*t} &= \sum_{e'}p_{e't} \\
-\end{align*}
-
-\noindent log of the probability of the $e$-$t$-combination (count of this vs count of all), normalized by the probability of this $e$ with any $t$ times this $t$ with any $e$.\\
-To quote the paper: "PPMI will favor terms which are frequently associated with the entity $e$ while being relatively infrequent in the corpus overall"
-
-\vspace{30px}
-
-I found this definition:
-\begin{align*}
-ppmi(X,i,j) &= max(0, pmi(X,i,j)) \\
-pmi(X,i,j)  &= log\left( \frac{X_{ij}}{expected(X,i,j)} \right) \\
-            &= log\left( \frac{P(X_{ij})}{P(X_{i*}) * P(X_{*j})} \right)
-\end{align*}
-
-
-\@input{pandoc_generated_latex/chapter_methods_section_required_algorithms}
-
-
-\chapter{Methods}
-%(Algorithmus & Datensatz)
-
-Direkt am Anfang schreiben dass ich halt auf den main algorithmus eingehe und das laut meiner research diese 3 paper am besten den main algo beschreiben (bzw sinnvoll erweitern) - was nicht heißt dass das die einzigen in dem kontext sind, Alshaikh2019 bspw nutzen ja den main algorithmus, aber ja nur als komponente, und haben andere Ziele was sie dann damit machen
-
-Im folgenden gibt es neben Datasets 2 main sections: algoritm and architecture. Dass Algorithm und Architecture 2 subsection von methods sind ist halt "Der allgemeine Algorithmus und die spezifische Anwendung" Warum Architecture session? es kostet extrem viel zeit die schwammigen formulierungen in den papern genau zu verstehen, man probiert super oft falsche parameter-kombinationen aus etc etc, es ist halt ein riesiger ewig langer lernprozess den man von vorne machen müsste wenn man es nachimplementieren möchte, ich hätte mir gewünscht die authors hätten darüber mehr worte verloren, and also the scalable reproducible open-science part. And also - it took me a shitton of time, way more than working on the algorithm (but NOW it can run so easily on the grid and all param-combis simultaneously, ..), so this is what you'll get.
-
-
-\section{Datasets}
-
-% * Steht ja schon woanders dass mein Datensatz anders ist als concatenated-movie-reviews und ich deswegen nicht einfach "je öfter 'scary' desco scarier" machen kann. Da gibt's several ways mit umzugehen
-	% * Das sich-die-richtigen-wörter-per-candidate-svm-bootstrappen
-	% * Mit LSI rausfinden welche Terme genausogut in dem Text hätten vorkommen können (hab ich auch irgendwo schon)
-	% * Explizit einfach zu gucken "Welche Terme kommen oft in den gleichen dokumenten vor" (und das inverse (steht iwo im code)), und dann ne candidate SVM für grouped terms anstelle von einzelterms machen (auch schon iwo als code)
-	% * Mit Wordnet hypernyms/hyponyns und synonyms zu finden damit ebenfalls zu arbeiten (kann man wit wordnet angeben welches abstraktionsniveau ich haben will?)
-	%     * Abstraktionsniveau gibt's nicht in wordnet, das heißt das richtige layer zu finden ist schwer. Was man auf jeden Fall machen kann ist die Terme zu den bases ihrer synsets umzuwandeln (dadurch wird aus "math" und "mathematics" das gleiche), aber in anderen Fällen ist es halt so dass ich die Candidate-Terms schon vorher brauche und nur sagen kann "diese entity enhält X wörter die halt hyponyms von dem Term sind"
-
-their algorithm is tailored to concatenated-reviews or concatenated-bags-of-tags. Take their success-metric for the SVMs splitting the embedding. The more often the word "scary" comes in the concatenated reviews, the more scary the movie is. Sounds legit. The more often the people that took pictures at a particular place mentioned the "nature" of that, the more relevant "nature" is to that place. Also legit. But in the descriptions for courses that involve a lot of mathematics, it is not necessarily the case that the term "mathematics" occurs often. So due to the different nature of my dataset I have to go beyond their algorithm at some points - in this case it is probably the case that different kinds of mathematical terms actually do occur more often, so I'd need calculate these kinds of kappas not based oon a single term but ALREADY on a cluster of terms (... and I can bootstrap my way there, because after I do this I get more words to add to my cluster, rinse and repeat!)
-
-\input{include/dataset_table}
-
-
-% Empirie, auch specifics über den Datensatz
-
-%To write:
-% * where does the data come from
-% * what size is the data, what is the distribution, ...
-% * Preliminary analysis (if I delete all that are shorter than X, it are |Y|..)
-% * Does it cluster and look nice?
-% * Verteilung der Sprachen
-% * Preprocessing in kurzem Fließtext beschreiben - "After throwing out all descriptions shorter than xyz chars, 2323 courses where left. 223 of these were ..."
-% * That the type of dataset differs from DESC15 and followups - mainly used movie-dataset consists of concatenated reviews (which means relevant words occur more often!) 
-%     (TODO: look/think was die anderen auszeichnet - bei dem placetypedataset ists ja gar kein fließtext sondern direkt ein bag-of-tags)
-% Dass mein Datensatz kleiin ist! Bei keinem sonderlichen min-word-per-desc threshold hab ich halt 7588 samples, bei 50 schon nur noch 4123, das ist wirklich little
-% Dass auch die Descriptions echt kurz sind! Ich hab rund 8k samples, um das selbe samples-to-threshold verhältnis zu haben wie DESC15 wäre rechnerisch ein wert von 2 bis 25 sinnvoll (wobei man beachten muss das 2 schon richtig kacke ist weil dann die SVM 2 vs 8000 klassifizieren muss and that will never work -> 25 ist minimum), ABER wenn ich dann 25 nehme hab ich nur 2.4k candidates statt the 22k DESC15 aimed at, which also sucks!! --> CONCLUSION: Datensatz scheint zu klein.
-
-The main goal of this thesis was to create a conceptual space of courses, automatically generated by course descriptions.
-
-
-For that, a dataset of courses and their descriptions was obtained as export from the Stud.IP system as used at the universities of Osnabrück, Hannover and Bremen.
-%TODO wait, woher kam der datensatz überhaupt? Tobias hat mir den geschickt, aber kam er zustande im Rahmen von Siddata?
-
-The dataset comes from Johannes' Repo at \url{https://git.siddata.de/jschrumpf/study_behavior_analysis} (requires authentification over UOS!)
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\figwidth]{graphics/figures/courses_language_distribution.png}
-	\slcaption{
-		\label{fig:courses_language_distribution}
-		Distribution of languages of course descriptions.
-		%TODO figure if this is the correct amount of preprocessing/throwout to have done
-		Of the 21337 courses left after preprocessing, 18,679 were in german language according to the \textit{langdetect} python-package (for details, see \aref{ap:translating}).
-		}
-\end{figure}
-
-
-The faculty is easily obtainable from the dataset, as the first one or two digits of the course ID correspond to it. The distribution of the faculties is depicted in figure \ref{fig:faculty_plot}.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\figwidth]{graphics/figures/faculty_plot.png}
-	\slcaption{
-		\label{fig:faculty_plot}
-		Distribution of faculties in the courses
-		}
-\end{figure}
-
-The purpose of the Neural Network classifier is to check if it is anyhow possible to extract meaningful information from the descriptions: If it is possible to train a classifier on the data that can reasonably predict a qualitative feature, there is enough structure in the data such that the algorithm I'm about to produce can work.
-Also, we have a lower bound for useful data: we can just throw away data that cannot be classified!
-%TODO: train a second classifier on something else and throw away data that gets classified by neither and inspect it
-
-(-> 91\% test accuracy)
-
-% =============== Besonderheiten vom Siddata-datensatz
-
-....len([i for i in descriptions._descriptions if "kompetenzen entwickelt befahigen akademischen berufstypischen" in i.processed_as_string()]) == 25  ... weil es genau 25 exakt gleiche Beschreibungen gibt, für die Fremdsprachkurse. Deswegen ist up to jede 5-wort-kombination davon ein extracted keyword
-(und das obwohl sie verschiedene Namen haben! merging them doesn't make sense but they are almost equal)
-
-% =============== Schreiben zum Thema Datensatz-Vergleich:
-
-...ist es richtig dass nur 6000 verschiedene Terms >= 25 mal vorkommen?! 6000?!
-=> auch in groß ist mein datensatz ja noch deutlich kleiner als placetypes, die haben immerhin 22k candidates
---> n-docs: 7596
---> 1-grams >= 25 times: 5054, 1-5-grams >= 25 times: 6717
---> unique 1-grams: 106235
-
-bei placetypes sind es 
-* unique 1-grams: 746180, davon 41320 >= 25 mal und 21833 >= 50 mal (their threshold)
-
---> das verhältnis Anzahl Texte zu Länge Texte ist bei mir halt komplett off 
-
-% =============== 
-
-
-\subsection{Other Datasets}
-
-%TODO: write IN THE ALGORITHM & ARCHITECTURE SECTIONS that I of course tried the placetypes-dataset as sanity-check to find errors - for that dataset, stuff like the good-candidates is known so as long as I don't reach their performances for that dataset I know my code is the problem, but as soon as I reach their performance I can savely say that the actual algorithm is correct and if it's still bad on the siddata dataset it's just not applicable to this kind of data
-
-Also tried the Plactypes-Dataset used by all main-paper-authors. When doing so I noticed that there are definitely duplicates (which are consistently recognized as closest-terms in embedding):
-  abandoned rail road and abandoned railroad
-  boat yard and boatyard
-  coral reef and reef
-  court house and courthouse
-  grass land and grassland
-  sheep fold and sheepfold
-  skate park and skatepark
-  steak house and steakhouse
-  water fall and waterfall
-  wind mill and windmill
-
-Next to that, the embedding however also sees very similar ones as very similar, which is a nice sanity-check, eg.
-
-  abandoned farm and abandoned home
-  airfield and airport
-  airport and airport terminal
-  ancient site and archaeological site
-  arch and arch bridge
-  art gallery and art museum
-  coffee house and coffee shop
-  aircraft cabin and airplane cabin
-  apartment and apartment building
-  bank and bank building
-  field hockey field and hockey field
-
-
-Also tried a dataset of 100.000 coursera course reviews from \url{https://www.kaggle.com/septa97/100k-courseras-course-reviews-dataset}. Why? Because it's also eduactional resources, but as it's reviews it seems closer to the movies dataset
-See \url{https://www.kaggle.com/roshansharma/coursera-course-reviews} for exploratory analysis of the dataset (there he also has another dataset he writes about, but you cannot merge them unfortunately, so besides course name the only possible task is the rating)
-%TODO: I could try to merge it with this one https://www.kaggle.com/siddharthm1698/coursera-course-dataset or another one (see https://www.kaggle.com/mihirs16/coursera-course-data which links names to links, https://www.kaggle.com/search?q=coursera+in%3Adatasets for other places)
-
-Also, there's the Large Movie Review Dataset\footnote{\url{http://ai.stanford.edu/~amaas/data/sentiment/}, \url{https://scikit-learn.org/0.19/datasets/twenty_newsgroups.html}}, also used by \cite{Ager2018}.
-
-
-\section{Architecture}
-\label{sec:architecture}
-
-%Doing this section before Algorithm-section such that I can reference how plots are created or general code examples with the real thing, including how what you're seeing was generated and can be reproduced
-
-%TODO: Also in this chapter:
-% * Source-code is ofc open, available under github under this link, it is referred to the signed commit xyz
-% * Reference Snakemake-Paper (and at least look a the abstract of that, they also talk about that in science you need reproducible, adaptable and transparency including definitions of what that means!)
-\cite{Molder2021a}
-% 		* good way to bash the original paper who either didn't publish their sourcecode or link a github-repo in their paper that is fucking empty, or did at least opensource their code but have just one fucking file in there that expects >40 unnamed command-line-args
-
-
-\@input{pandoc_generated_latex/chapter_methods_section_architecture}
-
-
-
-\section{Algorithm}
-
-\input{sections/methods_algorithms}
-
-\chapter{Results}
-
-
-\input{include/results_table_1}
-	
-		
-	
-	
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - MAIN PART
+%----------------------------------------------------------------------------------------
 	
 
+% INTRO
+	% Broad - "Initialkontextualisierung" - warum mach ich das, aus was für ner domain kommen die daten, was will ich damit machen (use rrecommendation, ich bau AI part, ..)
+	\include{Chapters/01-intro.tex}
 
-\section{Evaluation} %TODO what is this for a title? it sucks
+% BACKGROUND
+	% (zuspitzung von generell auf spezifisch, sowohl technisch (conceputalspaces -> was macht das paper konkret), (und bei dem anderen teil was sind educational resources, was sind die schwierigkeiten dabei, warum möchte man überhaupt empfehlen))
+	\include{Chapters/02-background.tex}
 
+%METHODS
+	%(Algorithmus & Datensatz)
+	\include{Chapters/03-methods.tex}
 
-* This is clustering and looking if it corresponds to human judgement, which unfortunately doesn't allow for a simple accuracy and be done with it.
-* So, the papers that did this come up with a few things
-* [TODO: the shallow decisiontrees of one of the followups]
-* DESC15 "evaluate the practical usefulness of the considered semantic relations" by checking "their use in commonsense reasoning based classifiers", like interpolation and a fortiori inference (chap 5)
+%RESULTS
+	\include{Chapters/04-results.tex}
 
-
-* DESC15 tests like this: Section 6.1: Evaluate whether the derived relations are sufficiently accurate for classification, and 6.2 is then comparison with crowdsourcing experiments (more subjective aspects, the question “are the relations useful explanations?”)
-
-
-
-\section{Qualitative Analysis}
-
-Qualitative Analysis in this case means "looking at stuff". Such a qualitative analysis is always to be taken with a grain of salt, because it is very prone to cherry-picking (both on purpose and not on purpose, the stuff you're looking at just doesn't need to be representative!). However it does help a lot and provides a lot of insights (and often helped me in the debugging process).
-What can you look at for such a qualitative analysis?
-\begin{itemize}
-	\item The clusters, checking if things you know to be similar are actually in the same clusters
-	\item If descriptions you know to be semantically similar are actually close in the embedding
-	\item You can do the whole thing for only three dimensions instead of the 50/100/200 because there you can plot the stuff and interpret it
-\end{itemize}
-
-\begin{itemize}
-	\item  Man kann ja schon nach dem Embedding anhand der nächsten Entities sehen ob das was werden kann - bei 100D sind dann halt "airplane cabin" und "aircraft cabin" die nächsten entities, bei 3D dann halt eher kram wie "area" and "moor", was schon eindeutig zeigt dass 3D offensichtlich nicht so der Hit ist
-	\item Die vielen Sanity Checks die man machen kann, bspw dass ich ja in 3D gucken kann (und auch in höher-D ausrechnen) ob eben diese dinge (von item 1) im Embedding nah sind, und ob die SVM Dinge schön trennt ("howto_embed.ipynb")
-	\item "placetypes_origconf.ipynb", was einfach von vorne bis hinten die original-config (ist ja auch im yaml) von DESC15 ausführt und interpretiert	
-\end{itemize}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\figwidth]{svm_mathematik_highlight_infoAB.png}
-	\caption[3D-Plot with an SVM for the term "Mathematik"]{
-		\label{fig:3dplot_mathe_infoab}
-		3D-Plot with an SVM for the term "Mathematik", also highlighting the courses "Informatik A" and "Informatik B"
-	}
-\end{figure}
-
-In figure \ref{fig:3dplot_mathe_infoab} we see a 3D-Embedding for courses, splitting courses which contain the term "mathematics" from those that don't, also hightlighting the terms "Informatik A" and "Informatik B". We see they are close we see the SVM is not to bad, and even though neiher Info A nor Info B contains the word "mathematik", thy are both on the "mathematical side" of courses. Negative samples are hidden for better visibility, and entities that contain the word more-often-than-the 75th (???) percentile have bigger markers.
-
-
-\begin{itemize}
-	\item In 3D ists immer ne Kugel, und ich würde behaupten in höheren Dimensionen ist es nicht extrem viel besser. dadrin ne SVM zu machen bringt echt wenig bis gar nix (Ich hab ja sogar Plots die zeigen dass die Movies viel besser clustern - TODO: die einbringen)
-\end{itemize}
-
-
-\section{Quantiative Results}
-
-% Schreiben was die paper denen ich mostly folge zur evaluation gemacht haben! ("To evaluate whether the discovered features are semantically meaningful, we test how similar they are to natural categories, by training depth-1 decision trees")
-% Ein anderer Weg zum testen wäre auch ein classifier der nur anhand der most salient generated features versucht den kurs wiederherzustellen (das zeigt natürlich nicht ob es similar to how humans do it but part of it)
-
-Here I'll add the results of the low-depth-decision-trees for Fachbereich, and also compare the results of throwing my code onto their placetypes-dataset and how my results compare to theirs 
-(set overlap of candidate terms!)
-
-To see if it is possible to extract any kind of structured data from the unstructured course descriptions, a Neural Network classifier was trained on the dataset, classifying courses to the faculty they run under. 
-$\rightarrow$ Der FB-Classifier kommt auf $95.33\%$ train, $90.96\%$ Test accuracy nach 10 epochs, that's a lot!!
-
-
-Both \cite{Ager2018} and \cite{Alshaikh2020} train shallow decision-trees (depth 1 and depth 3 each), on their feature-based representations (such that the 1 or 3 most distinct interpretable dimensions are used) on a known property of the data (genres for movies, category in some taxonomy for placetypes, fachbereich for mine) - in the assumption that these eg in the movie domain the genre (or rather *terms accurately predicting it*) is among the features.
-
-
-
-\chapter{Discussion and Conclusion}
-% (was sind die broaden takeaways von meinem Kram)
-% * Nochmal nen theoretisches Embedding, Kontextualisieren für Bildungsressourcen
-% * ...and conclusion
-
-\section{Future Work}
-
-\@input{pandoc_generated_latex/section_future_work}
-
-
-
-\section{Discussion}
-
-
-In die Conclusion auch die Frage inwieweit das jetzt conceptual spaces sind (sehr viele vereinfachende sachen, like no convex regions but simply dots)
-[AGKS18] ist da auch mehr humble als [DESC15] und sagt "The idea of learning semantic spaces with accurate fea- ture directions can be seen as a first step towards methods for learning conceptual space representa- tions from data"
+%DISCUSSION
+	% (was sind die broaden takeaways von meinem Kram)
+	% * Nochmal nen theoretisches Embedding, Kontextualisieren für Bildungsressourcen
+	% * ...and conclusion
+	\include{Chapters/05-discussion.tex}
 
 
 % \chapter*{Acknowledgements}
@@ -922,22 +532,29 @@ In die Conclusion auch die Frage inwieweit das jetzt conceptual spaces sind (seh
 \glsaddall
 \printglossaries %TODO: let glossary appear in TOC
 
-\cleardoublepage
-
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - APPENDICES
 %----------------------------------------------------------------------------------------
 	
 	\appendix % Cue to tell LaTeX that the following "chapters" are Appendices
-	
+
+	\cleardoubleoddpage
+	\phantomsection
+	\addcontentsline{toc}{part}{\appendixname}
+	\setchapterpreamble[o]{% siehe KOMA-Script-Anleitung
+  		\usekomafont{disposition}\usekomafont{part}\appendixname\bigskip} 
+	% the three above are to show the appendix as section, see https://golatex.de/viewtopic.php?p=22119&sid=ebe25f27fce1765ab7d8b1d2e91ee979#p22119
+
 	% Include the appendices of the thesis as separate files from the Appendices folder
 	% Uncomment the lines as you write the Appendices
 	
-	\include{Appendices/AppendixA}
+	\input{Appendices/AppendixA}
 	\input{Appendices/AppendixB}
 
-\cleardoublepage
+
+	\cleardoublepage
 \pagestyle{plain}
+\bookmarksetup{startatroot} 
 
 \printbibliography[heading=bibintoc]
 

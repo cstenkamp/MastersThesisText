@@ -1,0 +1,159 @@
+\chapter{Methods}
+
+Direkt am Anfang schreiben dass ich halt auf den main algorithmus eingehe und das laut meiner research diese 3 paper am besten den main algo beschreiben (bzw sinnvoll erweitern) - was nicht heißt dass das die einzigen in dem kontext sind, Alshaikh2019 bspw nutzen ja den main algorithmus, aber ja nur als komponente, und haben andere Ziele was sie dann damit machen
+
+Im folgenden gibt es neben Datasets 2 main sections: algoritm and architecture. Dass Algorithm und Architecture 2 subsection von methods sind ist halt "Der allgemeine Algorithmus und die spezifische Anwendung" Warum Architecture session? es kostet extrem viel zeit die schwammigen formulierungen in den papern genau zu verstehen, man probiert super oft falsche parameter-kombinationen aus etc etc, es ist halt ein riesiger ewig langer lernprozess den man von vorne machen müsste wenn man es nachimplementieren möchte, ich hätte mir gewünscht die authors hätten darüber mehr worte verloren, and also the scalable reproducible open-science part. And also - it took me a shitton of time, way more than working on the algorithm (but NOW it can run so easily on the grid and all param-combis simultaneously, ..), so this is what you'll get.
+
+
+\section{Datasets}
+
+\subsection{SIDDATA-courses}
+
+% * Steht ja schon woanders dass mein Datensatz anders ist als concatenated-movie-reviews und ich deswegen nicht einfach "je öfter 'scary' desco scarier" machen kann. Da gibt's several ways mit umzugehen
+	% * Das sich-die-richtigen-wörter-per-candidate-svm-bootstrappen
+	% * Mit LSI rausfinden welche Terme genausogut in dem Text hätten vorkommen können (hab ich auch irgendwo schon)
+	% * Explizit einfach zu gucken "Welche Terme kommen oft in den gleichen dokumenten vor" (und das inverse (steht iwo im code)), und dann ne candidate SVM für grouped terms anstelle von einzelterms machen (auch schon iwo als code)
+	% * Mit Wordnet hypernyms/hyponyns und synonyms zu finden damit ebenfalls zu arbeiten (kann man wit wordnet angeben welches abstraktionsniveau ich haben will?)
+	%     * Abstraktionsniveau gibt's nicht in wordnet, das heißt das richtige layer zu finden ist schwer. Was man auf jeden Fall machen kann ist die Terme zu den bases ihrer synsets umzuwandeln (dadurch wird aus "math" und "mathematics" das gleiche), aber in anderen Fällen ist es halt so dass ich die Candidate-Terms schon vorher brauche und nur sagen kann "diese entity enhält X wörter die halt hyponyms von dem Term sind"
+
+their algorithm is tailored to concatenated-reviews or concatenated-bags-of-tags. Take their success-metric for the SVMs splitting the embedding. The more often the word "scary" comes in the concatenated reviews, the more scary the movie is. Sounds legit. The more often the people that took pictures at a particular place mentioned the "nature" of that, the more relevant "nature" is to that place. Also legit. But in the descriptions for courses that involve a lot of mathematics, it is not necessarily the case that the term "mathematics" occurs often. So due to the different nature of my dataset I have to go beyond their algorithm at some points - in this case it is probably the case that different kinds of mathematical terms actually do occur more often, so I'd need calculate these kinds of kappas not based oon a single term but ALREADY on a cluster of terms (... and I can bootstrap my way there, because after I do this I get more words to add to my cluster, rinse and repeat!)
+
+\input{include/dataset_table}
+
+
+% Empirie, auch specifics über den Datensatz
+
+%To write:
+% * where does the data come from
+% * what size is the data, what is the distribution, ...
+% * Preliminary analysis (if I delete all that are shorter than X, it are |Y|..)
+% * Does it cluster and look nice?
+% * Verteilung der Sprachen
+% * Preprocessing in kurzem Fließtext beschreiben - "After throwing out all descriptions shorter than xyz chars, 2323 courses where left. 223 of these were ..."
+% * That the type of dataset differs from DESC15 and followups - mainly used movie-dataset consists of concatenated reviews (which means relevant words occur more often!) 
+%     (TODO: look/think was die anderen auszeichnet - bei dem placetypedataset ists ja gar kein fließtext sondern direkt ein bag-of-tags)
+% Dass mein Datensatz kleiin ist! Bei keinem sonderlichen min-word-per-desc threshold hab ich halt 7588 samples, bei 50 schon nur noch 4123, das ist wirklich little
+% Dass auch die Descriptions echt kurz sind! Ich hab rund 8k samples, um das selbe samples-to-threshold verhältnis zu haben wie DESC15 wäre rechnerisch ein wert von 2 bis 25 sinnvoll (wobei man beachten muss das 2 schon richtig kacke ist weil dann die SVM 2 vs 8000 klassifizieren muss and that will never work -> 25 ist minimum), ABER wenn ich dann 25 nehme hab ich nur 2.4k candidates statt the 22k DESC15 aimed at, which also sucks!! --> CONCLUSION: Datensatz scheint zu klein.
+
+The main goal of this thesis was to create a conceptual space of courses, automatically generated by course descriptions.
+
+
+For that, a dataset of courses and their descriptions was obtained as export from the Stud.IP system as used at the universities of Osnabrück, Hannover and Bremen.
+%TODO wait, woher kam der datensatz überhaupt? Tobias hat mir den geschickt, aber kam er zustande im Rahmen von Siddata?
+
+The dataset comes from Johannes' Repo at \url{https://git.siddata.de/jschrumpf/study_behavior_analysis} (requires authentification over UOS!)
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\figwidth]{graphics/figures/courses_language_distribution.png}
+	\slcaption{
+		\label{fig:courses_language_distribution}
+		Distribution of languages of course descriptions.
+		%TODO figure if this is the correct amount of preprocessing/throwout to have done
+		Of the 21337 courses left after preprocessing, 18,679 were in german language according to the \textit{langdetect} python-package (for details, see \aref{ap:translating}).
+		}
+\end{figure}
+
+
+The faculty is easily obtainable from the dataset, as the first one or two digits of the course ID correspond to it. The distribution of the faculties is depicted in figure \ref{fig:faculty_plot}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\figwidth]{graphics/figures/faculty_plot.png}
+	\slcaption{
+		\label{fig:faculty_plot}
+		Distribution of faculties in the courses
+		}
+\end{figure}
+
+The purpose of the Neural Network classifier is to check if it is anyhow possible to extract meaningful information from the descriptions: If it is possible to train a classifier on the data that can reasonably predict a qualitative feature, there is enough structure in the data such that the algorithm I'm about to produce can work.
+Also, we have a lower bound for useful data: we can just throw away data that cannot be classified!
+%TODO: train a second classifier on something else and throw away data that gets classified by neither and inspect it
+
+(-> 91\% test accuracy)
+
+% =============== Besonderheiten vom Siddata-datensatz
+
+....len([i for i in descriptions._descriptions if "kompetenzen entwickelt befahigen akademischen berufstypischen" in i.processed_as_string()]) == 25  ... weil es genau 25 exakt gleiche Beschreibungen gibt, für die Fremdsprachkurse. Deswegen ist up to jede 5-wort-kombination davon ein extracted keyword
+(und das obwohl sie verschiedene Namen haben! merging them doesn't make sense but they are almost equal)
+
+% =============== Schreiben zum Thema Datensatz-Vergleich:
+
+...ist es richtig dass nur 6000 verschiedene Terms >= 25 mal vorkommen?! 6000?!
+=> auch in groß ist mein datensatz ja noch deutlich kleiner als placetypes, die haben immerhin 22k candidates
+--> n-docs: 7596
+--> 1-grams >= 25 times: 5054, 1-5-grams >= 25 times: 6717
+--> unique 1-grams: 106235
+
+bei placetypes sind es 
+* unique 1-grams: 746180, davon 41320 >= 25 mal und 21833 >= 50 mal (their threshold)
+
+--> das verhältnis Anzahl Texte zu Länge Texte ist bei mir halt komplett off 
+
+% =============== 
+
+
+\subsection{Place-Types}
+
+\begin{itemize}
+	\item Did it to be able to compare my results to the ones of \mainalgos
+	\item Did NOT do the movies-dataset (also used by all \mainalgos, see \tref{tab:all_datasets}), because version available online does not contain n-grams so it will not be comparable
+	\item 
+\end{itemize}
+
+%TODO: write IN THE ALGORITHM & ARCHITECTURE SECTIONS that I of course tried the placetypes-dataset as sanity-check to find errors - for that dataset, stuff like the good-candidates is known so as long as I don't reach their performances for that dataset I know my code is the problem, but as soon as I reach their performance I can savely say that the actual algorithm is correct and if it's still bad on the siddata dataset it's just not applicable to this kind of data
+
+Also tried the Plactypes-Dataset used by all main-paper-authors. When doing so I noticed that there are definitely duplicates (which are consistently recognized as closest-terms in embedding):
+  abandoned rail road and abandoned railroad
+  boat yard and boatyard
+  coral reef and reef
+  court house and courthouse
+  grass land and grassland
+  sheep fold and sheepfold
+  skate park and skatepark
+  steak house and steakhouse
+  water fall and waterfall
+  wind mill and windmill
+
+Next to that, the embedding however also sees very similar ones as very similar, which is a nice sanity-check, eg.
+
+  abandoned farm and abandoned home
+  airfield and airport
+  airport and airport terminal
+  ancient site and archaeological site
+  arch and arch bridge
+  art gallery and art museum
+  coffee house and coffee shop
+  aircraft cabin and airplane cabin
+  apartment and apartment building
+  bank and bank building
+  field hockey field and hockey field
+
+\subsection{Other Datasets}
+
+Also tried a dataset of 100.000 coursera course reviews from \url{https://www.kaggle.com/septa97/100k-courseras-course-reviews-dataset}. Why? Because it's also eduactional resources, but as it's reviews it seems closer to the movies dataset
+See \url{https://www.kaggle.com/roshansharma/coursera-course-reviews} for exploratory analysis of the dataset (there he also has another dataset he writes about, but you cannot merge them unfortunately, so besides course name the only possible task is the rating)
+%TODO: I could try to merge it with this one https://www.kaggle.com/siddharthm1698/coursera-course-dataset or another one (see https://www.kaggle.com/mihirs16/coursera-course-data which links names to links, https://www.kaggle.com/search?q=coursera+in%3Adatasets for other places)
+
+Also, there's the Large Movie Review Dataset\footnote{\url{http://ai.stanford.edu/~amaas/data/sentiment/}, \url{https://scikit-learn.org/0.19/datasets/twenty_newsgroups.html}}, also used by \cite{Ager2018}.
+
+
+\section{Architecture}
+\label{sec:architecture}
+
+%Doing this section before Algorithm-section such that I can reference how plots are created or general code examples with the real thing, including how what you're seeing was generated and can be reproduced
+
+%TODO: Also in this chapter:
+% * Source-code is ofc open, available under github under this link, it is referred to the signed commit xyz
+% * Reference Snakemake-Paper (and at least look a the abstract of that, they also talk about that in science you need reproducible, adaptable and transparency including definitions of what that means!)
+\cite{Molder2021a}
+% 		* good way to bash the original paper who either didn't publish their sourcecode or link a github-repo in their paper that is fucking empty, or did at least opensource their code but have just one fucking file in there that expects >40 unnamed command-line-args
+
+
+\@input{pandoc_generated_latex/chapter_methods_section_architecture}
+
+
+
+\section{Algorithm}
+
+\input{sections/methods_algorithms}

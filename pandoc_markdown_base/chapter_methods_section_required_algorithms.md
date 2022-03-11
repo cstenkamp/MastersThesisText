@@ -49,6 +49,8 @@ and $N$ being the total number of documents
 
 ### Latent Semantic Analysis (LSA) / Latend Semantic Indexing (LSI)
 
+DESC15: "In infor- mation retrieval, it is common to represent documents as vectors with one component for every term occurring in the corpus. In many other applica- tions (and sometimes in information retrieval) some form of dimensionality reduction is typically used to obtain vectors whose components correspond to concepts. One of the most popular techniques, called latent semantic analysis (LSA [39]), uses singular value decomposition (SVD) to this end. Multi-dimensional scaling (MDS [40]) is another popular method for dimen- sionality reduction, which builds a vector-space representation from pairwise similarity judgements."
+
 * LSI is alternative name for LSA in linguistics
 * *"applies rank-reduced singular value decomposition to a term-document matrix in order to express the documents and terms in a lower dimensional concept space*" (Quote [VISR12])
 * [VISR12] use it to find relationships between tags and documents by the cosine similiarity in this concept space: the closeness of a document to a tag is the cosine similarity of the LSI-embedded document and an LSI-embedded pseudo-document that consists of only that tag
