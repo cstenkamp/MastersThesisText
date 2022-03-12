@@ -1,5 +1,3 @@
-Universal Time Coordinated (UTC)
-Machine Learning (ML)
 Support Vector Machine (SVM)
 Multi Dimensional Scaling (MDS)
 Positive Pointwise Mutual Information (PPMI)

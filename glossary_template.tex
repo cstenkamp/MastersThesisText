@@ -1,6 +1,6 @@
-% see https://tex.stackexchange.com/q/180660/108199, https://tex.stackexchange.com/questions/1226/how-to-make-latexmk-use-makeglossaries, https://de.overleaf.com/learn/latex/Glossaries, https://tex.stackexchange.com/a/182765/108199, https://tex.stackexchange.com/q/270098/108199, https://tex.stackexchange.com/q/316777/108199, https://tex.stackexchange.com/a/509325/108199, https://texblog.org/2014/04/01/multiple-glossaries-in-latex/, https://de.overleaf.com/learn/latex/Glossaries, 
+% see https://tex.stackexchange.com/q/180660/108199, https://tex.stackexchange.com/questions/1226/how-to-make-latexmk-use-makeglossaries, https://de.overleaf.com/learn/latex/Glossaries, https://tex.stackexchange.com/a/182765/108199, https://tex.stackexchange.com/q/270098/108199, https://tex.stackexchange.com/q/316777/108199, https://tex.stackexchange.com/a/509325/108199, https://texblog.org/2014/04/01/multiple-glossaries-in-latex/, https://de.overleaf.com/learn/latex/Glossaries, https://texwelt.de/fragen/24504/glossaries-extra-liste-der-seiten-kleiner-setzen-und-vertikalen-leerraum-entfernen
 
-% especially https://tex.stackexchange.com/a/364059/108199, https://tex.stackexchange.com/a/360368/108199
+% especially https://tex.stackexchange.com/a/364059/108199, https://tex.stackexchange.com/a/360368/108199, https://www.dickimaw-books.com/gallery/glossaries-styles/
 
 \usepackage[
   acronym,
@@ -17,6 +17,11 @@
 
 \setlength{\glsdescwidth}{11cm}
 \renewcommand{\glsnamefont}[1]{\textbf{#1}}
+\renewcommand{\glspagelistwidth}{1.8cm} %such that the "Page List" is one line
+\renewcommand{\glossarypreamble}{\vspace*{-0.2cm}} % space after caption
+% \renewcommand{\glsgroupskip}{\vspace*{0.2cm}} 
+\let\oldglossaryheader\glossaryheader
+\renewcommand{\glossaryheader}{\vspace{0.25cm}\oldglossaryheader}
 
 % =========================================================
 
@@ -52,14 +57,14 @@
 \newglossarystyle{2colacro}{%
     \setglossarystyle{longragged}% base this style on the list style
     \renewenvironment{theglossary}{% Change the table type --> 3 columns
-        \settowidth{\dimen0}{\bfseries Abkürzung}%
-%       \settowidth{\dimen1}{\bfseries Beschreibung}%
+        \settowidth{\dimen0}{\bfseries Acronym}%
+%       \settowidth{\dimen1}{\bfseries Description}%
         \glsdescwidth=\dimexpr\linewidth-\dimen0-\dimen1-4\tabcolsep\relax
         \begin{longtable}{@{}l p{\glsdescwidth}@{}}}%
         {\end{longtable}}%
     %
     \renewcommand*{\glossaryheader}{%  Change the table header
-        \bfseries Abkürzung & \bfseries Beschreibung \\
+        \bfseries Acronym & \bfseries Description \\
         %       \hline
         \vspace{0.05cm}
         \endhead}
