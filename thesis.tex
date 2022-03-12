@@ -1,130 +1,14 @@
 \documentclass{scrreport}
 
-\usepackage{amsfonts}
-\newcommand*{\Z}{\mathbb{Z}}
-\newcommand*{\Q}{\mathbb{Q}}
-
 \usepackage{lipsum} 
-
-
-
-%============= glossaries ==============
-% see https://tex.stackexchange.com/q/180660/108199, 
 \usepackage[colorlinks]{hyperref}
-\usepackage[
-  acronym,
-  style=long3colheader,
-  hyperfirst=true,
-  toc,
-  section=section,
-  acronym
-  ]{glossaries}
-\usepackage{glossary-longbooktabs}
-\usepackage{siunitx}
-
-\newglossary[slg]{unitlist}{syi}{syg}{Verzeichnis der Kurzzeichen}
-%\newglossary[alg]{acronym}{acr}{acn}{Verzeichnis der Abkürzungen} % create add. symbolslist
-\glsaddkey{unit}{\glsentrytext{\glslabel}}{\glsentryunit}{\GLsentryunit}{\glsunit}{\Glsunit}{\GLSunit}
-
-\newglossary[dlg]{symbols}{dld}{ddn}{Symbols} 
-\newglossary[tlg]{defs}{tld}{tdn}{Definitions} 
-
-% \setlength{\glsdescwidth}{12cm}
 
 
-\newglossaryentry{m}{name=\ensuremath{m},
-        description={Meter},
-        unit={\si{m}},
-        type=unitlist}
-
-\newglossaryentry{symb:Pi}{name=\ensuremath{\pi},
-        description={Geometrischer Wert},
-        unit={},
-        type=unitlist}
-
-\newglossaryentry{energyconsump}{
-        name=\ensuremath{P},
-        description={Leistung},
-        unit={\si{kW}},
-        type=unitlist}
-
- \newglossaryentry{cd}{
-        name=CD,
-        description=Quadratkilometer Quadratkilometer Quadratkilometer Quadratkilometer Quadratkilometer,
-        unit=,
-        type=acronym}
-
-\newacronym{bzw}{bzw.}{Beziehungsweise}
-
-
-    
-\newglossaryentry{integers}{name=\ensuremath{\Z},
-  type=symbols,
-  description={the ring of integers}, sort=Z}
-
-\newglossaryentry{rationals}{name=\ensuremath{\Q},
-  type=symbols,
-  description={the field of rational numbers}, sort=Q} %there's always `nonumberlist` as arg
-
-\newglossaryentry{vector-space}{name=\ensuremath{V},
-  type=symbols,
-  description={a vector space}, sort=V}
-
-
-\newglossaryentry{maths}
-{
-	type=defs,
-    name=mathematics,
-    description={Mathematics is what mathematicians do}
-}
-
-
-\newglossarystyle{3colger}{%
-    \setglossarystyle{longragged3col}% base this style on the list style
-    \renewenvironment{theglossary}{% Change the table type --> 3 columns
-        \settowidth{\dimen0}{\bfseries Zeichen}%
-        \settowidth{\dimen1}{\bfseries Einheit}%
-        \glsdescwidth=\dimexpr\linewidth-\dimen0-\dimen1-4\tabcolsep\relax
-        \begin{longtable}{@{}l l p{\glsdescwidth}@{}}}%
-        {\end{longtable}}%
-    %
-    \renewcommand*{\glossaryheader}{%  Change the table header
-        \bfseries Zeichen & \bfseries Einheit & \bfseries Beschreibung \\
-        %       \hline
-        \vspace{0.05cm}
-        \endhead}
-    \renewcommand*{\glossentry}[2]{%  Change the displayed items
-        \glstarget{##1}{\glossentryname{##1}} %
-        & \glsunit{##1}
-        &  \glossentrydesc{##1}  \tabularnewline
-    }
-}
-
-
-\newglossarystyle{2colacro}{%
-    \setglossarystyle{longragged}% base this style on the list style
-    \renewenvironment{theglossary}{% Change the table type --> 3 columns
-        \settowidth{\dimen0}{\bfseries Abkürzung}%
-%       \settowidth{\dimen1}{\bfseries Beschreibung}%
-        \glsdescwidth=\dimexpr\linewidth-\dimen0-\dimen1-4\tabcolsep\relax
-        \begin{longtable}{@{}l p{\glsdescwidth}@{}}}%
-        {\end{longtable}}%
-    %
-    \renewcommand*{\glossaryheader}{%  Change the table header
-        \bfseries Abkürzung & \bfseries Beschreibung \\
-        %       \hline
-        \vspace{0.05cm}
-        \endhead}
-    \renewcommand*{\glossentry}[2]{%  Change the displayed items
-        \glstarget{##1}{\glossentryname{##1}} %
-        &  \glossentrydesc{##1}  \tabularnewline
-    }
-}
-
+\input{glossary_template.tex}
+\input{glossary_contents.tex}
 \makeglossaries    
 
-%============= /glossaries ==============
-
+% =========================================================
 
 \begin{document}
 
@@ -133,17 +17,22 @@
 
 A vector space \gls{vector-space} 
 
-A number from \gls{integers}
+A number from \gls{integers}. 
+
+Then there's \gls{symb:Pi}
+
 
 \ldots
 \lipsum[1-10]
 
+Do you know what a \gls{bow} is?!
+
+You DO know what a \gls{bow} is!!
 
 Another vector space \gls{vector-space} 
 Also another integer from \gls{integers}
 
-\chapter*{Glossary}
-\addcontentsline{toc}{chapter}{Glossary}
+% =========================================================
 
 % START Acronym definitions
 \newacronym{utc}{UTC}{Universal Time Coordinated}
@@ -155,15 +44,15 @@ Also another integer from \gls{integers}
 \newacronym{imdb}{IMDB}{Internet Movie Database}
 % END Acronym definitions
 
+% =========================================================
 
-
+\chapter*{Glossary}
+\addcontentsline{toc}{chapter}{Glossary}
 \glsaddallunused
-% \printglossaries
-
-\printglossary[type=unitlist,style=3colger]
-\printglossary[type=defs,title=Definitions,toctitle=Definitions]
-\printglossary[type=symbols,title=Symbols,toctitle=Symbols]
-\printglossary[type=\acronymtype,title=List of Acronyms,toctitle=Acronyms] 
+\printglossary[type=defs,         title=Definitions, toctitle=Definitions]
+\printglossary[type=units,        title=Units,       toctitle=Units,      style=3colger]
+\printglossary[type=symbols,      title=Symbols,     toctitle=Symbols]
+\printglossary[type=\acronymtype, title=Acronyms,    toctitle=Acronyms]  %,style=2colacro
 
 
 \end{document}

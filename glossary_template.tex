@@ -1,0 +1,64 @@
+% see https://tex.stackexchange.com/q/180660/108199, 
+
+\usepackage[
+  acronym,
+  style=long3colheader,
+  hyperfirst=true,
+  toc,
+  section=section,
+  acronym
+  ]{glossaries}
+\usepackage{glossary-longbooktabs}
+
+\setlength{\glsdescwidth}{11cm}
+
+% =========================================================
+
+\newglossary[slg]{units}{syi}{syg}{Units}
+\glsaddkey{unit}{\glsentrytext{\glslabel}}{\glsentryunit}{\GLsentryunit}{\glsunit}{\Glsunit}{\GLSunit}
+\newglossary[dlg]{symbols}{dld}{ddn}{Symbols} 
+\newglossary[tlg]{defs}{tld}{tdn}{Definitions} 
+
+% =========================================================
+
+\newglossarystyle{3colger}{%
+    \setglossarystyle{longragged3col}% base this style on the list style
+    \renewenvironment{theglossary}{% Change the table type --> 3 columns
+        \settowidth{\dimen0}{\bfseries Notation}%
+        \settowidth{\dimen1}{\bfseries Unit}%
+        \glsdescwidth=\dimexpr\linewidth-\dimen0-\dimen1-4\tabcolsep\relax
+        \begin{longtable}{@{}l l p{\glsdescwidth}@{}}}%
+        {\end{longtable}}%
+    %
+    \renewcommand*{\glossaryheader}{%  Change the table header
+        \hspace{0.08cm} \bfseries Notation & \bfseries Unit & \bfseries Description \\
+        %       \hline
+        \vspace{0.05cm}
+        \endhead}
+    \renewcommand*{\glossentry}[2]{%  Change the displayed items
+        \hspace{0.08cm} \glstarget{##1}{\glossentryname{##1}} %
+        & \glsunit{##1}
+        &  \glossentrydesc{##1}  \tabularnewline
+    }
+}
+
+
+\newglossarystyle{2colacro}{%
+    \setglossarystyle{longragged}% base this style on the list style
+    \renewenvironment{theglossary}{% Change the table type --> 3 columns
+        \settowidth{\dimen0}{\bfseries Abkürzung}%
+%       \settowidth{\dimen1}{\bfseries Beschreibung}%
+        \glsdescwidth=\dimexpr\linewidth-\dimen0-\dimen1-4\tabcolsep\relax
+        \begin{longtable}{@{}l p{\glsdescwidth}@{}}}%
+        {\end{longtable}}%
+    %
+    \renewcommand*{\glossaryheader}{%  Change the table header
+        \bfseries Abkürzung & \bfseries Beschreibung \\
+        %       \hline
+        \vspace{0.05cm}
+        \endhead}
+    \renewcommand*{\glossentry}[2]{%  Change the displayed items
+        \glstarget{##1}{\glossentryname{##1}} %
+        &  \glossentrydesc{##1}  \tabularnewline
+    }
+}

@@ -1,0 +1,67 @@
+\usepackage{amsfonts}
+\usepackage{siunitx}
+\newcommand*{\Z}{\mathbb{Z}}
+\newcommand*{\Q}{\mathbb{Q}}
+
+
+% =========================================================
+% UNITS
+
+\newglossaryentry{m}{
+    name=\ensuremath{m},
+    description={Meter},
+    unit={\si{m}},
+    type=units
+}
+
+\newglossaryentry{energyconsump}{
+    name=\ensuremath{P},
+    description={Power},
+    unit={\si{kW}},
+    type=units
+}
+
+% =========================================================
+% SYMBOLS
+
+\newglossaryentry{symb:Pi}{
+    name=\ensuremath{\pi},
+    description={geometric value},
+    type=symbols,
+    sort=P
+}
+
+\newglossaryentry{integers}{
+    name=\ensuremath{\Z},
+    type=symbols,
+    description={the ring of integers}, 
+    sort=Z
+}
+
+\newglossaryentry{rationals}{
+    name=\ensuremath{\Q},
+    type=symbols,
+    description={the field of rational numbers}, 
+    sort=Q,
+    % nonumberlist,
+} 
+
+\newglossaryentry{vector-space}{
+    name=\ensuremath{V},
+    type=symbols,
+    description={a vector space}, 
+    sort=V
+}
+
+% =========================================================
+% DEFINITIONS
+
+\newglossaryentry{n-gram}{
+    type=defs,
+    name=n-gram,
+    description={
+        n-grams are sequences of consecutive words of length $n$. For example, the text "I eat lunch" contains the 1-grams ["I", "eat", "lunch"], the 2-grams ["I eat", "eat lunch"] and the 3-gram ["I eat lunch"]
+        }
+}
+
+
