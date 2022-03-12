@@ -32,6 +32,8 @@
           "-synctex=1",
           "-interaction=nonstopmode",
           "-file-line-error",
+          "-r",
+          "/workspace/.latexmkrc",
           "-pdf",
           "-outdir=%OUTDIR%",
           "-f", //stop retrying infinitely (if this isn't here I cannot even log at the error log bc it keeps retrying infinitely)

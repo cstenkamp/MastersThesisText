@@ -6,9 +6,11 @@ ARG gid
 ENV RUNNING_IN_DOCKER true
 
 RUN apt-get update \
-    && apt-get install -y bash git vim curl zsh htop tmux unzip\ 
+    && apt-get install -y bash git vim curl zsh htop tmux unzip xindy\ 
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
+#xindy: see https://tex.stackexchange.com/a/541990/108199
+
 
 RUN groupadd -g ${gid} developer \
     && useradd -g developer -u ${uid} -m developer

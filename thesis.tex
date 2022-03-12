@@ -1,545 +1,149 @@
-%TODO: once the text is "finished": [see sublime note]
+\documentclass{scrreport}
 
-% NoMarkdown and Twoside are compile-commands, see https://tex.stackexchange.com/a/220101/108199, https://tex.stackexchange.com/a/22525/108199, https://tex.stackexchange.com/a/33577/108199
-% \newcommand*{\TwoSide}{}%
-% \newcommand*{\NoMarkdown}{}%
-% pdflatex -jobname=thesis_twosided '\newcommand*{\TwoSide}{}\input{main}'
-% pdflatex -jobname=thesis_nomarkdown '\newcommand*{\NoMarkdown}{}\input{main}'
+\usepackage{amsfonts}
+\newcommand*{\Z}{\mathbb{Z}}
+\newcommand*{\Q}{\mathbb{Q}}
 
-\ifdefined\TwoSide
-	\PassOptionsToClass{twoside}{scrreprt}
-\fi
-
-\documentclass[11pt,
-  paper=a4, 
-%   twoside,
-%   openright,
-  hidelinks,
-  bibliography=totocnumbered,
-	captions=tableheading,
-	BCOR=10mm
-]{scrreprt}
+\usepackage{lipsum} 
 
 
-% ====================== /parts from MastersDoctoralThesis.cls ======================
-%	HEADERS AND FOOTERS
 
-
-\usepackage[automark,headsepline]{scrlayer-scrpage} %https://esc-now.de/_/latex-individuelle-kopf--und-fusszeilen-update/?lang=de
-\pagestyle{scrheadings}
-\clearpairofpagestyles
-% \automark*[section]{chapter} %[] = right side, {} = left side
-\ifdefined\TwoSide
-	\automark*[section]{chapter}
-\else
-	\automark*[chapter]{section}
-\fi
-% TODO: maybe have a SEPARATE automark for ONE-sided, wo's section ist?!
-\ihead{\headmark}% Inner header
-\ohead[\pagemark]{\pagemark}% Outer header
-\ifoot{}% Inner footer
-\ofoot{}% Outer footer
-%TODO: check vor dem Drucken, ich bin gerade etwas verwirrt was wo wann. 
-% Ich dachte bei Okular: View Mode -> "Facing Pages, first centered" ist wie ich es gedruckt auch hab, aber scheinbar krieg ich genau die non-facing pages da als facing angezeigt? Und for some reason geht nur \automark[section]{chapter} und nicht \automark[chapter]{section}, was falsch rum aussieht? wie dumm?! Wenn ich das mit Okular wie gesagt anzeige sind halt auch inner und outer head vertauscht... Maybe I need the doc-class-option "openright"?? 
-%TODO: create final PDF at least twice, once with twoside and once without
-%TODO: on the two-sided version, addtitionally have \automark*[section]{chapter}
-
-% ====================== /parts from MastersDoctoralThesis.cls ======================
-
-\usepackage[utf8]{inputenc}
- 
-
-\usepackage{makecell} % linebreaks in tables, see https://tex.stackexchange.com/a/176780/108199
-\renewcommand{\cellalign}{vh}
-\usepackage{lscape} % landscape tables
-\usepackage{footnote}
-\makesavenoteenv{tabular} % this line and line above see https://tex.stackexchange.com/a/109471/108199
-\newcommand{\specialcell}[2][l]{%
-  \begin{tabular}[#1]{@{}l@{}}#2\end{tabular}} %https://tex.stackexchange.com/a/19678/108199
-\newcommand{\tabitem}{\textbullet~~}
-
-
-%\usepackage[text={7in,10in},centering]{geometry}  %such that appendices etc can define new margins etc
-\usepackage{caption}  % https://tex.stackexchange.com/a/176175/108199
-\captionsetup[table]{position=below} 
-
-\usepackage[anythingbreaks]{breakurl}
-\usepackage[onehalfspacing]{setspace}
-\usepackage{amsmath} % Standard math.
-\usepackage{amsthm} % Math theorems.
-\usepackage{amssymb} % More math symbols.
-\usepackage{dsfont} % Render |R and the like
-\usepackage[british]{babel} %was [english] (see note of underscore), is now [british] 
-
-
-\usepackage{underscore} % I need underscore to not have to write "\_" for underscores, but that would break labels with unterscores in it unless I also include babel, see https://tex.stackexchange.com/a/121438/108199
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}[chapter]
- 
-% for https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_latex.html, https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.to_latex.html:
-\usepackage{booktabs} 
-\usepackage{multirow} 
-\usepackage[table,dvipsnames]{xcolor} %dvipsnames for yaml-code-listings
-\usepackage{siunitx}
-\colorlet{lightgreen}{green!40!white}
-\usepackage{etoolbox}
-\robustify\bfseries
-\robustify\itshape
-% end 
-
-\usepackage{pdflscape} % if this is used, those pages within {landscape} are turned when viewed digitally (https://tex.stackexchange.com/a/141444/108199)
-
-
-\usepackage{url}
-\usepackage[section]{placeins} % Keep floats in the section they were defined in.
-\usepackage{tabularx}
-\usepackage{booktabs} % Scientific table styling.
-\usepackage{floatrow} % Option for keeping floats in the place they were defined in the code.
-\floatsetup[table]{style=plaintop}
-% \usepackage[breaklinks=true]{hyperref} % Hyperlinks.
-\usepackage[pdftex,
-	   breaklinks=true,%
-       bookmarks=true,%
-       bookmarksopen=true,
-       bookmarksopenlevel=0,
-       bookmarksnumbered=false,
-       plainpages=false,
-       hyperindex=true,
-       pdfstartview=%
- ]{hyperref} % why so many options? https://golatex.de/viewtopic.php?p=22119&sid=ebe25f27fce1765ab7d8b1d2e91ee979#p22119
-\usepackage{bookmark} %also https://golatex.de/viewtopic.php?p=22119&sid=ebe25f27fce1765ab7d8b1d2e91ee979#p22119
-
-\usepackage[all]{nowidow} % Prevent widows and orphans.
-\usepackage{xstring} % logic string operations
-\usepackage{bbm} % \mathbb on numerals.
-\usepackage{mathtools}
-\usepackage[ruled,vlined]{algorithm2e} % Pseudocode
-\usepackage{scrhack} % Make warning go away.
-\usepackage{graphicx}
-\usepackage{subcaption} % Subfigures with subcaptions.
-\usepackage{authoraftertitle} % Make author, etc., available after \maketitle
-\usepackage{listofitems}
-\usepackage{blindtext} % Placeholder text.
-\usepackage[automake, nopostdot, nonumberlist]{glossaries} % glossary for definitions and acronyms, without dot after entry and page reference 
-\makeglossaries % Generate the glossary
-
-
-% ================== biblatex stuff ==================
-\newcommand\posscite[1]{\citeauthor{#1}'s \cite{#1}}
-\newcommand\gencite[1]{\citeauthor{#1}'s \cite{#1}} %https://tex.stackexchange.com/a/22279/108199
-
-% \PassOptionsToPackage{obeyspaces}{url}%
+%============= glossaries ==============
+% see https://tex.stackexchange.com/q/180660/108199, 
+\usepackage[colorlinks]{hyperref}
 \usepackage[
-	backend=bibtex,% 
-	style=nature,% 
-	doi=true,
-	isbn=false,
-	url=false, 
-	eprint=false
-	]{biblatex}
-% \renewbibmacro*{url}{\printfield{urlraw}}
+  acronym,
+  style=long3colheader,
+  hyperfirst=true,
+  toc,
+  section=section,
+  acronym
+  ]{glossaries}
+\usepackage{glossary-longbooktabs}
+\usepackage{siunitx}
 
-\addbibresource{mendeley_bibs/Masterarbeit.bib}
+\newglossary[slg]{unitlist}{syi}{syg}{Verzeichnis der Kurzzeichen}
+%\newglossary[alg]{acronym}{acr}{acn}{Verzeichnis der Abkürzungen} % create add. symbolslist
+\glsaddkey{unit}{\glsentrytext{\glslabel}}{\glsentryunit}{\GLsentryunit}{\glsunit}{\Glsunit}{\GLSunit}
 
-\DeclareStyleSourcemap{
-  \maps[datatype=bibtex, overwrite=true]{
-    \map{
-      \step[fieldsource=url, final]
-      \step[typesource=misc, typetarget=online]
-    }
-    \map{
-      \step[typesource=misc, typetarget=patent, final]
-      \step[fieldsource=institution, final]
-      \step[fieldset=holder, origfieldval]
-    }
-  }
-}
+\newglossary[dlg]{symbols}{dld}{ddn}{Symbols} 
+\newglossary[tlg]{defs}{tld}{tdn}{Definitions} 
 
-% ================
-% https://tex.stackexchange.com/a/468286/108199 
-\DeclareCiteCommand{\fancyquotecite}
-  {\usebibmacro{prenote}}
-  {\usebibmacro{citeindex}%
-   \usebibmacro{fancyquotecite}}
-  {\multicitedelim}
-  {\usebibmacro{postnote}}
-
-\newbibmacro{fancyquotecite}{%
-  \printnames[given-family]{labelname}%
-  \setunit{\addcomma\space}%
-  \printfield{maintitle}%
-  \setunit{\addcomma\space}%
-  \printfield{booktitle}%
-  \setunit{\addcomma\space}%
-  \printfield{title}%
-}
-% ================
-
-\usepackage{dirtytalk} %https://de.overleaf.com/learn/latex/Typesetting_quotations
-% \usepackage{csquotes} % Context sensitive quotation.
-\usepackage[autostyle=false, style=english]{csquotes}
-\newcommand{\q}[1]{\enquote{#1}}
-% \MakeOuterQuote{"} %https://tex.stackexchange.com/a/216166/108199 to auto-replace " with `` '' (parity must be given)
-% See also regarding quotation:
-% IEEE Standard: https://libraryguides.vu.edu.au/ieeereferencing/gettingstarted
-% https://de.overleaf.com/learn/latex/Typesetting_quotations, https://www.andy-roberts.net/writing/latex/formatting, https://wiki.carleton.edu/download/attachments/20155418/textguide.pdf?version=1&modificationDate=1387231254000&api=v2
-% ================== END biblatex stuff ==================
-
-%\linespread{1.5} % set line spacing
-
-\DeclareFontFamily{U}{mathx}{\hyphenchar\font45}
-\DeclareFontShape{U}{mathx}{m}{n}{
-      <5> <6> <7> <8> <9> <10>
-      <10.95> <12> <14.4> <17.28> <20.74> <24.88>
-      mathx10
-      }{}
-\DeclareSymbolFont{mathx}{U}{mathx}{m}{n}
-\DeclareFontSubstitution{U}{mathx}{m}{n}
-\DeclareMathSymbol{\bigtimes}{1}{mathx}{"91}
+% \setlength{\glsdescwidth}{12cm}
 
 
- 
+\newglossaryentry{m}{name=\ensuremath{m},
+        description={Meter},
+        unit={\si{m}},
+        type=unitlist}
 
-%%% Custom definitions %%%
-% Shorthands
-\newcommand{\ie}{i.\,e.~}
-\newcommand{\eg}{e.\,g.~}
-\newcommand{\wrt}{w.\,r.\,t.~}
-\newcommand{\ind}{\mathbbm{1}}
-\DeclarePairedDelimiter{\norm}{\lVert}{\rVert} 
-% Functions
-\newcommand{\tpow}[1]{\cdot 10^{#1}}
-\newcommand{\fref}[1]{Figure~\ref{#1}}
-\newcommand{\figref}[1]{Figure~\ref{#1}}
-\newcommand{\figureref}[1]{Figure~\ref{#1}}
-\newcommand{\tref}[1]{Table~\ref{#1}}
-\newcommand{\aref}[1]{Appendix~\ref{#1}}
-\newcommand{\tabref}[1]{(Table~\ref{#1})}
-\newcommand{\tableref}[1]{Table~\ref{#1}}
-\newcommand{\secref}[1]{%
-	\IfBeginWith{#1}{chap:}{%
-		(cf. Chapter \ref{#1})}%
-		{(cf. Section \ref{#1})}%
-		}
-\newcommand{\sectionref}[1]{%
-	\IfBeginWith{#1}{chap:}{%
-		Chapter \ref{#1}}%
-		{\IfBeginWith{#1}{s}{%
-			Section \ref{#1}}%
-			{[\PackageError{sectionref}{Undefined option to sectionref: #1}{}]}}}
-\newcommand{\chapref}[1]{(see chapter \ref{#1})}
-% \newcommand{\unit}[1]{\,\mathrm{#1}}
-\newcommand{\unitfrac}[2]{\,\mathrm{\frac{#1}{#2}}}
-\newcommand{\codeil}[1]{\lstinline{#1}}{} % wrapper for preventing syntax highlight error
-\newcommand{\techil}[1]{\texttt{#1}}
-\newcommand{\Set}[2]{%
-  \{\, #1 \mid #2 \, \}%
-}
-% Line for signature.
-\newcommand{\namesigdate}[1][5cm]{%
-	\vspace{5cm}
-	{\setlength{\parindent}{0cm}
-	\begin{minipage}{0.3\textwidth}
-		\hrule 
-		\vspace{0.5cm}
-		{\small city, date}
-	\end{minipage}
-	 \hfill
-	\begin{minipage}{0.3\textwidth}
-		\hrule
-		\vspace{0.5cm}
-	    {\small signature}
-	\end{minipage}
-	}
-}
-% Automatically use the first sentence in a caption as the short caption.
-\newcommand\slcaption[1]{\setsepchar{.}\readlist*\pdots{#1}\caption[{\pdots[1].}]{#1}}
+\newglossaryentry{symb:Pi}{name=\ensuremath{\pi},
+        description={Geometrischer Wert},
+        unit={},
+        type=unitlist}
 
-% Variables. 
-% Adapt if necessary, use to refer to figures and graphics.
-\def \figwidth {0.9\linewidth}
-\graphicspath{ {./graphics/figures/}{./graphics/figures/} } % Path to figures and images.
+\newglossaryentry{energyconsump}{
+        name=\ensuremath{P},
+        description={Leistung},
+        unit={\si{kW}},
+        type=unitlist}
 
-% Pandoc creates tightlists (https://tex.stackexchange.com/a/258486/108199)
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+ \newglossaryentry{cd}{
+        name=CD,
+        description=Quadratkilometer Quadratkilometer Quadratkilometer Quadratkilometer Quadratkilometer,
+        unit=,
+        type=acronym}
 
-% Customizations of existing commands.
-
-% vec-command to be used in text and mathmode. If called with \vec[m]{a} it's math-mode, default text.
-\renewcommand{\vec}[2][t]{%
-	\IfEqCase{#1}{%
-		{m}{\mathbf{#2}}%
-		{t}{\textbf{#2}}%
-	}[\PackageError{tree}{Undefined option to vec: #1}{}]%
-}%
+\newacronym{bzw}{bzw.}{Beziehungsweise}
 
 
+    
+\newglossaryentry{integers}{name=\ensuremath{\Z},
+  type=symbols,
+  description={the ring of integers}, sort=Z}
 
-% Capitalized \autoref names.
-\renewcommand*{\chapterautorefname}{Chapter}
-\renewcommand*{\sectionautorefname}{Section}
+\newglossaryentry{rationals}{name=\ensuremath{\Q},
+  type=symbols,
+  description={the field of rational numbers}, sort=Q} %there's always `nonumberlist` as arg
 
-%have multiple references to the same footnote, see https://tex.stackexchange.com/a/35044/108199
-\usepackage{cleveref}
-\crefformat{footnote}{#2\footnotemark[#1]#3} %https://tex.stackexchange.com/a/10116/108199
-\makeatletter 
-\newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}
-\makeatother
-%....but the above doesn't work for tables, so we need something else as well, see https://tex.stackexchange.com/a/95905/108199
-\usepackage{scrextend}
-
-
-\title{Data-Driven Embedding of Educational Resources in a Vector Space with Interpretable Dimensions for Explainable Recommendation}
-\author{Christoph Stenkamp}
+\newglossaryentry{vector-space}{name=\ensuremath{V},
+  type=symbols,
+  description={a vector space}, sort=V}
 
 
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-% see https://github.com/jgm/pandoc/issues/4941#issuecomment-425975499, https://github.com/jgm/pandoc/issues/4384#issuecomment-367585913
-
-
-% ##################################################################################
-% === CODE LISTINGS ===
-
-\usepackage{listings} % rendering program code
-
-\lstset{% general command to set parameter(s)
-	basicstyle=\ttfamily\color{grey},          % print whole listing small
-	keywordstyle=\color{black}\bfseries\underbar,
-	% underlined bold black keywords
-	identifierstyle=,           % nothing happens
-	commentstyle=\color{white}, % white comments
-	stringstyle=\ttfamily,      % typewriter type for strings
-	showstringspaces=false}     % no special string spaces
-
-
-% === Taken from my BA ===
-\usepackage{pifont}% http://ctan.org/pkg/pifont for \ding (used in listing)
-\definecolor{verylightgray}{gray}{0.92}
-\definecolor{evenmorelightgray}{gray}{0.95}
-
-\newlength\lsthorizontalpadding
-\setlength\lsthorizontalpadding{3pt}
-\newcommand*\lstnumberstyle{\ttfamily\scriptsize}
-\newlength\lstnumbersep
-\setlength\lstnumbersep{8pt}
-\newlength\lstnumberwidth
-\setlength\lstnumberwidth{\widthof{\lstnumberstyle00}+\lstnumbersep+\lsthorizontalpadding}
-
-\lstset{
-	numberblanklines=false
-	,basicstyle=\ttfamily%
-	,breaklines=true%
-	,tabsize=1%
-	,showstringspaces=false%
-	,numbers=left%   
-	,numbersep=\lstnumbersep%
-	,numberstyle=\lstnumberstyle%
-	,framesep=0pt% 
-	,xleftmargin=\lstnumberwidth%
-	,framexleftmargin=\lsthorizontalpadding%
-	,xrightmargin=\lsthorizontalpadding%
-	,framexrightmargin=\lsthorizontalpadding%
-	,backgroundcolor=\color{verylightgray}%
-	,postbreak=\ding{229}\space%
-	,escapeinside={*(}{*)}
-	\linespread{1.0}
-}
-
-% === YAML code listing === 
-% comes from https://tex.stackexchange.com/a/152856/108199)
-
-
-\newcommand\YAMLcolonstyle{\color{red}\mdseries}
-\newcommand\YAMLkeystyle{\color{black}\bfseries}
-\newcommand\YAMLvaluestyle{\color{blue}\mdseries}
-
-\makeatletter
-
-% here is a macro expanding to the name of the language
-% (handy if you decide to change it further down the road)
-\newcommand\language@yaml{yaml}
-
-\expandafter\expandafter\expandafter\lstdefinelanguage
-\expandafter{\language@yaml}
+\newglossaryentry{maths}
 {
-  keywords={true,false,null,y,n},
-  keywordstyle=\color{darkgray}\bfseries,
-  basicstyle=\YAMLkeystyle,                                 % assuming a key comes first
-  sensitive=false,
-  comment=[l]{\#},
-  morecomment=[s]{/*}{*/},
-  commentstyle=\color{purple}\ttfamily,
-  stringstyle=\YAMLvaluestyle\ttfamily,
-  moredelim=[l][\color{orange}]{\&},
-  moredelim=[l][\color{magenta}]{*},
-  moredelim=**[il][\YAMLcolonstyle{:}\YAMLvaluestyle]{:},   % switch to value style at :
-  morestring=[b]',
-  morestring=[b]",
-  literate =    {---}{{\ProcessThreeDashes}}3
-                {>}{{\textcolor{red}\textgreater}}1     
-                {|}{{\textcolor{red}\textbar}}1 
-                {\ -\ }{{\mdseries\ -\ }}3,
+	type=defs,
+    name=mathematics,
+    description={Mathematics is what mathematicians do}
 }
 
-% switch to key style at EOL
-\lst@AddToHook{EveryLine}{\ifx\lst@language\language@yaml\YAMLkeystyle\fi}
-\makeatother
 
-\newcommand\ProcessThreeDashes{\llap{\color{cyan}\mdseries-{-}-}}
-
-% ################################################
-% fonts for code-objects etc (taken from BA)
-
-\newcommand{\inlinecode}[1]{\colorbox{verylightgray}{\lstinline[basicstyle=\ttfamily\color{white}]{#1}}}
-% \newcommand{\inlinecode}[1]{\colorbox{red}{\lstinline[basicstyle=\ttfamily\color{black}]{#1}}}
-
-
-\newcommand{\term}[1] {{\spaceskip=.95\fontdimen2\font minus \fontdimen4\font
-	\xspaceskip=0pt\relax \large\texttt{#1}}}
-
-\newcommand{\codefunc}[1]{\colorbox{evenmorelightgray}{\lstinline[basicstyle=\ttfamily\color{black},keywordstyle=\ttfamily]{#1}}}
-
-\newcommand{\codeobj}[1]{\colorbox{evenmorelightgray}{{\spaceskip=.95\fontdimen2\font minus \fontdimen4\font	\xspaceskip=0pt\relax \large\texttt{#1}}}}
-
-\newcommand{\codeobjFN}[1]{\colorbox{evenmorelightgray}{{\spaceskip=.95\fontdimen2\font minus \fontdimen4\font	\xspaceskip=0pt\relax \texttt{#1}}}}
-
-\newcommand{\codeother}[1]{\colorbox{evenmorelightgray}{\lstinline[basicstyle=\ttfamily\color{black},keywordstyle=\ttfamily]{#1}}}
+\newglossarystyle{3colger}{%
+    \setglossarystyle{longragged3col}% base this style on the list style
+    \renewenvironment{theglossary}{% Change the table type --> 3 columns
+        \settowidth{\dimen0}{\bfseries Zeichen}%
+        \settowidth{\dimen1}{\bfseries Einheit}%
+        \glsdescwidth=\dimexpr\linewidth-\dimen0-\dimen1-4\tabcolsep\relax
+        \begin{longtable}{@{}l l p{\glsdescwidth}@{}}}%
+        {\end{longtable}}%
+    %
+    \renewcommand*{\glossaryheader}{%  Change the table header
+        \bfseries Zeichen & \bfseries Einheit & \bfseries Beschreibung \\
+        %       \hline
+        \vspace{0.05cm}
+        \endhead}
+    \renewcommand*{\glossentry}[2]{%  Change the displayed items
+        \glstarget{##1}{\glossentryname{##1}} %
+        & \glsunit{##1}
+        &  \glossentrydesc{##1}  \tabularnewline
+    }
+}
 
 
+\newglossarystyle{2colacro}{%
+    \setglossarystyle{longragged}% base this style on the list style
+    \renewenvironment{theglossary}{% Change the table type --> 3 columns
+        \settowidth{\dimen0}{\bfseries Abkürzung}%
+%       \settowidth{\dimen1}{\bfseries Beschreibung}%
+        \glsdescwidth=\dimexpr\linewidth-\dimen0-\dimen1-4\tabcolsep\relax
+        \begin{longtable}{@{}l p{\glsdescwidth}@{}}}%
+        {\end{longtable}}%
+    %
+    \renewcommand*{\glossaryheader}{%  Change the table header
+        \bfseries Abkürzung & \bfseries Beschreibung \\
+        %       \hline
+        \vspace{0.05cm}
+        \endhead}
+    \renewcommand*{\glossentry}[2]{%  Change the displayed items
+        \glstarget{##1}{\glossentryname{##1}} %
+        &  \glossentrydesc{##1}  \tabularnewline
+    }
+}
 
-% ##################################################################################
-% specialstuff mentioned later
-\newcommand{\mainalgos}{\cite{Derrac2015,Ager2018,Alshaikh2020} }
+\makeglossaries    
 
+%============= /glossaries ==============
 
-\input{special_highlight.tex}
-\newcommand{\todoparagraph}[1]{\highlight[red]{#1}}
-
-% If we add the \NoMarkdown at compilation, we won't use any of the \@input. See https://tex.stackexchange.com/a/220101/108199, https://tex.stackexchange.com/a/33577/108199
-\ifdefined\NoMarkdown
-	\makeatletter
-	\renewcommand{\@input}[1]{\ignorespaces}
-\fi
-
-
-% #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
-
-
-\makeatletter
 
 \begin{document}
 
-\cleardoublepage
-\pagestyle{plain} %for the headers & footers
-
-
-\begin{titlepage}
-	\begin{flushleft}
-		Universität Osnabrück\\
-		Fachbereich Humanwissenschaften\\
-		Institute of Cognitive Science
-	\end{flushleft}
-
-	\vspace{2cm}
-	\centering{
-		Master's thesis\vspace{1cm}\\
-		\textbf{\Large{\MyTitle}}
-		\vspace{1cm}\\
-		\begin{tabular}{c}
-			\MyAuthor                          \\
-			955004                             \\
-			Master's Program Cognitive Science \\
-			April 2017 - April 2022
-		\end{tabular}}
-	\vspace{1cm}
-
-	\begin{tabular}{ll}
-		First supervisor:  & Dr. Tobias Thelen          \\
-		                   & Institute of Cognitive Science \\
-		                   & University of Osnabrück  \\\\
-		Second supervisor: & Johannes Schrumpf, M.Sc.         \\
-		                   & Institute of Cognitive Science \\
-		                   & Osnabrück
-	\end{tabular}
-
-\end{titlepage}
-
-
-\chapter*{Declaration of Authorship}
-I hereby certify that the work presented here is, to the best of my knowledge and belief, original and the result of my own investigations, except as acknowledged, and has not been submitted, either in part or whole, for a degree at this or any other university.
-
-\namesigdate
-\pagenumbering{gobble}
-\pagebreak
-
-\begin{abstract}
-	\textbf{\LARGE{Abstract}}\\\\
-	%TODO summarize the main objectives and outcomes of your work. The abstract should fit on one page.
-	In this thesis, I want to generate a conceptual space for the domain of educational reasources such as university courses, automatically created in data-driven way from their descriptions.
-
-	Conceptual Spaces are seen as something that may be able to link sub-symbolic and symbolic approaches by standing in between them: In Conceptual Spaces, Concepts are represented as convex regions in high-dimensional spaces. Optimally, these spaces are cartesian, and the axes correspond to human-interpretable dimensions. If that is the case, you could for example classify the concept of "Apple" as a region that is in the color-dimension somwhere between green and red, and in the form-dimension roughly at "round".
-	Creating these concpetual spaces is a very cumbersome task, which is why an automated method may lead to reasonable results. Unfortunately, this is still computationally very complex.
-	The method of [DESC15] uses MDS, blablabla, then a Support-Vector-Machine separating concepts, and the orthogonal of the separating hyperplane is then an axis
-\end{abstract}
-
-
-
-
 \tableofcontents
-\listoffigures
-\listoftables
-\listofalgorithms
-\lstlistoflistings %TODO: figure out which of these two is correct
+\clearpage
 
-\pagestyle{scrheadings}
+A vector space \gls{vector-space} 
 
-\cleardoublepage
-\pagenumbering{arabic} % https://tex.stackexchange.com/a/313306/108199 https://tex.stackexchange.com/a/154666/108199
+A number from \gls{integers}
 
-% #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
+\ldots
+\lipsum[1-10]
 
 
-%----------------------------------------------------------------------------------------
-%	THESIS CONTENT - MAIN PART
-%----------------------------------------------------------------------------------------
-	
+Another vector space \gls{vector-space} 
+Also another integer from \gls{integers}
 
-% INTRO
-	% Broad - "Initialkontextualisierung" - warum mach ich das, aus was für ner domain kommen die daten, was will ich damit machen (use rrecommendation, ich bau AI part, ..)
-	\include{Chapters/01-intro.tex}
-
-% BACKGROUND
-	% (zuspitzung von generell auf spezifisch, sowohl technisch (conceputalspaces -> was macht das paper konkret), (und bei dem anderen teil was sind educational resources, was sind die schwierigkeiten dabei, warum möchte man überhaupt empfehlen))
-	\include{Chapters/02-background.tex}
-
-%METHODS
-	%(Algorithmus & Datensatz)
-	\include{Chapters/03-methods.tex}
-
-%RESULTS
-	\include{Chapters/04-results.tex}
-
-%DISCUSSION
-	% (was sind die broaden takeaways von meinem Kram)
-	% * Nochmal nen theoretisches Embedding, Kontextualisieren für Bildungsressourcen
-	% * ...and conclusion
-	\include{Chapters/05-discussion.tex}
-
-
-% \chapter*{Acknowledgements}
-%TODO A place to say thank you to everybody who helped you.
-
+\chapter*{Glossary}
+\addcontentsline{toc}{chapter}{Glossary}
 
 % START Acronym definitions
 \newacronym{utc}{UTC}{Universal Time Coordinated}
@@ -551,33 +155,15 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 \newacronym{imdb}{IMDB}{Internet Movie Database}
 % END Acronym definitions
 
-\glsaddall
-\printglossaries %TODO: let glossary appear in TOC
-
-%----------------------------------------------------------------------------------------
-%	THESIS CONTENT - APPENDICES
-%----------------------------------------------------------------------------------------
-	
-	\appendix % Cue to tell LaTeX that the following "chapters" are Appendices
-
-	\cleardoubleoddpage
-	\phantomsection
-	\addcontentsline{toc}{part}{\appendixname}
-	\setchapterpreamble[o]{% siehe KOMA-Script-Anleitung
-  		\usekomafont{disposition}\usekomafont{part}\appendixname\bigskip} 
-	% the three above are to show the appendix as section, see https://golatex.de/viewtopic.php?p=22119&sid=ebe25f27fce1765ab7d8b1d2e91ee979#p22119
-
-	% Include the appendices of the thesis as separate files from the Appendices folder
-	% Uncomment the lines as you write the Appendices
-	
-	\input{Appendices/AppendixA} %hae to use input and not include, otherwise the order of "Appendix" and the first appendix is wrong
-	\input{Appendices/AppendixB}
 
 
-	\cleardoublepage
-\pagestyle{plain}
-\bookmarksetup{startatroot} 
+\glsaddallunused
+% \printglossaries
 
-\printbibliography[heading=bibintoc]
+\printglossary[type=unitlist,style=3colger]
+\printglossary[type=defs,title=Definitions,toctitle=Definitions]
+\printglossary[type=symbols,title=Symbols,toctitle=Symbols]
+\printglossary[type=\acronymtype,title=List of Acronyms,toctitle=Acronyms] 
+
 
 \end{document}

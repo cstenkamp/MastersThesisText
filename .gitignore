@@ -9,6 +9,18 @@ pandoc_generated_latex
 .vscode-server/data/Machine/*
 !.vscode-server/data/Machine/settings.json
 
+## CUSTOM temporary glossary files
+*.ddn
+*.dld
+*.dlg
+*.slg
+*.syg
+*.syi
+*.tdn
+*.tld
+*.tlg
+
+
 
 ## Core latex/pdflatex auxiliary files:
 *.aux

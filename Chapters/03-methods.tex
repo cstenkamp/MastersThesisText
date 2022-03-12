@@ -7,6 +7,13 @@ Im folgenden gibt es neben Datasets 2 main sections: algoritm and architecture. 
 
 \section{Datasets}
 
+All considered algorithms \mainalgos use a dataset of 15.000 movies and their reviews on IMDB, as well as a placetypes-dataset to evaluate their methods. The former consists of the concatenation of all available reviews for movies from IMDB\footnote{\url{https://www.imdb.com/}}, whereas the latter a collection of tags from photos uploaded to Flickr\footnote{\url{https://www.flickr.com}} that co-occur with a certain placetype. Other considered datasets are wine reviews, posts to certain newsgroups and another IMDB-review-dataset (see \tref{tab:all_datasets}). 
+
+All of these datasets have in common that they are made up from a collection of independent texts or tags, created by different people. This means, that the more obvious or distinct a property of the respective entity is, the more often words describing that property will be used as tag or as part of the review. For example, a movie that is \emph{scary} to a lot of people will lead to many reviews mentioning that, which means that the word scary (or other words commonly co-occuring with it) will have a high count in the concatenation of that review. The algorithm from \cite{Derrac2015} heavily leans on this property by using the (relative) frequency of certain words as signal for the importance of the concept they may refer to. 
+
+The main considered dataset of this thesis unfortunately does not share this property, as the texts that belong to an entity are not collected from different independent texts, but solely from the description of that entity - while it may be the case that the more \emph{mathematical} a course is, the more often the word \emph{math} occurs in it description, but the correlation is likely not as prominent as in the aforementioned datasets. Interestingly, \cite{Alshaikh2020} also used three datasets that only use a sort of description for an entity: its Wikipedia\footnote{\url{https://en.wikipedia.org/}}-article.
+
+
 \subsection{SIDDATA-courses}
 
 % * Steht ja schon woanders dass mein Datensatz anders ist als concatenated-movie-reviews und ich deswegen nicht einfach "je öfter 'scary' desco scarier" machen kann. Da gibt's several ways mit umzugehen
@@ -96,12 +103,22 @@ bei placetypes sind es
 \subsection{Place-Types}
 
 \begin{itemize}
-	\item Did it to be able to compare my results to the ones of \mainalgos
+	\item Took it to be able to compare my results to the ones of \mainalgos
 	\item Did NOT do the movies-dataset (also used by all \mainalgos, see \tref{tab:all_datasets}), because version available online does not contain n-grams so it will not be comparable
-	\item 
+	\item Also took it to be able to sanity-check if my implementation was correct, which was extremely helpful
+	\item Didn't do the openCYC taxonomy bc they say that they don't use one level of the taxonomy consistently but also never explain where they go to which level
 \end{itemize}
 
 %TODO: write IN THE ALGORITHM & ARCHITECTURE SECTIONS that I of course tried the placetypes-dataset as sanity-check to find errors - for that dataset, stuff like the good-candidates is known so as long as I don't reach their performances for that dataset I know my code is the problem, but as soon as I reach their performance I can savely say that the actual algorithm is correct and if it's still bad on the siddata dataset it's just not applicable to this kind of data
+
+So, infos from \cite{Derrac2015}:
+\begin{itemize}
+	\item GeoNames has 667 place-types in 9 categories (403 used)
+	\item Foursquare has 435 place-types in 9 top-level categories (391 used))
+	\item content: tags of Flickr photos. Photos assumed to be of a type if one of the tags is the name of that type (so they queried for photos with that tag), and then all other tags of that picture make up the BoW.
+	\item 22816139 photos, types with less than 1000 photos removed.
+\end{itemize}
+
 
 Also tried the Plactypes-Dataset used by all main-paper-authors. When doing so I noticed that there are definitely duplicates (which are consistently recognized as closest-terms in embedding):
   abandoned rail road and abandoned railroad

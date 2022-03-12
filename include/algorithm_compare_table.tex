@@ -1,4 +1,12 @@
 
+\afterpage{%
+
+\newgeometry{
+	a4paper,
+	top=18mm,
+	bottom=8mm,
+} 
+\clearpage
 
 
 \begin{landscape}
@@ -7,8 +15,9 @@
 		\resizebox{\textwidth}{!}{%
 			\begin{tabular}{lllll} % statt textcite mit \fancyquotecite https://tex.stackexchange.com/a/468286/108199
 			& \textbf{\textcite{Derrac2015}} & \textbf{\textcite{Ager2018}} & \textbf{\textcite{Alshaikh2020}} & \textbf{This codebase} \\
-
-			\textbf{Step 1: Generate Vector Spaces (Embeddings) from Descriptions} 
+			\textbf{Step 1: Pre-process text corpus} & \multicolumn{3}{c}{\textit{see \tref{tab:all_datasets}}} & \specialcell[l]{placetypes: \textit{see \tref{tab:all_datasets}} \\ SIDDATA: \textit{see section \ref{sec:algo_preproc}} }
+			\\ \midrule
+			\textbf{Step 2: Generate Vector Spaces (Embeddings) from text corpus} 
 			& 
 			\specialcell[l]{MDS trained with the angular differences $\frac{2}{\pi}* arccos\left(\frac{\vec{v}_{e_i}*\vec{v}_{e_j}}{\norm{\vec{v}_{e_i}}*\norm{\vec{v}_{e_j}}}\right)$ \\
 				between the PPMI weighted BoW Vectors (all terms) \\
@@ -24,7 +33,7 @@
 			\specialcell[l]{ \tabitem MDS, \tabitem t-SNE or \tabitem Isomap with arbitrary number of dimensions \\ on a dissimilarity-matrix based on \tabitem BoW (raw counts), \tabitem BoW (binarized), \tabitem tf-idf-weighted BoW, \tabitem ppmi-weighted BoW, \tabitem tf-weighted BoW \\ distance measure \tabitem normalized angular distance \tabitem cosine distance \tabitem TODO: the other distance measures}
 			\\ \midrule
 
-			\specialcell[l]{ \textbf{Step 2: Generate Candidate Words} \\ \textbf{for Feature Directions} } 
+			\specialcell[l]{ \textbf{Step 3: Generate Candidate Words} \\ \textbf{for Feature Directions} } 
 			& 
 			\specialcell[l]{ All sufficiently frequent\footnote{For the placetypes-dataset: all tags that co-occur with at least 50 place types} adjectives, nouns, adjective phrases and noun phrases \\
 				(using POS-Tagger and Chunker from openNLP) } 
@@ -40,7 +49,7 @@
 			\\ \midrule
 
 
-			\textbf{Step 3: Filter Candidate Feature Directions} 
+			\textbf{Step 4: Filter Candidate Feature Directions} 
 			&                   
 			\specialcell[l]{ linear SVM for all candidates (pos samples: $\forall e: c \in e$) with pos/neg-count-ratio as instance cost \\
 				Only take candidates where the correlation according to Cohen's Kappa between the ranking induced by the SVM's hyperplane and count(t, e) is $\geq \lambda$ (0.5/0.1)\\
@@ -61,7 +70,7 @@
 			\\ \midrule
 
 
-			\textbf{Step 4: Merge Feature Directions} 
+			\textbf{Step 5: Merge Feature Directions} 
 			&   
 			\specialcell[l]{ According to \cite{Alshaikh2020} "a variant of \textit{k}-means" \\ Cluster centers: Select Term with highest $\kappa$, then i=2*ndims times select the term from $T^{0.5}$ minimizing $max_{j<i}cos(\vec[m]{v_{t_j}},\vec[m]{v_t})$ \\ 
 				Others: assign all terms from $T^{0.1}$ to the closest cluster and define $\vec[m]{v^*_i} = \frac{1}{|C_i|} \sum_{t\in C_i} \vec[m]{v_t}$ as cluster direction (average direction of cluster's elements)} 
@@ -76,7 +85,7 @@
 			TODO: my stuff
 			\\  \midrule
 
-			\textbf{Step 5: Post-Processing} 
+			\textbf{Step 6: Post-Processing} 
 			&                   
 			None 
 			&                 
@@ -96,3 +105,7 @@
 % Alshaikh2020 say: "It may seem counter-intuitive to use binary classifiers to learn representations of ordinal features. However, the occurrence or non- occurrence of a word in the description is binary, and this is the most important available signal. We experimented with statistics such as pointwise mutual information, which did not lead to better results." -> does that mean DCM_QUANT_MEASURE or QUANTIFICATION_MEASURE or both? and also does that mean they use binary or count as this measure?
 
 % Alshaikh2020 use: sub, ortho, primary, random (coordinates uniformly random), 
+
+
+\restoregeometry
+} %afterpage

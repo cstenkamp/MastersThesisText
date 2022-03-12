@@ -19,7 +19,7 @@ To allow for the types of reasoning mentioned in Section \ref{sec:cs_reasoning},
 it is embedded into metric spaces where the concepts of direction and distance are well-defined. \gencite{Derrac2015} original algorithm uses MDS (see \ref{MDS}) for this matter, which enforces equal distances  %TODO: link the distance-matrix-notepad FROM MY REPO in nbviewer+binder
 (however as shown by \textcite{Mikolov:Regularities}, such things are also possible with neural word-embedding techniques such as word2vec \cite{Mikolov:Word2Vec}) %TODO: word2vec cite
 . Additionally, words from the text are extracted as candidates for the names of the semantic dimensions. The core assumption is then, that \q{words describing semantically meaningful features can be identified by learning for each candidate word $w$ a linear classifier which separates the embeddings of entities that have $w$ in their description from the others} \cite[3574]{Alshaikh2020}. The better the performance of that classifier according to a chosen metric, the more evidence there is that $w$ describes a semnatically meaningful feature. 
-% * from Alshaikh2020: "Their core assumption is that words describing semantically mean- ingful features can be identified by learning for each candi- date word w a linear classifier which separates the embed- dings of entities that have w in their description from the oth- ers. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
+% * from Alshaikh2020: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candi- date word w a linear classifier which separates the embeddings of entities that have w in their description from the others. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
 % TODO: make the direct quote shorter, such things should only be done "to support an argument", which I don't here.
 In a final step, the candidate-words are clustered according to their similarity to find a fixed set of dimensions. A representative term for the directions is selected, and the entities are re-embedded into a new space comprised of these dimensions, where the individual vector-components correspond to the ranking of an entity with respect to these dimensions.
 % * from Alshaikh2020: "The learned vectors will be referred to as feature directions to emphasize the fact that only the ordering induced by the dot product d_i · e matters"
@@ -35,9 +35,23 @@ In a final step, the candidate-words are clustered according to their similarity
 
 Many of the just mentioned components don't refer to a specific algorithms, and the existing implementations \mainalgos differ in many of these implementations. The rest of this sections goes into further detail for each of these components, and an overview of the components supported in the respective implementations is given in \tref{tab:compared_algos}. Further, configuration files to enable exactly the respective components of the respective papers for the codebase of this thesis are listed in \aref{ap:yamls_for_origalgos}.
 
+
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
 \subsection{Steps of the algorithm}
+
+% TODO: THIS from \cite{Turney2010} is a very fucking good explanation!!!
+
+% After the text has been tokenized and (optionally) normalized and annotated, the first step is to generate a matrix of frequencies. Second, we may want to adjust the weights of the elements in the matrix, because common words will have high frequencies, yet they are less informative than rare words. Third, we may want to smooth the matrix, to reduce the amount of random noise and to fill in some of the zero elements in a sparse matrix. Fourth, there are many different ways to measure the similarity of two vectors. Lowe (2001) gives a good summary of mathematical processing for word–context VSMs.
+% He decomposes VSM construction into a similar four-step process: calculate the frequencies, transform the raw frequency counts, smooth the space (dimensionality reduction), then calculate the similarities.
+
+
+
+The considered algorithm first embeds the collection of texts into a vector space, to afterwards extract important features from this space using linear classifiers. The second step is an original idea of \cite{Derrac2015}, however creating vector space embeddings from texts is a very popular technique, used for many tasks in computational linguistics \cite{Mikolov:Regularities,Mikolov2013a,Guo,Lowe,Turney2010}. %TODO: irgendwo bin ich ja noch auf word2vec und den ganzen bums eingegangen blabla, nochmal schreiben dass es hier um classical AI geht und ebennicht die sahcen wie word2vec und glove
+%TODO: glove und fasttext cite?!
+ \textcite{Lowe} conceived a general framework to construct vector spaces from texts, splitting the process into the steps of first counting the token frequencies, then transforming the raw counts into more useful quantification measures (see \ref{sec:word_count_techniques}) %adjust the weights of the elements in the matrix, because common words will have high frequencies yet are less informative than rare words.
+ %TODO: talk about a fucking DOC-TERM-MATRIX, A MATRIX OF FREQUENCIES!!!
+  and smoothing the space using dimensionality reduction, before calculating the similarities on the resulting embedding. While the considered algorithm requires more steps before calculating the similarities (to allow for domain-specific and more complex forms of reasoning), it also adheres to this structure.
 
 %TODO:
 % * reference yamls again
@@ -92,9 +106,9 @@ The core idea of the algorithm is to (unsupervised, data-driven) find a a set of
 	\item preprocess the descriptions using default techniques and create a bag-of-words representation for the texts
 	\item extract candidate features from these texts (easist variant is to just consider each sufficiently frequent word as candidate)
 	\item create a fixed-dimensional embedding for the texts (optimally a metric space, optimally based on their dissimilarity)
-	\item for each candidate term, train a linear classifier to seperate the vector representations of the entities that contain the term vs those that don't
-	\item if some metric for this classifier is sufficiently high, assume that the candidate term captures a salient feature - it's direction is then characterized by the normal vector for that hyperplane (for an intuition see \ref{fig:3d_hyperplane_ortho})
-	\item Cluster the candidates
+	\item for each candidate term, train a linear classifier to seperate the vector representations of the entities that contain the term vs those that don't. If some metric for this classifier is sufficiently high, assume that the candidate term captures a salient feature - it's direction is then characterized by the normal vector for that hyperplane (for an intuition see \ref{fig:3d_hyperplane_ortho})
+	\item Cluster the candidates and re-calculate the directions
+	\item (optionally) Post-process the clusters 
 	\item Calculate the direction of the cluster from the directions of it's contents to create a new space to embed the entities into
 \end{enumerate}
 
@@ -123,8 +137,9 @@ Before looking at the steps in turn, it should be noted that even the preprocess
 
 \subsubsection{Preprocessing}
 
-%TODO: I hate the first sentence hereafter!
-As for many NLP algorithms, before any other step can be performed, the text corpus needs to be preprocessed. The preprocessing itself consists of multiple independent components chained after each other. Which components are necessary also depends on the processed dataset - as for example the \emph{placetypes-dataset} consists not of a collection of tags instead of full sentences, tokenizing sentences or removing punctuation becomes irrelevant. Other datasets may require additional cleaning or are already available in preprocessed form.
+\label{sec:algo_preproc}
+
+The first step of basically all NLP algorithms must be to pre-process the text corpus. The preprocessing itself consists of multiple independent components chained after each other. Which components are necessary also depends on the processed dataset - as for example the \emph{placetypes-dataset} consists not of a collection of tags instead of full sentences, tokenizing sentences or removing punctuation becomes irrelevant. Other datasets may require additional cleaning or are already available in preprocessed form.
 % * some parts of this depend on the dataset 
 %     * Some may just require additional cleaning (remove HTML-Tags and such things)
 %     * Some are already mostly preprocessed (placetypes is already a bag-of-words so there's not much to do there, and we skip almost all preprocessing-steps)
@@ -139,13 +154,16 @@ The following components are developed for the preprocessing, every one of which
 
 
 
+... The preprocessing of the algorithms of \mainalgos is dependent on the dataset - \tref{tab:all_datasets} lists the respectively used preprocessing per dataset and author.
 
 
+\subsubsection{Extract Candidates}
 
 
+\subsubsection{Generating Vector Space Embeddings}
+%TODO: in \cite{Turney2010}, this is "Building the frequency matrix", transform the raw counts, smooth the space
 
-
-
+Embedding words, n-grams or other tokens depicted by \cite{Turney2010} and \cite{Lowe}, 
 
 
 
