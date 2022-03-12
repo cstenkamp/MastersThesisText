@@ -15,6 +15,8 @@
 \tableofcontents
 \clearpage
 
+We also use \gls{n-gram}s!
+
 A vector space \gls{vector-space} 
 
 A number from \gls{integers}. 
@@ -50,9 +52,11 @@ Also another integer from \gls{integers}
 \addcontentsline{toc}{chapter}{Glossary}
 \glsaddallunused
 \printglossary[type=defs,         title=Definitions, toctitle=Definitions]
-\printglossary[type=units,        title=Units,       toctitle=Units,      style=3colger]
-\printglossary[type=symbols,      title=Symbols,     toctitle=Symbols]
-\printglossary[type=\acronymtype, title=Acronyms,    toctitle=Acronyms]  %,style=2colacro
+% \printglossary[type=units,        title=Units,       toctitle=Units,      style=3colger]
+\vspace{0.5cm}
+\printglossary[type=symbols,      title=Symbols,     toctitle=List of Symbols]
+\vspace{0.5cm}
+\printglossary[type=\acronymtype, title=Acronyms,    toctitle=List of Acronyms, style=2colacro, nonumberlist]  %,style=2colacro
 
 
 \end{document}

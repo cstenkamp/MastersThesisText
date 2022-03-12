@@ -1,4 +1,6 @@
-% see https://tex.stackexchange.com/q/180660/108199, 
+% see https://tex.stackexchange.com/q/180660/108199, https://tex.stackexchange.com/questions/1226/how-to-make-latexmk-use-makeglossaries, https://de.overleaf.com/learn/latex/Glossaries, https://tex.stackexchange.com/a/182765/108199, https://tex.stackexchange.com/q/270098/108199, https://tex.stackexchange.com/q/316777/108199, https://tex.stackexchange.com/a/509325/108199, https://texblog.org/2014/04/01/multiple-glossaries-in-latex/, https://de.overleaf.com/learn/latex/Glossaries, 
+
+% especially https://tex.stackexchange.com/a/364059/108199, https://tex.stackexchange.com/a/360368/108199
 
 \usepackage[
   acronym,
@@ -6,11 +8,15 @@
   hyperfirst=true,
   toc,
   section=section,
-  acronym
+  acronym,
+%   nopostdot,
+%   nonumberlist, 
   ]{glossaries}
 \usepackage{glossary-longbooktabs}
+\usepackage{tabu}
 
 \setlength{\glsdescwidth}{11cm}
+\renewcommand{\glsnamefont}[1]{\textbf{#1}}
 
 % =========================================================
 
@@ -61,4 +67,59 @@
         \glstarget{##1}{\glossentryname{##1}} %
         &  \glossentrydesc{##1}  \tabularnewline
     }
+}
+
+
+% -----------------
+% Acronym-styles
+% -----------------
+
+\newglossarystyle{myacronymstyle}{%
+  \renewenvironment{theglossary}%
+    {\begin{longtabu} to \linewidth {lX}}%
+    {\end{longtabu}}%
+  % Header line
+  \renewcommand*{\glossaryheader}{}%
+  % indicate what to do at the start of each logical group
+  \renewcommand*{\glsgroupskip}{\tabularnewline}% What to do between groups
+  \renewcommand*{\glossaryentryfield}[5]{%
+    \glsentryitem{##1}\glstarget{##1}{##2}
+    & ##3\glspostdescription ##5% Description
+    \\% end of row
+  }
+}
+
+% -----------------
+% Symbols-styles
+% -----------------
+
+\newglossarystyle{mysymbolstyle}{%
+  %\renewcommand{\glossarysection}[2][]{}% no title
+  \renewcommand*{\glsclearpage}{}% avoid page break before glossary
+  \renewenvironment{theglossary}%
+    {\begin{longtabu} to \linewidth {clXc}}%
+    {\end{longtabu}}%
+  % Header line
+  \renewcommand*{\glossaryheader}{%
+    % Requires booktabs
+    %\toprule%
+    \textbf{Symbol} & \textbf{Name} & \textbf{Description} & \textbf{Unit}%
+    \tabularnewline%
+    \tabularnewline%
+    %\midrule%
+    \endhead%
+    %\bottomrule%
+    \endfoot%
+  }%
+  % indicate what to do at the start of each logical group
+  \renewcommand*{\glsgroupskip}{\tabularnewline}% What to do between groups
+  \renewcommand*{\glossentry}[1]{%
+    \glsentryitem{##1}% Entry number if required
+    \glstarget{##1}{\glossentrysymbol{##1}} &
+    %\glossentrysymbol{##1} & % Symbol
+    \glossentryname{##1}    & % Name
+    \glossentrydesc{##1}    & % Description
+    \glsentryuseri{##1}%      % Unit in User1-Variable
+    \tabularnewline%
+  }%
 }
