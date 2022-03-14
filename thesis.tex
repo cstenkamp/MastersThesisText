@@ -11,10 +11,6 @@
 %TODO: once the text is "finished": [see sublime note]
 
 % NoMarkdown and Twoside are compile-commands, see https://tex.stackexchange.com/a/220101/108199, https://tex.stackexchange.com/a/22525/108199, https://tex.stackexchange.com/a/33577/108199
-% \newcommand*{\ForPrinting}{}%
-% \newcommand*{\NoMarkdown}{}%
-% pdflatex -jobname=thesis_forprinting '\newcommand*{\ForPrinting}{}\input{main}'
-% pdflatex -jobname=thesis_nomarkdown '\newcommand*{\NoMarkdown}{}\input{main}'
 
 \ifdefined\ForPrinting
 	\PassOptionsToClass{twoside}{scrreprt}
@@ -59,6 +55,49 @@
 %TODO: on the two-sided version, addtitionally have \automark*[section]{chapter}
 
 % ====================== /parts from MastersDoctoralThesis.cls ======================
+
+% ====
+% https://tex.stackexchange.com/a/135731/108199
+\newcounter{saveenumerate}
+\makeatletter
+\newcommand{\enumeratext}[1]{%
+	\setcounter{saveenumerate}{\value{enum\romannumeral\the\@enumdepth}}
+	\end{enumerate}
+	#1
+	\begin{enumerate}
+	\setcounter{enum\romannumeral\the\@enumdepth}{\value{saveenumerate}}%
+}
+\makeatother
+
+\usepackage{changepage} %https://tex.stackexchange.com/a/594/108199
+\newcommand{\itemtextCore}[1]{%
+	\begin{adjustwidth}{0.2\textwidth}{0cm}
+	\begin{flushright}
+	{   
+		\parskip=0pt
+		\small
+		\vspace{-0.55em}
+		\textit{#1}
+		\vspace{-0.55em}
+	}
+	\end{flushright}
+	\end{adjustwidth}
+}
+
+\newcommand{\itemtext}[1]{%
+	\end{itemize} 
+	\itemtextCore{#1}
+	\begin{itemize}
+}
+% for the last one I have to use this, because otherwise I'll get a "missing \item" error
+\newcommand{\lastitemtext}[1]{%
+	\end{itemize} 
+	\itemtextCore{#1}
+}
+
+% ===
+
+
 
 \usepackage[utf8]{inputenc}
  
@@ -107,6 +146,7 @@
 
 \usepackage{pdflscape} % if this is used, those pages within {landscape} are turned when viewed digitally (https://tex.stackexchange.com/a/141444/108199)
 
+\usepackage[section]{placeins} %for FloatBarrier, https://tex.stackexchange.com/a/282/108199
 
 \usepackage{url}
 \usepackage[section]{placeins} % Keep floats in the section they were defined in.
@@ -149,7 +189,11 @@
 \newacronym{ppmi}{PPMI}{Positive Pointwise Mutual Information}
 \newacronym{bow}{BoW}{Bag Of Words}
 \newacronym{imdb}{IMDB}{Internet Movie Database}
+\newacronym{tf-idf}{tf-idf}{term frequency $\times$ inverse document frequency algorithm}
 % END Acronym definitions
+%TODO: update acronym script for Plural!!
+\newacronym[plural=MOOCs]{mooc}{MOOC}{Massive Open Online Course}
+
 
 % ================== biblatex stuff ==================
 \newcommand\posscite[1]{\citeauthor{#1}'s \cite{#1}}
@@ -455,11 +499,27 @@
 
 % If we add the \NoMarkdown at compilation, we won't use any of the \@input. See https://tex.stackexchange.com/a/220101/108199, https://tex.stackexchange.com/a/33577/108199
 \ifdefined\NoMarkdown
+	\newcommand{\includeMD}[1]{\ignorespaces}
+\else
 	\makeatletter
-	\renewcommand{\@input}[1]{\ignorespaces}
-	%TODO: this leads to many errors for some reason (TOC sucks, lists suck, ...)
+	\let\includeMD\@input
 \fi
 
+% let ALL paragraphs not have an indent but an empty line between
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1ex}
+\RedeclareSectionCommand[beforeskip=-5.5ex plus -1ex minus -.2ex,
+						 afterskip=4.3ex plus -.2ex]{chapter}
+\RedeclareSectionCommand[beforeskip=-4ex plus -1ex minus -.2ex,
+						 afterskip=2ex plus -.2ex]{section}
+\RedeclareSectionCommand[beforeskip=-2.5ex plus -1ex minus -.2ex,
+						 afterskip=1ex plus -.2ex]{subsection}
+\RedeclareSectionCommand[beforeskip=-2ex plus -1ex minus -.2ex,
+						 afterskip=1ex plus -.2ex]{subsubsection}					 
+% https://tex.stackexchange.com/a/469110/108199
+
+
+\usepackage{nameref} % comment of https://tex.stackexchange.com/a/253961/108199
 
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
@@ -527,8 +587,9 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 \tableofcontents
 \listoffigures
 \listoftables
-\listofalgorithms
-\lstlistoflistings %TODO: figure out which of these two is correct
+\listofalgorithms  % https://tex.stackexchange.com/a/100382/108199
+\renewcommand{\lstlistlistingname}{List of Code-Listings}
+\lstlistoflistings %only those with a caption will be listed!
 
 \pagestyle{scrheadings}
 
@@ -574,9 +635,11 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 
 
 \chapter*{Glossary}
+\vspace{-4ex}
 \addcontentsline{toc}{chapter}{Glossary}
 \glsaddallunused
-\printglossary[type=defs,         title=Definitions, toctitle=Definitions]
+\printglossary[type=defs,         title=Definitions, toctitle=Definitions, style=long3colheaderMINE]
+\printglossary[type=customs,      title=Custom Terms, toctitle=Custom Terms used in this thesis, style=long3colheaderMINE]
 % \printglossary[type=units,        title=Units,       toctitle=Units,      style=3colger]
 \vspace{0.5cm}
 \printglossary[type=symbols,      title=Symbols,     toctitle=List of Symbols]

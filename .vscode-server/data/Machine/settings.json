@@ -91,7 +91,8 @@
         ],
         "env": {}
       }
-    ]
+    ],
+    "editor.suggestSelection": "recentlyUsedByPrefix"
 
 
 } 

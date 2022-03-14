@@ -1,6 +1,7 @@
-% see https://tex.stackexchange.com/q/180660/108199, https://tex.stackexchange.com/questions/1226/how-to-make-latexmk-use-makeglossaries, https://de.overleaf.com/learn/latex/Glossaries, https://tex.stackexchange.com/a/182765/108199, https://tex.stackexchange.com/q/270098/108199, https://tex.stackexchange.com/q/316777/108199, https://tex.stackexchange.com/a/509325/108199, https://texblog.org/2014/04/01/multiple-glossaries-in-latex/, https://de.overleaf.com/learn/latex/Glossaries, https://texwelt.de/fragen/24504/glossaries-extra-liste-der-seiten-kleiner-setzen-und-vertikalen-leerraum-entfernen
+% see https://tex.stackexchange.com/q/180660/108199, https://tex.stackexchange.com/questions/1226/how-to-make-latexmk-use-makeglossaries, https://de.overleaf.com/learn/latex/Glossaries, https://tex.stackexchange.com/a/182765/108199, https://tex.stackexchange.com/q/270098/108199, https://tex.stackexchange.com/q/316777/108199, https://tex.stackexchange.com/a/509325/108199, https://texblog.org/2014/04/01/multiple-glossaries-in-latex/, https://de.overleaf.com/learn/latex/Glossaries, https://texwelt.de/fragen/24504/glossaries-extra-liste-der-seiten-kleiner-setzen-und-vertikalen-leerraum-entfernen, rc-file: https://tex.stackexchange.com/a/39782/108199 & https://tex.stackexchange.com/a/541990/108199
 
 % especially https://tex.stackexchange.com/a/364059/108199, https://tex.stackexchange.com/a/360368/108199, https://www.dickimaw-books.com/gallery/glossaries-styles/
+
 
 \usepackage[
   acronym,
@@ -9,6 +10,7 @@
   toc,
   section=section,
   acronym,
+  numberedsection=nameref, %https://tex.stackexchange.com/a/253961/108199
 %   nopostdot,
 %   nonumberlist, 
   ]{glossaries}
@@ -16,12 +18,20 @@
 \usepackage{tabu}
 
 \setlength{\glsdescwidth}{11cm}
+\newlength{\glsnamewidth}
+\setlength{\glsnamewidth}{2cm}
+
+\renewcommand*{\glsautoprefix}{glo:}
 \renewcommand{\glsnamefont}[1]{\textbf{#1}}
 \renewcommand{\glspagelistwidth}{1.8cm} %such that the "Page List" is one line
-\renewcommand{\glossarypreamble}{\vspace*{-0.2cm}} % space after caption
+% \renewcommand{\glossarypreamble}{\vspace*{-0.2cm}} % space after caption
 % \renewcommand{\glsgroupskip}{\vspace*{0.2cm}} 
 \let\oldglossaryheader\glossaryheader
 \renewcommand{\glossaryheader}{\vspace{0.25cm}\oldglossaryheader}
+
+\setglossarypreamble[\acronymtype]{
+    The abbreviations used throughout the work are compiled in the following list below. Note that the abbreviations denote the singular form of the abbreviated words. Whenever the plural forms is needed, an \textit{s} is added. Thus, for example, whereas ANN abbreviates \textit{artificial neural network}, the abbreviation of \textit{artificial neural networks} is written as ANNs.
+}
 
 % =========================================================
 
@@ -29,8 +39,21 @@
 \glsaddkey{unit}{\glsentrytext{\glslabel}}{\glsentryunit}{\GLsentryunit}{\glsunit}{\Glsunit}{\GLSunit}
 \newglossary[dlg]{symbols}{dld}{ddn}{Symbols} 
 \newglossary[tlg]{defs}{tld}{tdn}{Definitions} 
+% \newglossary[tlg2]{customs}{tld2}{tdn2}{Custom Terms} 
 
 % =========================================================
+
+
+\newglossarystyle{long3colheaderMINE}{%
+    \setglossarystyle{long3colheader}% base this style on the list style
+    \renewenvironment{theglossary}{
+        \begin{longtable}{@{}p{\glsnamewidth} p{\glsdescwidth} p{\glspagelistwidth}@{}}}%
+        {\end{longtable}}%
+    \renewcommand*{\glossaryheader}{%  Change the table header
+        \bfseries Notation & \bfseries Description & \bfseries Page List \\[0.5em]
+        %       \hline
+        \endhead}
+}
 
 \newglossarystyle{3colger}{%
     \setglossarystyle{longragged3col}% base this style on the list style

@@ -19,7 +19,7 @@
 
 
 
-\@input{pandoc_generated_latex/chapter_theobg_section_cs}
+\includeMD{pandoc_generated_latex/chapter_theobg_section_cs}
 
 
 \section{Automatic Data-Driven Generation of Conceptual Spaces}
@@ -42,7 +42,7 @@
 
 Mostly from \cite{Derrac2015}, but tbh not that important for me. However a short paragraph about reasoning-based classifiers and the respective intutitive explanations for known classifiers may be interesting (think 1-NN is "Y is of the same class as X because X closest to Y", but also more complex ones.)
 
-\@input{pandoc_generated_latex/chapter_theobg_section_reasoning}
+\includeMD{pandoc_generated_latex/chapter_theobg_section_reasoning}
 
 \section{Related Work}
 
@@ -53,11 +53,13 @@ Mostly from \cite{Derrac2015}, but tbh not that important for me. However a shor
 % \cite{Derrac2015}: some form of dimensionality reduction is typically used to obtain vectors whose components correspond to concepts. One of the most popular techniques, called latent semantic analysis (LSA [39]), uses singular value decomposition (SVD) to this end. Multi-dimensional scaling (MDS [40]) is another popular method for dimen- sionality reduction, which builds a vector-space representation from pairwise similarity judgements.
 
 
-\@input{pandoc_generated_latex/chapter_related_work}
+\includeMD{pandoc_generated_latex/chapter_related_work}
 
 
 
 \section{Required Algorithms and Techniques}
+
+Note that those that are not defined here are likely to be found in the Glossary \nameref{glo:defs}.
 
 \subsubsection*{Semantic Knowledge Bases}
 
@@ -71,7 +73,21 @@ occur in its corresponding text-corpus is highly relevant. To do that, WordNet \
 \label{sec:word_count_techniques}
 
 
-The Paper uses the following PPMI definition:\\ 
+
+\paragraph{Tf-Idf}
+
+\gls{tf-idf} 
+
+%\cite{Turney2010} (sec 4.2): The most popular way to formalize this idea for term–document matrices is the tf-idf (term frequency × inverse document frequency) family of weighting functions (Sp¨arck Jones, 1972). An element gets a high weight when the corresponding term is frequent in the corresponding document (i.e., tf is high), but the term is rare in other documents in the corpus (i.e., df is low, and thus idf is high). Salton and Buckley (1988) defined a large family of tf-idf weighting functions and evaluated them on information re- trieval tasks, demonstrating that tf-idf weighting can yield significant improvements over raw frequency
+
+
+\paragraph{PPMI}
+
+It was suggested by \cite{Turney2010} to use the \gls{ppmi} measure instead of tf-idf to weight the counts in \glspl{doctermmat}, relying on \cite{Bullinaria2007}'s work taking into account psychological models to extract information about lexical semantics from co-occurence statistics. According to \cite{Turney2010,Bullinaria2007}, \gls{ppmi} performs most plausible to measure semantic similarity in word-context matrices compared to human evaluation. %(sec 4.2) of \cite{Turney2010}: Bullinaria and Levy (2007) demonstrated that PPMI performs better than a wide variety of other weighting approaches when measuring semantic similarity with word-context matrices.
+
+
+
+The Paper uses the following \gls{ppmi} definition:\\ 
 
 \noindent $e \in E$ is an entity, $D_e$ a document (bag of words) where that entity occurs.\\
 We want to quantify for each term occuring in the corpus $\{D_e | e \in E\}$ how strongly it is associated with $e$.\\
@@ -99,5 +115,5 @@ pmi(X,i,j)  &= log\left( \frac{X_{ij}}{expected(X,i,j)} \right) \\
 \end{align*}
 
 
-\@input{pandoc_generated_latex/chapter_methods_section_required_algorithms}
+\includeMD{pandoc_generated_latex/chapter_methods_section_required_algorithms}
 

@@ -13,25 +13,7 @@ TODO: Selbst für sachen wie bag-of-words oder tokenization kann ich entsprechen
 [//]: # TODO: Do I want to have a section for every single step of the pipeline containing what paramters there are in this step?!
  
 ### Step 1: Pre-process the texts
-* some parts of this depend on the dataset 
-    * Some may just require additional cleaning (remove HTML-Tags and such things)
-    * Some are already mostly preprocessed (placetypes is already a bag-of-words so there's not much to do there, and we skip almost all preprocessing-steps)
-    * In course-descriptions, I want some parts of the pre-preprocessing be part of the pipeline, like how we merge descriptions of different iterations of the same course that overlap to a high degree (sentwise-merge vs relative-term-frequencies)
-* generally, in this step we do
-    * Do some last steps of preprocessing depending on the dataset
-    * Check the language of the entities \footnote{Using this library: \cite{nakatani2010langdetect} which claims to have xyz% accuracy (TODO: didn't i talk about this somwhere else?!)}  and, depending on our translate-policy 
-        * take only those texts of a certain language
-        * enforce all texts are of the same language by translating all those that are not of that language \footnote{The code of this thesis contains extensive code to do that using Google Translate (which has TODO: thatandthat qualitiy of translation compared to human translators, which is better than the average german Prof holding a lecture in english), however Google only allows 500.000 characters for free per month per person, so while thisandthis many course descriptions are already translated, I don't have all texts easiliy available in all languages at will}
-        * ignore the language and take all texts in their original language
-    * Optionally prepend the title and subtitle to the description, as for courses this may be a lot more informative than the title itselv
-    * Optionally remove HTML-Tags from texts
-    * Optionally tokenize sentences (such that n-grams across sentences are not considered)
-    * Optionally convert all tokens to lower-case
-    * Optionally remove stopwords\footnote{Grains of salt concerning stopword-lists} (Alshaikh2019 just removed too-high-docfreq)
-    * Tokenize the words in the texts 
-    * Optionally lemmatize\footnote{explain lemmatization} the words in the texts (TODO: write about it and that I use HanTa for german etc etc)
-    * Optionally remove diacritics\footnote{explain}
-    * Optionally remove punctuation
+[list of steps]
 * The above can be done manually step-by-step mostly based on NLTK tools, or in one step using `sklearn`'s `CountVectorizer`. 
 
 

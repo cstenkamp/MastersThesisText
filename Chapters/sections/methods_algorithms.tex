@@ -118,14 +118,15 @@ The core idea of the algorithm is to (unsupervised, data-driven) find a a set of
 %   5) if metric, assume salient:
 %  		* [AGKS18] haben den candidate-filter-teil konfigurierbar (und sagen bei denen ist accuracy even better than kappa)
 
-\fref{fig:depdendency_graph} shows an automatically exported depdendency-graph, displaying the individual steps of the algorithm as done in the codebase of this thesis, also showing where selected important parameters are first used. As explained in section \ref{sec:architecture}, the modularity of the provided architecture allows individual components to be exchanged as needed.
+\fref{fig:dependency_graph} shows an automatically exported dependency_graph-graph, displaying the individual steps of the algorithm as done in the codebase of this thesis, also showing where selected important parameters are first used. As explained in section \ref{sec:architecture}, the modularity of the provided architecture allows individual components to be exchanged as needed.
+\todoparagraph{I should also refer to} \tref{tab:compared_algos} here!
 
 
 \begin{figure}[htp]
 	\begin{center}
 	  \includegraphics[width=0.9\textwidth]{dependency_graph_2022-02-14_11-36-45}
 	  \caption[Dependency-Graph of the Algorithm]{(automatically generated) dependency-graph, displaying the individual steps of the algorithm as well as their dependencies and where selected important parameters are first used.}
-	  \label{fig:depdendency_graph}
+	  \label{fig:dependency_graph}
 	\end{center}
 \end{figure}
 
@@ -139,18 +140,34 @@ Before looking at the steps in turn, it should be noted that even the preprocess
 
 \label{sec:algo_preproc}
 
-The first step of basically all NLP algorithms must be to pre-process the text corpus. The preprocessing itself consists of multiple independent components chained after each other. Which components are necessary also depends on the processed dataset - as for example the \emph{placetypes-dataset} consists not of a collection of tags instead of full sentences, tokenizing sentences or removing punctuation becomes irrelevant. Other datasets may require additional cleaning or are already available in preprocessed form.
+The first step of basically all NLP algorithms must be to pre-process the text corpus. The preprocessing itself consists of multiple independent components chained after each other. Which components are necessary also depends on the processed dataset - as for example the \emph{placetypes-dataset} consists of a collection of tags instead of full sentences, tokenizing sentences or removing \gls{stopword}s becomes irrelevant. Other datasets may require additional cleaning or are already available in preprocessed form.
 % * some parts of this depend on the dataset 
 %     * Some may just require additional cleaning (remove HTML-Tags and such things)
 %     * Some are already mostly preprocessed (placetypes is already a bag-of-words so there's not much to do there, and we skip almost all preprocessing-steps)
 %     * In course-descriptions, I want some parts of the pre-preprocessing be part of the pipeline, like how we merge descriptions of different iterations of the same course that overlap to a high degree (sentwise-merge vs relative-term-frequencies)
 
-As the main considered dataset of university-courses is highly multilingual (see \fref{fig:courses_language_distribution}), one of the first questions that needs to be addressed is how entities of different langauges are handled. The algorithm consists of classical language processing algorithms such as comparing the bag-of-words representation of the entities, which means that the same text in two different languages result in maximally different representations\footnote{\todoparagraph{another reason that makes checking out word2vec worth it!}}. Because of this, before any other processing, the languages of the entities is checked, such that entities of languages other than the demanded may be translated or left out.
+As the main considered dataset of university-courses is highly multilingual (see \fref{fig:courses_language_distribution}), one of the first questions that needs to be addressed is how entities of different langauges are handled. The algorithm consists of classical language processing algorithms such as comparing \gls{bow} representation of the entities, which means that the same text in two different languages may result in maximally different representations\footnote{\todoparagraph{another reason that makes checking out word2vec worth it!}}. Because of this, before any other processing, the languages of the entities is checked, such that entities of languages other than the demanded may be either translated, left out or used anyway\footnote{For details about the translation-step, it is referred to Appendix \ref{ap:translating}. It should be noted that professional automatic translation is costly and thus not all texts are available in all languages.}.
+
+\FloatBarrier
 
 The following components are developed for the preprocessing, every one of which can be individually enabled or disabled:
 \begin{itemize}
-	\item 
+	\item Prepend title and/or subtitle to the entities' associated text \itemtext{useful for the SIDDATA-Dataset, as the titles are often quite long and more descriptive than their descriptions}
+	\item Remove HTML-Tags from texts 
+	\itemtext{useful for the SIDDATA-Dataset, as it includes descriptions for \glspl{mooc}, which may contain such}
+	\item Tokenize sentences 
+	\itemtext{such that \glspl{ngram} across sentences are not considered}
+	\item Lower-case all words
+	\item Remove stop-words
+	\itemtext{\todoparagraph{grains of salt for stopwords! Alshaikh2019 just removed too-high-docfreq!}}
+	\item Tokenize words
+	\item \Gls{lemma}tize words
+	\itemtext{\todoparagraph{TODO: Write about details  and HanTa for german etc!}}
+	\item Remove diacritics\footnote{\emph{Diacritics} are glyphs added to basic letters, such as accents or german \emph{Umlaute}. Removing them converts for example the letter \emph{ä} to an \emph{a}}
+	\item Remove punctuation 
 \end{itemize}
+
+%TODO: The above can be done manually step-by-step mostly based on NLTK tools, or in one step using `sklearn`'s `CountVectorizer`. 
 
 
 
@@ -163,7 +180,7 @@ The following components are developed for the preprocessing, every one of which
 \subsubsection{Generating Vector Space Embeddings}
 %TODO: in \cite{Turney2010}, this is "Building the frequency matrix", transform the raw counts, smooth the space
 
-Embedding words, \gls{n-gram}s or other tokens depicted by \cite{Turney2010} and \cite{Lowe}, 
+Embedding words, \glspl{ngram} or other tokens depicted by \cite{Turney2010} and \cite{Lowe}, 
 
 
 
@@ -176,8 +193,7 @@ Embedding words, \gls{n-gram}s or other tokens depicted by \cite{Turney2010} and
 
 
 
-
-\begin{figure}
+\begin{figure}[h!]
 	\begin{center}
 	  \includegraphics[width=0.9\textwidth]{3dplot_hyperplane_and_orthogonal}
 	  \caption[Visual representation of the Hyperplane of an SVM splitting a dataset]{ \label{fig:3d_hyperplane_ortho} Visual representation of the Hyperplane of a Support-Vector-Machine splitting a dataset, as well as it's orthogonal and the orthogonal projection of a set of samples onto the plane. For an interactive version of this plot, visit  {\small \url{https://nbviewer.org/github/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/hyperplane_orthogonal_3d.ipynb?flush_cache}}}
@@ -185,7 +201,7 @@ Embedding words, \gls{n-gram}s or other tokens depicted by \cite{Turney2010} and
 \end{figure}
 
 
-\@input{pandoc_generated_latex/section_algorithm}
+\includeMD{pandoc_generated_latex/section_algorithm}
 
 
 \subsection{Preprocessing}

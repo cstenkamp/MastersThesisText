@@ -56,7 +56,7 @@
 % =========================================================
 % DEFINITIONS
 
-\newglossaryentry{n-gram}{
+\newglossaryentry{ngram}{
     type=defs,
     name=n-gram,
     description={
@@ -65,3 +65,36 @@
 }
 
 
+\newglossaryentry{stopword}{
+    type=defs,
+    name=stopword,
+    description={
+        TODO: do
+        }
+}
+
+\newglossaryentry{lemma}{
+    type=defs,
+    name=lemma,
+    description={
+        The \textbf{lemma} of a word is the canonical, base form of a set of words belonging to the same lexeme. \textbf{Lemmatizing} a word refers to the process of finding this base form for (possibly inflected) words. For example, the lemma of the words \textit{going, went, gone} is \textit{go}.
+        }
+}
+
+\newglossaryentry{doctermmat}{
+    type=defs,
+    name=document-term \mbox{matrix},
+    plural=document-term matrices,
+    description={
+        A document-term matrix encodes the frequency of terms (words, n-grams or other) for a collection of texts in a matrix. The (often very sparse) matrix has a rows represending the documents and columns corresponding to terms, the individual values encoding the pure counts, frequencies or quantifications of all combinations of document and term.
+        }
+}
+
+% % TODO maybe have ANOTHER glossary section with the nomenclature used in this thesis which are not-really-definitions?
+% \newglossaryentry{quant}{
+%     type=customs,
+%     name=quantificiation,
+%     description={
+%         A document-term matrix encodes the frequency of terms (words, n-grams or other) for a collection of texts in a matrix. The (often very sparse) matrix has a rows represending the documents and columns corresponding to terms, the individual values encoding the pure counts, frequencies or quantifications of all combinations of document and term.
+%         }
+% }
