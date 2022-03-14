@@ -3,23 +3,24 @@
 \newcommand*{\Z}{\mathbb{Z}}
 \newcommand*{\Q}{\mathbb{Q}}
 
+%TODO: If I don't want to have a COMPLETE pagelist, see https://tex.stackexchange.com/q/246818/108199
 
 % =========================================================
 % UNITS
 
-\newglossaryentry{m}{
-    name=\ensuremath{m},
-    description={Meter},
-    unit={\si{m}},
-    type=units
-}
+% \newglossaryentry{m}{
+%     name=\ensuremath{m},
+%     description={Meter},
+%     unit={\si{m}},
+%     type=units
+% }
 
-\newglossaryentry{energyconsump}{
-    name=\ensuremath{P},
-    description={Power},
-    unit={\si{kW}},
-    type=units
-}
+% \newglossaryentry{energyconsump}{
+%     name=\ensuremath{P},
+%     description={Power},
+%     unit={\si{kW}},
+%     type=units
+% }
 
 % =========================================================
 % SYMBOLS
@@ -90,11 +91,14 @@
         }
 }
 
-% % TODO maybe have ANOTHER glossary section with the nomenclature used in this thesis which are not-really-definitions?
-% \newglossaryentry{quant}{
-%     type=customs,
-%     name=quantificiation,
-%     description={
-%         A document-term matrix encodes the frequency of terms (words, n-grams or other) for a collection of texts in a matrix. The (often very sparse) matrix has a rows represending the documents and columns corresponding to terms, the individual values encoding the pure counts, frequencies or quantifications of all combinations of document and term.
-%         }
-% }
+% =========================================================
+% CUSTOM TERMS
+
+% TODO maybe have ANOTHER glossary section with the nomenclature used in this thesis which are not-really-definitions?
+\newglossaryentry{quant}{
+    type=customs,
+    name=quantificiation,
+    description={
+        \hspace{1.2em} In the scope of this thesis, the term \textbf{quantification} refers to 
+        }
+}

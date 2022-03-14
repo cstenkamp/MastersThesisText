@@ -249,7 +249,7 @@
 \usepackage{dirtytalk} %https://de.overleaf.com/learn/latex/Typesetting_quotations
 % \usepackage{csquotes} % Context sensitive quotation.
 \usepackage[autostyle=false, style=english]{csquotes}
-\newcommand{\q}[1]{\enquote{#1}}
+\newcommand{\q}[1]{\hspace{-0.5ex}\enquote{#1}}
 % \MakeOuterQuote{"} %https://tex.stackexchange.com/a/216166/108199 to auto-replace " with `` '' (parity must be given)
 % See also regarding quotation:
 % IEEE Standard: https://libraryguides.vu.edu.au/ieeereferencing/gettingstarted
@@ -633,7 +633,7 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 % Glossaries
 
 
-
+%TODO: If I don't want to have a COMPLETE pagelist, see https://tex.stackexchange.com/q/246818/108199
 \chapter*{Glossary}
 \vspace{-4ex}
 \addcontentsline{toc}{chapter}{Glossary}

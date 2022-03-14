@@ -2,6 +2,7 @@
 
 % especially https://tex.stackexchange.com/a/364059/108199, https://tex.stackexchange.com/a/360368/108199, https://www.dickimaw-books.com/gallery/glossaries-styles/
 
+%TODO: If I don't want to have a COMPLETE pagelist, see https://tex.stackexchange.com/q/246818/108199
 
 \usepackage[
   acronym,
@@ -35,11 +36,11 @@
 
 % =========================================================
 
-\newglossary[slg]{units}{syi}{syg}{Units}
-\glsaddkey{unit}{\glsentrytext{\glslabel}}{\glsentryunit}{\GLsentryunit}{\glsunit}{\Glsunit}{\GLSunit}
+\newglossary[tlg]{customs}{syi}{syg}{Custom Terms}
 \newglossary[dlg]{symbols}{dld}{ddn}{Symbols} 
 \newglossary[tlg]{defs}{tld}{tdn}{Definitions} 
-% \newglossary[tlg2]{customs}{tld2}{tdn2}{Custom Terms} 
+% \glsaddkey{unit}{\glsentrytext{\glslabel}}{\glsentryunit}{\GLsentryunit}{\glsunit}{\Glsunit}{\GLSunit}
+% \newglossary[slg]{units}{syi}{syg}{Units} %TODO: I'd like to be able to use this one, but latex...
 
 % =========================================================
 
