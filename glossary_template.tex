@@ -30,10 +30,6 @@
 \let\oldglossaryheader\glossaryheader
 \renewcommand{\glossaryheader}{\vspace{0.25cm}\oldglossaryheader}
 
-\setglossarypreamble[\acronymtype]{
-    The abbreviations used throughout the work are compiled in the following list below. Note that the abbreviations denote the singular form of the abbreviated words. Whenever the plural forms is needed, an \textit{s} is added. Thus, for example, whereas ANN abbreviates \textit{artificial neural network}, the abbreviation of \textit{artificial neural networks} is written as ANNs.
-}
-
 % =========================================================
 
 \newglossary[tlg]{customs}{syi}{syg}{Custom Terms}
@@ -41,6 +37,20 @@
 \newglossary[tlg]{defs}{tld}{tdn}{Definitions} 
 % \glsaddkey{unit}{\glsentrytext{\glslabel}}{\glsentryunit}{\GLsentryunit}{\glsunit}{\Glsunit}{\GLSunit}
 % \newglossary[slg]{units}{syi}{syg}{Units} %TODO: I'd like to be able to use this one, but latex...
+
+% =========================================================
+
+\setglossarypreamble[\acronymtype]{
+    The abbreviations used throughout the work are compiled in the following list below. Note that the abbreviations denote the singular form of the abbreviated words. Whenever the plural forms is needed, an \textit{s} is added. Thus, for example, whereas ANN abbreviates \textit{artificial neural network}, the abbreviation of \textit{artificial neural networks} is written as ANNs.
+}
+
+\setglossarypreamble[defs]{
+    \todoparagraph{Definitions - terms that actually exist with the same meaning also outside of this thesis}
+}
+
+\setglossarypreamble[customs]{
+    \todoparagraph{Terms that I'll use in this thesis that will have the same meaning throughout the thesis, but are no official definitions}
+}
 
 % =========================================================
 

@@ -91,14 +91,33 @@
         }
 }
 
+
+\newglossaryentry{dissimmat}{
+    type=defs,
+    name=dissimilarity matrix,
+    plural=dissimilarity matrices,
+    description={
+        \hspace{0.2em} A square matrix where both rows and columns represent entities, the cells being to their pairwise dissimilarities as calculated by an arbitrary distance function. For metric distances, distance matrices are mirrored along their main diagonal, which is made up solely from zeros. Also called \textbf{distance matrix}.
+        }
+}
+
 % =========================================================
 % CUSTOM TERMS
 
-% TODO maybe have ANOTHER glossary section with the nomenclature used in this thesis which are not-really-definitions?
 \newglossaryentry{quant}{
     type=customs,
     name=quantificiation,
     description={
-        \hspace{1.2em} In the scope of this thesis, the term \textbf{quantification} refers to 
+        \hspace{1.2em} In the scope of this thesis, the term \textbf{quantification} refers to the relative score for an n-gram in a document, depending on it's frequency as well as other frequencies, as calculated by one of the \nameref{sec:word_count_techniques}, also called \textbf{quantification measures}. %TODO: to lower-case see https://tex.stackexchange.com/questions/445404/capitalization-variants-of-nameref 
         }
 }
+
+\newglossaryentry{entity}{
+    type=customs,
+    name=entity,
+    plural=entities,
+    description={
+        An entity is a single sample from the handled corpus. Depending on the context, this term may also refer to its associated text (which may, depending on the considered dataset, be the course-description, picture-tags, concatenated-reviews, \dots).
+        }
+}
+

@@ -17,25 +17,6 @@
 
 ### Word-Scoring Methods
 
-#### tf-idf
-
-term frequency - inverse document frequency. Words that are rare overall and frequent in this document are weighted highly.
-
-tf-idf for term $x$ within document $y$:
-
-$$ w_{x,y} = \text{\textit{tf}}_{x,y} * log(\frac{N}{df_x}) $$
-
-with $\text{tf}_{x,y}$ as the term-frequency of $x$ in $y$, \
-$df_x$ as the document-frequency (the number of documents containing $x$) \
-and $N$ being the total number of documents
-
-[//]: # see also: https://towardsdatascience.com/3-basic-approaches-in-bag-of-words-which-are-better-than-word-embeddings-c2cbc7398016
-
-#### PPMI
-
-* Source [52] of [DESC15]
-* See also: https://stackoverflow.com/a/58725695/5122790
-
 ## Dimension Reduction & Topic Modeling 
 
 * Reasoning to use stuff like this: 

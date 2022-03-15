@@ -31,7 +31,10 @@ TODO: Selbst für sachen wie bag-of-words oder tokenization kann ich entsprechen
 
 ### Step 2 and 3: Create Dissimilarity Matrix and the Embedding
 
-In these steps, the individual entities (coursedescriptions, placetypes, concatenated-reviews-per-movie) are embedded into a high-dimensional vector space. Optimally the number of dimensions of this space is decidable without constraints and the resulting space is euclidian. Because of these two requirements, \cite{Derrac2015} selected Multi-Dimensional Scaling (MDS) as their algorithm of choice, which takes a dissimilarity-matrix as input and returns a lower-dimensional embedding in which original distances are kept as close to the ones of the dissimilarity-matrix as possible. In their algorithm, the dissimilarity-matrix is created using the normalized angular distances of the bags-of-words of the respective entities. If the strict requirement for a metric space is dropped however, many different algorithms may instead be used at this point - not only different dimensionality reduction methods for the embedding, but also ones that don't rely on the distance matrix or even the bag-of-words at all, like document-embedding-techniques such as Doc2Vec (eg. used by \cite{which_one??}).
+
+ Multi-Dimensional Scaling (MDS) as their algorithm of choice, which takes 
+ 
+ In their algorithm, the dissimilarity-matrix is created using the normalized angular distances of the bags-of-words of the respective entities. If the strict requirement for a metric space is dropped however, many different algorithms may instead be used at this point - not only different dimensionality reduction methods for the embedding, but also ones that don't rely on the distance matrix or even the bag-of-words at all, like document-embedding-techniques such as Doc2Vec (eg. used by \cite{which_one??}).
 
 For this thesis, the creation of the dissimiliarity-matrix and the embedding are split into individual steps because both have a substantial runtime, and as the number of dimensions for the embedding is only relevant in the embedding-step, a lot of runtime can be saved if the dissimiliarity-matrix can be re-used for different embeddings and dimensions.
 

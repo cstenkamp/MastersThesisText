@@ -45,13 +45,12 @@ Many of the just mentioned components don't refer to a specific algorithms, and 
 % After the text has been tokenized and (optionally) normalized and annotated, the first step is to generate a matrix of frequencies. Second, we may want to adjust the weights of the elements in the matrix, because common words will have high frequencies, yet they are less informative than rare words. Third, we may want to smooth the matrix, to reduce the amount of random noise and to fill in some of the zero elements in a sparse matrix. Fourth, there are many different ways to measure the similarity of two vectors. Lowe (2001) gives a good summary of mathematical processing for word–context VSMs.
 % He decomposes VSM construction into a similar four-step process: calculate the frequencies, transform the raw frequency counts, smooth the space (dimensionality reduction), then calculate the similarities.
 
-
-
 The considered algorithm first embeds the collection of texts into a vector space, to afterwards extract important features from this space using linear classifiers. The second step is an original idea of \cite{Derrac2015}, however creating vector space embeddings from texts is a very popular technique, used for many tasks in computational linguistics \cite{Mikolov:Regularities,Mikolov2013a,Guo,Lowe,Turney2010}. %TODO: irgendwo bin ich ja noch auf word2vec und den ganzen bums eingegangen blabla, nochmal schreiben dass es hier um classical AI geht und ebennicht die sahcen wie word2vec und glove
 %TODO: glove und fasttext cite?!
- \textcite{Lowe} conceived a general framework to construct vector spaces from texts, splitting the process into the steps of first counting the token frequencies, then transforming the raw counts into more useful quantification measures (see \ref{sec:word_count_techniques}) %adjust the weights of the elements in the matrix, because common words will have high frequencies yet are less informative than rare words.
+
+ \textcite{Lowe} conceived a general framework to construct vector spaces from texts, splitting the process into the steps of first counting the token frequencies, then transforming the raw counts into more useful \gls{quant} measures (see \ref{sec:word_count_techniques}) %adjust the weights of the elements in the matrix, because common words will have high frequencies yet are less informative than rare words.
  %TODO: talk about a fucking DOC-TERM-MATRIX, A MATRIX OF FREQUENCIES!!!
-  and smoothing the space using dimensionality reduction, before calculating the similarities on the resulting embedding. While the considered algorithm requires more steps before calculating the similarities (to allow for domain-specific and more complex forms of reasoning), it also adheres to this structure.
+  and smoothing the space using dimensionality reduction, before calculating the similarities on the resulting embedding. While the considered algorithm requires more steps before calculating the similarities to allow for domain-specific and more complex forms of reasoning, it also adheres to this structure, as will be shown in section~\nameparanref{sec:generate_vectorspaces}.
 
 %TODO:
 % * reference yamls again
@@ -140,13 +139,13 @@ Before looking at the steps in turn, it should be noted that even the preprocess
 
 \label{sec:algo_preproc}
 
-The first step of basically all NLP algorithms must be to pre-process the text corpus. The preprocessing itself consists of multiple independent components chained after each other. Which components are necessary also depends on the processed dataset - as for example the \emph{placetypes-dataset} consists of a collection of tags instead of full sentences, tokenizing sentences or removing \gls{stopword}s becomes irrelevant. Other datasets may require additional cleaning or are already available in preprocessed form.
+The first step of basically all NLP algorithms must be to pre-process the text corpus. The preprocessing itself consists of multiple independent components chained after each other. Which components are necessary also depends on the processed dataset - as for example the \emph{placetypes-dataset} consists of a collection of tags instead of full sentences, tokenizing sentences or removing \glspl{stopword} becomes irrelevant. Other datasets may require additional cleaning or are already available in preprocessed form.
 % * some parts of this depend on the dataset 
 %     * Some may just require additional cleaning (remove HTML-Tags and such things)
 %     * Some are already mostly preprocessed (placetypes is already a bag-of-words so there's not much to do there, and we skip almost all preprocessing-steps)
 %     * In course-descriptions, I want some parts of the pre-preprocessing be part of the pipeline, like how we merge descriptions of different iterations of the same course that overlap to a high degree (sentwise-merge vs relative-term-frequencies)
 
-As the main considered dataset of university-courses is highly multilingual (see \fref{fig:courses_language_distribution}), one of the first questions that needs to be addressed is how entities of different langauges are handled. The algorithm consists of classical language processing algorithms such as comparing \gls{bow} representation of the entities, which means that the same text in two different languages may result in maximally different representations\footnote{\todoparagraph{another reason that makes checking out word2vec worth it!}}. Because of this, before any other processing, the languages of the entities is checked, such that entities of languages other than the demanded may be either translated, left out or used anyway\footnote{For details about the translation-step, it is referred to Appendix \ref{ap:translating}. It should be noted that professional automatic translation is costly and thus not all texts are available in all languages.}.
+As the main considered dataset of university-courses is highly multilingual (see \autoref{fig:courses_language_distribution}), one of the first questions that needs to be addressed is how entities of different langauges are handled. The algorithm consists of classical language processing algorithms such as comparing \gls{bow} representation of the entities, which means that the same text in two different languages may result in maximally different representations\footnote{\todoparagraph{another reason that makes checking out word2vec worth it!}}. Because of this, before any other processing, the languages of the entities is checked, such that entities of languages other than the demanded may be either translated, left out or used anyway\footnote{For details about the translation-step, it is referred to Appendix \ref{ap:translating}. It should be noted that professional automatic translation is costly and thus not all texts are available in all languages.}.
 
 \FloatBarrier
 
@@ -169,7 +168,8 @@ The following components are developed for the preprocessing, every one of which
 
 %TODO: The above can be done manually step-by-step mostly based on NLTK tools, or in one step using `sklearn`'s `CountVectorizer`. 
 
-
+% TODO: Regarding Stop-words:
+% from \cite{Turney2010}: Computing the similarity between all pairs of vectors, described in Section 4.4, is a computationally intensive task. However, only vectors that share a non-zero coordinate must be compared (i.e., two vectors that do not share a coordinate are dissimilar). Very frequent context words, such as the word the, unfortunately result in most vectors matching a non-zero coordinate. Such words are precisely the contexts that have little semantic discrimination power
 
 ... The preprocessing of the algorithms of \mainalgos is dependent on the dataset - \tref{tab:all_datasets} lists the respectively used preprocessing per dataset and author.
 
@@ -178,16 +178,17 @@ The following components are developed for the preprocessing, every one of which
 
 
 \subsubsection{Generating Vector Space Embeddings}
-%TODO: in \cite{Turney2010}, this is "Building the frequency matrix", transform the raw counts, smooth the space
 
-Embedding words, \glspl{ngram} or other tokens depicted by \cite{Turney2010} and \cite{Lowe}, 
+\label{sec:generate_vectorspaces}
+%TODO: in \cite{Turney2010}, this is "Building the frequency matrix", 
 
+In this step, the individual \glspl{entity} are embedded into a fixed-dimensional vector space, making up a \emph{frequency matrix}. It should be noted that while this matrix is a \gls{doctermmat}, it is only an interim result in the algorithm and the calculation of distances and directions will be done on another matrix from a later step.
 
+Embedding words, \glspl{ngram}/phrases or other tokens, as depicted by \cite{Turney2010,Lowe}, generally involves counting the token frequencies, transforming them to get relative frequencies, and performing dimensionality reduction on the resulting matrix. As elaborated upon in \autoref{sec:reasoning}, for \gencite{Derrac2015} algorithm it was a requirement that the space is Euclidian. Another requirement is that the number of dimensions is decidable as hyperparameter to the algorithm. Because of these two requirements, they selected \gls{mds} for dimensionality reduction.
 
+In their algorithm, the \gls{dissimmat} is created using the \emph{normalized angular distances} of the \glspl{bow} of the respective entities. If the strict requirement for a metric space is dropped however, many different algorithms may instead be used at this point - not only different dimensionality reduction methods for the embedding, but also embeddings that do not rely on the distance matrix or even the \gls{bow} at all, like document-embedding-techniques such as doc2vec \cite{Le2014} (as \eg used by \cite{Alshaikh2020}).
 
-
-
-
+% TODO: komplettes 4 von \cite{Turney2010}, außerdem der ganze bums von Deerwester!
 
 
 

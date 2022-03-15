@@ -1,14 +1,5 @@
-% We also use \gls{n-gram}s!
-% A vector space \gls{vector-space} 
-% A number from \gls{integers}. 
-% Then there's \gls{symb:Pi}
-% Do you know what a \gls{bow} is?!
-% You DO know what a \gls{bow} is!!
-% Another vector space \gls{vector-space} 
-% Also another integer from \gls{integers}
-
-
 %TODO: once the text is "finished": [see sublime note]
+% see also: https://www.wiwi.uni-osnabrueck.de/fileadmin/documents/public/3_fachgebiete/3.11_mikro/Guidelines/Guidelines_Thesis.pdf
 
 % NoMarkdown and Twoside are compile-commands, see https://tex.stackexchange.com/a/220101/108199, https://tex.stackexchange.com/a/22525/108199, https://tex.stackexchange.com/a/33577/108199
 
@@ -129,6 +120,7 @@
 \usepackage[british]{babel} %was [english] (see note of underscore), is now [british] 
 
 
+
 \usepackage{underscore} % I need underscore to not have to write "\_" for underscores, but that would break labels with unterscores in it unless I also include babel, see https://tex.stackexchange.com/a/121438/108199
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[chapter]
@@ -166,6 +158,14 @@
        pdfstartview=%
  ]{hyperref} % why so many options? https://golatex.de/viewtopic.php?p=22119&sid=ebe25f27fce1765ab7d8b1d2e91ee979#p22119
 \usepackage{bookmark} %also https://golatex.de/viewtopic.php?p=22119&sid=ebe25f27fce1765ab7d8b1d2e91ee979#p22119
+\addto\extrasenglish{
+    \def\sectionautorefname{Section}
+}
+\addto\extrasbritish{
+    \def\sectionautorefname{Section}
+}
+%https://github.com/Cryptosaurus/iacrtrans/issues/9#issuecomment-562347502
+
 
 \usepackage[all]{nowidow} % Prevent widows and orphans.
 \usepackage{xstring} % logic string operations
@@ -187,13 +187,12 @@
 \newacronym{svm}{SVM}{Support Vector Machine}
 \newacronym{mds}{MDS}{Multi Dimensional Scaling}
 \newacronym{ppmi}{PPMI}{Positive Pointwise Mutual Information}
-\newacronym{bow}{BoW}{Bag Of Words}
 \newacronym{imdb}{IMDB}{Internet Movie Database}
 \newacronym{tf-idf}{tf-idf}{term frequency $\times$ inverse document frequency algorithm}
 % END Acronym definitions
 %TODO: update acronym script for Plural!!
 \newacronym[plural=MOOCs]{mooc}{MOOC}{Massive Open Online Course}
-
+\newacronym[plural=BoWs, firstplural=Bags of Words]{bow}{BoW}{Bag of Words}
 
 % ================== biblatex stuff ==================
 \newcommand\posscite[1]{\citeauthor{#1}'s \cite{#1}}
@@ -521,6 +520,11 @@
 
 \usepackage{nameref} % comment of https://tex.stackexchange.com/a/253961/108199
 
+\newcommand*{\fullref}[1]{\hyperref[{#1}]{\autoref*{#1} \nameref*{#1}}} % One single link
+
+\newcommand*{\nameparanref}[1]{\hyperref[{#1}]{\ref{#1} (\nameref*{#1})}} 
+
+
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
 
@@ -634,18 +638,21 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 
 
 %TODO: If I don't want to have a COMPLETE pagelist, see https://tex.stackexchange.com/q/246818/108199
+\renewcommand*{\arraystretch}{1.8}
 \chapter*{Glossary}
-\vspace{-4ex}
+\vspace{-5ex}
 \addcontentsline{toc}{chapter}{Glossary}
+\label{sec:glossary}
 \glsaddallunused
-\printglossary[type=defs,         title=Definitions, toctitle=Definitions, style=long3colheaderMINE]
-\printglossary[type=customs,      title=Custom Terms, toctitle=Custom Terms used in this thesis, style=long3colheaderMINE]
+\printglossary[type=defs,         title=Definitions, toctitle=Definitions, style=long3colheaderMINE, nogroupskip]
+\printglossary[type=customs,      title=Custom Terms, toctitle=Custom Terms used in this thesis, style=long3colheaderMINE, nogroupskip]
 % \printglossary[type=units,        title=Units,       toctitle=Units,      style=3colger]
 \vspace{0.5cm}
-\printglossary[type=symbols,      title=Symbols,     toctitle=List of Symbols]
+\renewcommand*{\arraystretch}{1}
+\printglossary[type=symbols,      title=Symbols,     toctitle=List of Symbols, nogroupskip]
 \vspace{0.5cm}
 % \printglossary[type=\acronymtype, title=Acronyms,    toctitle=List of Acronyms, style=2colacro, nonumberlist]
-\printglossary[type=\acronymtype, title=Acronyms,    toctitle=List of Acronyms] 
+\printglossary[type=\acronymtype, title=Acronyms,    toctitle=List of Acronyms, nogroupskip] 
 
 
 %----------------------------------------------------------------------------------------
