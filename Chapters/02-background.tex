@@ -150,7 +150,7 @@ pmi(X,i,j)  &= log\left( \frac{X_{ij}}{expected(X,i,j)} \right) \\
 
 FROM \cite{deerwester} (huge chunks verbaitm!)
 
-The only information that can be taken into account when comparing two texts, or a text and a query, are the words it is made up from (...and their constellation, which is why word2vec works better than \gls{bow}-approaches). 
+The only information that can be taken into account when comparing two texts, or a text and a query, are the words it is made up from (...and their constellation, which is why \gls{word2vec} works better than \gls{bow}-approaches). 
 However what you really want to compare is their conceptual/semantic content, and that unfortunately doesn't have a 1:1 correspondance to words - language is highly redundant, and the problems with that approach are synonymy (multiple words with one meaning) and polysemy (one word with multiple meanings), so equal words don't necessarily entail same concepts, and same concepts doesn't automatically mean same words. The terms used to describe or index a document typically contain only a fraction of the terms that users as a group will try to look it up under. Automatically adding synonyms worsens the polysemy problem. the words in query and document are both only one sample description of the intended documents, and in principle could have contained many different terms from the ones it does
 
 if there is a great deal of structure, i.e. the occurrence ofsome patterns of words gives us a strong clue as to the likely occurrence of others, then data from one part (or all) of the table can be used to correct other portions

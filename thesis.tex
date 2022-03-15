@@ -25,7 +25,6 @@
 % ====================== /parts from MastersDoctoralThesis.cls ======================
 %	HEADERS AND FOOTERS
 
-
 \usepackage[automark,headsepline]{scrlayer-scrpage} %https://esc-now.de/_/latex-individuelle-kopf--und-fusszeilen-update/?lang=de
 \pagestyle{scrheadings}
 \clearpairofpagestyles
@@ -158,12 +157,10 @@
        pdfstartview=%
  ]{hyperref} % why so many options? https://golatex.de/viewtopic.php?p=22119&sid=ebe25f27fce1765ab7d8b1d2e91ee979#p22119
 \usepackage{bookmark} %also https://golatex.de/viewtopic.php?p=22119&sid=ebe25f27fce1765ab7d8b1d2e91ee979#p22119
-\addto\extrasenglish{
-    \def\sectionautorefname{Section}
-}
-\addto\extrasbritish{
-    \def\sectionautorefname{Section}
-}
+\addto\extrasenglish{\def\sectionautorefname{Section}}
+\addto\extrasbritish{\def\sectionautorefname{Section}}
+\addto\extrasenglish{\def\subsectionautorefname{Section}}
+\addto\extrasbritish{\def\subsectionautorefname{Section}}
 %https://github.com/Cryptosaurus/iacrtrans/issues/9#issuecomment-562347502
 
 
@@ -189,6 +186,8 @@
 \newacronym{ppmi}{PPMI}{Positive Pointwise Mutual Information}
 \newacronym{imdb}{IMDB}{Internet Movie Database}
 \newacronym{tf-idf}{tf-idf}{term frequency $\times$ inverse document frequency algorithm}
+\newacronym{os}{OS}{Operating System}
+\newacronym{ikw}{IKW}{Institut für Kognitionswissenschaften}
 % END Acronym definitions
 %TODO: update acronym script for Plural!!
 \newacronym[plural=MOOCs]{mooc}{MOOC}{Massive Open Online Course}
@@ -383,6 +382,11 @@
 
 \usepackage{listings} % rendering program code
 
+\newfloat{lstfloat}{htbp}{lop}
+\floatname{lstfloat}{Listing}
+\def\lstfloatautorefname{Listing} % needed for hyperref/auroref
+
+
 \lstset{% general command to set parameter(s)
 	basicstyle=\ttfamily\color{grey},          % print whole listing small
 	keywordstyle=\color{black}\bfseries\underbar,
@@ -406,24 +410,26 @@
 \newlength\lstnumberwidth
 \setlength\lstnumberwidth{\widthof{\lstnumberstyle00}+\lstnumbersep+\lsthorizontalpadding}
 
-\lstset{
-	numberblanklines=false
-	,basicstyle=\ttfamily%
-	,breaklines=true%
-	,tabsize=1%
-	,showstringspaces=false%
-	,numbers=left%   
-	,numbersep=\lstnumbersep%
-	,numberstyle=\lstnumberstyle%
-	,framesep=0pt% 
-	,xleftmargin=\lstnumberwidth%
-	,framexleftmargin=\lsthorizontalpadding%
-	,xrightmargin=\lsthorizontalpadding%
-	,framexrightmargin=\lsthorizontalpadding%
-	,backgroundcolor=\color{verylightgray}%
-	,postbreak=\ding{229}\space%
-	,escapeinside={*(}{*)}
-	\linespread{1.0}
+\newcommand{\lstdefaultstyle}{
+	\lstset{
+		numberblanklines=false
+		,basicstyle=\ttfamily%
+		,breaklines=true%
+		,tabsize=1%
+		,showstringspaces=false%
+		,numbers=left%   
+		,numbersep=\lstnumbersep%
+		,numberstyle=\lstnumberstyle%
+		,framesep=0pt% 
+		,xleftmargin=\lstnumberwidth%
+		,framexleftmargin=\lsthorizontalpadding%
+		,xrightmargin=\lsthorizontalpadding%
+		,framexrightmargin=\lsthorizontalpadding%
+		,backgroundcolor=\color{verylightgray}%
+		,postbreak=\ding{229}\space%
+		,escapeinside={*(}{*)}
+		\linespread{1.0}
+	}
 }
 
 % === YAML code listing === 
@@ -468,6 +474,70 @@
 
 \newcommand\ProcessThreeDashes{\llap{\color{cyan}\mdseries-{-}-}}
 
+
+% === Terminal style code listing === 
+% comes from https://www.alanshawn.com/tech/2019/09/01/emulate-terminal.html
+
+
+\usepackage{changepage}                 % adjust margins for selected portions
+\newlength{\offsetpage}
+\setlength{\offsetpage}{1.1cm}
+\newenvironment{widepage}{\begin{adjustwidth}{-\offsetpage}{-\offsetpage}%
+    \addtolength{\textwidth}{2\offsetpage}}%
+{\end{adjustwidth}} % https://tex.stackexchange.com/a/154766/108199
+
+
+\usepackage{listingsutf8}
+\usepackage{pmboxdraw} %for the \textblock
+
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{terminalbgcolor}{HTML}{330033}
+\definecolor{terminalrulecolor}{HTML}{000099}
+\newcommand{\lstconsolestyle}{
+	\lstset{
+		backgroundcolor=\color{terminalbgcolor},
+		basicstyle=\color{white}\fontseries{lc}\scriptsize\selectfont,
+		breakatwhitespace=false,  
+		breaklines=false,
+		captionpos=b,
+		commentstyle=\color{mygreen},
+		deletekeywords={...},
+		escapeinside={\%*}{*)},
+		extendedchars=true,
+		frame=single,
+		keepspaces=true,
+		keywordstyle=\color{blue},
+		%language=none,
+		morekeywords={*,...},
+		numbers=none,
+		numbersep=5pt,
+		% inputencoding=utf8,
+		literate=%
+			{█}{{\textblock}}1
+			{▎}{{\textlfblock}}1
+			{▏}{{\textlfblock}}1,
+		xleftmargin=0pt,
+		xrightmargin=0pt,
+		framesep=0pt,
+		framexleftmargin=0pt,
+	framerule=2pt,
+		numberstyle=\color{mygray}\tiny\selectfont,
+		rulecolor=\color{terminalrulecolor},
+		showspaces=false,
+		showstringspaces=false,
+		showtabs=false,
+		stepnumber=2,
+		stringstyle=\color{mymauve},
+		tabsize=2
+	}
+}
+% TODO: see https://tex.stackexchange.com/questions/129377/unwanted-white-lines-in-listings-environment
+
+\usepackage{float}
+
 % ################################################
 % fonts for code-objects etc (taken from BA)
 
@@ -485,6 +555,101 @@
 \newcommand{\codeobjFN}[1]{\colorbox{evenmorelightgray}{{\spaceskip=.95\fontdimen2\font minus \fontdimen4\font	\xspaceskip=0pt\relax \texttt{#1}}}}
 
 \newcommand{\codeother}[1]{\colorbox{evenmorelightgray}{\lstinline[basicstyle=\ttfamily\color{black},keywordstyle=\ttfamily]{#1}}}
+
+\newcommand{\termcmd}[1]{\colorbox{evenmorelightgray}{{\spaceskip=.95\fontdimen2\font minus \fontdimen4\font	\xspaceskip=0pt\relax \large\texttt{#1}}}}
+
+
+% =====================================
+% custom verbatim, see https://tex.stackexchange.com/a/113942/108199
+\makeatletter
+
+% this defines myverbatim environment. to change name replace "myverbatim" in all places below (strctly speaing it is only necessary in some but ... :-)
+
+\newdimen\outerparindent
+\def\myverbatim{%
+% fix for \@noligs as the definition in LaTeX is swallowing any following space
+  \def\do@noligs##1{%
+     \catcode`##1\active
+     \begingroup
+       \lccode`\~`##1\relax
+       \lowercase{\endgroup\def~{\leavevmode\kern\z@\char`##1 }}}%
+% save the \parindent used outside
+   \outerparindent\parindent
+% I'm lazy reusing existing setup of verbatim as much as possible, so obeylines is my way too hook in
+   \def\obeylines{\rightskip=0pt plus 1fil
+                  \parindent=\outerparindent  % if you like a defined \parindent value instead set it here
+                  \let\par\@@par
+                  \leavevmode\indent}%
+% different definitions to handle spaces, select one:
+   \def\@xobeysp{\penalty\z@\char 32 \penalty\z@}%        % this produces a visible space
+%   \let\@xobeysp\space                                    % this version will drop spaces at linebreaks
+%   \def\@xobeysp{\penalty\z@\mbox{}\space\penalty\z@}%    % this will keep spaces after line breaks
+%
+  \@verbatim
+  \@myverbatimescape\@myverbatimnewline
+  \frenchspacing\@vobeyspaces\@xmyverbatim}
+
+\let\endmyverbatim\endverbatim
+
+% setting up the behavior of end-off-line: on its one behave like a (special) space, 
+% two in a row end a paragraph
+\begingroup
+\catcode`\^^M=\active%
+\gdef\@myverbatimnewline{\catcode`\^^M=\active \let^^M\@xmyverbatimnewline}%
+\gdef\@xmyverbatimnewline{\@ifnextchar ^^M{\@myverbatimpar}{\@xobeysp}}%
+\gdef\@ymyverbatimnewline{\@ifnextchar ^^M{\@myverbatimpar}{}}%
+\gdef\@myverbatimpar ^^M{\par%
+                         \vskip\baselineskip%     % this line will generate an extra baselineskip per empty line
+                                                  % comment out if not wanted
+                         \@ymyverbatimnewline}%
+% and this part is to get rid of the first ^^M after \begin{verbatim} but not any other
+\gdef\@zmyverbatimnewline{\@ifnextchar ^^M{\@zmyverbatimpar}{}}%
+\gdef\@zmyverbatimpar^^M{\@ifnextchar ^^M{\@myverbatimpar}{}}%
+\endgroup
+
+\begingroup \catcode `|=0 \catcode `[= 1
+\catcode`]=2 \catcode `\{=12 \catcode `\}=12
+%  to support \\ as a line break we need to make \ active and make a lot of extra horrible definitions:
+\catcode`\\=13
+|gdef|@myverbatimescape[|catcode`|\|active|let\|@myverbatimbslash]
+%  using \@ifnextchar is ok because "space" is active too so isn't gobbled in case of  "\ \"
+|gdef|@myverbatimbslash[|@ifnextchar\[|@xmyverbatimbslash][|string\]]
+|gdef|@xmyverbatimbslash\[|\]
+% a newline char before the end of the environment also needs some special handling therefore the gymnastics
+|catcode`|^^M=|active
+|long|gdef|@xmyverbatim#1\end{myverbatim}[|@zmyverbatimnewline#1^^M|vskip-|lastskip|vskip|z@skip|end[myverbatim]]%
+|endgroup
+
+\makeatother
+
+
+%=========================
+% more custom verbatim, see https://tex.stackexchange.com/a/273850/108199
+
+\newcommand\mytokens[2][gray!20]{\mytokenshelp{#1}#2 \relax\relax \hspace{-0.5em}}
+\def\mytokenshelp#1#2 #3\relax{\grayspace\tokenscolor[#1]{#2}\ifx\relax#3\else
+ \mytokenshelp{#1}#3\relax\fi}
+\newcommand\tokenscolor[2][gray!20]{\colorbox{#1}{\small\textcolor{black}{%
+  \ttfamily\mystrut\smash{\detokenize{#2}\allowbreak}}}}
+\def\mystrut{\rule[\dimexpr-\dp\strutbox+\fboxsep]{0pt}{%
+ \dimexpr\normalbaselineskip-2\fboxsep}}
+\def\grayspace{\hspace{0pt minus \fboxsep}}
+
+\newcommand\mytokensfnote[2][gray!20]{\mytokensfnotehelp{#1}#2 \relax\relax \hspace{-0.1em}}
+\def\mytokensfnotehelp#1#2 #3\relax{\grayspace\tokensfootnotecolor[#1]{#2}\ifx\relax#3\else
+ \mytokensfnotehelp{#1}#3\relax\fi}
+\newcommand\tokensfootnotecolor[2][gray!20]{\colorbox{#1}{\scriptsize\textcolor{black}{%
+  \ttfamily\mystrut\smash{\detokenize{#2}\allowbreak}}}}
+
+
+% https://tex.stackexchange.com/a/296946/108199
+
+
+\newcommand*{\txtbrut}{\lstinline[basicstyle=\ttfamily]}%
+\newcommand\alttxtbrut[1]{\tbhelp#1\relax\relax\relax}
+\def\tbhelp#1#2\relax{%
+  {\texttt{\detokenize{#1}}}\penalty0\ifx\relax#2\else\tbhelp#2\relax\fi}
+
 
 
 
@@ -515,6 +680,7 @@
 						 afterskip=1ex plus -.2ex]{subsection}
 \RedeclareSectionCommand[beforeskip=-2ex plus -1ex minus -.2ex,
 						 afterskip=1ex plus -.2ex]{subsubsection}					 
+\RedeclareSectionCommand[beforeskip=-1ex plus -1ex minus -.2ex]{paragraph}		
 % https://tex.stackexchange.com/a/469110/108199
 
 
@@ -527,6 +693,7 @@
 
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
+\renewcommand{\baselinestretch}{1.25}
 
 \makeatletter
 

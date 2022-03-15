@@ -1,0 +1,30 @@
+Scheduler: Task-Id 736317, active for 0:03:47 on ramsauer
+Active Jobs:
+  Job 736319: does preprocess_descriptions_notranslate for 0:03:17 on phobos with 1 procs.
+      Creates siddata2022/de_debug_False/mfauhtcsldp_onlyorig_minwords80/pp_descriptions.json
+      Progress: Lemmatizing Descriptions    :  50%|█████     | 10843/21643 [01:26<01:03, 169.88it/s]
+  Job 736322: does create_dissim_mat for 0:01:32 on rigel with 3 procs.
+      Creates siddata2022/de_debug_False/mfauhcsd2_onlyorig_minwords80/embedding_tfidf/dissim_mat.json
+      Progress: Creating dissimilarity matrix:   3%|▎         | 6/200 [00:47<20:55,  6.47s/it]
+  Job 736324: does create_dissim_mat for 0:01:17 on cippy02 with 3 procs.
+      Creates siddata2022/de_debug_False/mfauhcsd2_onlyorig_minwords80/embedding_ppmi/dissim_mat.json
+      Progress: Creating dissimilarity matrix:   3%|▎         | 6/200 [00:43<20:16,  6.27s/it]
+  Job 736325: does create_dissim_mat for 0:01:02 on felis with 3 procs.
+      Creates siddata2022/de_debug_False/mfhcsd2_onlyorig_minwords80/embedding_ppmi/dissim_mat.json
+      Progress: Creating dissimilarity matrix:   1%|          | 2/200 [00:11<15:47,  4.79s/it]
+  Job 736327: does create_dissim_mat for 0:01:02 on cippy18 with 3 procs.
+      Creates siddata2022/de_debug_False/mfhcsd2_onlyorig_minwords80/embedding_tfidf/dissim_mat.json
+      Progress: Creating dissimilarity matrix:   2%|▏         | 3/200 [00:20<22:40,  6.91s/it]
+  Job 736329: does create_dissim_mat.83.sh for 0:00:17 on vr6 with 3 procs.
+  Job 736330: does create_dissim_mat.100.sh for 0:00:17 on bunda with 3 procs.
+  Job 736331: does extract_candidate_terms.81.sh for 0:00:17 on vr5 with 1 procs.
+  Job 736332: does extract_candidate_terms for 0:00:02 on ocular with 1 procs.
+      Creates siddata2022/de_debug_False/mfhcsd2_onlyorig_minwords80/candidate_terms_tfidf.json
+Finished Jobs:
+  Job 736318: did preprocess_descriptions_notranslate at 00:35:57 on dodo, creating siddata2022/de_debug_False/mfhcsd2_onlyorig_minwords80/pp_descriptions.json
+  Job 736321: did preprocess_descriptions_notranslate at 00:36:12 on altair, creating siddata2022/de_debug_False/mfauhcsd2_onlyorig_minwords80/pp_descriptions.json
+Failed Jobs:
+  Job 736320: failed at preprocess_descriptions_notranslate
+  Job 736323: failed at extract_candidate_terms.43.sh
+  Job 736326: failed at extract_candidate_terms.5.sh
+  Job 736328: failed at extract_candidate_terms.43.sh

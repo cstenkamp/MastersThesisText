@@ -18,6 +18,8 @@ Throughout this thesis, many abbreviations, symbols and technical terms will be 
 
 \section{Motivation}
 
+% ich hätte gerne sowas wie könig - mann + frau = königin \cite{Mikolov:Regularities}, nur halt mit mann und frau als einer achse
+
 % * wie schlecht der amazon-approach wirklich ist! I mean ja, similarity-based reasoning haben sie mittlerweile sehr gut hinbekommen, aber similarity-based reasoning is the absolute basic reasoning/classification you can think of!
 
 Dass die paar leute die in dem Bereich veröffentlichen echt aktiv sind and all und coole Ideen haben, dass die aber immer nur sich selbst zitieren (und alle auf DESC15 basieren und einen der autoren als co-author haben), und das es sinnvoll ist da mal nen sanity-check reinzubringen und als externe person die validität vom DESC15 algorithmus zu prüfen (...und dass sie ja auch alle die selben 2 datensätze nutzen und dass man eben da auch mal prüfen sollte ob deren kram so sinnvoll ist BEYOND this one dataset) - also in kurz "If this algorithm is as good as they claim, that would be great, but we have reasons to not trust their claim so we're checking them." Im Prozess dafür soll halt auch eine Pipeline rauskommen die es future research leichter macht ebengenau das zu tun was ich hier tu und die validiät der claims zu prüfen etc.
@@ -27,6 +29,11 @@ Es gibt auch arbeiten bei denen die formulierte These ein Beispiel-Anwendungsfal
 in meinem Fall "Meine Ausgangsfrage war ob man die Methoden von diesem einem Paper auf educational resources anwenden kann um regelmäßigkeiten zu finden für recommendations für educational resources. Um das rauszufinden war es wichtig den Algorithmus zu entwickeln, und im verlauf der thesis ist rausgekommen das ein system dafür zu entwickeln sehr komplex ist (...dass dafür halt eine solide Software-Grundlage gegeben sein muss), also ist diese thesis primär dafür da um das system zu beshcreiben um dann mit diesem system prototypisch die fragestellung anzugehen, und die results für die originalfrage sind dann eher als priliminary results zu betrachten - fokus-shift von results zu methodik".
 
 Das ist eine Motivation für die Thesis ganz klar ist "der Algorithmus den ich da gesehen habe ist ganz nice, das wäre doch cool wenn der so modular und reproduzierbar undundund wäre dass jemand wie ich ankommen kann und den auf andere Datensätze schmeißen kann, aber leider sind die bei open source/open data/details nennen leider nicht so super, so I'm making that instead - the delivarable is a scalable, modular, ... system that makes it easy to exchange components of it, has many analysis-scripts, etc etc etc" 
+% * One of the main goals of this thesis was to create a better architecture than the shit that was available from the papers I tried to re-do here 
+	% * DESC15 didn't have any code, 
+	% * one of the others has a link to the repo but it's empty
+	% * the last one has >40 unnamed command-line-args!)
+	% * good way to bash the original paper who either didn't publish their sourcecode or link a github-repo in their paper that is fucking empty, or did at least opensource their code but have just one fucking file in there that expects >40 unnamed command-line-args
 
 Das was ich mache ist ja eine Replikationsstudie -> Dann darf ich auch gerne diese Dinge über die Architektur undso schreiben. "Ist ja schon irgendwie ingeneurwissenschaft", dazu gehört also auch mal mehr detail wie man das gemacht hat - hängt natürlich von der gewünschten seitenzahl und dem raum den ich hab ab. In der Arbeit sollte alles drinstehen was man für die Beurteilung braucht, also quellcode oder so darf auch gerne mal im Hauptteil stehen
 
@@ -62,8 +69,8 @@ Conceptual spaces (Gärdenfors, blabla) want to stand in between subsymbolic pro
 So, in conceptual spaces, concepts are represented as convex regions in high-dimensional, human interpretable spaces. For example, the concept of "apple" is a region that in the dimension "color" is somewhere between red and green, in the dimension "form" at roughly round, in the dimension "taste" somwhere between sweet and sour, etc. 
 Every instance of an apple is thus a vector that lies inside the high-dimensional region of the concept. This allows for high-level reasoning, such as the question "does any Instance of concept X fit into my bag?" -> If the "size" dimension of the whole region is smaller than the size of my bag, it will.
 
-Conceptual spaces sounds similar to word2vec or other word embedding approaches, however there are a few important distinctions - first, the domain of a conceptual space does not include all kinds of words or concepts, but only concepts of a certain domain (like movies or university courses). 
-Second, conceptual spaces are convex regions, not mere vectors (which allows for easy extraction of is-a and part-of relations or prototypical examples vs edge examples, but makes the generation computationally vastly more expensive). And, most importantly, while the geometry of word2vec is roughly euclidian (otherwise the famous vec(king)-vec(man)+vec(woman)==vec(queen) wouldn't work), the dimensions are not interpretable but arbitrarily depend on the random initial setup, so the concepts king and queen differ not only in a single "gender" dimension [..and also its not really euclidian, is it?! sonst wäre die betweeness doch nicht so special, oder?].
+Conceptual spaces sounds similar to \gls{word2vec} or other word embedding approaches, however there are a few important distinctions - first, the domain of a conceptual space does not include all kinds of words or concepts, but only concepts of a certain domain (like movies or university courses). 
+Second, conceptual spaces are convex regions, not mere vectors (which allows for easy extraction of is-a and part-of relations or prototypical examples vs edge examples, but makes the generation computationally vastly more expensive). And, most importantly, while the geometry of \gls{word2vec} is roughly euclidian (otherwise the famous vec(king)-vec(man)+vec(woman)==vec(queen) wouldn't work), the dimensions are not interpretable but arbitrarily depend on the random initial setup, so the concepts king and queen differ not only in a single "gender" dimension [..and also its not really euclidian, is it?! sonst wäre die betweeness doch nicht so special, oder?].
 
 Now the standard problem with conceptual spaces is that they would have to be manually generated, which of courses is a lot of work, which is where the work of [Schokeart et al] comes in - to generate them in a data-driven fashion.
 For that, the authors look at three different domains: movies, wines and places. For each of these domains, they collected many samples (like movies) together with descriptions from places where people can leave them (like reviews from IMDB). A representation of a movie is then generated from the bag-of-words of the descriptions of the individual movies, leading to a very high-dimensional, very sparse representation for all movies. 
@@ -107,6 +114,7 @@ To find these dimensions, the authors look for these words (as well as similar w
 
 \section{What do I want to do in this thesis?}
 
+% Ich habe schon eine eindeutige Fragestelleung ("Kann man X auf educational resources anwenden") -> danach stringent und explizit vorgehen! Das ist meine Hypothese, these are my methods, this my results, this my conclusion! 
 
 \begin{figure}[H]
 	\centering
@@ -117,6 +125,31 @@ To find these dimensions, the authors look for these words (as well as similar w
 \end{figure}
 
 \subsection{Open Science and Reproducibility}
+
+\label{sec:reproducibility}
+
+% Im Snakemake-Paper https://f1000research.com/articles/10-33/v2 und auf deren startseite https://snakemake.github.io/ hauen sie einige buzzwords raus!
+% Mariellas Präsi nochmal angucken
+% Explainable AI!! 
+
+from \cite{Molder2021a}: 
+
+\begin{description}
+	\item[Reproducibility] allowing validation and regeneration of results on the original or even new data. Requires understandble and well documented code.
+	\item[Sustainability] such that the analysis is of lasting impact for the field, not just one research grouped
+	\item[Adaptability] i.e. the ability to modify the analysis to anwer extended or slightly different research questions
+	\item[Transparency] i.e. the ability for others to understand it well enough to judge if it's technically as well as methodologically valid.
+	\item[Scalability] - 
+\end{description}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{graphics/stolenfigures/snakemake_aspect_hierachy.png}
+	\slcaption{
+		Hierarchy of aspects to consider for sustainable data analysis (reproduced from {\cite[Fig.1]{Molder2021a}}) \label{fig:snakemake_aspect_hierachy}
+	}
+\end{figure}
+
 
 I think it is absolutely crucial for all branches of science to adhere to the principles of open science and to ensure that all claims that are made in publications are reproducible and testable. This thesis will mostly copy the work of somebody else, but doing so was incredibly tedious, much more so than it would have to be.
 

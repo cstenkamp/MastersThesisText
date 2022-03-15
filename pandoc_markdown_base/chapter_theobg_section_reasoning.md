@@ -1,6 +1,6 @@
 * Similiarity based reasoning ("If A enjoyed X and Y is similar to X, A will likely also enjoy X")
     * what Amazon does
-    * easy to train (similiarity degrees can be obtained from stuff like word2vec thank's to the distributional hypothesis)
+    * easy to train (similiarity degrees can be obtained from stuff like \gls{word2vec} thank's to the distributional hypothesis)
     * can only be used if there are enough similar concepts (das Problem hat Felix auch bei Siddata gehabt! Was konkret war das nochmal?)
     * context-dependent
 * (Logic-Based reasoning/Inference? das was FOL macht? [DESC15] und [VISR12] listen ein paar Einschränkungen/Eigenschaften die das hat I think)

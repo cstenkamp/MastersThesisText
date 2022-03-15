@@ -5,6 +5,16 @@
 		
 \section{Evaluation} %TODO what is this for a title? it sucks
 
+% * viel showcasen. Also mir 10 Kurse raussuchen die laut algorithmus nahe beieinander sind und sagen "hier, wir sehen die sehen tatsächlich related aus".
+% * Drauf eingehen dass ich nicht wirklich metriken habe. This is not classification, I don't get a "87% accuracy" and can compare that, ich krieg cluster und muss mir angucken ob die "ähnlich sind wie ein mensch das macht" -> qualitative und quantitative analyse, beides mit grains of salt (quantiativ ertrickst metriken halt nen bissle -> Clustert das so dass ich den fachbereich dadrin wiedererkenne? )
+% * Brauch ich mehr/bessere Daten? Wenn ich nur die 1000 mit den längsten Beschreibungen behalten würde und dann 10 solcher subsets hätte wären halt die Fälle wie "Tutoren sind: Susi Sorglos Willi Wacker" etc raus
+% * ...ich kann auch mit Johannes' Datensatz mit Mapping Kurstitel -> DDCs vergleichen und gucken ob die shallow decision trees was ähnliches wie die DDCs extracten können als weiteren Klassifizerungs-Task nehmen! (see Masterarbeit/OTHER/study_behavior_analysis/EducationalResource-2022-01-20.csv), dann kann ich auch das Siddata/SidBert-Paper von Johannnes Referenzieren!
+% * Was man als testing halt machen kann ist nen decision tree based on their features zu machen und zu gucken ob der einen held out test dataset klassifizieren kann.
+% * Ein anderer Weg zum testen wäre auch ein classifier der nur anhand der most salient generated features versucht den kurs wiederherzustellen (das zeigt natürlich nicht ob es similar to how humans do it but part of it)
+% * Metrik: Gucken ob es ähnlich wie FB Clustert => Da kann ich dann die Parameterkombi die die im paper gemacht haben plus nen paar andere in ne tabelle packen und fertig
+% * Check my claim in the results for place-types (chapter 6.1), that the classification based on word embeddings may even be better than their SVM_MDS!!!
+% * Ich hab ja den Fachbereichs-Classifier gemacht, wenn ich jetzt noch die shallow decision trees mache kann ich ja legit accuracies vergleichen
+
 \begin{itemize}
 	\item \cite{Derrac2015} evaluated using a bunch of commonsense reasoning based classifiers (want to show that at least as performant than standard approaches, but can give intuitive explanations) (these reasoning-classifiers can be linked to intuitive explanations: 1-NN is "Y is of the same class as X because X closest to Y", but also more complex ones.) 
 	\item 
@@ -35,6 +45,14 @@ What can you look at for such a qualitative analysis?
 	\item Die vielen Sanity Checks die man machen kann, bspw dass ich ja in 3D gucken kann (und auch in höher-D ausrechnen) ob eben diese dinge (von item 1) im Embedding nah sind, und ob die SVM Dinge schön trennt ("howto_embed.ipynb")
 	\item "placetypes_origconf.ipynb", was einfach von vorne bis hinten die original-config (ist ja auch im yaml) von DESC15 ausführt und interpretiert	
 \end{itemize}
+
+\begin{itemize}
+	\item Ist "Mathe" ein Keyword, clustern "a1" und "a2", ...
+	\item Ist "Codierungstheorie und Kryptographie" - mathe = "Kryptographische Methoden in der Informatik"?
+	\item Question: Does the continuation thingy which they have (backtothefuture:backtothefutureII::terminator:terminator2) hold for courses as well - Verhält sich Informatik A zu Informatik B wie Mathe für Anwender 1 zu Mathe für Anwender 2?  Info B zu Info A genau wie Statistik 2 zu Statisik 1? 
+	\item Paperlesen und den cluster von "pub" für placetypes angucken
+\end{itemize}
+
 
 \begin{figure}[H]
 	\centering
@@ -69,3 +87,8 @@ Both \cite{Ager2018} and \cite{Alshaikh2020} train shallow decision-trees (depth
 
 
 TODO die Plots mit den Boxen von display_desc15_top3.ipynb !!!
+
+\begin{itemize}
+	\item result: set overlap of my extracted candidates for placetypes and theirs (und auch die big_21222.yml ergebnisse danach auswerten) (nicht nur overlap, ich kann auch verhältnis set intersect zu set union machen, und die als true/false positive/negative deklarieren und dann accuracy, f1 etc analysieren und halt anhand dessen "die hyperparam kombi die am closesten zu deren ergebnissen ist" rausbekommen)
+	\item result: kommt accuracy etc von den shallow decision trees für fachbereich close an die vom fb-classifier?
+\end{itemize}
