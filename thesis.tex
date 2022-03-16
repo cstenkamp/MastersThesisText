@@ -118,7 +118,8 @@
 \usepackage{dsfont} % Render |R and the like
 \usepackage[british]{babel} %was [english] (see note of underscore), is now [british] 
 
-
+% https://tex.stackexchange.com/a/142973/108199
+\usepackage[useregional]{datetime2}
 
 \usepackage{underscore} % I need underscore to not have to write "\_" for underscores, but that would break labels with unterscores in it unless I also include babel, see https://tex.stackexchange.com/a/121438/108199
 \theoremstyle{definition}
@@ -188,8 +189,15 @@
 \newacronym{tf-idf}{tf-idf}{term frequency $\times$ inverse document frequency algorithm}
 \newacronym{os}{OS}{Operating System}
 \newacronym{ikw}{IKW}{Institut für Kognitionswissenschaften}
+\newacronym{dag}{DAG}{Directed Acyclic Graph}
+\newacronym{ram}{RAM}{Random Access Memory}
+\newacronym{cpu}{CPU}{Central Processing Unit}
+\newacronym{sge}{SGE}{Sun Grid Engine}
+\newacronym{cli}{CLI}{Command Line Interface}
+\newacronym{uos}{UOS}{University of Osnabrück}
 % END Acronym definitions
 %TODO: update acronym script for Plural!!
+%TODO: also let the acronym script define eg. an \svm command that is just an alias for \gls{svm} and an \svms for \glspl{svm}
 \newacronym[plural=MOOCs]{mooc}{MOOC}{Massive Open Online Course}
 \newacronym[plural=BoWs, firstplural=Bags of Words]{bow}{BoW}{Bag of Words}
 
@@ -270,6 +278,9 @@
  
 
 %%% Custom definitions %%%
+\newcommand{\me}{the author of this thesis }
+\newcommand{\my}{the author's }
+
 % Shorthands
 \newcommand{\ie}{i.\,e.~}
 \newcommand{\eg}{e.\,g.~}
@@ -376,6 +387,7 @@
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 % see https://github.com/jgm/pandoc/issues/4941#issuecomment-425975499, https://github.com/jgm/pandoc/issues/4384#issuecomment-367585913
 
+\usepackage{enumitem} % long descriptions
 
 % ##################################################################################
 % === CODE LISTINGS ===
@@ -478,8 +490,7 @@
 % === Terminal style code listing === 
 % comes from https://www.alanshawn.com/tech/2019/09/01/emulate-terminal.html
 
-
-\usepackage{changepage}                 % adjust margins for selected portions
+\usepackage{changepage}    % adjust margins for selected portions
 \newlength{\offsetpage}
 \setlength{\offsetpage}{1.1cm}
 \newenvironment{widepage}{\begin{adjustwidth}{-\offsetpage}{-\offsetpage}%
@@ -659,14 +670,15 @@
 
 
 \input{special_highlight.tex}
-\newcommand{\todoparagraph}[1]{\highlight[red]{#1}}
 
 % If we add the \NoMarkdown at compilation, we won't use any of the \@input. See https://tex.stackexchange.com/a/220101/108199, https://tex.stackexchange.com/a/33577/108199
 \ifdefined\NoMarkdown
-	\newcommand{\includeMD}[1]{\ignorespaces}
+	\newcommand{\includeMD}[1]{\ignorespaces}	
+	\newcommand{\todoparagraph}[1]{\ignorespaces}	
 \else
 	\makeatletter
 	\let\includeMD\@input
+	\newcommand{\todoparagraph}[1]{\highlight[red]{#1}}
 \fi
 
 % let ALL paragraphs not have an indent but an empty line between
