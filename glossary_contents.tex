@@ -61,7 +61,7 @@
     type=defs,
     name=n-gram,
     description={
-        n-grams are sequences of consecutive words of length $n$. For example, the text "I eat lunch" contains the 1-grams ["I", "eat", "lunch"], the 2-grams ["I eat", "eat lunch"] and the 3-gram ["I eat lunch"]
+        n-grams are sequences of consecutive words of length $n$. For example, the text "I eat lunch" contains the 1-grams ["I", "eat", "lunch"], the 2-grams ["I eat", "eat lunch"] and the 3-gram ["I eat lunch"]. In the scope of this thesis, the term \textbf{phrase} also refers to n-grams.
         }
 }
 
@@ -145,5 +145,22 @@
     name=hyperparameter,
     description={
         \todoparagraph{When I refer to hyperparameters, I mean not only stuff like the number of dimensions, but also which specific algorithm is used in a step!!}
+        }
+}
+
+
+\newglossaryentry{cand}{
+    type=customs,
+    name=candidate-phrase,
+    description={
+        \todoparagraph{Candidateterm, Candidate, Candidate-phrase, potato, potahto}
+        }
+}
+
+\newglossaryentry{feature}{
+    type=customs,
+    name=feature,
+    description={
+        \todoparagraph{Feature, the semantic human-interpretable dimensions, words or groups of words that are supposed to represent a concept or attribute, used as dimension in the embedding}
         }
 }

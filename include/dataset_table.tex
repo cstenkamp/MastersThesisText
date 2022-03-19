@@ -1,15 +1,12 @@
 %TODO https://tex.stackexchange.com/questions/526198/table-resize-table-and-automatic-line-breaks
 %TODO add back key feature sizes?!
 
-% \afterpage{%
+\afterpage{%
 
 \newgeometry{
-	a4paper,
 	top=18mm,
 	bottom=8mm,
 } 
-\clearpage
-
 \begin{landscape}
 	\begin{table}[]
 		\resizebox{\textwidth}{!}{%
@@ -41,12 +38,12 @@
 					None &
 					1383 place-types & %both in DESC15 and the follow-up paper
 					\specialcell[l]{ \tabitem category from Geonames (7 classes)\\ \tabitem category from Foursquare (9 classes)\\ \tabitem category from OpenCYC (\cite{Derrac2015}: 93 classes, \cite{Ager2018,Alshaikh2020}: 20 classes) } &
-					\specialcell[l]{ $\geq$ 50 occurences (doq-freq) \\ \textrightarrow around 22k candidates \\ (all words from the BoW) \\ \textbf{n-grams}: squashed all words of a tag}
+					\specialcell[l]{ $\geq$ 50 occurences (doq-freq) \\ \textrightarrow around 22k candidates \\ (all words from the BoW) \\ \textbf{n-grams}: squashed all words of a tag} & candidate-terms: 6385
 					\\ \midrule
 				\textbf{wines\footref{origdsets}\footnote{\url{https://snap.stanford.edu/data/web-CellarTracker.html}} \cite{Derrac2015}} &
-					grouped-by-wine-variant concatenated reviews for wines & \specialcell[l]{\tabitem removed stop-words\footnoteref{fnote:stopwordlist} \\ \tabitem lower-cased text \\ \tabitem removed diacritics  \\ \tabitem removed punctuation} &
+					grouped-by-wine-variant concatenated reviews for wines & \specialcell[l]{\tabitem removed stop-words\footnoteref{fnote:stopwordlist} \\ \tabitem lower-cased text \\ \tabitem removed diacritics  \\ \tabitem removed punctuation} & 330 wine-varieties &
 					\textit{not performed} &
-					\specialcell[l] {$\geq$ 50 occurences (doq-freq) \\  \textrightarrow around 6k candidates }
+					\specialcell[l] {$\geq$ 50 occurences (doq-freq) \\  \textrightarrow around 6k candidates \\ variable-length \textbf{n-grams} considered }
 					\\ \midrule
 				\textbf{20 newsgroups\footnote{\url{http://qwone.com/~jason/20Newsgroups}} \cite{Ager2018}} &
 					posts partitioned (nearly) evenly across 20 different newsgroups &
@@ -98,7 +95,6 @@
 	\end{table}
 	% TODO was ist mit n>1-grams? Movies used them, placetypes used tags so it kinda has them... and stuff liek buildings/organizations?
 \end{landscape}	
-
-
-\restoregeometry
-% } %afterpage
+\restoregeometry\clearpage % !!! Jörg's comment on https://tex.stackexchange.com/a/78285/108199 !!!!
+\aftergroup\restoregeometry  % see THE QUESTION of https://tex.stackexchange.com/q/139834/108199
+} %afterpage

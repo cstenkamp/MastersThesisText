@@ -2,7 +2,6 @@
 \afterpage{%
 
 \newgeometry{
-	a4paper,
 	top=18mm,
 	bottom=8mm,
 } 
@@ -104,6 +103,6 @@
 % Alshaikh2020 say: "It may seem counter-intuitive to use binary classifiers to learn representations of ordinal features. However, the occurrence or non- occurrence of a word in the description is binary, and this is the most important available signal. We experimented with statistics such as pointwise mutual information, which did not lead to better results." -> does that mean DCM_QUANT_MEASURE or QUANTIFICATION_MEASURE or both? and also does that mean they use binary or count as this measure?
 
 % Alshaikh2020 use: sub, ortho, primary, random (coordinates uniformly random), 
-
+\restoregeometry\clearpage
+\aftergroup\restoregeometry  % see THE QUESTION of https://tex.stackexchange.com/q/139834/108199
 } %afterpage
-\restoregeometry

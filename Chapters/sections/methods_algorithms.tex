@@ -17,7 +17,7 @@ The general idea to achieve that is as follows: First, the entities %TODO: at th
 are embedded as fixed-dimensional vectors. This already softens the definition of a conceptual space, as the considered entities are modelled as vectors instead of regions. % entities were supposed to be regions, however here we assume vectors because it's computationally a lot easier (TODO: are the reasons mentioned elsewhere? also the distiction between types and tokens?)
 To allow for the types of reasoning mentioned in Section \ref{sec:cs_reasoning}, %TODO: section where the entire mapping from logic-reasoning to CS-reasoning is explained, mostly from DESC15 and Gärdenfors himself
 it is embedded into metric spaces where the concepts of direction and distance are well-defined. \gencite{Derrac2015} original algorithm uses MDS (see \ref{MDS}) for this matter, which enforces equal distances  %TODO: link the distance-matrix-notepad FROM MY REPO in nbviewer+binder
-(however as shown by \textcite{Mikolov:Regularities}, such things are also possible with neural word-embedding techniques such as word2vec \cite{Mikolov:Word2Vec}) %TODO: word2vec cite
+(however as shown by \textcite{Mikolov:Regularities}, such things are also possible with neural word-embedding techniques such as word2vec \cite{Mikolov2013}) 
 . Additionally, words from the text are extracted as candidates for the names of the semantic dimensions. The core assumption is then, that \q{words describing semantically meaningful features can be identified by learning for each candidate word $w$ a linear classifier which separates the embeddings of entities that have $w$ in their description from the others} \cite[3574]{Alshaikh2020}. The better the performance of that classifier according to a chosen metric, the more evidence there is that $w$ describes a semnatically meaningful feature. 
 % * from Alshaikh2020: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candi- date word w a linear classifier which separates the embeddings of entities that have w in their description from the others. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
 % TODO: make the direct quote shorter, such things should only be done "to support an argument", which I don't here.
@@ -119,13 +119,13 @@ The core idea of the algorithm is to (unsupervised, data-driven) find a a set of
 %   5) if metric, assume salient:
 %  		* [AGKS18] haben den candidate-filter-teil konfigurierbar (und sagen bei denen ist accuracy even better than kappa)
 
-\fref{fig:dependency_graph} shows an automatically exported dependency_graph-graph, displaying the individual steps of the algorithm as done in the codebase of this thesis, also showing where selected important parameters are first used. As explained in section \ref{sec:architecture}, the modularity of the provided architecture allows individual components to be exchanged as needed.
+\autoref{fig:dependency_graph} shows an automatically exported dependency_graph-graph, displaying the individual steps of the algorithm as done in the codebase of this thesis, also showing where selected important parameters are first used. As explained in section \ref{sec:architecture}, the modularity of the provided architecture allows individual components to be exchanged as needed.
 \todoparagraph{I should also refer to} \tref{tab:compared_algos} here!
 
 
 \begin{figure}[htp]
 	\begin{center}
-	  \includegraphics[width=0.9\textwidth]{dependency_graph_2022-02-14_11-36-45}
+	  \includegraphics[width=0.9\textwidth]{dependency_graph.pdf}
 	  \caption[Dependency-Graph of the Algorithm]{(automatically generated) dependency-graph, displaying the individual steps of the algorithm as well as their dependencies and where selected important parameters are first used.}
 	  \label{fig:dependency_graph}
 	\end{center}
@@ -173,10 +173,40 @@ The following components are developed for the preprocessing, every one of which
 % TODO: Regarding Stop-words:
 % from \cite{Turney2010}: Computing the similarity between all pairs of vectors, described in Section 4.4, is a computationally intensive task. However, only vectors that share a non-zero coordinate must be compared (i.e., two vectors that do not share a coordinate are dissimilar). Very frequent context words, such as the word the, unfortunately result in most vectors matching a non-zero coordinate. Such words are precisely the contexts that have little semantic discrimination power
 
-... The preprocessing of the algorithms of \mainalgos is dependent on the dataset - \tref{tab:all_datasets} lists the respectively used preprocessing per dataset and author.
+... The preprocessing of the algorithms of \mainalgos is dependent on the dataset - \autoref{tab:all_datasets} lists the respectively used preprocessing per dataset and author.
 
 
 \subsubsection{Extract Candidates}
+\label{sec:extract_cands}
+% Section 4.2.1 of Derrac2015
+
+The final result of the algorithm is a metric space in which the individual dimensions (\emph{\glspl{feature}}) correspond to natural-language concepts and attributes (\q{Interpretable directions} \cite{Derrac2015}). The candidates for these features are verbatim phrases extracted from the text-corpus of the \glspl{entity}, which will subsequently be filtered and merged.
+
+In \gencite{Derrac2015} original paper, which phrases are extracted as algorithm depends on the dataset: For placetypes-dataset, all sufficiently frequent\footnote{\label{fnote:cand_thresholds}The respective thresholds are listed in \autoref{tab:all_datasets} as ``candidate word threshold''.} 1-grams\footnote{Note that in the case of the place-types dataset, a 1-gram corresponds to all merged words of a tag.} were considered. For the other two datasets, they applied a \gls{pos}-tagger that extracted all sufficiently frequent\footnoteref{fnote:cand_thresholds} \textbf{adjectives, nouns, adjective phrases} and \textbf{noun phrases}, assuming that adjectives would correspond to gradual properties (\eg \textit{violent, funny}) and nouns to topics (\eg the \textit{genre}) \cite[Sec. 4.2.1]{Derrac2015}.
+
+% Their method depended on the dataset - as their placetypes-dataset was just a collection of tags and the number of tags with doc-freq >= 2 corresponded to their desired number of candidates anyway (around 22k), they just took all of these as candidates. For their movie-reviews-dataset, they considered all nouns, adjectives, nounphrases and adjective-phrases as detected by a POS-tagger. Doing something similar in the scope of this thesis led to suboptimal results, which is why alternative methods were developed
+For this step, the implementation of this thesis differs from the original algorithm, as both taking all words as candidate and running a \gls{pos}-tagger led to suboptimal results in previous experiments\footnote{To ensure comparability, in the case of the placetypes-dataset the original method of taking all words with a document-frequency of at least 50 was used.}. 
+% I would however argue that the difference here doesn't make a relevant difference (TODO: argue that lol)
+% Also, while in the paper they claim to use n-grams as candidates, the dataset they publicly published does not contain n-grams (which is why I didn't use that one).
+
+In the codebase the candidate-extraction is split into four consequently excecuted substeps, because depending on the algorithm used to extract the candidates the runtime of the individual components is comparably long and some settings are only relevant in later substeps. The substeps are:
+\begin{itemize}
+	\item Extracting Candidate Terms
+	\item Postprocessing the Candidates
+	\item Creating the \gls{doctermmat} for the candidates
+	\item Filtering the \gls{doctermmat}
+\end{itemize}
+
+As visualized in \autoref{fig:dependency_graph}, these substeps only depend on the preprocessed descriptions, which means they can be run in parallel to the creation of the embedding\footnote{\todoparagraph{Another good reason for cluster exceution!}}.
+
+% This can be done either based on the frequency (meaning all terms with a minimal document-frequency), based on some notion of *importance* (based on scores like tf-idf or ppmi), or by more complex means of figuring out *important* keywords and keyphrases. An example of the latter would be KeyBERT
+Three main techniques are implemented to extract candidates from the text-corpus: 
+\begin{description}
+	\item[By frequency:] consider all phrases that exceed a specified term-frequency (like \cite{Derrac2015})
+	\item[By a \gls{quant}:] consider all phrases that exceed a specified score (\gls{ppmi}, \gls{tf-idf} or pure term-frequency)
+	\item[Using \emph{KeyBERT}\cite{grootendorst2020keybert}:] consider phrases whose BERT-embedding \cite{Devlin2019} is most similar to the text they are in\footnote{For more details on KeyBERT, see Appendix~\ref{ap:details_keybert}}
+\end{description}
+
 
 
 \subsubsection{Generating Vector Space Embeddings}
@@ -196,120 +226,120 @@ In their algorithm, the \gls{dissimmat} is created using the \emph{normalized an
 
 
 
-\begin{figure}[h!]
-	\begin{center}
-	  \includegraphics[width=0.9\textwidth]{3dplot_hyperplane_and_orthogonal}
-	  \caption[Visual representation of the Hyperplane of an SVM splitting a dataset]{ \label{fig:3d_hyperplane_ortho} Visual representation of the Hyperplane of a Support-Vector-Machine splitting a dataset, as well as it's orthogonal and the orthogonal projection of a set of samples onto the plane. For an interactive version of this plot, visit  {\small \url{https://nbviewer.org/github/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/hyperplane_orthogonal_3d.ipynb?flush_cache}}}
-	\end{center}
-\end{figure}
+% \begin{figure}[h!]
+% 	\begin{center}
+% 	  \includegraphics[width=0.9\textwidth]{3dplot_hyperplane_and_orthogonal}
+% 	  \caption[Visual representation of the Hyperplane of an SVM splitting a dataset]{ \label{fig:3d_hyperplane_ortho} Visual representation of the Hyperplane of a Support-Vector-Machine splitting a dataset, as well as it's orthogonal and the orthogonal projection of a set of samples onto the plane. For an interactive version of this plot, visit  {\small \url{https://nbviewer.org/github/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/hyperplane_orthogonal_3d.ipynb?flush_cache}}}
+% 	\end{center}
+% \end{figure}
 
 
 \includeMD{pandoc_generated_latex/section_algorithm}
 
 
-\subsection{Preprocessing}
+% \subsection{Preprocessing}
 
-There are issues with using stop-word lists, see \cite{nothman-etal-2018-stop} ( SkLearn references this paper why their own/stopwordslists in general suck)
-
-
-%Was für Schritte hat der Algo 
-
-%TODO something along the lines of "Da, based on [source die die accuracy von dem gtranslate algorithm mit denen von menschen vergleicht], a gtranslate translation is as good as the average lecturer, it is assumed that translating the texts to english before using an english model can lead to better results
+% There are issues with using stop-word lists, see \cite{nothman-etal-2018-stop} ( SkLearn references this paper why their own/stopwordslists in general suck)
 
 
-\subsection{Extracting Candidate Terms}
-\label{sec:extract_candidates}
+% %Was für Schritte hat der Algo 
 
-* KeyBERT
-
-%TODO theoretisch ist es auch möglich bspw nen network mit attention auf gewisse dinge wie fachbereich und anderes zu trainieren und dann rauszusuchen was die wichtigen ausschlaggebenden dinge für das Netzwerk waren
-
-%TODO extract using TF/IDF as well
-
-%TODO a source: https://github.com/MaartenGr/KeyBERT#citation
-
-* After you figure out which candidate term appears in which texts, figure out which other terms are frequent in these texts while infrequent in texts of the other class and then add these to the candidate-term-set (other way may even be to classify the texts according to if the candidateterm appears in them, and then take the misclassified one also as positive samples)
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\figwidth]{graphics/figures/keyphrases_histogram.png}
-	%plot created with scripts/create_siddata_dataset.py filter-keyphrases /home/chris/Documents/UNI_neu/Masterarbeit/DATA_CLONE --verbose
-	\caption[Occurences in all Documents per Keyphrase]{
-		\label{fig:keyphrases_histogram}
-		Occurences in all Documents per Keyphrase (for all keyphrases that occur $\geq$ 5 times, cut off at the 93th percentile).
-		7007 of 45295 terms occur at least 5 times.
-		Most frequent phrases: seminar (4173), course (3722), students (2923), it (2671), language (2071), work (1980), event (1842), research (1731), lecture (1723), law (1719).
-		}
-\end{figure}
+% %TODO something along the lines of "Da, based on [source die die accuracy von dem gtranslate algorithm mit denen von menschen vergleicht], a gtranslate translation is as good as the average lecturer, it is assumed that translating the texts to english before using an english model can lead to better results
 
 
-\subsection{Calculating the distance to the SVMs Separatrix}
-\label{sec:calculate_distance}
+% \subsection{Extracting Candidate Terms}
+% \label{sec:extract_candidates}
 
-%TODO: before this, explain 
-% * extraction of the candidate term set
-% * how vectors are made from texts
-In order to tell how much a text is prototypical of a category, all texts are split depending on whether they contain words of a set as described in \ref{sec:extract_candidates}, before a linear Support Vector Machine Classifier is trained on the vector-representation of all of the texts, splitting them into two classes: those that contain one of the candidate terms and those that do not. Due to the linear kernel, the SVM finds a hyperplane (\textit{separatrix}) that splits the positive from the negative samples in a way that maximizes the distance between the respective classmembers and the separatrix, using samples close to the margin as \textit{support vectors}. %TODO: what if the data is not linearly seperable?
+% * KeyBERT
 
-Following the SVMs logic, one could argue that the further away a sample is from this separatrix, the more prototypical it is of its class. Thus, the distance of a sample to its \textit{orthogonal projection onto the hyperplane} %TODO explain orthogonal projection
-may serve as metric for how prototypical a sample is for the respective category. 
+% %TODO theoretisch ist es auch möglich bspw nen network mit attention auf gewisse dinge wie fachbereich und anderes zu trainieren und dann rauszusuchen was die wichtigen ausschlaggebenden dinge für das Netzwerk waren
 
-Translated into terms relevant to the aim of this thesis, the classes may be those educational resources whose description contains the word "\textit{hard}" as one class vs. those that do not as the other class. Now according to [TODO], one may use the distance of the sample towards the separatrix as a measure of how hard a class is: For all positive samples, a longer distance means a harder class, for all negative samples a longer distance means an easier one, whereas those samples close to the separatrix can be considered average.
+% %TODO extract using TF/IDF as well
 
-\subsubsection*{How to calculate the distance}
+% %TODO a source: https://github.com/MaartenGr/KeyBERT#citation
 
-%TODO mention that I'm in a cartesian coordinate system
-%TODO mention that I'm thinking in euclidian coordinates, see https://en.wikipedia.org/wiki/Plane_(geometry)
-\noindent In the following paragraphs, I will visualize how to calculate the orthogonal distance from a sample to the hyperplane exemplary for the case of three-dimensional text-vectors.
+% * After you figure out which candidate term appears in which texts, figure out which other terms are frequent in these texts while infrequent in texts of the other class and then add these to the candidate-term-set (other way may even be to classify the texts according to if the candidateterm appears in them, and then take the misclassified one also as positive samples)
 
-Generally, the separatrix splitting positive from negative samples for an $n$-dimensional space $\mathds{R}^n$ is an $n-1$-dimensional subspace (called \textit{hyperplane}), which in the case of $\mathds{R}^3$ corresponds to a plane. 
-%https://en.wikipedia.org/wiki/Plane_(geometry)#Representation
+% \begin{figure}[H]
+% 	\centering
+% 	\includegraphics[width=\figwidth]{graphics/figures/keyphrases_histogram.png}
+% 	%plot created with scripts/create_siddata_dataset.py filter-keyphrases /home/chris/Documents/UNI_neu/Masterarbeit/DATA_CLONE --verbose
+% 	\caption[Occurences in all Documents per Keyphrase]{
+% 		\label{fig:keyphrases_histogram}
+% 		Occurences in all Documents per Keyphrase (for all keyphrases that occur $\geq$ 5 times, cut off at the 93th percentile).
+% 		7007 of 45295 terms occur at least 5 times.
+% 		Most frequent phrases: seminar (4173), course (3722), students (2923), it (2671), language (2071), work (1980), event (1842), research (1731), lecture (1723), law (1719).
+% 		}
+% \end{figure}
 
-The general form of the equation of a plane is given as the following linear equation, where parameters $a, b, c$ and $d$ encode the position of the plane:
 
-\begin{equation}
-	\label{eq:general_plane}
-	ax + by + cz = d
-	%TODO source? mein Tafelwerk? :D
-\end{equation}
+% \subsection{Calculating the distance to the SVMs Separatrix}
+% \label{sec:calculate_distance}
 
-This reads as "All points $(x,y,z)$ for which \ref{eq:general_plane} holds are on the plane". 
+% %TODO: before this, explain 
+% % * extraction of the candidate term set
+% % * how vectors are made from texts
+% In order to tell how much a text is prototypical of a category, all texts are split depending on whether they contain words of a set as described in \ref{sec:extract_candidates}, before a linear Support Vector Machine Classifier is trained on the vector-representation of all of the texts, splitting them into two classes: those that contain one of the candidate terms and those that do not. Due to the linear kernel, the SVM finds a hyperplane (\textit{separatrix}) that splits the positive from the negative samples in a way that maximizes the distance between the respective classmembers and the separatrix, using samples close to the margin as \textit{support vectors}. %TODO: what if the data is not linearly seperable?
 
-In this representation of the plane, the vector $(a,b,c)$ encodes a normal vector orthogonal to this plane, whereas $d$ serves as intercept, encoding the intersection of plane and normal. (specifically: the perpendicular distance you would need to translate the plane along its normal to have the plane pass through the origin) In higher dimensions, the formula for the hyperplane would become $a_1x_1+a_2x_2+a_3x_3+...+a_nx_n = b$, which means that encoding the hyperplane for a space $\mathds{R}^n$ requires $n+1$ parameters.
-% one rough quote in this paragraph from https://stackoverflow.com/a/17661431
+% Following the SVMs logic, one could argue that the further away a sample is from this separatrix, the more prototypical it is of its class. Thus, the distance of a sample to its \textit{orthogonal projection onto the hyperplane} %TODO explain orthogonal projection
+% may serve as metric for how prototypical a sample is for the respective category. 
 
-%TODO explain that it's not even harder in higher-dimensional spaces
-%TODO explain that nicely, in python the separatrix is perfectly specified using the normal and the intercept, so we have everything we need 
-%TODO die handschriftlichen notizen aus den beiden notebooks einbauen
-%TODO die plots aus dem notebook einbauen
+% Translated into terms relevant to the aim of this thesis, the classes may be those educational resources whose description contains the word "\textit{hard}" as one class vs. those that do not as the other class. Now according to [TODO], one may use the distance of the sample towards the separatrix as a measure of how hard a class is: For all positive samples, a longer distance means a harder class, for all negative samples a longer distance means an easier one, whereas those samples close to the separatrix can be considered average.
 
-% The distance from any point of this $\mathds{R}^n$ to the hyperplane is then calculated as the length of the vector that is the \textit{orthogonal projection} from that point onto the hyperplane. The orthogonal projection from one vector onto another can be calculated as 
+% \subsubsection*{How to calculate the distance}
+
+% %TODO mention that I'm in a cartesian coordinate system
+% %TODO mention that I'm thinking in euclidian coordinates, see https://en.wikipedia.org/wiki/Plane_(geometry)
+% \noindent In the following paragraphs, I will visualize how to calculate the orthogonal distance from a sample to the hyperplane exemplary for the case of three-dimensional text-vectors.
+
+% Generally, the separatrix splitting positive from negative samples for an $n$-dimensional space $\mathds{R}^n$ is an $n-1$-dimensional subspace (called \textit{hyperplane}), which in the case of $\mathds{R}^3$ corresponds to a plane. 
+% %https://en.wikipedia.org/wiki/Plane_(geometry)#Representation
+
+% The general form of the equation of a plane is given as the following linear equation, where parameters $a, b, c$ and $d$ encode the position of the plane:
 
 % \begin{equation}
-% 	\label{eq:orthogonal_projection}
-% 	\hat{\vec{a}} = \frac{\vec{a}\cdot\vec{b}}{\vec{b}\cdot\vec{b}}\cdot\vec{b}
-% 	%TODO source https://en.wikipedia.org/wiki/Vector_projection
+% 	\label{eq:general_plane}
+% 	ax + by + cz = d
+% 	%TODO source? mein Tafelwerk? :D
 % \end{equation}
 
-% ...as we however have a plane we want to project to, not a vector, what I wrote here is rather useless, isn't it?
+% This reads as "All points $(x,y,z)$ for which \ref{eq:general_plane} holds are on the plane". 
+
+% In this representation of the plane, the vector $(a,b,c)$ encodes a normal vector orthogonal to this plane, whereas $d$ serves as intercept, encoding the intersection of plane and normal. (specifically: the perpendicular distance you would need to translate the plane along its normal to have the plane pass through the origin) In higher dimensions, the formula for the hyperplane would become $a_1x_1+a_2x_2+a_3x_3+...+a_nx_n = b$, which means that encoding the hyperplane for a space $\mathds{R}^n$ requires $n+1$ parameters.
+% % one rough quote in this paragraph from https://stackoverflow.com/a/17661431
+
+% %TODO explain that it's not even harder in higher-dimensional spaces
+% %TODO explain that nicely, in python the separatrix is perfectly specified using the normal and the intercept, so we have everything we need 
+% %TODO die handschriftlichen notizen aus den beiden notebooks einbauen
+% %TODO die plots aus dem notebook einbauen
+
+% % The distance from any point of this $\mathds{R}^n$ to the hyperplane is then calculated as the length of the vector that is the \textit{orthogonal projection} from that point onto the hyperplane. The orthogonal projection from one vector onto another can be calculated as 
+
+% % \begin{equation}
+% % 	\label{eq:orthogonal_projection}
+% % 	\hat{\vec{a}} = \frac{\vec{a}\cdot\vec{b}}{\vec{b}\cdot\vec{b}}\cdot\vec{b}
+% % 	%TODO source https://en.wikipedia.org/wiki/Vector_projection
+% % \end{equation}
+
+% % ...as we however have a plane we want to project to, not a vector, what I wrote here is rather useless, isn't it?
 
 
-The distance from any point of this $\mathds{R}^n$ to the hyperplane can then be calculated as 
-% As... * dist(point, point_projected_onplane)     						 (`project[1,3]_pre`)
-%       * abs(trafo(point)[0])     										 (`protoypicality_pre`)
-%       * np.dot(plane.normal, point) + plane.d							 (`project2_pre')
-% ...normiert sind die alle gleich, aber for some reason differn die um nen multiplicator..?!
-% And the projections...:
-%       * back_trafo([0, trafo(point)[1], trafo(point)[2]]
-% 		* plane.project(point): k = (ax+by+cz+d)/(a²+b²+c²); result = [x-ka, y-kb, z-kc]
-%       * point - distance * plane.normal  (...aber nur mit protoypicality_pre als distance! )
-% 		...note that second and third are basically equal - both calculate "how much do I need to go into the direction of the orthogonal" and then do so  (point - distance * normal). The difference is that in plane.project the distance is divided by (a²+b²+c²). Originally sagt der typ von SO (https://stackoverflow.com/a/17661431) die distance ist einfach n*p-d, dann fehlt nur der normierungsterm. 
-% TODO: figure out the explanation of the difference from this to the result of using forward and backward??
-% See get_svm_decisionboundary.ipynb, den kram zwischen `#deleteme from here', commit d46a8300dae81adee
+% The distance from any point of this $\mathds{R}^n$ to the hyperplane can then be calculated as 
+% % As... * dist(point, point_projected_onplane)     						 (`project[1,3]_pre`)
+% %       * abs(trafo(point)[0])     										 (`protoypicality_pre`)
+% %       * np.dot(plane.normal, point) + plane.d							 (`project2_pre')
+% % ...normiert sind die alle gleich, aber for some reason differn die um nen multiplicator..?!
+% % And the projections...:
+% %       * back_trafo([0, trafo(point)[1], trafo(point)[2]]
+% % 		* plane.project(point): k = (ax+by+cz+d)/(a²+b²+c²); result = [x-ka, y-kb, z-kc]
+% %       * point - distance * plane.normal  (...aber nur mit protoypicality_pre als distance! )
+% % 		...note that second and third are basically equal - both calculate "how much do I need to go into the direction of the orthogonal" and then do so  (point - distance * normal). The difference is that in plane.project the distance is divided by (a²+b²+c²). Originally sagt der typ von SO (https://stackoverflow.com/a/17661431) die distance ist einfach n*p-d, dann fehlt nur der normierungsterm. 
+% % TODO: figure out the explanation of the difference from this to the result of using forward and backward??
+% % See get_svm_decisionboundary.ipynb, den kram zwischen `#deleteme from here', commit d46a8300dae81adee
 
 
-\subsection{Clustering the extracted candidates}
+% \subsection{Clustering the extracted candidates}
 
-An analysis of \cite{Carmel2009} showed that a statistical method to extract features from clustered text corpora identified the labels of human annotators as one of the top five most important terms in only 15\% of cases, implying ``that human labels are not necessarily significant from a statistical perspective" \cite[139]{Carmel2009}
-%TODO: die eigentliche Methode (JSD) mehr erklären!!
-%(the JSD method for feature selection identifies human labels as “significant” (appearing in the top five most important terms) for only 15% of the categories. This result implies that human labels are not necessarily significant from a statistical perspective.z)
+% An analysis of \cite{Carmel2009} showed that a statistical method to extract features from clustered text corpora identified the labels of human annotators as one of the top five most important terms in only 15\% of cases, implying ``that human labels are not necessarily significant from a statistical perspective" \cite[139]{Carmel2009}
+% %TODO: die eigentliche Methode (JSD) mehr erklären!!
+% %(the JSD method for feature selection identifies human labels as “significant” (appearing in the top five most important terms) for only 15% of the categories. This result implies that human labels are not necessarily significant from a statistical perspective.z)

@@ -136,16 +136,28 @@
 \robustify\itshape
 % end 
 
+\usepackage{lipsum}
 \usepackage{pdflscape} % if this is used, those pages within {landscape} are turned when viewed digitally (https://tex.stackexchange.com/a/141444/108199)
 
+
 \usepackage[section]{placeins} %for FloatBarrier, https://tex.stackexchange.com/a/282/108199
+% Keep floats in the section they were defined in.
+
+\makeatletter
+\AtBeginDocument{%
+  \expandafter\renewcommand\expandafter\subsection\expandafter{%
+    \expandafter\@fb@secFB\subsection
+  }%
+}
+\makeatother
+% let subsections also be float-barriers, https://tex.stackexchange.com/a/118667/108199
+
 
 \usepackage{url}
-\usepackage[section]{placeins} % Keep floats in the section they were defined in.
 \usepackage{tabularx}
 \usepackage{booktabs} % Scientific table styling.
 \usepackage{floatrow} % Option for keeping floats in the place they were defined in the code.
-\floatsetup[table]{style=plaintop}
+\floatsetup[table]{style=plaintop, capposition=bottom}
 % \usepackage[breaklinks=true]{hyperref} % Hyperlinks.
 \usepackage[pdftex,
 	   breaklinks=true,%
@@ -162,7 +174,10 @@
 \addto\extrasbritish{\def\sectionautorefname{Section}}
 \addto\extrasenglish{\def\subsectionautorefname{Section}}
 \addto\extrasbritish{\def\subsectionautorefname{Section}}
+\addto\extrasenglish{\def\subsubsectionautorefname{Section}}
+\addto\extrasbritish{\def\subsubsectionautorefname{Section}}
 %https://github.com/Cryptosaurus/iacrtrans/issues/9#issuecomment-562347502
+
 
 
 \usepackage[all]{nowidow} % Prevent widows and orphans.
@@ -195,6 +210,9 @@
 \newacronym{sge}{SGE}{Sun Grid Engine}
 \newacronym{cli}{CLI}{Command Line Interface}
 \newacronym{uos}{UOS}{University of Osnabrück}
+\newacronym{pos}{POS}{Part-of-Speech}
+\newacronym{bert}{BERT}{Bidirectional Encoder Representations from Transformers}
+\newacronym{ann}{ANN}{Artificial Neural Network}
 % END Acronym definitions
 %TODO: update acronym script for Plural!!
 %TODO: also let the acronym script define eg. an \svm command that is just an alias for \gls{svm} and an \svms for \glspl{svm}
@@ -500,7 +518,7 @@
 
 \usepackage{listingsutf8}
 \usepackage{pmboxdraw} %for the \textblock
-
+\usepackage[export]{adjustbox}[2011/08/13]
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
@@ -568,6 +586,8 @@
 \newcommand{\codeother}[1]{\colorbox{evenmorelightgray}{\lstinline[basicstyle=\ttfamily\color{black},keywordstyle=\ttfamily]{#1}}}
 
 \newcommand{\termcmd}[1]{\colorbox{evenmorelightgray}{{\spaceskip=.95\fontdimen2\font minus \fontdimen4\font	\xspaceskip=0pt\relax \large\texttt{#1}}}}
+
+
 
 
 % =====================================
@@ -663,10 +683,10 @@
 
 
 
-
 % ##################################################################################
 % specialstuff mentioned later
-\newcommand{\mainalgos}{\cite{Derrac2015,Ager2018,Alshaikh2020} }
+\usepackage{xspace} % https://tex.stackexchange.com/a/31092/108199
+\newcommand{\mainalgos}{\cite{Derrac2015,Ager2018,Alshaikh2020}\xspace}
 
 
 \input{special_highlight.tex}
@@ -703,6 +723,40 @@
 \newcommand*{\nameparanref}[1]{\hyperref[{#1}]{\ref{#1} (\nameref*{#1})}} 
 
 
+% ================= make titles link back to toc =================
+% https://tex.stackexchange.com/a/251964/108199
+
+\AtBeginDocument{\colorlet{defaultcolor}{.}}
+
+\makeatletter
+\let\hyperchapter\chapter
+\def\chapter{\@ifstar\starchapter\mychapter}
+\def\starchapter{\hyperchapter*}
+\newcommand{\mychapter}[2][\@empty]% #1=optional (toc and top of page), #2=title
+{\ifx#1\@empty \hyperchapter[#2]{\hyperlink{toc.chapter.\thechapter}{\textcolor{defaultcolor}{#2}}}
+ \else \hyperchapter[#1]{\hyperlink{toc.chapter.\thechapter}{\textcolor{defaultcolor}{#2}}}
+ \fi}
+
+\let\hypersection\section
+\def\section{\@ifstar\starsection\mysection}
+\def\starsection{\hypersection*}
+\newcommand{\mysection}[2][\@empty]% #1=optional (toc), #2=title
+{\ifx#1\@empty \hypersection[#2]{\hyperlink{toc.section.\thesection}{\textcolor{defaultcolor}{#2}}}
+ \else \hypersection[#1]{\hyperlink{toc.section.\thesection}{\textcolor{defaultcolor}{#2}}}
+ \fi}
+
+\let\hypersubsection\subsection
+\def\subsection{\@ifstar\starsubsection\mysubsection}
+\def\starsubsection{\hypersubsection*}
+\newcommand{\mysubsection}[2][\@empty]% #1=optional (toc), #2=title
+{\ifx#1\@empty \hypersubsection[#2]{\hyperlink{toc.subsection.\thesubsection}{\textcolor{defaultcolor}{#2}}}
+\else \hypersubsection[#1]{\hyperlink{toc.subsection.\thesubsection}{\textcolor{defaultcolor}{#2}}}
+\fi}
+
+\makeatother
+
+% ====================================================================
+
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
 \renewcommand{\baselinestretch}{1.25}
@@ -710,6 +764,10 @@
 \makeatletter
 
 \begin{document}
+
+\let\hypercontentsline=\contentsline
+\renewcommand{\contentsline}[4]{\hypertarget{toc.#4}{}\hypercontentsline{#1}{#2}{#3}{#4}}
+% above 2: https://tex.stackexchange.com/a/251964/108199
 
 \cleardoublepage
 \pagestyle{plain} %for the headers & footers
@@ -785,6 +843,8 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - MAIN PART
 %----------------------------------------------------------------------------------------
+
+\todoparagraph{TODO: jedes mall wenn ich document-frequency sage, meine ich nicht eher term-frequncy???!!!}
 	
 
 % INTRO
@@ -839,13 +899,16 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 %----------------------------------------------------------------------------------------
 	
 	\appendix % Cue to tell LaTeX that the following "chapters" are Appendices
+	\addtokomafont{section}{\LARGE}
+	\addtokomafont{subsection}{\Large}
+	\addtokomafont{subsubsection}{\large}
+
 
 	\cleardoubleoddpage
 	\phantomsection
 	\addcontentsline{toc}{part}{\appendixname}
 	\setchapterpreamble[o]{% siehe KOMA-Script-Anleitung
-  		\usekomafont{disposition}\usekomafont{part}\appendixname\bigskip} 
-	% the three above are to show the appendix as section, see https://golatex.de/viewtopic.php?p=22119&sid=ebe25f27fce1765ab7d8b1d2e91ee979#p22119
+	\usekomafont{disposition}\usekomafont{part} \appendixname\bigskip} 	% the three above are to show the appendix as section, see https://golatex.de/viewtopic.php?p=22119&sid=ebe25f27fce1765ab7d8b1d2e91ee979#p22119
 
 	% Include the appendices of the thesis as separate files from the Appendices folder
 	% Uncomment the lines as you write the Appendices
