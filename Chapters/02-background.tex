@@ -1,64 +1,34 @@
 \chapter{Background}
 
 
-\section{Use Case: Educational Resources}
-% Anwendungsfall (->e-learning, recommenden von bildungsressourcen, ...) -> nicht-technisch, aber nötig zum verstehen wo passiert das 
-
-% TALK ABOUT that actually, in CS concepts (=types) are regions, BUT we have only one-instance-per, so TOKENS, so it's kiiinda reasonable that we have points! IF we would have the collection of "ALL Computer Science 1 Courses" it would be different
-
 \section{Conceptual Spaces}
 
-% \cite{Alshaikh2019} (verbatim!):
-% * vector space models that are aimed at representing the entities of a given kind (e.g. movies), to- gether with their associated properties (e.g. scary) and concepts (e.g. thrillers).
-% * As such, they are similar in spirit to the vector space models that have been proposed in information retrieval (Deer- wester et al., 1990) and natural language pro- cessing (Turney and Pantel, 2010; Mikolov et al., 2013), but there are also notable differences.
-% * First, in the context of conceptual spaces, an explicit dis- tinction is made between the entities from the do- main of discourse, which are represented as vec- tors, and the corresponding properties and con- cepts, which are represented as regions (e.g. poly- topes) or soft regions (e.g. characterized by a Gaussian). 
-% * Second, conceptual spaces are organ- ised into a set of facets [domains], each of which captures a different aspect of meaning. For instance, in a conceptual space of movies, we may have facets such as genre, language, geographic location, etc. Each facet is associated with its own vector space, which intuitively captures similarity w.r.t. the corresponding facet. Most of these facet spaces tend to be low-dimensional (e.g. modelling budget only needs a single dimension). This clearly dif- ferentiates them from traditional semantic spaces, which often have hundreds of dimensions
+\includeMD{pandoc_generated_latex/1_2_conceptualspaces}
+\includeMD{pandoc_generated_latex/2_2_conceptualspaces}
 
+\subsection{Data-Driven Generation of Conceptual Spaces}
 
+\includeMD{pandoc_generated_latex/2_3_datadrivengeneration}
 
+\section{Educational Resources}
 
+\includeMD{pandoc_generated_latex/2_1_educationalresource}
 
 
 \includeMD{pandoc_generated_latex/chapter_theobg_section_cs}
 
 
-\section{Automatic Data-Driven Generation of Conceptual Spaces}
+\section{Computational Reasoning}
 
-% \cite{Alshaikh2019} geht drauf ein warum man infoGAN und VAEs für bilder als pretty much sowas betrachten kann
-
-%Wie funktioniert die Idee des data-driven generieren 
-
-% Base idea: [Derrac and Schockaert, 2015] proposed an unsupervised method which uses text descriptions of the considered entities to identify se- mantic features that can be characterized as directions. Their core assumption is that words describing semantically mean- ingful features can be identified by learning for each candi- date word w a linear classifier which separates the embed- dings of entities that have w in their description from the oth- ers. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature. 
-% This method trains for each word w in the vocab- ulary a linear classifier which predicts from the embedding of an entity whether w occurs in its description. The words w1, ..., wn for which this classifier performs sufficiently well are then used as basic features. To assess classifier perfor- mance, Cohen’s Kappa score, which can be seen as a correc- tion of classification accuracy to deal with class imbalance, is used. Each of the basic features w is associated with a cor- responding vector dw (i.e. the normal vector of the separat- ing hyperplane learned by the classifier). These directions are subsequently clustered, which serves to reduce the total num- ber of features.
-% Zum Thema points vs regions: [CS] where properties and concepts are represented using convex regions, while specific instances of a concept are represented as points. This has a num- ber of important advantages. First, it allows us to distinguish borderline instances of a concept from more prototypical instances, by taking the view that instances which are closer to the center of a region are more typical [9]. A second advantage is that using regions makes it clear whether one concept subsumes another (e.g. every pizzeria is a restaurant), whether two concepts are mutually exclusive (e.g. no restaurant can also be a beach), or whether they are overlapping (e.g. some bars serve wine but not all, some establishments which serve wine are bars but not all). Region based models have been shown to outperform point based models in some natural language processing tasks [41] On the other hand, using regions is computationally more demanding, and learning accurate region boundaries for a given concept would require a prohibitive amount of data. In this paper, we essentially view point based representations as coarse-grained approximations of conceptual spaces, where points correspond to fine-grained categories instead of specific instances, while convex regions are used to model higher-level categories
-%...ansonsten hätte ich immernoch die frage ob wir überhaupt points consideren oder nur vektoren, UND warum wie cosine distance consideren und nicht öfter mal euclidian distance, I mean warum ist unser space metric?!
-
-
-% TODO: Have to write here:
-% * that in a CS the axes correspond to human concepts, "concepts" meaning attributes and what-was-the-other-again, according to CS lingo corresponding to nouns and adjectives yadda yadda, darauf referenzier ich mich im Text
-
-
-\section{Types of Reasoning}
+\includeMD{pandoc_generated_latex/2_4_typesofreasoning}
 
 \label{sec:reasoning}
 
-Mostly from \cite{Derrac2015}, but tbh not that important for me. However a short paragraph about reasoning-based classifiers and the respective intutitive explanations for known classifiers may be interesting (think 1-NN is "Y is of the same class as X because X closest to Y", but also more complex ones.)
-
-TODO: \todoparagraph{explain here why they have the requirement that the resulting semantic space is euclidian!!}
-
-\includeMD{pandoc_generated_latex/chapter_theobg_section_reasoning}
-
 \section{Related Work}
 
-% dass das alles vergleichbar mit InfoGAN etc für Bilder ist.. (siehe auch text von \cite{Alshaikh2019})
-
-% \cite{Derrac2015}: "It is convenient to represent the meaning of terms or documents as points,vectors or regions in a Euclidean space. Such representations are known as vector-space models [...].  ==> FUCKING WORD2VEC!!!
- 
-% \cite{Derrac2015}: some form of dimensionality reduction is typically used to obtain vectors whose components correspond to concepts. One of the most popular techniques, called latent semantic analysis (LSA [39]), uses singular value decomposition (SVD) to this end. Multi-dimensional scaling (MDS [40]) is another popular method for dimen- sionality reduction, which builds a vector-space representation from pairwise similarity judgements.
-
+\includeMD{pandoc_generated_latex/2_5_relatedwork}
 
 \includeMD{pandoc_generated_latex/chapter_related_work}
-
 
 
 \section{Required Algorithms and Techniques}
@@ -82,90 +52,8 @@ Another crucial reason is, that the entities's are of drastically varying length
 Because of these reasons, in the algorithm it will often be talked about \glspl{quant}. The algorithms explained below transforms the raw frequency-counts of a document and an \gls{ngram} into some \emph{score}, dependent on the number of occurences of this term in this document as well as the counts of other \glspl{ngram} and other documents. This score is henceforth called a \gls{quant}.
 %TODO: term? phrase? n-gram?
 
-\paragraph{Tf-Idf}
-
-\gls{tf-idf} 
-
-Words that are rare overall and frequent in this document are weighted highly.
-
-tf-idf for term $x$ within document $y$:
-
-$$ w_{x,y} = \text{\textit{tf}}_{x,y} * log(\frac{N}{df_x}) $$
-
-with $\text{tf}_{x,y}$ as the term-frequency of $x$ in $y$, \
-$df_x$ as the document-frequency (the number of documents containing $x$) \
-and $N$ being the total number of documents
-
-%see also: see also: https://towardsdatascience.com/3-basic-approaches-in-bag-of-words-which-are-better-than-word-embeddings-c2cbc7398016
-
-%\cite{Turney2010} (sec 4.2): The most popular way to formalize this idea for term–document matrices is the tf-idf (term frequency × inverse document frequency) family of weighting functions (Sp¨arck Jones, 1972). An element gets a high weight when the corresponding term is frequent in the corresponding document (i.e., tf is high), but the term is rare in other documents in the corpus (i.e., df is low, and thus idf is high). Salton and Buckley (1988) defined a large family of tf-idf weighting functions and evaluated them on information re- trieval tasks, demonstrating that tf-idf weighting can yield significant improvements over raw frequency
 
 
-\paragraph{PPMI}
-
-% * See also: https://stackoverflow.com/a/58725695/5122790
-
-It was suggested by \cite{Turney2010} to use the \gls{ppmi} measure instead of tf-idf to weight the counts in \glspl{doctermmat}, relying on \cite{Bullinaria2007}'s work taking into account psychological models to extract information about lexical semantics from co-occurence statistics. According to \cite{Turney2010,Bullinaria2007}, \gls{ppmi} performs most plausible to measure semantic similarity in word-context matrices compared to human evaluation. %(sec 4.2) of \cite{Turney2010}: Bullinaria and Levy (2007) demonstrated that PPMI performs better than a wide variety of other weighting approaches when measuring semantic similarity with word-context matrices.
-
-
-
-The Paper uses the following \gls{ppmi} definition:\\ 
-
-\noindent $e \in E$ is an entity, $D_e$ a document (bag of words) where that entity occurs.\\
-We want to quantify for each term occuring in the corpus $\{D_e | e \in E\}$ how strongly it is associated with $e$.\\
-$c(e,t)$ is the number of times term $t$ occurs in document $D_e$. \\
-The weight $ppmi(e,t)$ for term $t$ in the vector representing $e$ is then:
-\begin{align*}
-ppmi(e,t) &= max\left(0, log\left( \frac{p_{et}}{p_{e*}*p_{*t}} \right) \right) \\
-          &= max\left(0, pmi(e,t) \right) \\
- pmi(e,t) &= log\left( \frac{p_{et}}{p_{e*}*p_{*t}} \right) \\          
-   p_{et} &= \frac{c(e,t)}{\sum_{e'}\sum_{t'} c(e',t')} \\
-   p_{e*} &= \sum_{t'}p_{et'} \\
-   p_{*t} &= \sum_{e'}p_{e't} \\
-\end{align*}
-
-\noindent log of the probability of the $e$-$t$-combination (count of this vs count of all), normalized by the probability of this $e$ with any $t$ times this $t$ with any $e$.\\
-To quote the paper: "PPMI will favor terms which are frequently associated with the entity $e$ while being relatively infrequent in the corpus overall"
-
-\vspace{30px}
-
-I found this definition:
-\begin{align*}
-ppmi(X,i,j) &= max(0, pmi(X,i,j)) \\
-pmi(X,i,j)  &= log\left( \frac{X_{ij}}{expected(X,i,j)} \right) \\
-            &= log\left( \frac{P(X_{ij})}{P(X_{i*}) * P(X_{*j})} \right)
-\end{align*}
-
-
-\subsection{Dimensionality Reduction}
-
-\subsubsection*{LSI/LSA}
-
-% from \cite{Turney2010}: 
-% Context: Smoothing the frequency matrix - keep comparison performance high but the comparision process faster and ignoring irrelevant stuff
-% Deerwester et al. (1990) found an elegant way to improve similarity measurements with a mathematical operation on the term–document matrix, X, based on linear algebra. The op- eration is truncated Singular Value Decomposition (SVD), also called thin SVD. 
-% Truncated SVD applied to document similarity is called Latent Semantic Indexing (LSI), but it is called Latent Semantic Analysis (LSA) when applied to word similarity.
-
-
-
-FROM \cite{deerwester} (huge chunks verbaitm!)
-
-The only information that can be taken into account when comparing two texts, or a text and a query, are the words it is made up from (...and their constellation, which is why \gls{word2vec} works better than \gls{bow}-approaches). 
-However what you really want to compare is their conceptual/semantic content, and that unfortunately doesn't have a 1:1 correspondance to words - language is highly redundant, and the problems with that approach are synonymy (multiple words with one meaning) and polysemy (one word with multiple meanings), so equal words don't necessarily entail same concepts, and same concepts doesn't automatically mean same words. The terms used to describe or index a document typically contain only a fraction of the terms that users as a group will try to look it up under. Automatically adding synonyms worsens the polysemy problem. the words in query and document are both only one sample description of the intended documents, and in principle could have contained many different terms from the ones it does
-
-if there is a great deal of structure, i.e. the occurrence ofsome patterns of words gives us a strong clue as to the likely occurrence of others, then data from one part (or all) of the table can be used to correct other portions
-
-assume there is some underlying latent semantic structure in the data that is partially obscured by the randomness of word choice with respect to retrieval. With statistical techniques, this latent structure can be uncovered (LSI). This takes both terms and documents and projects them into a "semantic" space wherein terms and documents that are closely associated are placed near one another. terms that did not actually appear in a document may still end up close to the document, if that is consistent with the major patterns of association in the data. Position in the space then serves as the new kind of semantic indexing, and retrieval proceeds by using the terms in a query to identify a point in the space, and documents in its neighborhood are returned to the user
-
-We want to use the matrix of observed occurrences of terms applied to documents to estimate parameters of that underlying model
-
-SVD represents both terms and documents as vectors in a space of choosable dimensionality, and the dot product or cosine between points in the space gives their similarity
-
-\subsubsection*{Multi-dimensional Scaling}
-
-\Gls{mds} is a dimensionality reduction technique that builds a vector-space representation from pairwise similarity judgements. It takes a \gls{dissimmat} as input and returns a fixed-dimensional embedding in which original distances are kept as close to the ones of the \gls{dissimmat} as possible. 
- 
-
+\includeMD{pandoc_generated_latex/2_6_requiredalgos}
 
 \includeMD{pandoc_generated_latex/chapter_methods_section_required_algorithms}
-

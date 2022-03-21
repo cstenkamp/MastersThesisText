@@ -1,94 +1,14 @@
 \chapter{Results}
 
-\input{include/results_table_1}
-	
-		
-\section{Evaluation} %TODO what is this for a title? it sucks
-
-% * viel showcasen. Also mir 10 Kurse raussuchen die laut algorithmus nahe beieinander sind und sagen "hier, wir sehen die sehen tatsächlich related aus".
-% * Drauf eingehen dass ich nicht wirklich metriken habe. This is not classification, I don't get a "87% accuracy" and can compare that, ich krieg cluster und muss mir angucken ob die "ähnlich sind wie ein mensch das macht" -> qualitative und quantitative analyse, beides mit grains of salt (quantiativ ertrickst metriken halt nen bissle -> Clustert das so dass ich den fachbereich dadrin wiedererkenne? )
-% * Brauch ich mehr/bessere Daten? Wenn ich nur die 1000 mit den längsten Beschreibungen behalten würde und dann 10 solcher subsets hätte wären halt die Fälle wie "Tutoren sind: Susi Sorglos Willi Wacker" etc raus
-% * ...ich kann auch mit Johannes' Datensatz mit Mapping Kurstitel -> DDCs vergleichen und gucken ob die shallow decision trees was ähnliches wie die DDCs extracten können als weiteren Klassifizerungs-Task nehmen! (see Masterarbeit/OTHER/study_behavior_analysis/EducationalResource-2022-01-20.csv), dann kann ich auch das Siddata/SidBert-Paper von Johannnes Referenzieren!
-% * Was man als testing halt machen kann ist nen decision tree based on their features zu machen und zu gucken ob der einen held out test dataset klassifizieren kann.
-% * Ein anderer Weg zum testen wäre auch ein classifier der nur anhand der most salient generated features versucht den kurs wiederherzustellen (das zeigt natürlich nicht ob es similar to how humans do it but part of it)
-% * Metrik: Gucken ob es ähnlich wie FB Clustert => Da kann ich dann die Parameterkombi die die im paper gemacht haben plus nen paar andere in ne tabelle packen und fertig
-% * Check my claim in the results for place-types (chapter 6.1), that the classification based on word embeddings may even be better than their SVM_MDS!!!
-% * Ich hab ja den Fachbereichs-Classifier gemacht, wenn ich jetzt noch die shallow decision trees mache kann ich ja legit accuracies vergleichen
-
-\begin{itemize}
-	\item \cite{Derrac2015} evaluated using a bunch of commonsense reasoning based classifiers (want to show that at least as performant than standard approaches, but can give intuitive explanations) (these reasoning-classifiers can be linked to intuitive explanations: 1-NN is "Y is of the same class as X because X closest to Y", but also more complex ones.) 
-	\item 
-\end{itemize}
-
-* This is clustering and looking if it corresponds to human judgement, which unfortunately doesn't allow for a simple accuracy and be done with it.
-* So, the papers that did this come up with a few things
-* [TODO: the shallow decisiontrees of one of the followups]
-* DESC15 "evaluate the practical usefulness of the considered semantic relations" by checking "their use in commonsense reasoning based classifiers", like interpolation and a fortiori inference (chap 5)
-
-
-* DESC15 tests like this: Section 6.1: Evaluate whether the derived relations are sufficiently accurate for classification, and 6.2 is then comparison with crowdsourcing experiments (more subjective aspects, the question “are the relations useful explanations?”)
-
-
+\includeMD{pandoc_generated_latex/4_0_results}
 
 \section{Qualitative Analysis}
 
-Qualitative Analysis in this case means "looking at stuff". Such a qualitative analysis is always to be taken with a grain of salt, because it is very prone to cherry-picking (both on purpose and not on purpose, the stuff you're looking at just doesn't need to be representative!). However it does help a lot and provides a lot of insights (and often helped me in the debugging process).
-What can you look at for such a qualitative analysis?
-\begin{itemize}
-	\item The clusters, checking if things you know to be similar are actually in the same clusters
-	\item If descriptions you know to be semantically similar are actually close in the embedding
-	\item You can do the whole thing for only three dimensions instead of the 50/100/200 because there you can plot the stuff and interpret it
-\end{itemize}
-
-\begin{itemize}
-	\item  Man kann ja schon nach dem Embedding anhand der nächsten Entities sehen ob das was werden kann - bei 100D sind dann halt "airplane cabin" und "aircraft cabin" die nächsten entities, bei 3D dann halt eher kram wie "area" and "moor", was schon eindeutig zeigt dass 3D offensichtlich nicht so der Hit ist
-	\item Die vielen Sanity Checks die man machen kann, bspw dass ich ja in 3D gucken kann (und auch in höher-D ausrechnen) ob eben diese dinge (von item 1) im Embedding nah sind, und ob die SVM Dinge schön trennt ("howto_embed.ipynb")
-	\item "placetypes_origconf.ipynb", was einfach von vorne bis hinten die original-config (ist ja auch im yaml) von DESC15 ausführt und interpretiert	
-\end{itemize}
-
-\begin{itemize}
-	\item Ist "Mathe" ein Keyword, clustern "a1" und "a2", ...
-	\item Ist "Codierungstheorie und Kryptographie" - mathe = "Kryptographische Methoden in der Informatik"?
-	\item Question: Does the continuation thingy which they have (backtothefuture:backtothefutureII::terminator:terminator2) hold for courses as well - Verhält sich Informatik A zu Informatik B wie Mathe für Anwender 1 zu Mathe für Anwender 2?  Info B zu Info A genau wie Statistik 2 zu Statisik 1? 
-	\item Paperlesen und den cluster von "pub" für placetypes angucken
-\end{itemize}
-
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\figwidth]{svm_mathematik_highlight_infoAB.png}
-	\caption[3D-Plot with an SVM for the term "Mathematik"]{
-		\label{fig:3dplot_mathe_infoab}
-		3D-Plot with an SVM for the term "Mathematik", also highlighting the courses "Informatik A" and "Informatik B"
-	}
-\end{figure}
-
-In figure \ref{fig:3dplot_mathe_infoab} we see a 3D-Embedding for courses, splitting courses which contain the term "mathematics" from those that don't, also hightlighting the terms "Informatik A" and "Informatik B". We see they are close we see the SVM is not to bad, and even though neiher Info A nor Info B contains the word "mathematik", thy are both on the "mathematical side" of courses. Negative samples are hidden for better visibility, and entities that contain the word more-often-than-the 75th (???) percentile have bigger markers.
-
-
-\begin{itemize}
-	\item In 3D ists immer ne Kugel, und ich würde behaupten in höheren Dimensionen ist es nicht extrem viel besser. dadrin ne SVM zu machen bringt echt wenig bis gar nix (Ich hab ja sogar Plots die zeigen dass die Movies viel besser clustern - TODO: die einbringen)
-\end{itemize}
-
+\includeMD{pandoc_generated_latex/4_1_qualitativeresults}
 
 \section{Quantiative Results}
 
-% Schreiben was die paper denen ich mostly folge zur evaluation gemacht haben! ("To evaluate whether the discovered features are semantically meaningful, we test how similar they are to natural categories, by training depth-1 decision trees")
-% Ein anderer Weg zum testen wäre auch ein classifier der nur anhand der most salient generated features versucht den kurs wiederherzustellen (das zeigt natürlich nicht ob es similar to how humans do it but part of it)
+\input{include/results_table_1}
 
-Here I'll add the results of the low-depth-decision-trees for Fachbereich, and also compare the results of throwing my code onto their placetypes-dataset and how my results compare to theirs 
-(set overlap of candidate terms!)
+\includeMD{pandoc_generated_latex/4_2_quantitativeresults}
 
-To see if it is possible to extract any kind of structured data from the unstructured course descriptions, a Neural Network classifier was trained on the dataset, classifying courses to the faculty they run under. 
-$\rightarrow$ Der FB-Classifier kommt auf $95.33\%$ train, $90.96\%$ Test accuracy nach 10 epochs, that's a lot!!
-
-
-Both \cite{Ager2018} and \cite{Alshaikh2020} train shallow decision-trees (depth 1 and depth 3 each), on their feature-based representations (such that the 1 or 3 most distinct interpretable dimensions are used) on a known property of the data (genres for movies, category in some taxonomy for placetypes, fachbereich for mine) - in the assumption that these eg in the movie domain the genre (or rather *terms accurately predicting it*) is among the features.
-
-
-TODO die Plots mit den Boxen von display_desc15_top3.ipynb !!!
-
-\begin{itemize}
-	\item result: set overlap of my extracted candidates for placetypes and theirs (und auch die big_21222.yml ergebnisse danach auswerten) (nicht nur overlap, ich kann auch verhältnis set intersect zu set union machen, und die als true/false positive/negative deklarieren und dann accuracy, f1 etc analysieren und halt anhand dessen "die hyperparam kombi die am closesten zu deren ergebnissen ist" rausbekommen)
-	\item result: kommt accuracy etc von den shallow decision trees für fachbereich close an die vom fb-classifier?
-\end{itemize}

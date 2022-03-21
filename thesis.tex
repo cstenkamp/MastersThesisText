@@ -10,6 +10,7 @@
 	\PassOptionsToPackage{colorlinks=true}{hyperref}
 \fi
 
+\newcommand*{\NoMarkdown}{}
 
 \documentclass[11pt,
   paper=a4, 
@@ -20,7 +21,6 @@
 	captions=tableheading,
 	BCOR=10mm
 ]{scrreprt}
-
 
 % ====================== /parts from MastersDoctoralThesis.cls ======================
 %	HEADERS AND FOOTERS
@@ -697,7 +697,7 @@
 	\newcommand{\todoparagraph}[1]{\ignorespaces}	
 \else
 	\makeatletter
-	\let\includeMD\@input
+	\let\includeMD\input
 	\newcommand{\todoparagraph}[1]{\highlight[red]{#1}}
 \fi
 
@@ -815,11 +815,7 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 \begin{abstract}
 	\textbf{\LARGE{Abstract}}\\\\
 	%TODO summarize the main objectives and outcomes of your work. The abstract should fit on one page.
-	In this thesis, I want to generate a conceptual space for the domain of educational reasources such as university courses, automatically created in data-driven way from their descriptions.
-
-	Conceptual Spaces are seen as something that may be able to link sub-symbolic and symbolic approaches by standing in between them: In Conceptual Spaces, Concepts are represented as convex regions in high-dimensional spaces. Optimally, these spaces are cartesian, and the axes correspond to human-interpretable dimensions. If that is the case, you could for example classify the concept of "Apple" as a region that is in the color-dimension somwhere between green and red, and in the form-dimension roughly at "round".
-	Creating these concpetual spaces is a very cumbersome task, which is why an automated method may lead to reasonable results. Unfortunately, this is still computationally very complex.
-	The method of [DESC15] uses MDS, blablabla, then a Support-Vector-Machine separating concepts, and the orthogonal of the separating hyperplane is then an axis
+	\includeMD{pandoc_generated_latex/0_0_abstract}
 \end{abstract}
 
 
@@ -828,7 +824,7 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 \tableofcontents
 \listoffigures
 \listoftables
-\listofalgorithms  % https://tex.stackexchange.com/a/100382/108199
+% \listofalgorithms  % https://tex.stackexchange.com/a/100382/108199 #TODO: list-of-algorithms wieder rein?
 \renewcommand{\lstlistlistingname}{List of Code-Listings}
 \lstlistoflistings %only those with a caption will be listed!
 
@@ -883,7 +879,7 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 \addcontentsline{toc}{chapter}{Glossary}
 \label{sec:glossary}
 \glsaddallunused
-\printglossary[type=defs,         title=Definitions, toctitle=Definitions, style=long3colheaderMINE, nogroupskip]
+\printglossary[type=defs,         title=Definitions, toctitle=List of Definitions, style=long3colheaderMINE, nogroupskip]
 \printglossary[type=customs,      title=Custom Terms, toctitle=Custom Terms used in this thesis, style=long3colheaderMINE, nogroupskip]
 % \printglossary[type=units,        title=Units,       toctitle=Units,      style=3colger]
 \vspace{0.5cm}

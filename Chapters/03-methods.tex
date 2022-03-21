@@ -7,6 +7,8 @@
 
 \section{Datasets}
 
+% Das Schokhard-Paper nutzt 14k, 1.3k, 11k, 3.7k große Datensätze
+
 All considered algorithms \mainalgos use a dataset of 15.000 movies and their reviews on IMDB, as well as a placetypes-dataset to evaluate their methods. The former consists of the concatenation of all available reviews for movies from IMDB\footnote{\url{https://www.imdb.com/}}, whereas the latter a collection of tags from photos uploaded to Flickr\footnote{\url{https://www.flickr.com}} that co-occur with a certain placetype. Other considered datasets are wine reviews, posts to certain newsgroups and another IMDB-review-dataset (see \tref{tab:all_datasets}). 
 % "their algorithm is tailored to concatenated-reviews or concatenated-bags-of-tags"
 
@@ -19,6 +21,8 @@ The main considered dataset of this thesis unfortunately does not share this pro
 \input{include/dataset_table}
 
 \subsection{SIDDATA-courses}
+
+% Generelle Analyse Datensatz mit Plots (Längenverteilung der Descriptions, ...)
 
 \begin{table}[H]
 	\resizebox{\textwidth}{!}{%
@@ -177,7 +181,7 @@ and the 64 allocated \emph{parallel environments} (slots) are maximally utilized
 	\lstdefaultstyle
 \end{widepage}
 
-% \includeMD{pandoc_generated_latex/chapter_methods_section_architecture}
+\includeMD{pandoc_generated_latex/chapter_methods_section_architecture}
 
 \subsection{Conclusion}
 
@@ -188,9 +192,11 @@ It was originally unexpected, but implementing an appropriate architecture for t
 \begin{description}[style=unboxed]
 	\item[Modularity] has been the main focus in the design, so exchanging components or running individual steps is easy and intuitive.
 	\item[Scalability] is reached thanks to massive parallelisation wherever possible as well as a professional workflow management system that is perfectly adjusted to the available cluster engine but also highly customizable for other engines.
-	\item[Reproducibility and Adaptability] are guaranteed by stringent encapsulation of components, completely automating the full data-analysis-pipeline, open-sourcing the code as proper package and containerization of the entire codebase for guaranteed and worry-free setup on any machine or compute cluster. The exact \gls{param}-combinations of \mainalgos are included (see \autoref{ap:yamls_for_origalgos}), allowing to re-create even the original papers using this code-base. Running the code on new datasets is extensively documented\footnote{TODO: link to that} and a matter of minutes. Extending or exchanging steps of the pipeline is seamless due to a consistent and understandable data schema, and pre-existing analysis-notebooks can easily create informative plots and figures.
-	\item[Transparency and Understandability] are ensured due to rigorous documentation\footnote{TODO: Link github-documentation!} (among others in this thesis) at any level of detail, from rough descriptions to concrete code-examples. Code, documentation and used data are publicly and easily available. Many analyses are inlcuded with the source-codes, for example allowing to visualize all steps of the process that can work with arbitrary numbers of dimension interactively in 3D. Code, data and configurations are clearly divided. All steps of the pipeline are very explicit about the used configurations and dependencies (making them traceable) and generate output at configurable levels of verbosity. All intermediate output can be re-accessed using helper commands (see \footnote{TODO: ref the appendix with the show-info-command and a notebook with \mytokensfnote{create_svm("mathematik", embedding, dcm, pp_descriptions, highlight=["Informatik A: Algorithmen", "Informatik B: Grundlagen der Software-Entwicklung"])}}), including clear traces of the first usage of parameters (as \eg in a plot as depicted in \autoref{fig:dependency_graph})
+	\item[Reproducibility and Adaptability] are guaranteed by stringent encapsulation of components, completely automating the full data-analysis-pipeline, open-sourcing the code as proper package and containerization of the entire codebase for guaranteed and worry-free setup on any machine or compute cluster. The exact \gls{param}-combinations of \mainalgos are included (see \autoref{ap:yamls_for_origalgos}), allowing to re-create even the original papers using this code-base. Running the code on new datasets is extensively documented\footnote{\todoparagraph{TODO:} link to that} and a matter of minutes. Extending or exchanging steps of the pipeline is seamless due to a consistent and understandable data schema, and pre-existing analysis-notebooks can easily create informative plots and figures.
+	\item[Transparency and Understandability] are ensured due to rigorous documentation\footnote{\todoparagraph{TODO:} Link github-documentation!} (among others in this thesis) at any level of detail, from rough descriptions to concrete code-examples. Code, documentation and used data are publicly and easily available. Many analyses are included with the source-codes, for example allowing to visualize all steps of the process that can work with arbitrary numbers of dimension interactively in 3D. Code, data and configurations are clearly divided. All steps of the pipeline are very explicit about the used configurations and dependencies (making them traceable) and generate output at configurable levels of verbosity. All intermediate output can be re-accessed using helper commands (see \footnote{\todoparagraph{TODO:} ref the appendix with the show-info-command and a notebook with \mytokensfnote{create_svm("mathematik", embedding, dcm, pp_descriptions, highlight=["Informatik A: Algorithmen", "Informatik B: Grundlagen der Software-Entwicklung"])}}), including clear traces of the first usage of parameters (as \eg in a plot as depicted in \autoref{fig:dependency_graph})
 	% it is crucial that the analysis code is as readable as possible such that it can be easily modified (looking at you, 40 unnamed cmd-args!)
 	% code is readable and well-documented 
 	% mit 2 Zeilen code kannst du dir in nem Jupyternotebook nen 3D-Plot anzeigen mit ner SVM die "Mathematik" von nicht-mathe trennt, mit gehighlighted ob "Informatik A" und "Informatik B" beeinander sind
 \end{description}
+
+\includeMD{pandoc_generated_latex/section_architecture_new}

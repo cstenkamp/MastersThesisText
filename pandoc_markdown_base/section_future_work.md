@@ -12,3 +12,12 @@
     * Fine-Tuning von Ager2018
     * Iteratively-finding-facets from Alshaik2019 (19!)
     * [I should have a table or a yaml earlier in the text, just mention all the not-implemented stuff from that]
+
+
+* Make interpretable classifiers with decision trees ("Was für einen Kurs willst du?" "Viel Mathe / Wenig Mathe" -> "Viel LinA / Wenig LinA" -> ...) (Figure 3 of Schokhard)
+    * Oder halt sowas wie den Movie Tuner 
+* Taxonomie erstellen
+    * Wie DDCs (->daran lässt sich auch immernoch super evaluieren ;)
+    * wie's ACCM CCS für Paper ([https://www.acm.org/publications/class-2012](https://www.acm.org/publications/class-2012))
+        * damit kann's auch Paper recommenden ;)
+* Conceptual Space an Kursen erstellen (die dann bspw die komplette Domäne der Mathematik erschließen ;)

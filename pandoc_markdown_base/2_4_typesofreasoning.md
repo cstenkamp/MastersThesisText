@@ -1,3 +1,8 @@
+
+Mostly from \cite{Derrac2015}, but tbh not that important for me. However a short paragraph about reasoning-based classifiers and the respective intutitive explanations for known classifiers may be interesting (think 1-NN is "Y is of the same class as X because X closest to Y", but also more complex ones.)
+
+TODO: \todoparagraph{explain here why they have the requirement that the resulting semantic space is euclidian!!}
+
 * Similiarity based reasoning ("If A enjoyed X and Y is similar to X, A will likely also enjoy X")
     * what Amazon does
     * easy to train (similiarity degrees can be obtained from stuff like \gls{word2vec} thank's to the distributional hypothesis)
