@@ -130,6 +130,15 @@
 }
 
 
+\newglossaryentry{tsne}{
+    type=defs,
+    name=t-SNE,
+    description={
+        t-SNE is a dimensionality-reduction algorithm often used to visualize high-dimensional data in two or three dimensions. It converts distances between data point to probabilities and minimizes the pairwise Kullback-Leibler-divergence between the joint probabilities of the original data and their respective embeddings. % https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html
+        }
+}
+
+
 
 % =========================================================
 % CUSTOM TERMS
@@ -138,7 +147,7 @@
     type=customs,
     name=quantificiation,
     description={
-        \hspace{1.2em} In the scope of this thesis, the term \textbf{quantification} refers to the relative score for an n-gram in a document, depending on it's frequency as well as other frequencies, as calculated by one of the \nameref{sec:word_count_techniques}, also called \textbf{quantification measures}. %TODO: to lower-case see https://tex.stackexchange.com/questions/445404/capitalization-variants-of-nameref 
+        \hspace{1.2em} In the scope of this thesis, the term \textbf{quantification} refers to the relative score for an n-gram in a document, depending on its frequency as well as other frequencies, as calculated by one of the \nameref{sec:word_count_techniques}, also called \textbf{quantification measures}. %TODO: to lower-case see https://tex.stackexchange.com/questions/445404/capitalization-variants-of-nameref 
         }
 }
 

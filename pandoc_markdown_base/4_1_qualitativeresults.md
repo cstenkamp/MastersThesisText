@@ -1,4 +1,18 @@
 
+You could do the shallow-decisiontrees-thingy for other attributes of the dataset than I currently have:
+- Attributes für eine Taxonomie von Kursen
+    - "Schwierigkeit" -> Durchschnittsnoten?
+    - "Komplexität" -> Avg. Semester der Teilnehmer?
+    - "Offenheit" -> #Students eines anderen Fachbereichs
+    - Aufwand -> #ECTS die der Kurs gibt
+    - Vorraussetzungen -> stehen in StudIP, sonst profile der studierenden die ihn belegen
+- See also [https://studip-etherpad.uni-osnabrueck.de:9001/p/SIDDATA_AI_Categories](https://studip-etherpad.uni-osnabrueck.de:9001/p/SIDDATA_AI_Categories)
+IntroAI für dieses Jahr ist in Stud.IP nen komplett anderer Kurs als für letztes jahr --> Tobias hat was gebaut dass die abgleicht! Und er will k-anonymisierung machen. Das vergrößert die Daten sodass es für jedes Datum mindestens k (say 10) Studierende gibt für die etwas zutrifft. Da muss man Daten wegwerfen.
+Mit meinen Attributen gibt's einige Probleme. Noten gibt's nicht, "allerschweste Datenschutzbedenken". Was studiert wer und in welchem Semester haben wir nur für den Zeitpunkt der Abfrage -> in kombi mit der k-anonymisierung wirds da schwer zu sagen in welchem semester leute was belegt haben
+
+
+
+
 Qualitative Analysis in this case means "looking at stuff". Such a qualitative analysis is always to be taken with a grain of salt, because it is very prone to cherry-picking (both on purpose and not on purpose, the stuff you're looking at just doesn't need to be representative!). However it does help a lot and provides a lot of insights (and often helped me in the debugging process).
 What can you look at for such a qualitative analysis?
 \begin{itemize}
@@ -36,3 +50,39 @@ In figure \ref{fig:3dplot_mathe_infoab} we see a 3D-Embedding for courses, split
 \begin{itemize}
 	\item In 3D ists immer ne Kugel, und ich würde behaupten in höheren Dimensionen ist es nicht extrem viel besser. dadrin ne SVM zu machen bringt echt wenig bis gar nix (Ich hab ja sogar Plots die zeigen dass die Movies viel besser clustern - TODO: die einbringen)
 \end{itemize}
+
+
+
+
+Look how good "reclassify" algo is!!
+
+Highest-ranking descriptions per dimension:
+	------------------------ reclassify --- main ------------
+	isawyoufirst           : beach          beach
+	workspace              : office
+	nutrition              : restaurant     deli
+	goalie                 : stadium		football stadium
+	pumper                 : building 		county
+	starwoodhotels         : hotel room 	pool
+	interstate10           : highway 		mongolian restaurant
+	urban                  : interior 		movie theater
+	tuolumne               : creek 			national forest
+	cabs                   : downtown
+	investment             : school 		stock exchange
+	stripmall              : downtown 		department store
+	michiganstateuniversity: school 		campus
+	ews                    : railroad 		train
+	anchored               : boat 			pier
+	a10                    : airport
+	wc2                    : restaurant 	square
+	airbase                : airport 		airbase
+	joshuatreenationalpark : canyon 
+	clinker                : building
+-> WE SEE HERE that using the respectively best-fitting DOCUMENT (without LSI or anything, just the one with the highest ranking!)  is often even the MUCH BETTER direction!!!
+
+
+
+
+
+* Neben den Clustern die ich mir anzeigen lassen kann und qualitativ analysieren kann, kann ich mir auch die distances to the origins of the respective dimensions (induced by the clusters), what induces the respective rankings! (see DESC15 p.24u, proj2 of load_semanticspaces.load_projections) anzeigen lassen - da kann ich sagen "term xyz ist bei "nature" am höchsten".
+	* FRAGE: sind dafür ÜBERHAUPT IRGENDWIE die cluster relevant??! Ich meine es wird nur die distance zur hyperplane vom main-term considered, so why the hell even cluster?!

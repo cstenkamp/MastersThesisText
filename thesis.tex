@@ -10,8 +10,6 @@
 	\PassOptionsToPackage{colorlinks=true}{hyperref}
 \fi
 
-\newcommand*{\NoMarkdown}{}
-
 \documentclass[11pt,
   paper=a4, 
 %   twoside,
@@ -840,8 +838,6 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 %	THESIS CONTENT - MAIN PART
 %----------------------------------------------------------------------------------------
 
-\todoparagraph{TODO: jedes mall wenn ich document-frequency sage, meine ich nicht eher term-frequncy???!!!}
-	
 
 % INTRO
 	% Broad - "Initialkontextualisierung" - warum mach ich das, aus was für ner domain kommen die daten, was will ich damit machen (use rrecommendation, ich bau AI part, ..)
@@ -849,10 +845,17 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 
 % BACKGROUND
 	% (zuspitzung von generell auf spezifisch, sowohl technisch (conceputalspaces -> was macht das paper konkret), (und bei dem anderen teil was sind educational resources, was sind die schwierigkeiten dabei, warum möchte man überhaupt empfehlen))
+	% - Anwendungsfall (->e-learning, recommenden von bildungsressourcen, ...) -> nicht-technisch, aber nötig zum verstehen wo passiert das
+    % - was sind conceputal spaces
+    % - Wie funktioniert die Idee des data-driven generieren
+	% bei 60 Seiten sollten 15 Seiten theoretical Background sein
+	% Was zu viel ist lieber als "Munition für Discussion" (wenn meine ergebnisse anders sind als die von dem paper kann ich halt erst dann sagen "das widerspricht demunddem hier, die proposen dass und ich kann es (nicht) confirmen".)
 	\include{Chapters/02-background.tex}
 
 %METHODS
 	%(Algorithmus & Datensatz)
+    % - Was für Schritte hat der Algo
+    % - Empirie, auch specifics über den Datensatz
 	\include{Chapters/03-methods.tex}
 
 %RESULTS

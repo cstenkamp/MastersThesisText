@@ -11,3 +11,14 @@
 
 % TODO: Have to write here:
 % * that in a CS the axes correspond to human concepts, "concepts" meaning attributes and what-was-the-other-again, according to CS lingo corresponding to nouns and adjectives yadda yadda, darauf referenzier ich mich im Text
+
+
+
+* was für teile der CS definition wir behalten und was wir droppen
+    * we are only dealing with one domain (movies, placetypes, courses, ..) at a time 
+        * this is like CS, but what's missing is a sort of categorization at first.. however that one is never talked about anyway
+    * supposed to be regions, but we use vectors.  [TYPES are, which are MADE UP FROM TOKENS]
+        * MUCH more computationally efficient
+        * the domain is different than the theoretical idea of Gärdenfors - especially stuff like movies and courses, what ARE they? are they type or token? Rather both at once - the region of the course XYZ is composed of only one token, at least until we take into account a much bigger dataset that would allow us to do reasoning on "the set of all introductory computer science courses" or something. (For placetypes however we ARE dealing with types!) 
+    * we ARE dealing with a mostly metric space	
+        * ..however we use cosine distance instead of euclidian

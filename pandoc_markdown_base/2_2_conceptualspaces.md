@@ -1,3 +1,91 @@
+\cite{Derrac2015}: "Conceptual spaces \cite{Gardenfors2000} are metric spaces which are used to encode the meaning of natural language concepts and properties." %In most applications, conceptual spaces are assumed to be Euclidean. They are typically high-dimensional, with each dimension corresponding to a primitive cognitive feature. Specific entities then correspond to points in the conceptual space, while natural con- cepts and properties are posited to correspond to convex regions
+
+% Intro of CS book: Within cognitive science, two approaches currently dominate the problem of modeling representations. The symbolic approach views cognition as computation involving symbolic manipulation. Connectionism, a special case of associationism, models associations using artificial neuron networks. Peter Gärdenfors offers his theory of conceptual representations as a bridge between the symbolic and connectionist approaches.
+
+%TODO: mention
+% * relation to prototype theory
+
+% \cite{Derrac2015}: "Most approaches represent natural language terms as points or vectors. One notable exception is the work of G¨ardenfors on conceptual spaces [9], where properties and concepts are represented using convex regions, while specific instances of a concept are represented as points." => BUT MENTION THAT TYPES != TOKENS!!
+% more DESC15: ...where properties and concepts are represented using convex regions, while specific instances of a concept are represented as points. This has a num- ber of important advantages. First, it allows us to distinguish borderline instances of a concept from more prototypical instances, by taking the view that instances which are closer to the center of a region are more typical [9]. A second advantage is that using regions makes it clear whether one concept subsumes another (e.g. every pizzeria is a restaurant), whether two concepts are mutually exclusive (e.g. no restaurant can also be a beach), or whether they are overlapping (e.g. some bars serve wine but not all, some establishments which serve wine are bars but not all). Region based models have been shown to outperform point based models in some natural language processing tasks [41] On the other hand, using regions is computationally more demanding, and learning accurate region boundaries for a given concept would require a prohibitive amount of data. In this paper, we essentially view point based representations as coarse-grained approximations of conceptual spaces, where points correspond to fine-grained categories instead of specific instances, while convex regions are used to model higher-level categories
+
+
+
+Conceptual spaces (Gärdenfors, blabla) want to stand in between subsymbolic processing and symbolic processing: Like in subsymbolism, concepts are represented in high-dimensional spaces, but because the dimensions of these spaces are not arbitrary but human-interpretable, it allows for symbolistic high-level reasoning.
+
+So, in conceptual spaces, concepts are represented as convex regions in high-dimensional, human interpretable spaces. For example, the concept of "apple" is a region that in the dimension "color" is somewhere between red and green, in the dimension "form" at roughly round, in the dimension "taste" somwhere between sweet and sour, etc. 
+Every instance of an apple is thus a vector that lies inside the high-dimensional region of the concept. This allows for high-level reasoning, such as the question "does any Instance of concept X fit into my bag?" -> If the "size" dimension of the whole region is smaller than the size of my bag, it will.
+
+Conceptual spaces sounds similar to \gls{word2vec} or other word embedding approaches, however there are a few important distinctions - first, the domain of a conceptual space does not include all kinds of words or concepts, but only concepts of a certain domain (like movies or university courses). 
+Second, conceptual spaces are convex regions, not mere vectors (which allows for easy extraction of is-a and part-of relations or prototypical examples vs edge examples, but makes the generation computationally vastly more expensive). And, most importantly, while the geometry of \gls{word2vec} is roughly euclidian (otherwise the famous vec(king)-vec(man)+vec(woman)==vec(queen) wouldn't work), the dimensions are not interpretable but arbitrarily depend on the random initial setup, so the concepts king and queen differ not only in a single "gender" dimension [..and also its not really euclidian, is it?! sonst wäre die betweeness doch nicht so special, oder?].
+
+Now the standard problem with conceptual spaces is that they would have to be manually generated, which of courses is a lot of work, which is where the work of [Schokeart et al] comes in - to generate them in a data-driven fashion.
+For that, the authors look at three different domains: movies, wines and places. For each of these domains, they collected many samples (like movies) together with descriptions from places where people can leave them (like reviews from IMDB). A representation of a movie is then generated from the bag-of-words of the descriptions of the individual movies, leading to a very high-dimensional, very sparse representation for all movies. 
+To make the representations less sparse and more meaningful, the words in the BOW are subsequently PPMI-weighted, which weights words that appear often in the description of a particular movie while being infrequent in the corpus overall higher while setting the representation of stopwords to almost zero. 
+This PPMI-weighted BOW is however not yet a euclidian space yet, which is why the authors subsequently use multidimensional scaling (MDS). MDS is a diminsionality reduction technique that attempts to create a euclidian space of lower dimensionality than the original one in which the individual distances of the items are preserved as well as possible. 
+
+With such a space, the concepts of betweeness already makes sense, but so far, the dimensions are not interpretable. So how does one automatically find such directions? In the case of movies, good dimensions may be "scariness", "funniness", "epicness", "family-friendlyness" etc. 
+To find these dimensions, the authors look for these words (as well as similar words thanks to clustering) in the reviews. Then the movies are grouped into those that contain the words from the cluster often enough vs those that don't. A support-vector-machine subsquently finds a hyperplane that best divides the two groups (eg. scary and non-scary), and the orthogonal of that hyperplane is used as one axis of the new coordinate basis. 
+
+% * Dass der tatsächliche Anwendungsbereich von CS noch sehr begrenzt ist - RaZb20 mention "they are commonly used in perceptual domains, e.g. for music cognition [Forth et al., 2010; Chella, 2015], where quality dimensions are carefully chosen to maximize how well the resulting conceptual spaces can predict human similarity judgements"
+% * Dass Word Embeddings ja relativ nah an CS sind - For ex- ample, a well-known property of word embeddings is that many syntactic and semantic relationships can be captured in terms of word vector differences [Mikolov et al., 2013].
+% TODO: Ist word2vec schon nen euclidian space? Why/Why not?
+
+
+
+
+
+
+
+
+
+
+=======================================================================================================================
+========================================================= ??? =========================================================
+=======================================================================================================================
+
+
+
+* Knowledge representation method:
+	* Representational format with rich semantics
+* Originally created by Peter Gärdenfors \cite{Gardenfors2000a}
+	* Created as better tool for semantic web (keep in mind, it's 2000, where that was all the rage)
+	* Use case: Should be a representational level below the symbolic level (...making it superflous, as the concept hierachies are generated automatically - the validity of "a robin is a bird" is encoded because it is a subregion ( - the semantic info that OWL and the like capture becomes redundant))
+	* Claims to have richer semantic structure than RDS/OWL/the entire idea of ontologies
+		* Why? Because information processing is not, as historically thought, pure deductive reasoning (→ syllogisms) - no strict is-a relations but also concepts like similiarity, which the original semantic web languages couldn't represent
+		* Other problems with ontologies and reasoning systems are that they assume explicit, unambiguous, universally agreed-upon truths which are explicitly described, which he argues is not how the world is.
+	* Benefits:
+		* once you have created the structure, the following emerge automatically: 
+			* concept hierachies/taxonomies (subregions)
+			* identity/equality of concepts (same region)
+			* identity/equality of names (same point)
+			* characteristics of properties (transitivity, symmetry) (from intrinsic features of dimensions (time is linear because the dimension is linear)). Also constraints like "nothing is both red and green" (disjoint regions)
+		* CS and with it ontologies "automatically" (BIG question mark) arise from prototypes + metric domain + voronoi tesselation
+		* no need for a symbolic inference engine anymore [WELL BUT this is computationally easily MORE demanding [..SOURCE!!]]
+		* Encodes more than just taxonomies of concepts (...which means more can be used for inference/reasoning): similiarity (If the wine I want to have is not avaiable, with the aid of the similarity information provided by the domain structures I can find similar ones - but since similarity is cnotext-dependant, the system can ask me for what dimensions of the wine are important to me to judge similarity!)
+		* Metaphors and metonymies are understood by the framework (-> das a fortiori reasoning, wakeboard & snowboard ding, das hat doch auch DESC15 drin!!)
+* Problems:
+	* Question of how to identify and describe domains not remotely answered
+	* Reasioning with regions is computationally extremely demanding
+
+* Principles:
+	* informtation organized in spatial structures with dimensions (color, size, shape, ...)
+		* dimensions have topological or geometric structures
+		* dimensions sorted into domains (h+s+v = color)
+		* dimensions are human-interpretable (measurable qualities)
+	* distances ^= dissimiliartiy
+	* properties: *A property is a convex region in some domain*
+	* concepts: *A concept is represented as a set of convex regions in a number of domains together with a prominence assignment to the domains and information about how the regions in different domains are correlated.* 
+
+
+
+
+
+
+=======================================================================================================================
+========================================================= ??? =========================================================
+=======================================================================================================================
+
+
 
 % Genereller Kram über vector space models (siehe Kurs, Slides 2, von Nico)
 

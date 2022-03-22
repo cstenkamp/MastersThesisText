@@ -55,7 +55,7 @@ The considered algorithm first embeds the collection of texts into a vector spac
   and smoothing the space using dimensionality reduction, before calculating the similarities on the resulting embedding. While the considered algorithm requires more steps before calculating the similarities to allow for domain-specific and more complex forms of reasoning, it also adheres to this structure, as will be shown in section~\nameparanref{sec:generate_vectorspaces}.
 
 
-\includeMD{pandoc_generated_latex/3_1_algorithms}
+\includeMD{pandoc_generated_latex/3_1_algorithm}
 
 The core idea of the algorithm is to (unsupervised, data-driven) find a a set of features which can be modelled as directions for a vector-space representation of the respetive entities. For that, the steps are:
 
@@ -115,7 +115,7 @@ The following components are developed for the preprocessing, every one of which
 	\itemtext{such that \glspl{ngram} across sentences are not considered}
 	\item Lower-case all words
 	\item Remove stop-words
-	\itemtext{\todoparagraph{grains of salt for stopwords! Alshaikh2019 just removed too-high-docfreq!}}
+	\itemtext{\todoparagraph{grains of salt for stopwords! Alshaikh2019 just removed too-high-termfreq!}}
 	\item Tokenize words
 	\item \Gls{lemma}tize words
 	\itemtext{\todoparagraph{TODO: Write about details  and HanTa for german etc!}}
@@ -142,8 +142,8 @@ The final result of the algorithm is a metric space in which the individual dime
 
 In \gencite{Derrac2015} original paper, which phrases are extracted as algorithm depends on the dataset: For placetypes-dataset, all sufficiently frequent\footnote{\label{fnote:cand_thresholds}The respective thresholds are listed in \autoref{tab:all_datasets} as ``candidate word threshold''.} 1-grams\footnote{Note that in the case of the place-types dataset, a 1-gram corresponds to all merged words of a tag.} were considered. For the other two datasets, they applied a \gls{pos}-tagger that extracted all sufficiently frequent\footnoteref{fnote:cand_thresholds} \textbf{adjectives, nouns, adjective phrases} and \textbf{noun phrases}, assuming that adjectives would correspond to gradual properties (\eg \textit{violent, funny}) and nouns to topics (\eg the \textit{genre}) \cite[Sec. 4.2.1]{Derrac2015}.
 
-% Their method depended on the dataset - as their placetypes-dataset was just a collection of tags and the number of tags with doc-freq >= 2 corresponded to their desired number of candidates anyway (around 22k), they just took all of these as candidates. For their movie-reviews-dataset, they considered all nouns, adjectives, nounphrases and adjective-phrases as detected by a POS-tagger. Doing something similar in the scope of this thesis led to suboptimal results, which is why alternative methods were developed
-For this step, the implementation of this thesis differs from the original algorithm, as both taking all words as candidate and running a \gls{pos}-tagger led to suboptimal results in previous experiments\footnote{To ensure comparability, in the case of the placetypes-dataset the original method of taking all words with a document-frequency of at least 50 was used.}. 
+% Their method depended on the dataset - as their placetypes-dataset was just a collection of tags and the number of tags with term-freq >= XYZ (docfreq>2?! hä?) corresponded to their desired number of candidates anyway (around 22k), they just took all of these as candidates. For their movie-reviews-dataset, they considered all nouns, adjectives, nounphrases and adjective-phrases as detected by a POS-tagger. Doing something similar in the scope of this thesis led to suboptimal results, which is why alternative methods were developed
+For this step, the implementation of this thesis differs from the original algorithm, as both taking all words as candidate and running a \gls{pos}-tagger led to suboptimal results in previous experiments\footnote{To ensure comparability, in the case of the placetypes-dataset the original method of taking all words with a term-frequency of at least 50 was used.}. 
 % I would however argue that the difference here doesn't make a relevant difference (TODO: argue that lol)
 % Also, while in the paper they claim to use n-grams as candidates, the dataset they publicly published does not contain n-grams (which is why I didn't use that one).
 
@@ -157,7 +157,7 @@ In the codebase the candidate-extraction is split into four consequently excecut
 
 As visualized in \autoref{fig:dependency_graph}, these substeps only depend on the preprocessed descriptions, which means they can be run in parallel to the creation of the embedding\footnote{\todoparagraph{Another good reason for cluster exceution!}}.
 
-% This can be done either based on the frequency (meaning all terms with a minimal document-frequency), based on some notion of *importance* (based on scores like tf-idf or ppmi), or by more complex means of figuring out *important* keywords and keyphrases. An example of the latter would be KeyBERT
+% This can be done either based on the frequency (meaning all terms with a minimal term-frequency), based on some notion of *importance* (based on scores like tf-idf or ppmi), or by more complex means of figuring out *important* keywords and keyphrases. An example of the latter would be KeyBERT
 Three main techniques are implemented to extract candidates from the text-corpus: 
 \begin{description}
 	\item[By frequency:] consider all phrases that exceed a specified term-frequency (like \cite{Derrac2015}).
@@ -180,10 +180,6 @@ In their algorithm, the \gls{dissimmat} is created using the \emph{normalized an
 
 % TODO: komplettes 4 von \cite{Turney2010}, außerdem der ganze bums von Deerwester!
 
-
-
-
-\includeMD{pandoc_generated_latex/section_algorithm}
 
 
 \includeMD{pandoc_generated_latex/3_2_algorithm_latersteps}

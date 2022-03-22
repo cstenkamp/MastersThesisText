@@ -1,5 +1,5 @@
 
-
+<!--
 % \begin{figure}[h!]
 % 	\begin{center}
 % 	  \includegraphics[width=0.9\textwidth]{3dplot_hyperplane_and_orthogonal}
@@ -109,3 +109,6 @@
 % An analysis of \cite{Carmel2009} showed that a statistical method to extract features from clustered text corpora identified the labels of human annotators as one of the top five most important terms in only 15\% of cases, implying ``that human labels are not necessarily significant from a statistical perspective" \cite[139]{Carmel2009}
 % %TODO: die eigentliche Methode (JSD) mehr erklären!!
 % %(the JSD method for feature selection identifies human labels as “significant” (appearing in the top five most important terms) for only 15% of the categories. This result implies that human labels are not necessarily significant from a statistical perspective.z)
+
+
+-->

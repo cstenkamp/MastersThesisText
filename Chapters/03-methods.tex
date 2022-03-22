@@ -23,6 +23,7 @@ The main considered dataset of this thesis unfortunately does not share this pro
 \subsection{SIDDATA-courses}
 
 % Generelle Analyse Datensatz mit Plots (Längenverteilung der Descriptions, ...)
+% ich würde SIDDATA immer in caps schreiben wenn du das Projekt meinst, wenn du die software meinst kannst du die ja auch klein introducen bzw die auch mit digital study assistant (DSA) abkürzen
 
 \begin{table}[H]
 	\resizebox{\textwidth}{!}{%
@@ -84,6 +85,8 @@ The main considered dataset of this thesis unfortunately does not share this pro
 	\label{fig:sid_wordsperdesc}
 \end{figure}
 
+\includeMD{pandoc_generated_latex/3_0_1_datasets_siddata}
+
 
 \subsection{Place-Types}
 
@@ -92,8 +95,12 @@ it does make sense to compare the results of the given pipeline on that dataset 
 
 There are two datasets used by all three authors: place-types and movie-reviews (see \autoref{tab:all_datasets}). Both of the datasets are available in preprocessed form\footnote{\url{https://www.cs.cf.ac.uk/semanticspaces/}} \cite{Derrac2015}. It was originally planned to use both of the datasets as basis for comparison, however unfortunately it is impossible to recover the form of it as originally used by \textcite{Derrac2015}: The original texts of the reviews are not available, but only their respective bag-of-1-grams (\glsentrylong{bow}) - even though the authors explicitly state that they worked with variable-length-n-grams. Even though the provided list of \glspl{cand} contains \glspl{ngram}, it is impossible to recover which of the \glspl{entity} contained it. While the algorithm can still be run only for the 1-grams, the results are not comparable with the original ones anymore\footnote{As all of the \mainalgos share an author, it is assumed that \cite{Alshaikh2020,Ager2018} had access to the full version of the dataset and did not share the stated problem.}.
 
+\includeMD{pandoc_generated_latex/3_0_2_datasets_placetypes}
 
 \subsection{Other Datasets}
+
+
+\includeMD{pandoc_generated_latex/3_0_3_datasets_other}
 
 \section{Algorithm}
 
@@ -181,8 +188,6 @@ and the 64 allocated \emph{parallel environments} (slots) are maximally utilized
 	\lstdefaultstyle
 \end{widepage}
 
-\includeMD{pandoc_generated_latex/chapter_methods_section_architecture}
-
 \subsection{Conclusion}
 
 It was originally unexpected, but implementing an appropriate architecture for the present codebase has been a major focus of work for this thesis, and the result fulfills all of the desired design criteria: 
@@ -199,4 +204,11 @@ It was originally unexpected, but implementing an appropriate architecture for t
 	% mit 2 Zeilen code kannst du dir in nem Jupyternotebook nen 3D-Plot anzeigen mit ner SVM die "Mathematik" von nicht-mathe trennt, mit gehighlighted ob "Informatik A" und "Informatik B" beeinander sind
 \end{description}
 
-\includeMD{pandoc_generated_latex/section_architecture_new}
+\includeMD{pandoc_generated_latex/3_3_architecture}
+
+
+
+
+\section{Workflow}
+
+\includeMD{pandoc_generated_latex/3_4_workflow}

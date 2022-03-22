@@ -6,8 +6,8 @@
 % - Bei Kursen wäre ein Beispiel dafür “A1” und “A2”. Hab ich random in den Daten gesehen, klingt plausibel dass die ein Cluster sind, weil beide eben oft in Sprachkursen vorkommen. They aren’t.
 % - Dann kann ich verschiedene Thresholds haben für minimale Ähnlichkeit. Wenn der zu klein ist, kommt nix in ein Cluster, wenn der zu groß ist, kommt “A1” in ein cluster mit “Course” and everything is over.
 % - Dazwischen MÜSSTE ich erstmal mal noch viel härter die Kandidaten filtern, mega viel davon, wie das Wort “course”, ist crap. Warum? Es kommt über die Bank in komplett verschiedenen random Kursen vor, und zwar in like half of them. Wenn A1 in nem cluster mit course ist hab ich keinen information gain, weil dann ist das nicht das cluster der Sprachkurse sondern das von random 50% der Kurse.
-% - → Man könnte meinen man kann Wörter die oft vorkommen (high doc freq) keine Keywords mehr werden. ABER es gibt auch wörter die oft vorkommen aber doch inhalt haben - das wort “science” kommt in coxi öfter vor als in kosmetologie oder Sportkursen. Oder das wort math, genau das will ich ja als dimension haben, kommt in supervielen kursen vor (SOLLTE MAN MEINEN, aber mein kack code erkennt es nicht als Keyword: ``ctx.obj["filtered_dcm"].doc_freq("computer", rel=True)` GOD WTF=
-% - → Also naja, doc-freq ists halt auch nciht. Und ich starre drauf, seh’s nicht funktionieren, weiß nicht was ich machen soll.
+% - → Man könnte meinen man kann Wörter die oft vorkommen (high term freq) keine Keywords mehr werden. ABER es gibt auch wörter die oft vorkommen aber doch inhalt haben - das wort “science” kommt in coxi öfter vor als in kosmetologie oder Sportkursen. Oder das wort math, genau das will ich ja als dimension haben, kommt in supervielen kursen vor (SOLLTE MAN MEINEN, aber mein kack code erkennt es nicht als Keyword: ``ctx.obj["filtered_dcm"].doc_freq("computer", rel=True)` GOD WTF=
+% - → Also naja, term-freq ists halt auch nciht. Und ich starre drauf, seh’s nicht funktionieren, weiß nicht was ich machen soll.
 
 % ---
 
@@ -43,4 +43,7 @@
 
 
 * DESC15 tests like this: Section 6.1: Evaluate whether the derived relations are sufficiently accurate for classification, and 6.2 is then comparison with crowdsourcing experiments (more subjective aspects, the question “are the relations useful explanations?”)
+
+
+
 
