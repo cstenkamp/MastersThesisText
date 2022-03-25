@@ -12,6 +12,8 @@ To write:
 	Dass mein Datensatz kleiin ist! Bei keinem sonderlichen min-word-per-desc threshold hab ich halt 7588 samples, bei 50 schon nur noch 4123, das ist wirklich little
 	Dass auch die Descriptions echt kurz sind! Ich hab rund 8k samples, um das selbe samples-to-threshold verhältnis zu haben wie DESC15 wäre rechnerisch ein wert von 2 bis 25 sinnvoll (wobei man beachten muss das 2 schon richtig kacke ist weil dann die SVM 2 vs 8000 klassifizieren muss and that will never work -> 25 ist minimum), ABER wenn ich dann 25 nehme hab ich nur 2.4k candidates statt the 22k DESC15 aimed at, which also sucks!! --> CONCLUSION: Datensatz scheint zu klein.
 
+* Woher die DDC-Klassifizierung kommt -> SidBERT citen
+
 ======================
 
 ich würde SIDDATA immer in caps schreiben wenn du das Projekt meinst, wenn du die software meinst kannst du die ja auch klein introducen bzw die auch mit digital study assistant (DSA) abkürzen
@@ -128,3 +130,11 @@ Maximum occurrences:
 `term_doc_matrix.index[np.unravel_index(term_doc_matrix.to_numpy().argmax(), term_doc_matrix.to_numpy().shape)[0]], term_doc_matrix.columns[np.unravel_index(term_doc_matrix.to_numpy().argmax(), term_doc_matrix.to_numpy().shape)[1]]`
 
 → 'Information Systems (Wirtschaftsinformatik) M III: IT-Risikomanagement (Übung)' und 'risk'
+
+
+
+* Brauch ich mehr/bessere Daten? Wenn ich nur die 1000 mit den längsten Beschreibungen behalten würde und dann 10 solcher subsets hätte wären halt die Fälle wie "Tutoren sind: Susi Sorglos Willi Wacker" etc raus
+
+* IntroAI für dieses Jahr ist in Stud.IP nen komplett anderer Kurs als für letztes jahr 
+		* Tobias hat was gebaut dass die abgleicht! Und er will k-anonymisierung machen. Das vergrößert die Daten sodass es für jedes Datum mindestens k (say 10) Studierende gibt für die etwas zutrifft. Da muss man Daten wegwerfen.
+		* Mit meinen Attributen gibt's einige Probleme. Noten gibt's nicht, "allerschweste Datenschutzbedenken". Was studiert wer und in welchem Semester haben wir nur für den Zeitpunkt der Abfrage -> in kombi mit der k-anonymisierung wirds da schwer zu sagen in welchem semester leute was belegt haben

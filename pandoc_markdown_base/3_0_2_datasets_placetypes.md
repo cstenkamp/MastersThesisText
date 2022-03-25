@@ -1,18 +1,15 @@
 DATASETS:PLACETYPES SECTION PRE-TEXT
 
-\begin{itemize}
-
-	\item Didn't do the openCYC taxonomy bc they say that they don't use one level of the taxonomy consistently but also never explain where they go to which level
-\end{itemize}
+* Didn't do the openCYC taxonomy bc they say that they don't use one level of the taxonomy consistently but also never explain where they go to which level
+* The fact that this dataset is created precisely to be good for the respective algorithm, in contrast to mine!
 
 
 So, infos from \cite{Derrac2015}:
-\begin{itemize}
-	\item GeoNames has 667 place-types in 9 categories (403 used)
-	\item Foursquare has 435 place-types in 9 top-level categories (391 used))
-	\item content: tags of Flickr photos. Photos assumed to be of a type if one of the tags is the name of that type (so they queried for photos with that tag), and then all other tags of that picture make up the BoW.
-	\item 22816139 photos, types with less than 1000 photos removed.
-\end{itemize}
+* GeoNames has 667 place-types in 9 categories (403 used)
+* Foursquare has 435 place-types in 9 top-level categories (391 used))
+* content: tags of Flickr photos. Photos assumed to be of a type if one of the tags is the name of that type (so they queried for photos with that tag), and then all other tags of that picture make up the BoW.
+* 22816139 photos, types with less than 1000 photos removed.
+
 
 
 Also tried the Plactypes-Dataset used by all main-paper-authors. When doing so I noticed that there are definitely duplicates (which are consistently recognized as closest-terms in embedding):

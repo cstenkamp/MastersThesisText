@@ -22,6 +22,8 @@ The main considered dataset of this thesis unfortunately does not share this pro
 
 \subsection{SIDDATA-courses}
 
+\label{sec:dataset_siddata}
+
 % Generelle Analyse Datensatz mit Plots (Längenverteilung der Descriptions, ...)
 % ich würde SIDDATA immer in caps schreiben wenn du das Projekt meinst, wenn du die software meinst kannst du die ja auch klein introducen bzw die auch mit digital study assistant (DSA) abkürzen
 
@@ -89,6 +91,7 @@ The main considered dataset of this thesis unfortunately does not share this pro
 
 
 \subsection{Place-Types}
+\label{sec:dataset_placetypes}
 
 Because the SIDDATA-dataset differs in many regards from the datasets used in \mainalgos, %AS stated above (in siddta-section, in the first part of datasecs-section, in workflow-section, ...)
 it does make sense to compare the results of the given pipeline on that dataset to the results of \mainalgos. To be able to compare the results achieved here with theirs, one of the datasets used by all of their papers was considered as well. Comparing on a original dataset also has the benefit of allowing to sanity-check if the implenetation is correct. If the performance achieved on this dataset is comparable to the performances of \mainalgos whereas the peformance for the SIDDATA-dataset is considerably worse, there is strong indication that the quality or quantity of the dataset is worse, suboptimal results on this one however would give indication that suboptimal results are the result of a faulty implementation.
@@ -207,8 +210,8 @@ It was originally unexpected, but implementing an appropriate architecture for t
 \includeMD{pandoc_generated_latex/3_3_architecture}
 
 
-
-
 \section{Workflow}
+\label{sec:workflow}
+
 
 \includeMD{pandoc_generated_latex/3_4_workflow}

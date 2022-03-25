@@ -1,11 +1,18 @@
-\begin{table}
+\newcommand{\mfauhcsdT}{\specialcell[t]{\tabitem \textbf{Sentence-} \\ \textbf{~~~wise merge} \\ \tabitem \textbf{add titles} \\ \tabitem \textbf{add subtitles} \\ \tabitem \textbf{rm HTML-tags} \\ \tabitem \textbf{lower-case} \\ \tabitem \textbf{rm stopwords} \\ \tabitem \textbf{rm diacritics} \\ \tabitem \textbf{use SK-Learn} }}
+
+
+
+\newcommand{\mfauhtcsldp}{\specialcell[t]{\tabitem \textbf{Sentence-} \\ \textbf{~~~wise merge} \\ \tabitem \textbf{add titles} \\ \tabitem \textbf{add subtitles} \\ \tabitem \textbf{rm HTML-tags} \\ \tabitem \textbf{Sentence-} \\ \textbf{~~~tokenization} \\ \tabitem \textbf{lower-case} \\ \tabitem \textbf{rm stopwords} \\ \tabitem \textbf{Lemmatize} \\ \tabitem \textbf{rm diacritics} \\ \tabitem \textbf{rm punctuation} }}
+
+
+\begin{table}[h]
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{llllrrrrrrrrr}
 	\toprule
-	 &  &  &  & \rotatebox{45}{\textbf{k_r2r_d}} & \rotatebox{45}{\textbf{k_r2r_min}} & \rotatebox{45}{\textbf{k_dig}} & \rotatebox{45}{\textbf{k_r2r+_d}} & \rotatebox{45}{\textbf{k_r2r+_min}} & \rotatebox{45}{\textbf{k_r2r+_max}} & \rotatebox{45}{\textbf{k_dig+_2}} & \rotatebox{45}{\textbf{k_c2r+}} & \rotatebox{45}{\textbf{mean}} \\
-	\textbf{pp_components} & \textbf{quantification_measure} & \textbf{embed_dimensions} & \textbf{dcm_quant_measure} &  &  &  &  &  &  &  &  &  \\
+% 	 &  &  &  & \rotatebox{70}{\textbf{k_r2r_d}} & \rotatebox{70}{\textbf{k_r2r_min}} & \rotatebox{70}{\textbf{k_dig}} & \rotatebox{70}{\textbf{k_r2r+_d}} & \rotatebox{70}{\textbf{k_r2r+_min}} & \rotatebox{70}{\textbf{k_r2r+_max}} & \rotatebox{70}{\textbf{k_dig+_2}} & \rotatebox{70}{\textbf{k_c2r+}} & \rotatebox{70}{\textbf{mean}} \\
+	\textbf{Preprocessing} & \specialcell[b]{\textbf{Quanti-}\\ \textbf{fication}} & \textbf{\#Dims} & \specialcell[b]{\textbf{Doc-Term-}\\ \textbf{Matrix} \\ \textbf{Quanti-}\\ \textbf{fication}} & \rotatebox{70}{\textbf{k_r2r_d}} & \rotatebox{70}{\textbf{k_r2r_min}} & \rotatebox{70}{\textbf{k_dig}} & \rotatebox{70}{\textbf{k_r2r+_d}} & \rotatebox{70}{\textbf{k_r2r+_min}} & \rotatebox{70}{\textbf{k_r2r+_max}} & \rotatebox{70}{\textbf{k_dig+_2}} & \rotatebox{70}{\textbf{k_c2r+}} & \rotatebox{70}{\textbf{mean}} \\
 	\midrule
-	\multirow[t]{24}{*}{\textbf{mfauhcsd2}} & \multirow[t]{8}{*}{\textbf{count}} & \multirow[t]{2}{*}{\textbf{3}} & \textbf{ppmi} & 0 & 1 & 0 & 145 & 370 & 510 & 191 & - & 174 \\
+	\multirow[t]{24}{*}{\mfauhcsdT} & \multirow[t]{8}{*}{\textbf{count}} & \multirow[t]{2}{*}{\textbf{3}} & \textbf{ppmi} & 0 & 1 & 0 & 145 & 370 & 510 & 191 & - & 174 \\
 	 &  &  & \textbf{tfidf} & 0 & 1 & 0 & 110 & 237 & 278 & 83 & - & 101 \\
 	\cline{3-4}
 	 &  & \multirow[t]{3}{*}{\textbf{100}} & \textbf{count} & 0 & 5 & 0 & 0 & 114 & 52 & 290 & 0 & 58 \\
@@ -38,7 +45,7 @@
 	 &  &  & \textbf{ppmi} & 0 & 2 & 13 & 395 & {\cellcolor{lightgreen}} 559 & {\cellcolor{lightgreen}} 577 & 153 & - & 243 \\
 	 &  &  & \textbf{tfidf} & 0 & 2 & 0 & {\cellcolor{lightgreen}} 531 & 554 & 572 & 794 & - & {\cellcolor{lightgreen}} 350 \\
 	\cline{1-4} \cline{2-4} \cline{3-4}
-	\multirow[t]{24}{*}{\textbf{mfauhtcsldp}} & \multirow[t]{8}{*}{\textbf{count}} & \multirow[t]{2}{*}{\textbf{3}} & \textbf{ppmi} & 0 & 1 & 0 & 226 & 319 & 317 & 208 & - & 153 \\
+	\multirow[t]{24}{*}{\mfauhtcsldp} & \multirow[t]{8}{*}{\textbf{count}} & \multirow[t]{2}{*}{\textbf{3}} & \textbf{ppmi} & 0 & 1 & 0 & 226 & 319 & 317 & 208 & - & 153 \\
 	 &  &  & \textbf{tfidf} & 0 & 1 & 0 & 210 & 214 & 215 & 82 & - & 103 \\
 	\cline{3-4}
 	 &  & \multirow[t]{3}{*}{\textbf{100}} & \textbf{count} & 0 & 7 & 0 & 0 & 118 & 61 & 230 & 0 & 52 \\
@@ -73,4 +80,5 @@
 	\bottomrule
 	\end{tabular}
 	}
+	\caption{Number of Candidate-PHrases for different parameter-combinations and kappa-values \label{tab:kappa_table}}
 \end{table}

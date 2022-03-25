@@ -14,5 +14,5 @@ University of Osnabrück (UOS)
 Part-of-Speech (POS)
 Bidirectional Encoder Representations from Transformers (BERT)
 Artificial Neural Network (ANN)
-
-T-distributed Stochastic Neighbor Embedding (t-SNE)
+Machine Learning (ML)
+Digital Study Assistant (DSA)

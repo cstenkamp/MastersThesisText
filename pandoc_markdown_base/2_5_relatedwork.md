@@ -1,3 +1,5 @@
+* Ich kann hier sogar auf Johannes' SidBERT eingehen hehe
+
 % Von Software Engineering oder best practices haben die alle ncoh nichts gehört, ich arbeite mit dem guten der Paper und das hier ist die main-function...https://github.com/cstenkamp/Autoencoder-Explanations/blob/master/src/_archive/pipeline.py#L1504-L1516
 
 % 

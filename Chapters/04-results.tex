@@ -1,23 +1,97 @@
 \chapter{Results}
 
+This section will summarize the results that the described algorithm achieved on the described datasets. Before going into detail about the performance on the SIDDATA-dataset (\ref{sec:dataset_siddata}), a brief summary of the results on the placetypes-dataset (\ref{sec:dataset_placetypes}) should demonstrate if the specific implementation can achieve comparable results to \mainalgos, thus putting the other results into perspective in terms of what the algorithm can realistically achieve on dedicated high-quality datasets.
+
+\section{How to Evaluate}
+
+Due to the implemented algorithm being an \gls{unsupervised} algorithm, there is no explicit target value for each of the considered samples, making it impossible to straight-forwardly apply well-known \gls{ml} metrics such as \Gls{acc} or \gls{f1}. What this algorithm tries to achieve is a lot \textit{fuzzier} than in the realm of classification: The end-goal of it is to embed the given \glspl{entity} into a vector-space that consists of semantically meaniningful directions, so the only actual metric would be a comparison checking if the respective categorization here corresponds closely to human judgement. To do that, the best evaluation is likely a study that asks for feedback of users that see the results of a developed system\footnote{An example for such a system is the \textit{Movie Tuner} interface from \textcite{VISR12}, reprinted as \autoref{fig:movetuner}.}. \textcite{Derrac2015} performed crowdsourcing experiments on CrowdFlower\footnote{\url{http://www.crowdflower.com}}, asking users among other tasks which of several candidates could best describe the difference between two movies. They also compared their results with those of running the supervised algorithm of \cite{VISR12} on a subset of their data. Furthermore they tested if the explainable classifiers generated from this algorithm (see \autoref{sec:reasoning}) \q{help users spot incorrect classifications} \cite[48]{Derrac2015}, as well as if their algorithmic classification corresponds to human judgement\footnote{The task was set only for classification into OpenCYC and Foursquare Taxonomies of the placetypes-dataset (see column `\textbf{classification classes}' in \autoref{tab:all_datasets}).}. 
+\todoparagraph{TODO: Should I also quickly mention their results?}
+While similar studies could be done in the SIDDATA-\gls{dsa} \cite{Schurz2021} without additional costs, carrying these out is outside the scope of this thesis.
+
+This thesis relies on both qualitative analysis and quantitative anlaysis in order to quantify the algorithm's performance.\\ 
+In the \textit{qualitative analysis}, exemplary partial results of the algorithm will be showcased that should intuitively show if what the algorithm does looks \textit{realistic} from a human perspective. It should be noted that analyses of this kind are always to be taken with care, because there is no guarantee that the picked examples are actually representative and not the result of (intentional or accidental) cherry-picking.\footnote{\todoparagraph{TODO: and I'll also quickly show that DESC15 weren't always perfect as well}}\\
+To also generate unambiguous facts, a \textit{quantitative analysis} was performed as well. Due to the aforementioned lack of obvious metrics however, workarounds must be found to generate clear quantifiable performance estimates. Like \mainalgos, this thesis makes use of \textit{Shallow Decision Trees} that are trained to recover a known category of the dataset from the generated semantic directions.
+% TODO: *HOW* I evaluated is not part of the results, is it?!
+
 \includeMD{pandoc_generated_latex/4_0_results}
+
+The plots \ref{fig:scatter_mds_movies} and \ref{fig:scatter_mds_placetypes} show a 2D-representation of the MDS %TODO: link MDS anyway, if not to the glossary than to the section
+of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\footnote{\url{https://www.cs.cf.ac.uk/semanticspaces/}}. Visually comparing them to their equivalent to the SIDDATA-dataset (\autoref{fig:scatter_mds}) \todoparagraph{shows that while the movie-embeddings looks pretty clustered}, the clustering of the placetypes-dataset looks in fact a lot worse than that of the SIDDATA-dataset.
+%TODO: obviously write again. What do we see? A 2D-Version of the MDS. If we see very distinct clusters in that, we can conclude that it sounds possible that we can detect whatever-we-colored-by from this embeddings to an okay degree.
+
+\begin{table}
+	\resizebox{0.6\textwidth}{!}{%
+	\caption{This algorithm on Placetypes}
+	\begin{tabular}{llrrr}
+	\toprule
+	 & \textbf{Depth:} & \textbf{1} & \textbf{2} & \textbf{3} \\
+	\textbf{1vsRest} & \textbf{Balanced} &  &  &  \\
+	\midrule
+	\multirow[t]{2}{*}{\textbf{False}} & \textbf{False} & 0.427 & 0.474 & 0.477 \\
+	 & \textbf{True} & 0.057 & 0.107 & 0.139 \\
+	\cline{1-2}
+	\multirow[t]{2}{*}{\textbf{True}} & \textbf{False} & {\cellcolor{lightgreen}} 0.745 & {\cellcolor{lightgreen}} 0.795 & {\cellcolor{lightgreen}} 0.811 \\
+	 & \textbf{True} & 0.529 & 0.660 & 0.681 \\
+	\bottomrule
+	\end{tabular}
+	}
+\end{table}
+
 
 \section{Qualitative Analysis}
 
 \begin{figure}[h]
 	\begin{center}
-	  \includegraphics[width=0.9\textwidth]{graphics/dataset_new/scatter_mds_tsne.pdf}
+	  \includegraphics[width=0.9\textwidth]{graphics/dataset_new/scatter_mds_tsne_e2a70a9bf2.pdf}
 	  \slcaption{2D Visualization of the Course-Dissimilarity-Matrix, generated with \gls{tsne}. See \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualize_embeddings.ipynb} for the origin of this plot as well as a 3D-plot on unaltered 3D-MDS-data that doesn't rely on t-SNE.}
 	  \label{fig:scatter_mds}
 	\end{center}
 \end{figure}
 
 
+
+\begin{figure}[h]
+	\begin{center}
+	  \makebox[\textwidth][c]{
+		\includegraphics[width=1.3\textwidth]{graphics/dataset_new/dims_for_fb.pdf}
+		\slcaption{Learned Level-1-Decisiontrees.}
+		\label{fig:dims_for_fb}
+	  }
+	\end{center}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+	  \makebox[\textwidth][c]{
+		\includegraphics[width=1.1\textwidth]{graphics/dataset_new/boxes_rechtswis.png}
+		\slcaption{A classification with a Level-3-Decisiontree. Visualize in 3D: \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/display_top3_SIDDATA.ipynb} }
+		\label{fig:boxes_rechtswis}
+	  }
+	\end{center}
+\end{figure}
+
+
+\begin{figure}[h]
+	\begin{center}
+	  \makebox[\textwidth][c]{
+		\includegraphics[width=1.1\textwidth]{graphics/dataset_new/possibledecision_sprachlit.png}
+		\slcaption{A possible Hyperplane on a 3-Dimensional Embedding. The SVM depicted here would reach an Accuracy of 67.9\% (Precision: 39.8\%, Recall: 70.5\%). Visualize interactively: \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualize_embeddings_mds.ipynb} }
+		\label{fig:mds_3d_hyperplane}
+		%TODO: why do I have this plot? -> To say what the lower boundary of what a 3D-Embedding of NON-CLASS-SPECIFIC dimensions can yield for classification
+	  }
+	\end{center}
+\end{figure}
+
 \includeMD{pandoc_generated_latex/4_1_qualitativeresults}
 
-\section{Quantiative Results}
+\section{Quantiative Analysis}
+
+\todoparagraph{As described in} \autoref{sec:workflow}, a good first approximation is to check how many candidate-terms we get. \autoref{tab:kappa_table} shows the results of many runs with different parameter-combinations with the purpose of figuring out which combination of parameters and kappa-metrics lead to enough candidate-terms (\todoparagraph{Also ref the figure of workflow where I check what threshold was realistic})
 
 \input{include/results_table_1}
 
 \includeMD{pandoc_generated_latex/4_2_quantitativeresults}
 
+\section{Conclusion for Results}
+
+\includeMD{pandoc_generated_latex/4_3_resultsconclusion}

@@ -30,3 +30,10 @@ TODO: direkt repeatability problems ansprechen, see \url{https://cs.carleton.edu
 
 Motivation of \textcite{Derrac2015} (and thus also mine, I mean I picked this bc I found what they do interesting and their idea promising): Explainable AI but data-driven (They want to get "commonsense reasoning such as interpolation and a fortiori inference", but learned automatically. As they claim, "commonsense reasoning" <=> "how different concepts and entities are semantically related" <=> CS, because "CS qualitative spatial relations" <=> "required semantic relations for reasoning"
 So why do we need structured knowledge bases you ask? [Chapter 1 of DESC15]. Many CL tasks rely on structured  knowledge bases, but getting them in symbolic form occupied (computational) linguists for dozens of years without significant progress, so finding it automatically is a good idea.
+
+
+* Ganz konkret ist diese Arbeit halt im Rahmen von SIDDATA entstanden, und die Idee ist ja für die existierende Platform einen Recommender hinzuzufügen der kurs-empfehlungen nach wunsch generieren kann. 
+	* Cite SIDDATA main paper
+	* Explain the Platform and the concept of recommenders
+	* That the dataset comes from there as well
+	* Dass es ja schon SidBERT gibt welches ja auch schon empfehlungen generiert (another cite)

@@ -211,11 +211,15 @@
 \newacronym{pos}{POS}{Part-of-Speech}
 \newacronym{bert}{BERT}{Bidirectional Encoder Representations from Transformers}
 \newacronym{ann}{ANN}{Artificial Neural Network}
+\newacronym{ml}{ML}{Machine Learning}
+\newacronym{dsa}{DSA}{Digital Study Assistant}
 % END Acronym definitions
 %TODO: update acronym script for Plural!!
 %TODO: also let the acronym script define eg. an \svm command that is just an alias for \gls{svm} and an \svms for \glspl{svm}
 \newacronym[plural=MOOCs]{mooc}{MOOC}{Massive Open Online Course}
 \newacronym[plural=BoWs, firstplural=Bags of Words]{bow}{BoW}{Bag of Words}
+\newacronym{tsne2}{t-SNE}{T-distributed Stochastic Neighbor Embedding}
+
 
 % ================== biblatex stuff ==================
 \newcommand\posscite[1]{\citeauthor{#1}'s \cite{#1}}
@@ -912,8 +916,9 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 	% Include the appendices of the thesis as separate files from the Appendices folder
 	% Uncomment the lines as you write the Appendices
 	
-	\input{Appendices/AppendixA} %hae to use input and not include, otherwise the order of "Appendix" and the first appendix is wrong
+	\input{Appendices/AppendixA} %have to use input and not include, otherwise the order of "Appendix" and the first appendix is wrong
 	\input{Appendices/AppendixB}
+	\input{Appendices/AppendixC}
 
 
 	\cleardoublepage
