@@ -76,3 +76,17 @@ Highest-ranking descriptions per dimension:
 	joshuatreenationalpark : canyon 
 	clinker                : building
 -> WE SEE HERE that using the respectively best-fitting DOCUMENT (without LSI or anything, just the one with the highest ranking!)  is often even the MUCH BETTER direction!!!
+
+
+Top 3 Features by Importance (TODO: Link notebook)
+
+Mathematik/Informatik            programmiersprache, menge, szene
+Rechtswissenschaften             juristisch, einfuhrung allgemein, bgb
+Erziehungs-/Kulturwissenschaften erziehungswissenschaft, religionsunterrichts, berufsbildend schule
+Physik                           neu entwicklung, regelmassig aktiv teilnahme ubernahme, unterrichtsforschung
+Sprach-/Literaturwissenschaften  deutsch literaturwissenschaft, sprache, partie
+Wirtschaftswissenschaften        center betriebswirtschaftlich kompetenz, zitat, religionsunterrichts
+Humanwissenschaften              psychologie, metaphysik, exposes
+Sozialwissenschaften             arbeitsmarkt, regieren, multiple
+Biologie/Chemie                  aktivierung studierend, brd, madchen
+Kultur-/Geowissenschaften        tourismus, gi, stadtgeographie

@@ -1,3 +1,11 @@
+TODO: Zum Schritt "Clustern" hinzufügen (also WARUM wir clustern):
+	* Ich zieh ja Daten als candidate terms raus nach denen man eine Dimension/Richtung benennen kann, wie “scary” bei den filmbeschreibungen. Die kann ich mir dann angucken zwischen 20 und 3000 Begriffen easy, alle mit Zahlenvektor (kommen ja auch aus nem Vector space). Dann will ich die Clustern, also nahe sind ähnlich: In Filmen, in deren Beschreibung das Wort “scary” oft vorkommt, kommt ebenfalls das wort “horror” oder “gore” oft vor. → das sollte ein Cluster sein.
+
+### Clarifications
+
+1) It *IS* okay if common words (like "course") are in clusters, it is NOT the case that as soon as the word occurs once it is said to have a certain property. ("Wenn cluster-threshold zu groß, kommt “A1” in ein cluster mit “Course” and everything is over" is FALSE). However it IS not too good -> A cluster with many words like "course" in it has a high degree of randomness (there is no information gain by such words, it occurs random across courses, a cluster of courses that mention that they are courses is useless) The word occurs randomly, if a course is assumed to have a certain property because of that it's certainly wrong
+
+
 
 %TODO:
 % * reference yamls again

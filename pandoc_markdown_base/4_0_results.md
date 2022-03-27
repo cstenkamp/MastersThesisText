@@ -13,7 +13,22 @@
 * A result is certainly a thing like the movie-tuner! Can I implement that thing quickly?? If yes, that's a separate section!
 
 
-# My implementation on movies & placetypes:
+# Results regarding the Goals for the architecture 
+
+<!-- Eine meiner 2 research questions ja war "wie sieht eine gute architecture aus", so if the architecture is good and how it (and thus a good architecture) looks are results!! -->
+
+
+We remember, we also wanted to build a good architecture and set goals for that, such as adaptability to new datasets etc.
+We said a good architecture would show in adaptability, scability, ..., so we wanna show that these are achieved. 
+More basic than that, we want to show that 
+
+* this implementation works
+* the results of \mainalgos are not a fluke (that the algorithm works at all)
+
+For those two points lemme present my results for placetypes
+
+
+## My implementation on movies & placetypes:
 
 * Display the "closest embeddings": eg. "airplane cabin" und "aircraft cabin"
 	* Is that the case for 3D as well? => is 3D any good?
@@ -22,3 +37,9 @@
 	* Die Performances von allen \mainalgos in ner tabelle reporten und mit meinen vergleichen, sowohl quantitativ als auch qualitativ!
 
 result: set overlap of my extracted candidates for placetypes and theirs (und auch die big_21222.yml ergebnisse danach auswerten) (nicht nur overlap, ich kann auch verhältnis set intersect zu set union machen, und die als true/false positive/negative deklarieren und dann accuracy, f1 etc analysieren und halt anhand dessen "die hyperparam kombi die am closesten zu deren ergebnissen ist" rausbekommen)
+
+## Results in terms of architecture quality
+
+* We are scalable and can run massively parallel (that you'll have to believe me, it's one command to run on the grid and I would say that's pretty noice).
+* Keep in mind when reading the other sections of the results that all plots and tables you'll see are explictly linked and easily re-creatable and runnable
+* We ran the stuff on other datasets\footnote{See Table with datasets and the respective notebooks and the quick datasets section} and it ran through, so we're adaptable.

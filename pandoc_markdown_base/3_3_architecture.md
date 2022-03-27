@@ -1,3 +1,8 @@
+## Faculty-Classifier
+
+As one of the evaluations is to compare the results of classifiers based on the algorithm here with a powerful classification algorithm, a neural network that classifies the Faculty of a course in the SIDDATA-Dataset was also implemented. The implementation for that will not be elaborated upon except that it is available at \todoparagraph{Link to the repo}, it relies on sacred\footnote{\todoparagraph{link to sacred, note that to get the results like I did you'll need a MongoDB in a docker container, see this link}}, and that it uses Google's `universal-sentence-encoder-multilingual` in Version 3 (linear in textlength, thus managable time and space requirements) plus a few classification layers ontop. The encoder is trained \q{on a number of natural language prediction tasks that require modeling the meaning of word sequences rather than just individual words}\footnote{Quote from their description at \url{https://tfhub.dev/google/collections/universal-sentence-encoder/1} (accessed \date{2022}{03}{25})}, aimed being the base for architectures for many NLP tasks through the usage of sentence embeddings \cite{Cer2018}. It was trained on with a train-test-split of 90/10 (the results being consitent through sampled cross-validation)
+
+
 	* == ARCHITECTURE left2do ==
 
 		* Meta-workflow vorgreifen

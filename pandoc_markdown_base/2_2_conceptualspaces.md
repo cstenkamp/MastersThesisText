@@ -2,8 +2,10 @@
 
 % Intro of CS book: Within cognitive science, two approaches currently dominate the problem of modeling representations. The symbolic approach views cognition as computation involving symbolic manipulation. Connectionism, a special case of associationism, models associations using artificial neuron networks. Peter Gärdenfors offers his theory of conceptual representations as a bridge between the symbolic and connectionist approaches.
 
-%TODO: mention
-% * relation to prototype theory
+TODO: mention relation to prototype theory
+TODO: Define criterion C and P (p111 of gardenfors200: "criterion C defines concepts as regions of conceptual spaces")
+
+
 
 % \cite{Derrac2015}: "Most approaches represent natural language terms as points or vectors. One notable exception is the work of G¨ardenfors on conceptual spaces [9], where properties and concepts are represented using convex regions, while specific instances of a concept are represented as points." => BUT MENTION THAT TYPES != TOKENS!!
 % more DESC15: ...where properties and concepts are represented using convex regions, while specific instances of a concept are represented as points. This has a num- ber of important advantages. First, it allows us to distinguish borderline instances of a concept from more prototypical instances, by taking the view that instances which are closer to the center of a region are more typical [9]. A second advantage is that using regions makes it clear whether one concept subsumes another (e.g. every pizzeria is a restaurant), whether two concepts are mutually exclusive (e.g. no restaurant can also be a beach), or whether they are overlapping (e.g. some bars serve wine but not all, some establishments which serve wine are bars but not all). Region based models have been shown to outperform point based models in some natural language processing tasks [41] On the other hand, using regions is computationally more demanding, and learning accurate region boundaries for a given concept would require a prohibitive amount of data. In this paper, we essentially view point based representations as coarse-grained approximations of conceptual spaces, where points correspond to fine-grained categories instead of specific instances, while convex regions are used to model higher-level categories

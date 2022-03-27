@@ -2,6 +2,8 @@
 
 \todoparagraph{Direkt am Anfang schreiben dass ich halt auf den main algorithmus eingehe und das laut meiner research diese 3 paper am besten den main algo beschreiben} (bzw sinnvoll erweitern) - was nicht heißt dass das die einzigen in dem kontext sind, Alshaikh2019 bspw nutzen ja den main algorithmus, aber ja nur als komponente, und haben andere Ziele was sie dann damit machen
 
+\todoparagraph{SCHON HIER, VOR DEN SUBTEILEN HIERVON, KLAR MACHEN} "ich replizier diese 3 algorithmen, aus diesen 3 papern (und dann in Dataset-section: "Die 3 haupt-autoren nutzen halt diesen algo auf diesen datasets" -> damit auch main-claim (Kommentar Johannes, es war sehr unklar welche datasets mich inwieweit interessieren und warum ich drauf eingehe undso)
+
 % Im folgenden gibt es neben Datasets 2 main sections: algoritm and architecture. Dass Algorithm und Architecture 2 subsection von methods sind ist halt "Der allgemeine Algorithmus und die spezifische Anwendung" Warum Architecture section? es kostet extrem viel zeit die schwammigen formulierungen in den papern genau zu verstehen, man probiert super oft falsche parameter-kombinationen aus etc etc, es ist halt ein riesiger ewig langer lernprozess den man von vorne machen müsste wenn man es nachimplementieren möchte, ich hätte mir gewünscht die authors hätten darüber mehr worte verloren, and also the scalable reproducible open-science part. And also - it took me a shitton of time, way more than working on the algorithm (but NOW it can run so easily on the grid and all param-combis simultaneously, ..), so this is what you'll get.
 
 
@@ -69,7 +71,7 @@ The main considered dataset of this thesis unfortunately does not share this pro
 	 &  &  &  & \textbf{en} & 1 & - & - & - \\
 	\bottomrule
 	\end{tabular}
-	\caption[Metadata of the SIDDATA-Dataset]{Metadata of the SIDDATA-Dataset. Languages are reported as detected (see \ref{ap:translating}), other metadata as it was available in the dumps. The individual columns is the number of entities whose description has at least 20, 50, 200 or 500 words.}
+	\caption[Metadata of the SIDDATA-Dataset]{Metadata of the SIDDATA-Dataset. Languages are reported as detected (see \ref{ap:translating}), other metadata as it was available in the dumps. The individual columns is the number of entities whose description has at least 20, 50, 200 or 500 words. \label{tab:siddata_metadata}}
 	}
 \end{table}
 
@@ -87,7 +89,17 @@ The main considered dataset of this thesis unfortunately does not share this pro
 	\label{fig:sid_wordsperdesc}
 \end{figure}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{graphics/dataset_new/courses_per_faculty.pdf}
+	\caption{Courses per Faculty}
+	\label{fig:courses_per_faculty}
+\end{figure}
+
+
 \includeMD{pandoc_generated_latex/3_0_1_datasets_siddata}
+
+\todoparagraph{Ref auf die Jupyter-plots, wie der sunburst-plot!}
 
 
 \subsection{Place-Types}
@@ -215,3 +227,11 @@ It was originally unexpected, but implementing an appropriate architecture for t
 
 
 \includeMD{pandoc_generated_latex/3_4_workflow}
+
+
+
+\section{Evaluation Metrics}
+\label{sec:eval_metrics}
+
+
+\includeMD{pandoc_generated_latex/3_5_evaluation_metrics}

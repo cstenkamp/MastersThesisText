@@ -10,6 +10,7 @@
 
 	* Ich hab ja den Fachbereichs-Classifier gemacht, wenn ich jetzt noch die shallow decision trees mache kann ich ja legit accuracies vergleichen !!
 		* To see if it is possible to extract any kind of structured data from the unstructured course descriptions, a Neural Network classifier was trained on the dataset, classifying courses to the faculty they run under. $\rightarrow$ Der FB-Classifier kommt auf $95.33\%$ train, $90.96\%$ Test accuracy nach 10 epochs, that's a lot!!
+		==> CORRECTION: auf Siddata2022 kommt er auf $85.19\%$ test, $94.13\%$ train, siehe \todoparagraph{link to notebook}
 		* kommt accuracy etc von den shallow decision trees für fachbereich close an die vom fb-classifier?
 	* "Here I'll add the results of the low-depth-decision-trees for Fachbereich"
 	* notebooks/analyze_results/display_siddata_decisiontrees.ipynb does that 
