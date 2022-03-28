@@ -2,7 +2,7 @@
 
 * Ich könnte die Schrittweise Anwendung des Algorithmus wie Alshaikh das gemacht haben mit "für die die politisch sind, what's their direction" mit Level 2 für DDC. "Für die die in 'Informatik' eingeteilt sind, wie gut kriegen wir deren sub-categorie hin?"
 
-
+* Ich kann gucken in welche Richtungen Fachbereiche sich unterscheiden (humanwissenschaften ist mehr psycho als mathe etc)
 
 * Evaluation in Stud.IP (which may then even be used for training something like \cite{VISR12}'s algorithm or the fine-tuing step of \cite{Ager2018})
 * Building this thing as component into Siddata, mit einem Interface wie dem Movie Tuner

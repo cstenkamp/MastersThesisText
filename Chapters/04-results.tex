@@ -19,6 +19,32 @@ The plots \ref{fig:scatter_mds_movies} and \ref{fig:scatter_mds_placetypes} show
 of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\footnote{\url{https://www.cs.cf.ac.uk/semanticspaces/}}. Visually comparing them to their equivalent to the SIDDATA-dataset (\autoref{fig:scatter_mds}) \todoparagraph{shows that while the movie-embeddings looks pretty clustered}, the clustering of the placetypes-dataset looks in fact a lot worse than that of the SIDDATA-dataset.
 %TODO: obviously write again. What do we see? A 2D-Version of the MDS. If we see very distinct clusters in that, we can conclude that it sounds possible that we can detect whatever-we-colored-by from this embeddings to an okay degree.
 
+\begingroup
+\renewcommand*{\arraystretch}{2}
+\begin{table}[]
+	\centering
+	\begin{tabular}{rccccc}
+										  & \multicolumn{3}{c}{\textbf{Feature vectors}}           & \textbf{Candidates} & \textbf{Cluster Elements}   \\
+										  & \textbf{Mean L.} & \textbf{Vectors} & \textbf{Clusters} &                     & \textbf{($\kappa\geq0.1$}) \\
+    \midrule	
+										  
+	\textbf{movies \cite{Derrac2015}}     & 12083            & 589727           & 3864              & 22903               & 9389              		   \\
+	\textbf{placetypes \cite{Derrac2015}} &                  &                  &                   &                     &                   		   \\
+	\textbf{SIDDATA}                      &                  &                  &                   &                     &                  
+	\end{tabular}
+	\caption{Statistics on generated features of the algorithm}
+	\label{tab:generated_stuff}
+\end{table}
+\endgroup
+% movies:
+% feature vecs: 38649 keys with 0-33k terms each (sum: 589727 terms) 
+% candidate-terms: 22903 (unclustered)
+% clusters: ndims*2 -> for 20D: 9389 (-> 9429 words in $T^{0.1}$)}		
+% movies: 15.000
+% ppmi-weighted feature vectors: 38649 keys with bag-of-words between 0 words and 33k words (but mostly couple 1000s), all in all 589727 unique terms
+% candidate-terms: 22903 (unclustered)
+% clusters: ndims*2 clusters with all in all (for 20d) 9389 values (->9429 words have kappa>=0.5)
+
 \begin{table}
 	\resizebox{0.6\textwidth}{!}{%
 	\caption{This algorithm on Placetypes}

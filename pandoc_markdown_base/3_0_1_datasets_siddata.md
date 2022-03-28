@@ -1,5 +1,9 @@
 DATASETS:SIDDATA SECTION PRE-TEXT
 
+write in Dataset-section where the DDCs come from
+* file: Masterarbeit/OTHER/study_behavior_analysis/EducationalResource-2022-01-20.csv
+* TODO: cite Johannes' Siddata/SidBert-Paper !
+
 To write:
 	* where does the data come from
 	* what size is the data, what is the distribution, ...

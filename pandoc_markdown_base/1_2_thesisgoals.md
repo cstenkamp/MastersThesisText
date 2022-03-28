@@ -57,6 +57,10 @@ Important subgoal to achieve these: Modularization and allowing components of th
 
 #### How to replicate
 
+<!-- Ja, das hier sollte drin sein, ich geh in methods:datasets drauf ein -->
+
+\label{sec:howtoreplicate}
+
 See \url{https://cs.carleton.edu/cs_comps/1920/replication/index.php}: The paper states there is problem X, makes a claim that algorithm Y may be good at problem X, create datasets Z for X, and then test the code on these datasets. 
 * In that test we...
 	* compare it to alternative approaches to see if it's a good choice
@@ -99,7 +103,7 @@ Fragestellung: "Kann man X auf educational resources anwenden". To answer this q
 
 * Movie Tuner interface? (here or [*])
 
-
+* We will be able to figure out if the dataset that this algorithm is thrown own must have certain properties in order for it to work -> we must also look at differences in the dataset
 
 
 

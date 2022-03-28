@@ -1,3 +1,11 @@
+
+% * Dataset + Algo Section "teilweise unveständlich"
+% * Verhältnis von Datensatz und Algorithmus wird nicht klar
+
+
+So in this section I'll go into detail about this main algorithm, plus the two other papers that according to my resarch are good additions to it (in terms of helping to understand it as well as improving on some stuff in it). That we are focusing on only those three papers should by no means imply that they are the only ones in that regard (See \autoref{sec:otherwork} - \cite{VISR12} and their tag genome, the fact that the algorithm detailed here is basically only one step in \cite{Alshaikh2019}, Gärdenfors himself suggested that one may use self-organizing maps instead of classical AI/NLP algorithms
+
+
 The algorithm that is implemented in the scope of the thesis is in principle the one from \textcite{Derrac2015}, but includes some improvements from \textcite{Ager2018} and \textcite{Alshaikh2020} - both of which directly builing on the work of the former. As all of these publications share Prof. Steven Schockaert as last author, it seems plausible that a) the latter ones are legit improvements upon the first, b) at least to a certain degree they can share code and data, c) this field of work is constrained to a small community, without any alternative implementations or substantial improvements from outside of it.
 % sollte ja schon vorher erwähnt haben dass das thema leider nicht über diese small community hinaus geht
 % and includes my own improvements und anpassungen für den speziellen datensatz
@@ -123,7 +131,8 @@ The following components are developed for the preprocessing, every one of which
 	\item Remove punctuation 
 \end{itemize}
 
-%TODO: The above can be done manually step-by-step mostly based on NLTK tools, or in one step using `sklearn`'s `CountVectorizer`. 
+The above can be done either be done with proprietary code for all of these steps\footnote{Mostly relying on the python package \emph{nltk} \cite{bird2009natural}}, or using \codeother{sklearn}\footnote{\url{https://scikit-learn.org/stable/}}s \codeother{CountVectorizer} (which is faster, but less configurable), as did \cite{Ager2018}.
+
 
 % TODO: Regarding Stop-words:
 

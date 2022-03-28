@@ -126,6 +126,7 @@
 % for https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_latex.html, https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.to_latex.html:
 \usepackage{booktabs} 
 \usepackage{multirow} 
+\usepackage{tablefootnote}
 \usepackage[table,dvipsnames]{xcolor} %dvipsnames for yaml-code-listings
 \usepackage{siunitx}
 \colorlet{lightgreen}{green!40!white}
@@ -134,9 +135,10 @@
 \robustify\itshape
 % end 
 
+
 \usepackage{lipsum}
 \usepackage{pdflscape} % if this is used, those pages within {landscape} are turned when viewed digitally (https://tex.stackexchange.com/a/141444/108199)
-
+\usepackage{footmisc}
 
 \usepackage[section]{placeins} %for FloatBarrier, https://tex.stackexchange.com/a/282/108199
 % Keep floats in the section they were defined in.
@@ -174,6 +176,8 @@
 \addto\extrasbritish{\def\subsectionautorefname{Section}}
 \addto\extrasenglish{\def\subsubsectionautorefname{Section}}
 \addto\extrasbritish{\def\subsubsectionautorefname{Section}}
+\addto\extrasenglish{\def\paragraphautorefname{Subsection}}
+\addto\extrasbritish{\def\paragraphautorefname{Subsection}}
 %https://github.com/Cryptosaurus/iacrtrans/issues/9#issuecomment-562347502
 
 
@@ -213,6 +217,7 @@
 \newacronym{ann}{ANN}{Artificial Neural Network}
 \newacronym{ml}{ML}{Machine Learning}
 \newacronym{dsa}{DSA}{Digital Study Assistant}
+\newacronym{tf}{tf}{Term Frequency}
 % END Acronym definitions
 %TODO: update acronym script for Plural!!
 %TODO: also let the acronym script define eg. an \svm command that is just an alias for \gls{svm} and an \svms for \glspl{svm}

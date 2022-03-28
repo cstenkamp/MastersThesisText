@@ -10,3 +10,5 @@
     * "A1" and "A2" cluster
     * "math" and "computer" become candidate-directions (corresponding to math-y courses and informatik-y courses)
     * Check if the 3D-embeddings are only a ball -> if so, the SVM may be no good
+
+* Ich kann gucken in welche Richtungen Fachbereiche sich unterscheiden (humanwissenschaften ist mehr psycho als mathe etc)
