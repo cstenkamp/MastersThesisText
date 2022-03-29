@@ -1,6 +1,7 @@
 pandoc_generated_latex
 *.bib
 !Masterarbeit.bib
+!NoBibliography.bib
 
 .vscode-server/*
 !.vscode-server/data/

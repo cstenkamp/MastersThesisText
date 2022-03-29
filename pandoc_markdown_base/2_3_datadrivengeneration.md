@@ -1,6 +1,8 @@
 Thesis goals: We want to automatically generate conceptual spaces for the domain of educational resources to generate explainable recommendation. So far, we established  that Conceptual Spaces are a good framework for that. The part that's missing is the automatic generation. The work of \cite{Derrac2015} is great because it basically does what Gärdenfors suggested using classical AI algorithms, and \cite{Ager2018} and \cite{Alshaikh2019} provided some useful additions for it without changing the main logic. So, we'll work with their algorithm, also only making small improvemenents. So the two main areas of work are implementing the original algorithm, and changing small details of it where most appropriate such that it works well for the domain we're interested in.
 
 
+TALK ABOUT that actually, in CS concepts (=types) are regions, BUT we have only one-instance-per, so TOKENS, so it's kiiinda reasonable that we have points! IF we would have the collection of "ALL Computer Science 1 Courses" it would be different
+
 % \cite{Alshaikh2019} geht drauf ein warum man infoGAN und VAEs für bilder als pretty much sowas betrachten kann
 
 %Wie funktioniert die Idee des data-driven generieren 

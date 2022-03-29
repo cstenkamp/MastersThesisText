@@ -218,6 +218,9 @@
 \newacronym{ml}{ML}{Machine Learning}
 \newacronym{dsa}{DSA}{Digital Study Assistant}
 \newacronym{tf}{tf}{Term Frequency}
+\newacronym{lms}{LMS}{Learning Management System}
+\newacronym{oer}{OER}{Open Educational Resources}
+\newacronym{ddc}{DDC}{Dewey Decimal Classification}
 % END Acronym definitions
 %TODO: update acronym script for Plural!!
 %TODO: also let the acronym script define eg. an \svm command that is just an alias for \gls{svm} and an \svms for \glspl{svm}
@@ -285,6 +288,21 @@
 % See also regarding quotation:
 % IEEE Standard: https://libraryguides.vu.edu.au/ieeereferencing/gettingstarted
 % https://de.overleaf.com/learn/latex/Typesetting_quotations, https://www.andy-roberts.net/writing/latex/formatting, https://wiki.carleton.edu/download/attachments/20155418/textguide.pdf?version=1&modificationDate=1387231254000&api=v2
+
+% ===============
+% "go back" link for references
+% https://tex.stackexchange.com/a/237512/108199
+\usepackage{textcomp}
+
+\ifdefined\ForPrinting
+\else
+	\renewbibmacro*{pageref}{%
+	%   \printtext[parens]{%
+		\Acrobatmenu{GoBack}{\textsuperscript{\textuparrow}}%
+	%   }%
+	}
+\fi
+
 % ================== END biblatex stuff ==================
 
 %\linespread{1.5} % set line spacing

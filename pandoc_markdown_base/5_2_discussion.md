@@ -7,6 +7,8 @@ Research Question: Ich will die Methodik von dem Paper auf educational resources
 * In der Discussion kann ich dann auch wieder bezug auf die orig-paper ziehen "im vergleich zu demundem haben wir das geliche rausbekommen, ...", "die arbeit extended dasunddas weil wir's in ne andere domäne geschoben haben und ...", und nochmal kritisch reflektieren wie gut meine bewertung ist ("shortcomings"-section)
 
 
+TODO: Welche Fachbereiche hab ich gut klassifiziert und welche schlecth? (...das kann ich auch mit den preliminary results in Johannes sidBERT vergleichen, see slack 29.3. 10:00)
+
 %TODO: darauf eingehen ob wir das was uns in the first place motiviert hat, erreicht haben - also ob wir jetzt easy und automatisch structured knowledge bases erzeugen können. My opinion is that the need to create such knowledge bases is absolutely there, but I am more than unsure if this is the best imaginable algorithm. Of course, I see the reasoning for the distancematrix->MDS to ensure the resulting place is actually metric (an assumption more and more dropped by the two followup-papers)... but maybe before and after we can use neural techniques? Like idk doc2vec für die distance matrix, dann gerne MDS, und candidate terms sind dann word embeddings we threshold their closeness to the document embedding? Or also use LSI/LDA?
 
 %TODO: dass sowohl die architektur hierfür, als auch meine Grid-solutions eine major contribution sind die sich sehen lassen können!
@@ -39,4 +41,6 @@ How good do I think does the algorithm capture CS? How useful do I think CS are 
 
 Gärdenfors basically said we could build a CS with "Dimensionality Reduction from the high-dimensional input (neurons) eg using MDS into a euclidian space, and then geometric reasoning on that" including some examples of kinds of reasoning, so actually the exact algorithm \cite{Derrac2015} did was extremely naheliegend (put some obvious NLP modelling to that like \cite{Turney2010} explained and you're pretty much exactly at their algorithm)
 ....but even more reason to make me think that it may have been their error to keep the enforcement that the MDS-result must be a euclidian space, when afterwards they have the additional step of using their rankings anyway! (...which btw brings me to the question what that does to distances?!)
+
+
 

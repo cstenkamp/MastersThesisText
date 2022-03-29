@@ -54,3 +54,6 @@ To achieve what we want, we'd need a vector-space with several properties like l
 
 ==> Before applying it, we should sanity-check their algorithm
 ==> This thesis should ALSO result in a pipeline die es future research leichter macht ebengenau das zu tun was ich hier tu und die validiät der claims zu prüfen etc.
+
+
+TODO: quotes from Johannes about how making the choice easier for students is very important, but that categorizing educational resources is a challenge.

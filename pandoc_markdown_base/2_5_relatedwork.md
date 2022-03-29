@@ -40,3 +40,20 @@ main idea is to learn a representation in terms of salient features, where each 
 Tag Genome, is based on keywords that users have explicitly as- signed to movies, together with a supervised learning process aimed at re- ducing the sparsity of these assignments and to learn a degree of relevance for terms (rather than just having binary assignments).
 
 => Schreiben dass in nem Klassifikationstask von DESC15 "welches keyword beschreibt den unterschied zwischen film1 und film2 am besten?" tag genome DEUTLICH besser war, aber well das ist halt supervised.
+
+
+### SidBERT
+
+With the "Academic Interests" recommender there is already a system in place that recommends courses, having seen the same need to aid students in finding educational resources, information about which is only implicit. It does that by using a custom head on a BERT encoder that maps courses onto 905 classes derived from the third DDC \cite{Dewey1876} level 
+
+AI-based application that categories courses and ohter learning materials into knowledge categories. Deep ANN that classifies courses and user requests to DDC [source], "a categorization system commonly deployed in libraries around the globe" based on title and description, matching DDCs of searches and courses
+
+"Information on the content discussed in the scope of the educational resources, however, is implicit and must be inferred by the user by reading the resource title or through contextual information" 
+
+DDC has hierachical tree stucture with 10 childs at each level. Childs are subtopics of thir parents, things can have multiple DDCs.
+
+SidBERT: SidBERT is BERT-base model + custom classification head, from Huggingface-transformers. trained on 1.3m book titles & descriptions (uni/hannover/bremen uni + german national libray) 3-4 level.
+
+BERT - based on transfomer (text doesn't need to be added sequentially). 12 stacked self-attention+feedforward encoder layers to create deep phrase embeddings, trained with masked-token inference tasks where the hidden word must be predicted
+
+Currently 62.2% recall, 45.2% accuracy for 905 classes (chance would be 0.11) (CITE TO BE PUBLISHED), preliminary qualitative analysis showing that the internal representation does indeed partially capture the hierachical structure of DDCs.

@@ -1,3 +1,7 @@
+Zitat JOHANNES über SidBERT: "When using traditional pattern-matching search, these search queries may yield no results or return courses within another domain that by chance contain the same words but are otherwise unrelated to the domain the student is looking for." (-> zum thema hilft auch in Search engines etc)
+
+
+
 \cite{Derrac2015}: "Conceptual spaces \cite{Gardenfors2000} are metric spaces which are used to encode the meaning of natural language concepts and properties." %In most applications, conceptual spaces are assumed to be Euclidean. They are typically high-dimensional, with each dimension corresponding to a primitive cognitive feature. Specific entities then correspond to points in the conceptual space, while natural con- cepts and properties are posited to correspond to convex regions
 
 % Intro of CS book: Within cognitive science, two approaches currently dominate the problem of modeling representations. The symbolic approach views cognition as computation involving symbolic manipulation. Connectionism, a special case of associationism, models associations using artificial neuron networks. Peter Gärdenfors offers his theory of conceptual representations as a bridge between the symbolic and connectionist approaches.
