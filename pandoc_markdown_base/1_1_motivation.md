@@ -1,3 +1,6 @@
+<!-- 
+Zitat JOHANNES über SidBERT: "When using traditional pattern-matching search, these search queries may yield no results or return courses within another domain that by chance contain the same words but are otherwise unrelated to the domain the student is looking for." (-> zum thema hilft auch in Search engines etc)
+-->
 
 ### Course Recommendation
 

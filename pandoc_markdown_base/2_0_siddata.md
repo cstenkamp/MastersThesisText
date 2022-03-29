@@ -7,6 +7,8 @@
 
 This section explains specific usecase (e-learning, recommendation of educational resources) and elaborates what the domain is and why there is the need for recommendation in the domain of educational resources. It further introduces the SIDDATA project and platform and how it relates to this thesis.
 
+TODO: Define "Educational Resource" explicitly
+Definition 1: \textbf{Educational Resource} An Education Resource is xyz.
 
 ### Overwhelming amounts of resources
 

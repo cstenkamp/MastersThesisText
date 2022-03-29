@@ -1,4 +1,10 @@
+TODO: Ist word2vec schon nen euclidian space? Why/Why not?
 
+## MDS
+
+As described by Gärdenfors himself \cite[Sec.~1.7]{Gardenfors2000a}:
+
+MDS: If the all coordinate components are known, distances are trivial, MDS does the reverse problem, starting from similarity judgements, MDS finds the numnber of dimensions and the scaling of the underlaying phenonemonal space, with the goal of achieving \q{"as high a correlation as possible between the similarity judgements of the subjects and the corresponding distances in the estimated dimensional space."} (p22) (Number of dimensions is chosen, not found by MDS. Metric is chosen (euclidian, city-block). MDS then starts randomly and \q{systematically ajdusts the coordinates to achieve a progressively better fit to the data from the similarity judgments.} (p22)). Some guy almost perfectly recovered the 2D space of hues using MDS and judgements.
 
 \paragraph{Tf-Idf}
 
