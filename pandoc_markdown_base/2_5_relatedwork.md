@@ -35,7 +35,7 @@ main idea is to learn a representation in terms of salient features, where each 
     * Topic modeling is the process of discovering groups of co-occurring words in text documents. These group co-occurring related words makes "topics". It is a form of unsupervised learning, so the set of possible topics are unknown.
     * In contrast to classification it's unsupervised and not single-class
 
-## Tag-Genome
+### Tag-Genome
 
 Tag Genome, is based on keywords that users have explicitly as- signed to movies, together with a supervised learning process aimed at re- ducing the sparsity of these assignments and to learn a degree of relevance for terms (rather than just having binary assignments).
 
