@@ -1,6 +1,9 @@
 * Introduction ist soweit fertig. Volltext daraus: 3 Stunden.
 * Datasets & Algorithm Table: Jeweils 6 Stunden.
 
+!!!!!!!!!!!!!!!!!!!!!!!!
+* Stringent und Explizit nach Fragestellungen ("Klappt Methodik auf Domäne ER?" & "Good Architecture?") vorgehen! 1.) Hypothese, 2.) methods, 3.) results, 4.) conclusion! 
+!!!!!!!!!!!!!!!!!!!!!!!!
 
 * BACKGROUND SECTION: 
     * ROTER FADEN!! Alles was nicht meine 2 research questiosn beantwortet ist irrelevant!!

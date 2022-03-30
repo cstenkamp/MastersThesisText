@@ -1,3 +1,13 @@
+## How to deal with the fact that my dataset is different
+
+Den ganzen "wo ist mein dataset anders als deren" Kram
+
+* Datensatz ist anders als concatenated-movie-reviews und ich deswegen nicht einfach "je öfter 'scary' desco scarier" machen kann. Wege damit umzugehen sind elaboriert in Section XYZ
+* Da hatte ich schon mehr sehr alte sachen!!!
+* Der Kappa-Score der rankigns vergleicht ist für mich ne kack metric weil ich ebennicht reviews nehme und more-occurences better-candidate heißen -> gucken wie ich stattdessen gute dimensionen und cluster finde (klingt doch so als sei accuracy/f1/... doch wichtig) => WE EXPECT dass accuracy/f1/... zu besseren ergebnissen führt!
+
+## IDK
+
 TODO: Zum Schritt "Clustern" hinzufügen (also WARUM wir clustern):
 	* Ich zieh ja Daten als candidate terms raus nach denen man eine Dimension/Richtung benennen kann, wie “scary” bei den filmbeschreibungen. Die kann ich mir dann angucken zwischen 20 und 3000 Begriffen easy, alle mit Zahlenvektor (kommen ja auch aus nem Vector space). Dann will ich die Clustern, also nahe sind ähnlich: In Filmen, in deren Beschreibung das Wort “scary” oft vorkommt, kommt ebenfalls das wort “horror” oder “gore” oft vor. → das sollte ein Cluster sein.
 

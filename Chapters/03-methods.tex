@@ -48,8 +48,25 @@ A very distinctive difference of the datasets is their size: the movies-dataset 
 	\textbf{Siddata (all)}     & 26346 & 19        & 60         & 169        & 22         & 71          & 239          \\
 	\textbf{Siddata} ($\geq 80$ words) & 11601 & 63        & 99         & 211        & 83         & 124         & 323         
 	\end{tabular}
-	\caption{Sizes of the text-corpora of the Siddata-dataset and those of \cite{Derrac2015}. The columns \textit{Words per Entity} list the 5\textsuperscript{th}, 50\textsuperscript{th}, and 95\textsuperscript{th} percentile respectively.}
+	\slcaption{Sizes of the text-corpora of the Siddata-dataset and those of \cite{Derrac2015}. The columns \textit{Words per Entity} list the 5\textsuperscript{th}, 50\textsuperscript{th}, and 95\textsuperscript{th} percentile respectively.}
 	\label{tab:corpussizes}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{rcccccccccc}
+	\multicolumn{1}{l}{} &
+	  \textbf{1} & \textbf{2} & \textbf{5} &  \textbf{25} &
+	  \textbf{50} & \textbf{100} & \textbf{500} & \textbf{1000} &
+	  \textbf{\acrshort{df}/10} & \textbf{\acrshort{df}/4} \\ \midrule
+	\textbf{Siddata} & 163285 & 87840  & 40998  & 11619  & 6649   & 3722   & 765   & 317   & 60     & 8     \\
+	\textbf{Places}  & 746180 & 746180 & 746180 & 313858 & 202713 & 126899 & 41108 & 24735 & 101867 & 53588 \\
+	\textbf{Movies}  & 589727 & 392885 & 200470 & 83354  & 60952  & 44809  & 20314 & 13558 & 5317   & 2484 
+	\end{tabular}
+	}
+	\slcaption{Words that exceed various term-frequency thresholds for the  Siddata, Places and Movies datasets. In \cite{Derrac2015}, the candidate-threshold for placetypes was 50, and the threshold for movies 100. Note that the last two columns are relative and depend on the dataset-size.}
+	\label{tab:summed_unique_words}
 \end{table}
 
 It is obvious that even though the number of Siddata-entities is comparable to the bigger of \cite{Derrac2015}'s datasets, the number of unique words in the individual texts associated with the entities are two orders of magnitude shorter than both. As the algorithm does not rely on deep learning, this does not mean that the dataset is unsuited for it, but let us explore how the distance in their lengths can be explained and what consequences this has.
@@ -110,6 +127,8 @@ The Siddata-dataset unfortunately does not share this property, as the texts tha
 	\cline{2-5} \cline{3-5} \cline{4-5}
 	 & \multirow[t]{2}{*}{\textbf{web}} & \multirow[t]{2}{*}{\textbf{unknown}} & \multirow[t]{2}{*}{\textbf{other}} & \textbf{de} & 48 & 3 & - & - \\
 	 &  &  &  & \textbf{en} & 1 & - & - & - \\
+	\cline{5-9}
+	 &  &  &  & \textbf{sum} & 30811 & 24752 & 5671 & 330 \\
 	\bottomrule
 	\end{tabular}
 	\caption[Metadata of the Siddata-Dataset]{Metadata of the Siddata-Dataset. Languages are reported as detected (see \ref{ap:translating}), other metadata as it was available in the dumps. The individual columns is the number of entities whose description has at least 20, 50, 200 or 500 words. \label{tab:siddata_metadata}}
@@ -118,7 +137,7 @@ The Siddata-dataset unfortunately does not share this property, as the texts tha
 
 \begin{figure}[H]
 	\includegraphics[width=1.15\textwidth,center]{graphics/dataset_new/statistics_bars.pdf}
-	\caption{Distribution of metadata in the raw Siddata-dataset}
+	\caption{Distribution of metadata in the raw Siddata-dataset. Languages are reported as detected (see \ref{ap:translating}), other metadata as it was available in the dumps.}
 	\label{fig:sid_statistics}
 \end{figure}
 
@@ -133,7 +152,7 @@ The Siddata-dataset unfortunately does not share this property, as the texts tha
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\textwidth]{graphics/dataset_new/courses_per_faculty.pdf}
-	\caption{Courses per Faculty}
+	\caption{Distribution of Faculty per Course for those Courses at University of Osnabrück.}
 	\label{fig:courses_per_faculty}
 \end{figure}
 

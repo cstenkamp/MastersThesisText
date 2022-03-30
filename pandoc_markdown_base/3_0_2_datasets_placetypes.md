@@ -2,7 +2,8 @@ DATASETS:PLACETYPES SECTION PRE-TEXT
 
 * Didn't do the openCYC taxonomy bc they say that they don't use one level of the taxonomy consistently but also never explain where they go to which level
 * The fact that this dataset is created precisely to be good for the respective algorithm, in contrast to mine!
-
+* Ref link for Geonames categories: http://www.geonames.org/export/codes.html
+* look/think was die anderen auszeichnet - bei dem placetypedataset ists ja gar kein fließtext sondern direkt ein bag-of-tags
 
 So, infos from \cite{Derrac2015}:
 * GeoNames has 667 place-types in 9 categories (403 used)
