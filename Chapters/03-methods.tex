@@ -2,11 +2,11 @@
 
 %TODO: IST KLAR GENUG: "ich replizier diese 3 algorithmen, aus diesen 3 papern"
 
-This chapter explains the methods that were used to achieve the goals two of replicating the algorihm of \textcite{Derrac2015} with the improvements of \cite{Ager2018,Alshaikh2020} with a sustainable architecture and applying it to the domain of educational resources.  
+This chapter explains the methods that were used to achieve the two goals of replicating the algorihm of \textcite{Derrac2015} with the improvements of \cite{Ager2018,Alshaikh2020} with a sustainable architecture and applying it to the domain of educational resources.  
 
-To do that, we will firstly look at the datasets that used as well as our dataset and kompare key key statistics of them. The subsequent section then explains the algorithm used broadly, before looking at each of its step in detail. Based on that, the specific architecture that was created as well as the workflow used to generate meaningful results will be introduced to demonstrate its process. The final section explains what kind of methods and metrics were used to interpret the results that will follow in the next chapter.
+To do that, we will firstly look at the datasets \mainalgos used as well as our own dataset and compare key statistics. The subsequent section then explains the used algorithm broadly before looking at each of its steps in detail. Based on that, the specific architecture that was created as well as the workflow used to generate meaningful results will be introduced to demonstrate its process. The final section explains what kind of methods and metrics were used to generate and interpret the results that will follow in the next chapter.
 
-Given that there were two research questions, one asking if the replicating algorithm can be applied to another domain and the other asking for a reliable application, it makes sense to look at datasets and general algorithm on the one side, but also on the worflow and architecture. Writing about the latter while also open-sourcing the code-base is especially useful to ensure ease and speed of future replication, because all claims can be independently tested with the exact same implementation without having to rely on ambiguous and incomplete verbal explanations\footnote{Just like this thesis could have been a lot less effort if \mainalgos did that instead of ambiguous incomplete descriptions. \todoparagraph{Scable, reproducible, open science! I wished it had been there, so I will do it.}}. 
+Given that there were two research questions, one asking if the replicating algorithm can be applied to another domain and the other asking for a reliable application, it makes sense to both look at datasets and general algorithm on the one side, but also at the worflow and architecture. Writing about the latter while also open-sourcing the code-base is especially useful to ensure ease and speed of future replication, such that all claims can be independently tested with the exact same implementation without having to rely on ambiguous and incomplete verbal explanations\footnote{Just like this thesis could have been a lot less effort if \mainalgos did that instead of ambiguous incomplete descriptions. \todoparagraph{Scable, reproducible, open science! I wished it had been there, so I will do it.}}. 
 
 
 %JOHANNES' KOMMENTARE TO WHAT I SENT HIM
@@ -25,22 +25,19 @@ Given that there were two research questions, one asking if the replicating algo
 % * Warum ich die einzelnen Datensätze erwähne wird nicht klar
 
 
-This section elaborates on the datasets used both in the works that are being replicated as well as the dataset used in the scope of this thesis. Doing both is important because as explained in \autoref{sec:howtoreplicate}, to really know if an algorithm is a good choice for a task, it must be ensured that it does not only work on a special kind of dataset (because of a special property that this kind of data happens to have). So we will look at the datasets that they used as well as the dataset mainly concerned in this thesis, to see if there are important differences between them, as for example in its structure, size or just general \emph{logic/kind}.
+Let us first elaborate on the datasets used both in the works that are being replicated as well as the dataset used in the scope of this thesis. Doing both is important because (as explained in \autoref{sec:howtoreplicate}), to really know if an algorithm is a good choice for a task, it must be ensured that it does not only work on a special kind of dataset due to a special property that this kind of data happens to have. So, we will now compare all datasets, to see if there are important differences between them, as for example in its structure, size or just general \emph{logic}.
 
-\textcite{Derrac2015} used their algorithm to create conceptual spaces for three domains: movies, placetypes and wines. Accordingly, they created corpora for these three domains. The two considered follow-up works both re-used the datasets for movies and placetypes, and also created additional datasets respectively. An overview of all the corpora used in \mainalgos is provided in \autoref{tab:all_datasets}.
+\textcite{Derrac2015} used their algorithm to create conceptual spaces for three domains: \textit{movies}, \textit{placetypes} and \textit{wines}. Accordingly, they created corpora for these three domains. The two considered follow-up works both re-used the datasets for movies and placetypes and also created additional datasets respectively. An overview of all the corpora used in \mainalgos is provided in \autoref{tab:all_datasets}.
 
 % NOW at first the ones from \mainalgos I am using
 
 \subsection*{Comparing dataset properties}
 
-This work applies the replicated algorithm to a new dataset, so it is important to check if the new dataset differs from the originally used ones. To ensure comparability in algorithm details, this implementation is also run on the \emph{placetypes}-dataset, and some of its statistics as well as that of the other two datasets made public\footnote{\url{https://www.cs.cf.ac.uk/semanticspaces/}} by \cite{Derrac2015}. Let us first compare some key statistics of them, before looking into two of them individually in the next section.
+This work applies the replicated algorithm to a new dataset, so it is important to check if the new dataset differs from the originally used ones. To ensure comparability in algorithm details, this implementation is also run on the \emph{placetypes}-dataset, and some of its statistics as well as that of the other two datasets made public by \cite{Derrac2015}\footnote{\url{https://www.cs.cf.ac.uk/semanticspaces/}}. Let us first compare some key statistics of them, before looking into two of them individually in the next section.
 
-A very distinctive difference of the datasets is their size: the movies-dataset consists of 15.000 entities, place-types of 1383, and wines of only 330. Just as important as the number of entities is however also the length of their associated text-corpus. \autoref{tab:corpussizes} shows the corpus size and distribution of text lenghts per entity.
+A very distinctive difference of the datasets is their size: the movies-dataset consists of 15.000 entities, place-types of 1383, and wines of only 330. Just as important as the number of entities is however also the length of their associated text-corpus. Figures \ref{fig:sid_wordsperdesc} and \ref{fig:placetypes_dist_unique} show a histogram of the distribution of text lengths for the Siddata-dataset and placetypes-dataset respectively, and \autoref{tab:corpussizes} summarize corpus size and distribution of text lengths per entity for all handled datasets. Note that the Siddata-dataset is listed twice, once including all available entities and once after filtering out those whose description was shorter than 80 words.
 
-\autoref{fig:placetypes_dist_unique} shows the distribution of lengths for the placetypes-corpus.
-
-
-\begin{table}[]
+\begin{table}[H]
 	\centering
 	\begin{tabular}{r|l|lll|lll}
 		&  \textbf{Entities}   & \multicolumn{6}{c}{\textbf{Words per Entity}}                                 \\
@@ -48,25 +45,21 @@ A very distinctive difference of the datasets is their size: the movies-dataset 
 	 &  & \textbf{5\textsuperscript{th}} & \textbf{Med} & \textbf{95\textsuperscript{th}} & \textbf{5\textsuperscript{th}} & \textbf{Med} & \textbf{95\textsuperscript{th}} \\ \midrule
 	\textbf{movie reviews}                                                          & 13978 & 565       & 1358       & 5510       & 962        & 3179        & 38378        \\
 	\textbf{place types}                                                          & 1383  & 159       & 2215       & 18117      & 2378       & 55422       & 886233       \\
-	\textbf{SIDDATA (all)}     & 26346 & 19        & 60         & 169        & 22         & 71          & 239          \\
-	\textbf{SIDDATA ($\geq 80$ words)} & 11601 & 63        & 99         & 211        & 83         & 124         & 323         
+	\textbf{Siddata (all)}     & 26346 & 19        & 60         & 169        & 22         & 71          & 239          \\
+	\textbf{Siddata} ($\geq 80$ words) & 11601 & 63        & 99         & 211        & 83         & 124         & 323         
 	\end{tabular}
-	\caption{Statistics of the text-corpora of the SIDDATA-dataset and those of \cite{Derrac2015}.}
+	\caption{Sizes of the text-corpora of the Siddata-dataset and those of \cite{Derrac2015}. The columns \textit{Words per Entity} list the 5\textsuperscript{th}, 50\textsuperscript{th}, and 95\textsuperscript{th} percentile respectively.}
 	\label{tab:corpussizes}
-	\end{table}
+\end{table}
 
+It is obvious that even though the number of Siddata-entities is comparable to the bigger of \cite{Derrac2015}'s datasets, the number of unique words in the individual texts associated with the entities are two orders of magnitude shorter than both. As the algorithm does not rely on deep learning, this does not mean that the dataset is unsuited for it, but let us explore how the distance in their lengths can be explained and what consequences this has.
 
-TODO: remove parts of the stuff below here and insert some stuff from the placetypes subsection!
-
-
-The works considered in this replication \mainalgos all use a dataset of 15.000 movies and their reviews on IMDB as well as a placetypes-dataset to evaluate their methods. The former consists of the concatenation of all available reviews for movies from IMDB\footnote{\url{https://www.imdb.com/}}, whereas the latter a collection of tags from photos uploaded to Flickr\footnote{\url{https://www.flickr.com}} that co-occur with a certain placetype. Other considered datasets are wine reviews, posts to certain newsgroups and another IMDB-review-dataset (see \tref{tab:all_datasets}). 
+The works considered in this replication \mainalgos all use the movies- and the  placetypes-dataset to evaluate their methods. The former consists of the concatenation of all available reviews for 15.000 movies from IMDB\footnote{\url{https://www.imdb.com/}}, grouped by the movie the reviews are for. The placetypes-dataset is created from a collection of tags that belong to photos uploaded to the photo sharing platform Flickr\footnote{\url{https://www.flickr.com}} that co-occur with other tags that denote one of several placetypes. Other datasets considered in the works of \mainalgos include wine reviews, posts to certain newsgroups, and another dataset created from IMDB-reviews (see \tref{tab:all_datasets}). 
 % "their algorithm is tailored to concatenated-reviews or concatenated-bags-of-tags"
 
-All of these datasets have in common that they are made up from a collection of independent texts or tags, created by different people. This means, that the more obvious or distinct a property of the respective entity is, the more often words describing that property will be used as tag or as part of the review. For example, a movie that is \emph{scary} to a lot of people will lead to many reviews mentioning that, which means that the word scary (or other words commonly co-occuring with it) will have a high count in the concatenation of that review. The algorithm from \cite{Derrac2015} heavily leans on this property by using the (relative) frequency of certain words as signal for the importance of the concept they may refer to. 
+All of these datasets have in common that they are made up from a collection of independent texts or tags, created by different people. This means, that the more obvious or distinct a property of the respective entity is, the more often words describing that property will be used as tag or as part of the review. For example, a movie that is \emph{scary} to a lot of people will lead to many reviews mentioning that, which means that the word scary (or other words commonly co-occuring with it) will have a high count in the concatenation of all these reviews. The algorithm from \cite{Derrac2015} heavily leans on this property by using the (relative) frequency of certain words as signal for the importance of the concept they may refer to. 
 
-The main considered dataset of this thesis unfortunately does not share this property, as the texts that belong to an entity are not collected from different independent texts, but solely from the description of that entity - while it may be the case that the more \emph{mathematical} a course is, the more often the word \emph{math} occurs in it description, but the correlation is likely not as prominent as in the aforementioned datasets. Interestingly, \cite{Alshaikh2020} also used three datasets that only use a sort of description for an entity: its Wikipedia\footnote{\url{https://en.wikipedia.org/}}-article.
-
-
+The Siddata-dataset unfortunately does not share this property, as the texts that belong to an entity are not collected from different independent texts, but solely from the description of that entity. It may of course be roughly the case that the more \emph{mathematical} a course is, the more often the word \emph{math} occurs in its description, but the correlation is likely not as prominent as in the aforementioned datasets. It should however be noted that \cite{Alshaikh2020} also used the algorithm on three datasets where the description for an entity was collected from its Wikipedia\footnote{\url{https://en.wikipedia.org/}}-article, which also does not contain the described duplication of words. \autoref{tab:all_datasets} shows a complete comparison of all datasets used in any of \mainalgos, including their origin, properties as well as associated pre-processing steps.
 
 \input{include/dataset_table}
 
@@ -84,11 +77,11 @@ The main considered dataset of this thesis unfortunately does not share this pro
 	 &  &  &  &  & \textbf{$\geq$20} & \textbf{$\geq$50} & \textbf{$\geq$200} & \textbf{$\geq$500} \\
 	\textbf{Source} & \textbf{Type} & \textbf{Format} & \textbf{Uni} & \textbf{Lang.} &  &  &  &  \\
 	\midrule
-	\multirow[t]{3}{*}{\textbf{2021 Dump}} & \multirow[t]{3}{*}{\textbf{SIP}} & \multirow[t]{3}{*}{\textbf{CRS}} & \multirow[t]{3}{*}{\textbf{\acrshort{uos}}} & \textbf{de} & 18203 & 14551 & 2671 & 100 \\
+	\multirow[t]{3}{*}{\textbf{2021 Dump}} & \multirow[t]{3}{*}{\textbf{Stud.IP}} & \multirow[t]{3}{*}{\textbf{Course}} & \multirow[t]{3}{*}{\textbf{\acrshort{uos}}} & \textbf{de} & 18203 & 14551 & 2671 & 100 \\
 	 &  &  &  & \textbf{en} & 1950 & 1773 & 616 & 53 \\
 	 &  &  &  & \textbf{other} & 681 & 612 & 100 & 1 \\
 	\cline{1-5} \cline{2-5} \cline{3-5} \cline{4-5}
-	\multirow[t]{6}{*}{\textbf{2022 Dump}} & \multirow[t]{6}{*}{\textbf{SIP}} & \multirow[t]{6}{*}{\textbf{CRS}} & \multirow[t]{3}{*}{\textbf{\acrshort{uos}}} & \textbf{de} & 1009 & 807 & 188 & 5 \\
+	\multirow[t]{6}{*}{\textbf{2022 Dump}} & \multirow[t]{6}{*}{\textbf{Stud.IP}} & \multirow[t]{6}{*}{\textbf{Course}} & \multirow[t]{3}{*}{\textbf{\acrshort{uos}}} & \textbf{de} & 1009 & 807 & 188 & 5 \\
 	 &  &  &  & \textbf{en} & 132 & 123 & 70 & 13 \\
 	 &  &  &  & \textbf{other} & 20 & 14 & 1 & - \\
 	\cline{4-5}
@@ -102,7 +95,7 @@ The main considered dataset of this thesis unfortunately does not share this pro
 	 &  & \multirow[t]{2}{*}{\textbf{unknown}} & \multirow[t]{2}{*}{\textbf{other}} & \textbf{de} & 125 & 50 & 6 & - \\
 	 &  &  &  & \textbf{en} & 7 & 4 & - & - \\
 	\cline{2-5} \cline{3-5} \cline{4-5}
-	 & \multirow[t]{6}{*}{\textbf{SIP}} & \multirow[t]{6}{*}{\textbf{CRS}} & \multirow[t]{3}{*}{\textbf{\acrshort{uos}}} & \textbf{de} & 993 & 684 & 121 & 5 \\
+	 & \multirow[t]{6}{*}{\textbf{Stud.IP}} & \multirow[t]{6}{*}{\textbf{Course}} & \multirow[t]{3}{*}{\textbf{\acrshort{uos}}} & \textbf{de} & 993 & 684 & 121 & 5 \\
 	 &  &  &  & \textbf{en} & 236 & 163 & 53 & 2 \\
 	 &  &  &  & \textbf{other} & 168 & 130 & 91 & 25 \\
 	\cline{4-5}
@@ -110,7 +103,7 @@ The main considered dataset of this thesis unfortunately does not share this pro
 	 &  &  &  & \textbf{en} & 303 & 258 & 89 & 23 \\
 	 &  &  &  & \textbf{other} & 33 & 23 & 3 & - \\
 	\cline{2-5} \cline{3-5} \cline{4-5}
-	 & \multirow[t]{3}{*}{\specialcell[t]{\textbf{Udemy-}\\ \textbf{\acrshort{mooc}}}} & \multirow[t]{2}{*}{\textbf{CRS}} & \multirow[t]{2}{*}{\textbf{other}} & \textbf{en} & 22 & - & - & - \\
+	 & \multirow[t]{3}{*}{\specialcell[t]{\textbf{Udemy-}\\ \textbf{\acrshort{mooc}}}} & \multirow[t]{2}{*}{\textbf{Course}} & \multirow[t]{2}{*}{\textbf{other}} & \textbf{en} & 22 & - & - & - \\
 	 &  &  &  & \textbf{other} & 3 & - & - & - \\
 	\cline{3-5} \cline{4-5}
 	 &  & \textbf{\acrshort{mooc}} & \textbf{other} & \textbf{en} & 8 & - & - & - \\
@@ -119,21 +112,21 @@ The main considered dataset of this thesis unfortunately does not share this pro
 	 &  &  &  & \textbf{en} & 1 & - & - & - \\
 	\bottomrule
 	\end{tabular}
-	\caption[Metadata of the SIDDATA-Dataset]{Metadata of the SIDDATA-Dataset. Languages are reported as detected (see \ref{ap:translating}), other metadata as it was available in the dumps. The individual columns is the number of entities whose description has at least 20, 50, 200 or 500 words. \label{tab:siddata_metadata}}
+	\caption[Metadata of the Siddata-Dataset]{Metadata of the Siddata-Dataset. Languages are reported as detected (see \ref{ap:translating}), other metadata as it was available in the dumps. The individual columns is the number of entities whose description has at least 20, 50, 200 or 500 words. \label{tab:siddata_metadata}}
 	}
 \end{table}
 
 \begin{figure}[H]
 	\includegraphics[width=1.15\textwidth,center]{graphics/dataset_new/statistics_bars.pdf}
-	\caption{Different statistics of the SIDDATA-dataset}
+	\caption{Distribution of metadata in the raw Siddata-dataset}
 	\label{fig:sid_statistics}
 \end{figure}
 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.95\textwidth]{graphics/dataset_new/words_per_desc.pdf}
-	\caption{Words per Description for SIDDATA}
+	\includegraphics[width=\textwidth]{graphics/dataset_new/words_per_desc.pdf}
+	\caption{Distribution of description-lengths of the Siddata-dataset. The rightmost bar represents the longest 2\% of descriptions.}
 	\label{fig:sid_wordsperdesc}
 \end{figure}
 

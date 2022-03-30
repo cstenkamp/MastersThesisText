@@ -1,3 +1,26 @@
+DATASETS TODO
+
+PLOTS TODO: 
+	* Sprachverteilung, Fachbereichsverteilung, Text-Längen-Verteilung
+	* Histogram über das Dataset mit Anzahl Wörtern, Anzahl Zeichen, Anzahl Wörter Beschreibung allein, ...
+	* Vergleich Kern-Größen my dataset to to others (maybe split big dataset table and put that stuff only in another table)
+
+
+TODO: 
+	* Datasets-Tabelle mit den key feature sizes für placetypes vervollständigen	
+	* Ich habe schon eine eindeutige Fragestelleung ("Kann man X auf educational resources anwenden") -> danach stringent und explizit vorgehen! Das ist meine Hypothese, these are my methods, this my results, this my conclusion! 
+
+
+Links to ref:
+	* Base datasets: https://www.cs.cf.ac.uk/semanticspaces/
+	* 20 Newsgroups: https://scikit-learn.org/0.19/datasets/twenty_newsgroups.html, http://qwone.com/~jason/20Newsgroups/
+	* Large Movie Review Dataset: http://ai.stanford.edu/~amaas/data/sentiment/
+	* Geonames categories: http://www.geonames.org/export/codes.html
+
+
+TODO: warum sinds in siddata2022 nur 1300 Osnabrück-kurse?! siddata2021 sind >7000!
+
+
 DATASETS:SIDDATA SECTION PRE-TEXT
 
 write in Dataset-section where the DDCs come from

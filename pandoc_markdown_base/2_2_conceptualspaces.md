@@ -1,30 +1,76 @@
 This section will introduce conceptual spaces as tool of choice as well as how to generate them and how reasoning on them works, as well as some other related work to what's done in this thesis.
 
-To understand what a CS is, let's start with vector space models in general. VSMs try to represent entities of a certain kind (movies, educational resources) together with their associated properties (if they are scary, if they are advanced) and relevant concepts (their genre or faculty). VSMs have been proposed for information retrieval and NLP \cite{deerwester, Lowe} long before the dawn of modern neural embeddings like \gls{word2vec} \cite{Mikolov2013}. 
+To understand what a CS is, let's start with vector space models in general. VSMs try to represent entities of a certain kind (such as educational resources) together with their associated properties (\eg if they are advanced) and relevant concepts (\eg their faculty). VSMs are used for information retrieval and NLP \cite{deerwester, Lowe} since long before the dawn of modern neural embeddings like \gls{word2vec} \cite{Mikolov2013}. 
 
-Conceptual spaces are similar in principle, but where in standard embeddings all natural language words (including verbs and adjectives) are simply modelled as vector, whereas in CS there is an explicit disctinction between entities (tokens, vectors, mostly nouns) and their properties and concepts (regions). Also, where the regularities in the VSMs (king -mann + frau, yadda yadda) are only implicit, in CS such primitive interpretable human concepts/properties are explicitly the dimensions/unitvectors Furthermore, CS are organized into different domains and in each of those only certain properties/concepts are relevant (from \cite{Alshaikh2019}: \q{For instance, in a conceptual space of movies, we may have facets such as genre, language, geographic location, etc. Each facet is associated with its own vector space, which intuitively captures similarity \wrt the corresponding facet. Most of these facet spaces tend to be low-dimensional [...]. This clearly differentiates them from traditional semantic spaces, which often have hundreds of dimensions})
+Conceptual Spaces are similar in principle, but where in standard embeddings all natural language words (including verbs and adjectives) are simply modelled as vector, in CS there is an explicit disctinction between entities (tokens, vectors, mostly nouns) and their properties and concepts (regions). The domain of a conceptual space does not include all kinds of words or concepts, but only concepts of a certain domain (like movies or university courses). Where the regularities in the VSMs (see \autoref{eq:w2vregularity}) are only implicit, a CS explicitly models meaningful and interpretable human concepts and properties as dimensions\footnote{Which means that in a conceptual space of humans, \emph{man} may be a unit vector}, so in contrast to arbitrary dimnesions that only depend on the random initial setup, there is a clearly interpretable direction for the gender, and the space itself has a clearly defined metric that allows much more geometric and arithmetic reasoning, such as \eg betweeness. Furthermore, CS are organized into multiple low-dimensionsional spaces for different facets of the domain, such that in each of those only a small set of highly correlated properties/concepts is relevant\footnote{A prime example for this is the color-domain, which may consist of the attributes \emph{hue}, \emph{saturation} and \emph{value}.}.
+<!-- from \cite{Alshaikh2019}: \q{For instance, in a conceptual space of movies, we may have facets such as genre, language, geographic location, etc. Each facet is associated with its own vector space, which intuitively captures similarity \wrt the corresponding facet. Most of these facet spaces tend to be low-dimensional [...]. This clearly differentiates them from traditional semantic spaces, which often have hundreds of dimensions}) -->
+Importantly, a concept in a Conceptual Spaces is not modelled as a vector or point, but as a convex region. <!-- TODO: is this mentioned? (which allows for easy extraction of is-a and part-of relations or prototypical examples vs edge examples, but makes the generation computationally vastly more expensive)--> . 
 
-Conceptual spaces sounds similar to \gls{word2vec} or other word embedding approaches, however there are a few important distinctions - first, the domain of a conceptual space does not include all kinds of words or concepts, but only concepts of a certain domain (like movies or university courses). 
-Second, conceptual spaces are convex regions, not mere vectors (which allows for easy extraction of is-a and part-of relations or prototypical examples vs edge examples, but makes the generation computationally vastly more expensive). And, most importantly, while the geometry of \gls{word2vec} is roughly euclidian (otherwise the famous vec(king)-vec(man)+vec(woman)==vec(queen) wouldn't work), the dimensions are not interpretable but arbitrarily depend on the random initial setup, so the concepts king and queen differ not only in a single "gender" dimension [..and also its not really euclidian, is it?! sonst wäre die betweeness doch nicht so special, oder?].
+As much for the differences, let's look into why they were created before formally defining them.
+
+The theory of Conceptual Spaces was first introduced by Peter Gärdenfors in his 2000 book \citetitle{Gardenfors2000a} \cite{Gardenfors2000a} both as a theoretical model of human concept formation, but also as format for knowledge representation in artificial systems \cite{Gardenfors2004}. 
+
+In short, a conceptual space is a gemetric structure that spans a number of \emph{quality dimensions} which denote basic features of the entities it contains. Regions of this space correspond to concepts and points to individual objects (instances/\emph{entities}).The quality dimensions are usually based on perception or sub-symbolic processing and according to the theory, natural categories correspond to convex region in these spaces, which allows for geometric solutions to commonsense reasoning tasks such as \emph{betweeness}.
+<!-- TODO: already formal definition?? -->
+<!-- TODO: \cite{Derrac2015}: "Conceptual spaces \cite{Gardenfors2000a} are metric spaces which are used to encode the meaning of natural language concepts and properties." -->
 
 
-Uhm \eqref{eq:w2vregularity} also works but is explicit, so imagine "man" being a unit vector.
+Intro to \cite{Gardenfors2000a}: \q{Within cognitive science, two approaches currently dominate the problem of modeling representations. The symbolic approach views cognition as computation involving symbolic manipulation. Connectionism, a special case of associationism, models associations using artificial neuron networks. Peter Gärdenfors offers his theory of conceptual representations as a bridge between the symbolic and connectionist approaches.}
 
-TODO: Define "Conceptual Space" explicitly
-Definition 2: \textbf{Conceptual Space} The term refers to xyz.
+CS are often seen as a layer of reasoning that stands in between symbolic processing (classical AI, expert systems, formal logic, syllogisms) and subsymbolic processing /connectionistic AI, modern ML with eg ANNs), something that builds a bridge between these and solves the symbol-grounding problem that classical logic and inference systems have by allowing to symbolistic representations that allow for high-level syllogistic reasoning from noisy real-world data. The need for that is certainly there, as the problem of clasical AI is that you'd have to add a shitton of data by hand, but in contrast to ANNs the results are explainable and its reasoning corresponds to high-level (logical) human reasoning (syllogisms etc). Conceptual Spaces are quite literally in between these two: According to \textcite{Gardenfors2000a}, humans have different forms of representations for concepts, split into three levels:  The symbolic level, the conceptual level and the subconceptual level \cite[204]{Gardenfors2000a}. These are not in conflict, but different perspectives onto the same phenonemon, such that each of the models captures some asbect of the true one. The three levels are:
+* Symbolic: Represent observations by describing them in some specified language (formal logic, symbolism, classical AI, "logical positivism", aristotelian concepts)
+* Conceptual: Observations are defined not as token of a symbol, but as vector in a conceptual space (of unknown but hopefully modellable quality) (induction/reasoning is thus based on regions and directions) (prototype theory, linear algebra)
+* Subconceptual: Observations are the firing of the neurons of our sensory receptors (defined as something before conceptualization) (induction as pattern-matching in that firing) (connectionism, modernAI=ANNs)
 
-Conceptual Spaces, Originally created by Peter Gärdenfors \cite{Gardenfors2000a}, want to stand in between subsymbolic processing and symbolic processing: Like in subsymbolism, concepts are represented in high-dimensional spaces, but because the dimensions of these spaces are not arbitrary but human-interpretable, it allows for symbolistic high-level reasoning.
-	* would also solve the symbol-grounding problem that Classical Logic & Inference systems have
+Apart from the theory's aspiration to model human concept formation and reasoning \cite[Sec.~6.5]{Gardenfors2000a} however, it is also a a useful knowledge representation method.
 
-So, in conceptual spaces, concepts are represented as convex regions in [high-dimensional/domain-specific], human interpretable spaces. For example, the concept of "apple" is a region that in the dimension "color" is somewhere between red and green, in the dimension "form" at roughly round, in the dimension "taste" somwhere between sweet and sour, etc. 
-Every instance of an apple is thus a vector that lies inside the high-dimensional region of the concept. This allows for high-level reasoning, such as the question "does any Instance of concept X fit into my bag?" -> If the "size" dimension of the whole region is smaller than the size of my bag, it will.
 
-The idea of Conceptual Spaces \cite{Gardenfors2000a, Gardenfors2004} is 
+The theory of Conceptual Spaces \cite{Gardenfors2000a, Gardenfors2004} is 
 	* a model of human conceptualization/concept formation and reasoning (\cite[Sec.~6.5]{Gardenfors2000a}: he's suggesting what kinds of models (and what algorisms to generate them) may be good at doing similar kinds of reasoning as humans (again explainable AI, where ANNs can solve it but not tell us how, this can))
 	* but also created as a tool to express semantic relations that is superior to previous appraoches of a symbolistic, ontology-based semantic web. Knowledge representation method, a representational format with rich semantics. Created as better tool for semantic web (keep in mind, it's 2000, where that was all the rage)
 		* Claims to have richer semantic structure than RDS/OWL/the entire idea of ontologies (Because information processing is not, as historically thought, pure deductive reasoning (→ syllogisms) - no strict is-a relations but also concepts like similiarity, which the original semantic web languages couldn't represent)
 		* Other problems with ontologies and reasoning systems are that they assume explicit, unambiguous, universally agreed-upon truths which are explicitly described, which he argues is not how the world is.
 => So on the one hand it's a framework for scientific theories, but on the other hand a model of human concept formation from phenomenal observations.
+
+ \cite[Sec.~6.7]{Gardenfors2000a} No matter if CS actually truely represents human concept formation, some (models of) kinds of reasoning can be done on that level that cannot be done on symbolistic or subconceptual level but only on the level that CS is at, so it's still a useful tool
+
+
+So, in conceptual spaces, concepts are represented as convex regions in [high-dimensional/domain-specific], human interpretable spaces. For example, the concept of "apple" is a region that in the dimension "color" is somewhere between red and green, in the dimension "form" at roughly round, in the dimension "taste" somwhere between sweet and sour, etc. 
+Every instance of an apple is thus a vector that lies inside the high-dimensional region of the concept. This allows for high-level reasoning, such as the question "does any Instance of concept X fit into my bag?" -> If the "size" dimension of the whole region is smaller than the size of my bag, it will.
+
+
+
+====================== FROM CS COURSE ====================
+
+* Classical Logic & Inference system have the symbol grounding problem.
+* Conceputal Layer in between symbolic layer (formal logic, natural language) and subsymbolic layer (sensor values, real world): gemometic representation, human cognition
+* there are quality dimensions. These can either be integral (hue & saturation) or seperable (temperature and weight)
+* domain = set of integral dimensions that are separable from others. (eg. color).
+* Distances on individual dimensions need to be aggregated - he suggests euclidian for integral, manhattan for seperable. Context can influence distance by putting weights on dimensions. Distance inversely related to similiarity.
+* betweenness iff d(x,y) + d(y,z) = d(x,z). Macht nen square bei manhattan distances!!
+* convec because in that way interpolations between two points don't leave the set.
+* Criterion P: a natural property is a convex region of a domain in a conceputal space.
+* Connects to prototype theory! central point of each region corresponds to prototype
+* relative properties: define them as region on a relative scale, resized this according to contrast class ("tall" iff in the upper third of all relevant objects)
+* Concepts: Combination of properties (different properties are differently important (influenced by context), and potentially correlated (taste and color in apples))
+* Criterion C: A natural concept is represented as a set of convex regions in a number of domains together with an assignment of salience weights to the domains and information about how the regions in different domains are correlated.
+* Concept combination: Either narrow down (correlations may yield more updates - green banana is bitter), or, if modifier incompatible with original value, replace that information (pink elephant), or, if incompatible with most domains, remove incompatible domains (stone lion doesn't have a life span or habitat)
+
+==================================================================
+* CS are often said to be something in between classical, symbolistic AI approaches on the one hand, and connectionistic ANN-based modern ML on the other, something that may possibly build a bridge between the two (we'll soon see that it's literally very much in between those!). Such a bridge is seen as very important bc the problem of classical AI is that it is a lot of manual data, you'd have to add countless facts or smth by hand, but the advantage of it over ML is that it's explainable and its reasoning corresponds to high-level (logical) human reasoning (syllogisms etc), so a bridge that crates the former from the latter would be awesome.
+	* Intro to \cite{Gardenfors2000a}: \q{Within cognitive science, two approaches currently dominate the problem of modeling representations. The symbolic approach views cognition as computation involving symbolic manipulation. Connectionism, a special case of associationism, models associations using artificial neuron networks. Peter Gärdenfors offers his theory of conceptual representations as a bridge between the symbolic and connectionist approaches.}
+
+* According to \textcite{Gardenfors2000a}, here are different forms of representation we humans have for concepts (chapter 1,2), which he says can be represented by three levels of accounting for observations: The symbolic level, the conceptual level and the subconceptual leven (p204).  Importantly, Gärdenfors doesn't see the three levels as being in conflict with each other, they are perspective on the same things, different models for the same phenonemon (..that each capture some aspects of the true one)
+	* Symbolic: Represent observations by describing them in some specified language (formal logic, symbolism, classical AI, "logical positivism", aristotelian concepts)
+	* Conceptual: Observations are defined not as token of a symbol, but as vector in a conceptual space (of unknown but hopefully modellable quality) (induction/reasoning is thus based on regions and directions) (prototype theory, linear algebra)
+	* Subconceptual: Observations are the firing of the neurons of our sensory receptors (defined as something before conceptualization) (induction as pattern-matching in that firing) (connectionism, modernAI=ANNs)
+ \cite[Sec.~6.7]{Gardenfors2000a} No matter if CS actually truely represents human concept formation, some (models of) kinds of reasoning can be done on that level that cannot be done on symbolistic or subconceptual level but only on the level that CS is at, so it's still a useful tool
+
+
+ Originally created by Peter Gärdenfors \cite{Gardenfors2000a}, want to stand in between subsymbolic processing and symbolic processing: Like in subsymbolism, concepts are represented in high-dimensional spaces, but because the dimensions of these spaces are not arbitrary but human-interpretable, it allows for symbolistic high-level reasoning.
+	* would also solve the symbol-grounding problem that Classical Logic & Inference systems have
+
+==================================================================
 
 * Representation of concepts. Note that, as Gärdenfors states, Representations don't need to be similiar to the objects they represent, but the *similarity relations of the representations* should correspond to those of the objects they represent
 
@@ -53,14 +99,10 @@ Use case: Should be a representational level below the symbolic level (...making
 
 
 
-* CS are often said to be something in between classical, symbolistic AI approaches on the one hand, and connectionistic ANN-based modern ML on the other, something that may possibly build a bridge between the two (we'll soon see that it's literally very much in between those!). Such a bridge is seen as very important bc the problem of classical AI is that it is a lot of manual data, you'd have to add countless facts or smth by hand, but the advantage of it over ML is that it's explainable and its reasoning corresponds to high-level (logical) human reasoning (syllogisms etc), so a bridge that crates the former from the latter would be awesome.
-	* Intro to \cite{Gardenfors2000a}: \q{Within cognitive science, two approaches currently dominate the problem of modeling representations. The symbolic approach views cognition as computation involving symbolic manipulation. Connectionism, a special case of associationism, models associations using artificial neuron networks. Peter Gärdenfors offers his theory of conceptual representations as a bridge between the symbolic and connectionist approaches.}
 
-* According to \textcite{Gardenfors2000a}, here are different forms of representation we humans have for concepts (chapter 1,2), which he says can be represented by three levels of accounting for observations: The symbolic level, the conceptual level and the subconceptual leven (p204).  Importantly, Gärdenfors doesn't see the three levels as being in conflict with each other, they are perspective on the same things, different models for the same phenonemon (..that each capture some aspects of the true one)
-	* Symbolic: Represent observations by describing them in some specified language (formal logic, symbolism, classical AI, "logical positivism", aristotelian concepts)
-	* Conceptual: Observations are defined not as token of a symbol, but as vector in a conceptual space (of unknown but hopefully modellable quality) (induction/reasoning is thus based on regions and directions) (prototype theory, linear algebra)
-	* Subconceptual: Observations are the firing of the neurons of our sensory receptors (defined as something before conceptualization) (induction as pattern-matching in that firing) (connectionism, modernAI=ANNs)
- \cite[Sec.~6.7]{Gardenfors2000a} No matter if CS actually truely represents human concept formation, some (models of) kinds of reasoning can be done on that level that cannot be done on symbolistic or subconceptual level but only on the level that CS is at, so it's still a useful tool
+
+TODO: Define "Conceptual Space" explicitly
+Definition 2: \textbf{Conceptual Space} The term refers to xyz.
 
 
 #### WHAT TO SAY NOW

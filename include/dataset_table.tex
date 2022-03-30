@@ -4,16 +4,16 @@
 % \afterpage{%
 
 \newgeometry{
-	top=22mm,
-	bottom=18mm,
-	inner=18mm,
-	outer=18mm,
+	top=21mm,
+	bottom=16mm,
+	inner=16mm,
+	outer=16mm,
 } 
 
 
 \begin{landscape}
 	\begin{table}[]
-		\resizebox{\textwidth}{!}{%
+		\resizebox{.98\textwidth}{!}{%
         \begin{tabular}{@{}llllll@{}} 
         	\toprule
         		\textbf{dataset} &
@@ -24,14 +24,14 @@
         		\textbf{candidate word threshold}
         		% & \textbf{key feature sizes} 
         		 \\ \midrule
-        	\textbf{movies\tablefootnote{\label{origdsets}\url{https://www.cs.cf.ac.uk/semanticspaces/}} \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020} } &
+        	\textbf{movies\tablefootnote{\label{origdsets}\url{https://www.cs.cf.ac.uk/semanticspaces/}} \cite{Derrac2015,Ager2018,Alshaikh2020} } &
 				\specialcell[l]{grouped-by-movie-concatenated\\reviews for movies} & 
         		\specialcell[l]{\tabitem removed stop-words\tablefootnote{\label{fnote:stopwordlist}\url{http://snowball.tartarus.org/algorithms/english/stop.txt}} \\ \tabitem lower-cased text \\ \tabitem removed diacritics  \\ \tabitem removed punctuation} &
         		\specialcell[l]{\cite{Derrac2015}: 15000 movies \\ \cite{Ager2018,Alshaikh2020}: 13978 movies } & %Ager2018 says 15.000 - 1022 duplicates, that's the number of Alshaikh2020
         		\specialcell[l]{ \tabitem genre (23 classes)\\ \tabitem plot keywords (eg. \textit{suicide, beach}) (100 classes) \\ \tabitem age-rating certificates (6 classes)} & \specialcell[l]{\acrshort{tf} $\geq 100$ \\ \textrightarrow around 22k candidates \\ variable-length \textbf{n-grams} considered}
         		
         		\\ \midrule
-        	\textbf{place types\footref{origdsets} \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020} } &
+        	\textbf{place types\footref{origdsets} \cite{Derrac2015,Ager2018,Alshaikh2020} } &
 				\specialcell[l]{Tags of Flickr-photos that are also\\tagged with a place-type}
         		% bag-of-tags from Flickr used to describe places of a certain place-type
         		& 
@@ -89,10 +89,12 @@
         	% 	&
         	% 	\specialcell[l]{ \tabitem Rating (5 classes) \\ \textit{\tabitem Major, Category, Offered-By,... (tbd)} }
         		\\ 
-        \end{tabular}
-        }
-        \end{table}
-    \end{landscape}
+		\end{tabular}
+		\caption[All datasets used by any of \mainalgos]{All datasets used by any of \mainalgos. Citations behind the dataset name denote which author used it. Other listed properties include dataset sources (where available), contents, sizes, the respectively used preprocessing-methods and candidate-word-thresholds, as well as the classes considered in the evaluation of the derived explainable classifiers.  Extends similar table in \cite{Alshaikh2020}.}
+		\label{tab:all_datasets}
+	}
+	\end{table}
+\end{landscape}
 
 
 \restoregeometry % !!! when trying to add afterpage again, remove this!!
