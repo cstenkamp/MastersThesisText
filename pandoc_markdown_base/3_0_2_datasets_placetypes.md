@@ -1,3 +1,13 @@
+<!-- 
+VON JOHANNES: 
+"Wo geht mein Argument für diese subsection hin?!"
+-> Nutzen das auch zum gucken ob wir fehler in der implentation haben, und wenn wir dann SIDDATA drauf schmeißen können wir sehen wie gut das performt und ob das aussagekräftig ist.
+
+Der Train of thought ist sehr gut, ABER NICHT STIMMIG IN DIESER SECTION
+=> workflow section!! (Oder direkt unter methods, ist eine sehr schöne überleitung dazu dann erstmal die datasets zu beschreiben und was die datasets aus der literatur ausmacht ==> Der einleitene Absatz von hier ist vollkommen valide dafür, kann ich stattdessen einfach in 3.0 packen
+
+-->
+
 DATASETS:PLACETYPES SECTION PRE-TEXT
 
 * Didn't do the openCYC taxonomy bc they say that they don't use one level of the taxonomy consistently but also never explain where they go to which level

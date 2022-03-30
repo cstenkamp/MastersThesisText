@@ -3,10 +3,17 @@
 % * Verhältnis von Datensatz und Algorithmus wird nicht klar
 
 
-So in this section I'll go into detail about this main algorithm, plus the two other papers that according to my resarch are good additions to it (in terms of helping to understand it as well as improving on some stuff in it). That we are focusing on only those three papers should by no means imply that they are the only ones in that regard (See \autoref{sec:otherwork} - \cite{VISR12} and their tag genome, the fact that the algorithm detailed here is basically only one step in \cite{Alshaikh2019}, Gärdenfors himself suggested that one may use self-organizing maps instead of classical AI/NLP algorithms
+In this section we will go into detail about this main algorithm, plus the two other papers that according to my research are good additions to it (in terms of helping to understand it as well as improving on some stuff in it). That we are focusing on only those three papers should by no means imply that they are the only ones in that regard\footnote{see \autoref{sec:otherwork} - \cite{VISR12} and their tag genome, the fact that the algorithm detailed here is basically only one step in \cite{Alshaikh2019}, Gärdenfors himself suggested that one may use self-organizing maps instead of classical AI/NLP algorithms.}.
+
+\todoparagraph{Important features:} %TODO:
+\begin{itemize}
+	\item Unsupervised, data-driven (in contrast to \cite{VISR12})
+	\item Modular (subcomponents may be exchanged)
+	\item Optimized to "look good to humans" (no straight-forward metrics or obvious evaluations)
+\end{itemize}
 
 
-The algorithm that is implemented in the scope of the thesis is in principle the one from \textcite{Derrac2015}, but includes some improvements from \textcite{Ager2018} and \textcite{Alshaikh2020} - both of which directly builing on the work of the former. As all of these publications share Prof. Steven Schockaert as last author, it seems plausible that a) the latter ones are legit improvements upon the first, b) at least to a certain degree they can share code and data, c) this field of work is constrained to a small community, without any alternative implementations or substantial improvements from outside of it.
+The algorithm that is implemented in the scope of the thesis replicates and extends the algorithm proposed by \textcite{Derrac2015}, by including some improvements from \textcite{Ager2018} and \textcite{Alshaikh2020} - both of which directly builing on the work of the former and sharing Prof. Steven Schockaert as last author. \todoparagraph{I assume they shared data, at least the didn't have the n-gram problem I mentioned.}
 % sollte ja schon vorher erwähnt haben dass das thema leider nicht über diese small community hinaus geht
 % and includes my own improvements und anpassungen für den speziellen datensatz
 % und ist so modular wie möglich
@@ -15,33 +22,26 @@ The algorithm that is implemented in the scope of the thesis is in principle the
 
 % The core idea of the algorithm is to unsupervisedly find a a set of features which can be modelled as directions for a vector-space representation of the respetive entities.
 The main goal of the algorithm is to unsupervisedly use the considered text-corpora associated with the respective entities from a certain domain % descriptions, reviews, ...
-to embed the entities in to a vector-space where the axes correspond to human concepts, % "concepts" meaning attributes and what-was-the-other-again, according to CS lingo corresponding to nouns and adjectives, TODO: see above where I described that already.
+to embed the entities into a vector-space where the axes correspond to human concepts, % "concepts" meaning attributes and what-was-the-other-again, according to CS lingo corresponding to nouns and adjectives, TODO: see above where I described that already.
 allowing a \textit{feature-based} representation of them - a high-dimensional vector that numerically encodes the degree % protypicality
 to which the entity corresponds to a number of appropriate dimensions. % Das haupt-ziel der algorithmen ist es, am ende die entities "feature-based" darstellen zu können, also als high-dim-vector mit floats per human-interpretable dimension. 
 % Alshaikh2020 hat dafür wegen den subfeatures noch kleine specials
+%TODO: Johannes said "Consider breaking this sentence into multiple sentences to enhance readability."
 \newline
 
 The general idea to achieve that is as follows: First, the entities %TODO: at this point already defined that entities = texts = descriptions/concatenatedreviews/... 
-are embedded as fixed-dimensional vectors. This already softens the definition of a conceptual space, as the considered entities are modelled as vectors instead of regions. % entities were supposed to be regions, however here we assume vectors because it's computationally a lot easier (TODO: are the reasons mentioned elsewhere? also the distiction between types and tokens?)
+are embedded as fixed-dimensional vectors\footnote{This already softens the definition of a conceptual space, as the considered entities are modelled as vectors instead of regions.}. % entities were supposed to be regions, however here we assume vectors because it's computationally a lot easier (TODO: are the reasons mentioned elsewhere? also the distiction between types and tokens?)
 To allow for the types of reasoning mentioned in Section \ref{sec:cs_reasoning}, %TODO: section where the entire mapping from logic-reasoning to CS-reasoning is explained, mostly from DESC15 and Gärdenfors himself
-it is embedded into metric spaces where the concepts of direction and distance are well-defined. \gencite{Derrac2015} original algorithm uses MDS (see \ref{MDS}) for this matter, which enforces equal distances  %TODO: link the distance-matrix-notepad FROM MY REPO in nbviewer+binder
-(however as shown by \textcite{Mikolov:Regularities}, such things are also possible with neural word-embedding techniques such as word2vec \cite{Mikolov2013}) 
-. Additionally, words from the text are extracted as candidates for the names of the semantic dimensions. The core assumption is then, that \q{words describing semantically meaningful features can be identified by learning for each candidate word $w$ a linear classifier which separates the embeddings of entities that have $w$ in their description from the others} \cite[3574]{Alshaikh2020}. The better the performance of that classifier according to a chosen metric, the more evidence there is that $w$ describes a semnatically meaningful feature. 
+it is embedded into metric spaces where the concepts of direction and distance are well-defined. \gencite{Derrac2015} original algorithm uses MDS (see \ref{MDS}) for this matter, which enforces equal distances\footnote{however as shown by \textcite{Mikolov:Regularities}, such things are also possible with neural word-embedding techniques such as word2vec \cite{Mikolov2013}.}%TODO: link the distance-matrix-notepad FROM MY REPO in nbviewer+binder
+. Additionally, words or phrases from the text are extracted as candidates for the names of the semantic dimensions. The underlying assumption is that \q{words describing semantically meaningful features can be identified by learning for each candidate word $w$ a linear classifier which separates the embeddings of entities that have $w$ in their description from the others} \cite[3574]{Alshaikh2020}. The better the performance of that classifier according to a chosen metric, the more evidence there is that $w$ describes a semantically meaningful feature. 
 % * from Alshaikh2020: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candi- date word w a linear classifier which separates the embeddings of entities that have w in their description from the others. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
 % TODO: make the direct quote shorter, such things should only be done "to support an argument", which I don't here.
-In a final step, the candidate-words are clustered according to their similarity to find a fixed set of dimensions. A representative term for the directions is selected, and the entities are re-embedded into a new space comprised of these dimensions, where the individual vector-components correspond to the ranking of an entity with respect to these dimensions.
+In a final step, the candidate-words are clustered according to their similarity to find a fixed set of \emph{semantic directions}. A representative term for the directions is selected, and the entities are re-embedded into a new space comprised of these dimensions, where the individual vector-components correspond to the ranking of an entity with respect to these dimensions.
 % * from Alshaikh2020: "The learned vectors will be referred to as feature directions to emphasize the fact that only the ordering induced by the dot product d_i · e matters"
 \newline
 
-\todoparagraph{Important features:} %TODO:
-\begin{itemize}
-	\item Unsupervised, data-driven (in contrast to \textcite{VISR12})
-	\item Modular (subcomponents may be exchanged)
-	\item Optimize for "looking good to humans", so no straight-forward metrics or obvious way to evaluate
-\end{itemize}
 
-
-Many of the just mentioned components don't refer to a specific algorithms, and the existing implementations \mainalgos differ in many of these implementations. The rest of this sections goes into further detail for each of these components, and an overview of the components supported in the respective implementations is given in \tref{tab:compared_algos}. Further, configuration files to enable exactly the respective components of the respective papers for the codebase of this thesis are listed in \aref{ap:yamls_for_origalgos}.
+Many of the mentioned components don't refer to a specific algorithms, and the existing implementations \mainalgos differ in many of these implementations. The rest of this section goes into further detail for each of these components, and an overview of the components supported in the respective implementations is given in \tref{tab:compared_algos}. Further, configuration files to enable exactly the respective components of the papers \mainalgos for the codebase of this thesis are listed in \aref{ap:yamls_for_origalgos}.
 
 
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
