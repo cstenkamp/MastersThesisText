@@ -6,6 +6,7 @@ Research Question: Ich will die Methodik von dem Paper auf educational resources
 
 * In der Discussion kann ich dann auch wieder bezug auf die orig-paper ziehen "im vergleich zu demundem haben wir das geliche rausbekommen, ...", "die arbeit extended dasunddas weil wir's in ne andere domäne geschoben haben und ...", und nochmal kritisch reflektieren wie gut meine bewertung ist ("shortcomings"-section)
 
+* theoretisch ist es auch möglich bspw nen network mit attention auf gewisse dinge wie fachbereich und anderes zu trainieren und dann rauszusuchen was die wichtigen ausschlaggebenden dinge für das Netzwerk waren
 
 TODO: Welche Fachbereiche hab ich gut klassifiziert und welche schlecth? (...das kann ich auch mit den preliminary results in Johannes sidBERT vergleichen, see slack 29.3. 10:00)
 
@@ -16,6 +17,12 @@ TODO: Welche Fachbereiche hab ich gut klassifiziert und welche schlecth? (...das
 In die Conclusion auch die Frage inwieweit das jetzt conceptual spaces sind (sehr viele vereinfachende sachen, like no convex regions but simply dots)
 [AGKS18] ist da auch mehr humble als [DESC15] und sagt "The idea of learning semantic spaces with accurate fea- ture directions can be seen as a first step towards methods for learning conceptual space representa- tions from data"
 -> SO I'd say just becuase of the fact that we're not talking about points but regions we cannot... and the two follow-ups even drop the metric requirement so there I'd say definitely not.
+
+
+
+I assume \mainalgos \todoparagraph{shared data, at least the didn't  n-gram problem I mentioned.}
+sollte ja schon vorher erwähnt haben dass das thema leider nicht über diese small community hinaus geht
+
 
 
 

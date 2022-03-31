@@ -1,4 +1,19 @@
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\figwidth]{graphics/figures/keyphrases_histogram.png}
+	%plot created with scripts/create_siddata_dataset.py filter-keyphrases /home/chris/Documents/UNI_neu/Masterarbeit/DATA_CLONE --verbose
+	\caption[Occurences in all Documents per Keyphrase]{
+		\label{fig:keyphrases_histogram}
+		Occurences in all Documents per Keyphrase (for all keyphrases that occur $\geq$ 5 times, cut off at the 93th percentile).
+		7007 of 45295 terms occur at least 5 times.
+		Most frequent phrases: seminar (4173), course (3722), students (2923), it (2671), language (2071), work (1980), event (1842), research (1731), lecture (1723), law (1719).
+		}
+\end{figure}
+
+* When we make a histogram counting for every keyword how many documents it appears in, we see an exponential decrease (plot: "Docs per Keyword")
+
+
 Maximum occurrences:
 `term_doc_matrix.index[np.unravel_index(term_doc_matrix.to_numpy().argmax(), term_doc_matrix.to_numpy().shape)[0]], term_doc_matrix.columns[np.unravel_index(term_doc_matrix.to_numpy().argmax(), term_doc_matrix.to_numpy().shape)[1]]`
 

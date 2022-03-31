@@ -166,6 +166,16 @@ To find these dimensions, the authors look for these words (as well as similar w
 	* He even has a chapter "conceptual aspects", where he suggests vector space models, dimensionality reduction algorithms, ANN architectures, ... (for all of the 3 levels)
 	* ....but even more reason to make me think that it may have been their error to keep the enforcement that the MDS-result must be a euclidian space, when afterwards they have the additional step of using their rankings anyway! (...which btw brings me to the question what that does to distances?!)
 
+
+
+* We also drop the requirement that actually we'd have to embed entities into small spaces of only one domain! This is only kinda picked up again later by \cite{Alshaikh2020}
+	* \cite{Alshaikh2020}: "When representing a particular entity in a conceptual space, we need to specify which domains it belongs to, and for each of these domains we need to provide a corresponding vector." 
+
+
+
+
+
+
 #### On types and tokens
 
 Unlike many ther NLP approaches that rely on embedding (see \autoref{sec:embeddings}), in a Conceptual Space, natural language terms are not modelled as points or vectors, but as convex regions. A point in such a region is one specific instance of such a concept - you could say that regions denote \textbf{types}, with the individual points corresponding to their \textbf{tokens}. 

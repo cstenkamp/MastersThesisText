@@ -37,12 +37,19 @@ Note that those that are not defined here are likely to be found in the Glossary
 
 Lexical databases of semantic relations between words, the most famous of which being WordNet\footnote{\url{https://wordnet.princeton.edu/}}, link words in a graph that encodes explicit semantic relations like synonyms and hyponyms (subtypes/ \emph{is-a}-relationships). While neural %TODO: nicht neural, aber halt data-driven? naja das was word2vec undso sind... by-context-created/trained...?! similarity-based? -> DISTRIBUTIONAL MODELS (ones trained from the co-occurrence patterns of temrs)
 embeddings may encode similar information implicitly, when relying on dictionary-based word encodings they are an important tool when using classical linguistic techniques. For the developed algorithm, the information how many hyponyms of a candidate word for a semantic direction %TODO: did I explain the algorithm well enough before this to throw this much information at the reader?!
-occur in its corresponding text-corpus is highly relevant. To do that, WordNet \cite{Miller1995} and it's german equivalent, GermaNet \cite{hamp-feldweg-1997-germanet,Henrich}, are required in the respective step.
+occur in its corresponding text-corpus is highly relevant. To do that, WordNet \cite{Miller1995} and it's german equivalent, GermaNet \cite{hamp-feldweg-1997-germanet,Henrich}\footnote{\url{(https://uni-tuebingen.de/fakultaeten/philosophische-fakultaet/fachbereiche/neuphilologie/seminar-fuer-sprachwissenschaft/arbeitsbereiche/allg-sprachwissenschaft-computerlinguistik/ressourcen/lexica/germanet-1/)}}, are required in the respective step.
 
 
 \subsubsection*{Word-weighting techniques}
-
 \label{sec:word_count_techniques}
+
+So, making 100\% sure:
+
+\begin{itemize}
+    \item term-frequency tf(term, doc): How often term occurs in doc
+    \item doc-frequency df(term):  the number of documents in the corpus that contain the word
+    \item summed term-frequncy sdf(term): How often term occurs in ANY DOC = tf(term, doc) forall doc
+\end{itemize}
 
 When comparing the \gls{bow}-representations of texts, it is reasonable to give more weight to \emph{surprising} words and less weight to expected ones. \q{The hypothesis is that surprising events, if shared by two vectors, are more discriminative of the similarity between the vectors than less surprising events.} \cite[156]{Turney2010} 
 Another crucial reason is, that the entities's are of drastically varying length, so longer entities would naturally dominate shorter ones when only comparing the raw counts - considering relative frequencies instead of absolute ones alleviates such problems.
@@ -54,3 +61,5 @@ Because of these reasons, in the algorithm it will often be talked about \glspl{
 \label{sec:embeddings}
 
 \includeMD{pandoc_generated_latex/2_6_requiredalgos}
+
+\includeMD{pandoc_generated_latex/2_7_seperatrixdistance}

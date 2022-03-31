@@ -75,10 +75,12 @@ The main goal of this thesis was to create a conceptual space of courses, automa
         * \ref{fig:sid_wordsperdesc}
         * Backref \ref{tab:corpussizes}
     * "Preliminary experiments have shown that including short ones led to worse results than excluding, so we excluded."
-        * Again \ref{tab:siddata_metadata} (lists number of entities for different word-limits) (ADD SUMS!!!!!)
+        * Again \ref{tab:siddata_metadata} (lists number of entities for different word-limits) 
     * That it's REALLY small compared to the others
         * Bei keinem sonderlichen min-word-per-desc threshold hab ich halt XXX samples, bei 50 schon nur noch YYY, das ist wirklich little
         * How I would need to calculate the candidate-word-threshold to have the same one as DESC15 to demonstrate HOW MUCH SMALLER it is
+            * how irrelevant the extract-candidtes step of the alrorithm is for my dataset because there are only XXX [was "6k"] unique x-grams anyway so just taking all is the best thing to do anyway
+            
             * Candidate-Word-Threshold: movies has samples-to-threshold value of 100, placetypes has 35, 20newsgrups has 614, so for 8000 courses any threshold from 2 to 25 seems reasonable => \cite{Derrac2015} say they intentionally kept the number of candidateterms approximate equal (at around 22.000), so to do the same I'd need a threshold of [TODO: optimal value]
             * REGARDING ORIGINAL DATASET: Dass auch die Descriptions echt kurz sind! Ich hab rund 8k samples, um das selbe samples-to-threshold verhältnis zu haben wie DESC15 wäre rechnerisch ein wert von 2 bis 25 sinnvoll (wobei man beachten muss das 2 schon richtig kacke ist weil dann die SVM 2 vs 8000 klassifizieren muss and that will never work -> 25 ist minimum), ABER wenn ich dann 25 nehme hab ich nur 2.4k candidates statt the 22k DESC15 aimed at, which also sucks!! --> CONCLUSION: Datensatz scheint zu klein.
     * Regarding Candidate Words:
@@ -92,6 +94,7 @@ The main goal of this thesis was to create a conceptual space of courses, automa
             * unique 1-grams: 746180, davon 41320 >= 25 mal und 21833 >= 50 mal (their threshold)
             --> das verhältnis Anzahl Texte zu Länge Texte ist bei mir halt komplett off 
         * ausrechnen "um so gut zu sein wie die, müsste der datensatz größe xyz haben"
+    * Datensatz ist anders als concatenated-movie-reviews und ich deswegen nicht einfach "je öfter 'scary' desco scarier" machen kann. Wege damit umzugehen sind elaboriert in Section XYZ
 
 #### How I created it
 
@@ -117,3 +120,10 @@ The main goal of this thesis was to create a conceptual space of courses, automa
 	* Also, we have a lower bound for useful data: we can just throw away data that cannot be classified!
     * Dass man theoretisch sich den task einfacher machen kann indem man nur die correctly-classified Kurse des fb-classifiers verwendet, das wirft die oben genannten doofen descriptions raus!!
 * I'd like more attributes, but da gibt's einige Probleme. Noten gibt's nicht, "allerschweste Datenschutzbedenken". Was studiert wer und in welchem Semester haben wir nur für den Zeitpunkt der Abfrage -> in kombi mit der k-anonymisierung wirds da schwer zu sagen in welchem semester leute was belegt haben
+
+
+### Addendums (SORT ME)
+
+* Because of the nature of the dataset I need to do some things differently 
+    * I'm not working with reviews or collections-of-tags, that means their "how does this dimension correspond to the count in the reviews" doesn't make sense
+        * their algorithm is tailored to this. Take their success-metric for the SVMs splitting the embedding. The more often the word "scary" comes in the concatenated reviews, the more scary the movie is. Sounds legit. The more often the people that took pictures at a particular place mentioned the "nature" of that, the more relevant "nature" is to that place. Also legit. But in the descriptions for courses that involve a lot of mathematics, it is not necessarily the case that the term "mathematics" occurs often. So due to the different nature of my dataset I have to go beyond their algorithm at some points - in this case it is probably the case that different kinds of mathematical terms actually do occur more often, so I'd need calculate these kinds of kappas not based oon a single term but ALREADY on a cluster of terms (... and I can bootstrap my way there, because after I do this I get more words to add to my cluster, rinse and repeat!)

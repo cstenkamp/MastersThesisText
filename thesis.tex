@@ -1,3 +1,5 @@
+% \newcommand*{\NoMarkdown}{}
+
 %TODO: once the text is "finished": [see sublime note]
 % see also: https://www.wiwi.uni-osnabrueck.de/fileadmin/documents/public/3_fachgebiete/3.11_mikro/Guidelines/Guidelines_Thesis.pdf
 
@@ -43,6 +45,9 @@
 %TODO: on the two-sided version, addtitionally have \automark*[section]{chapter}
 
 % ====================== /parts from MastersDoctoralThesis.cls ======================
+
+\newcommand{\saveref}[2]{\texorpdfstring{\hyperref[#1]{#2}}{#2}}
+
 
 % ====
 % https://tex.stackexchange.com/a/135731/108199
@@ -229,6 +234,8 @@
 \newacronym[plural=BoWs, firstplural=Bags of Words]{bow}{BoW}{Bag of Words}
 \newacronym{tsne2}{t-SNE}{T-distributed Stochastic Neighbor Embedding}
 
+\glsunset{cpu}
+\glsunset{ram}
 
 % ================== biblatex stuff ==================
 \newcommand\posscite[1]{\citeauthor{#1}'s \cite{#1}}
@@ -296,12 +303,14 @@
 \usepackage{textcomp}
 
 \ifdefined\ForPrinting
+	\newcommand{\arrowref}[1]{\ignorespaces}	
 \else
 	\renewbibmacro*{pageref}{%
 	%   \printtext[parens]{%
 		\Acrobatmenu{GoBack}{\textsuperscript{\textuparrow}}%
 	%   }%
 	}
+	\newcommand{\arrowref}[1]{\texorpdfstring{\hyperref[#1]{\textsuperscript{\textuparrow}}}{}}
 \fi
 
 % ================== END biblatex stuff ==================
@@ -946,6 +955,7 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 	\input{Appendices/AppendixA} %have to use input and not include, otherwise the order of "Appendix" and the first appendix is wrong
 	\input{Appendices/AppendixB}
 	\input{Appendices/AppendixC}
+	\input{Appendices/AppendixD}
 
 
 	\cleardoublepage

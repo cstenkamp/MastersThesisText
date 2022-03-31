@@ -1,5 +1,21 @@
 <!--oder: OUTLOOK -->
 
+
+
+## WHAT ONE COULD HAVE DONE IN EVERY ALGORITHM STEP
+
+### Preprocessing
+
+
+### ...
+
+
+### Finding Cluster-Names 
+
+* \cite{Camel2009} one!!
+
+
+
 * Ich könnte die Schrittweise Anwendung des Algorithmus wie Alshaikh das gemacht haben mit "für die die politisch sind, what's their direction" mit Level 2 für DDC. "Für die die in 'Informatik' eingeteilt sind, wie gut kriegen wir deren sub-categorie hin?"
 
 * Ich kann gucken in welche Richtungen Fachbereiche sich unterscheiden (humanwissenschaften ist mehr psycho als mathe etc)
@@ -29,6 +45,19 @@
 * Conceptual Space an Kursen erstellen (die dann bspw die komplette Domäne der Mathematik erschließen ;)
 
 
+### Stuff to add Because nicht je-öfter-desto-scarier
+    * Not compare Rankings, but [WHAT]
+    * Using WordNet or smth
+    * Bootstrap your way to more candidates
+        * using LSI or smth (see below)    
+	* Das sich-die-richtigen-wörter-per-candidate-svm-bootstrappen
+        * war das das mit dem statistical "die haben einen hohen overlap, so that term might as well have been in there"?   
+	* Mit LSI rausfinden welche Terme genausogut in dem Text hätten vorkommen können (hab ich auch irgendwo schon)
+	* Explizit einfach zu gucken "Welche Terme kommen oft in den gleichen dokumenten vor" (und das inverse (steht iwo im code)), und dann ne candidate SVM für grouped terms anstelle von einzelterms machen (auch schon iwo als code)
+	* Mit Wordnet hypernyms/hyponyns und synonyms zu finden damit ebenfalls zu arbeiten (kann man wit wordnet angeben welches abstraktionsniveau ich haben will?)
+	    * Abstraktionsniveau gibt's nicht in wordnet, das heißt das richtige layer zu finden ist schwer. Was man auf jeden Fall machen kann ist die Terme zu den bases ihrer synsets umzuwandeln (dadurch wird aus "math" und "mathematics" das gleiche), aber in anderen Fällen ist es halt so dass ich die Candidate-Terms schon vorher brauche und nur sagen kann "diese entity enhält X wörter die halt hyponyms von dem Term sind"
+    * After you figure out which candidate term appears in which texts, figure out which other terms are frequent in these texts while infrequent in texts of the other class and then add these to the candidate-term-set (other way may even be to classify the texts according to if the candidateterm appears in them, and then take the misclassified one also as positive samples)
+
 ### Low-Hanging-Algorithm-Addendums
 
 * A lot from Tag-Genome 
@@ -45,6 +74,33 @@
 * Extensively relying on Wordnet/Germanet 
 	
 [TODO: add those that I didn't do anymore from ONLY CODE_TODOS MRZ25+ : Base Algorithm Improvements/Additions here! ]
+
+* Cluster&Filter:
+    * <TODO>Associate-nongreat-algorithm (k-means, DESC15 one, ..?)
+    * <TODO>Associate-nongreat-threshold (if those ones that are far away from all are ignored) ("smart weighting function that takes into account the kappa-score of the term and/or the closeness to the original clustercenter (to threshold which cluster they are added to)")
+    * <TODO>weight which-candidates-may-cluster: the closer the orthogonals (cosine-dist) AND the closer their intercepts, the more we want to have them in a cluster.
+    * <TODO>Cluster-Direction-Algorithm (onlymain, average, weighted-by-kappa-averaged, weighted-by-distance-to-center-averaged, redo-decision-plane)
+    * <TODO>the better ways to find the name of the cluster
+        
+* Allow to remove too-high-df-words instead of removing stopwords (-> phrasen wie "Fallen aus")
+
+### More Complex Algorithm Addendums
+
+
+* BOOTSTRAP MORE CANDIDATES (AFTER EXTRACT CANDIDATES)
+    * [VISR12]: LSI
+        * Options: [see what to take for dtm]]
+        * Parameters: #dims for the rank reduction (see https://en.wikipedia.org/wiki/Latent_semantic_analysis#Rank-reduced_singular_value_decomposition)
+
+* What to take for the term-document-matrix
+    * [VISR12]: 
+        * tag-applied
+        * tag-count
+        * tag-share (the number of times tag t has been applied to item i, divided by the number of times any tag has been applied to item i)
+    * relative-tag-count (tag-count / text-len) or tag-count / distinct-words-in-text
+    * See also: https://en.wikipedia.org/wiki/Latent_semantic_analysis#Term-document_matrix
+
+
 
 ### Suggestion for what may even be a better algorithm
 
