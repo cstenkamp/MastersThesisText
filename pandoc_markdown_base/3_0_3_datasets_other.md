@@ -14,3 +14,6 @@ See \url{https://www.kaggle.com/roshansharma/coursera-course-reviews} for explor
 Also, there's the Large Movie Review Dataset\footnote{\url{http://ai.stanford.edu/~amaas/data/sentiment/}, \url{https://scikit-learn.org/0.19/datasets/twenty_newsgroups.html}}, also used by \cite{Ager2018}.
 
 
+
+
+goodreads dataset! https://www.mdpi.com/2306-5729/6/8/83

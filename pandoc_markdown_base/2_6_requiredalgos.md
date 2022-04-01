@@ -92,6 +92,7 @@ SVD represents both terms and documents as vectors in a space of choosable dimen
 
 \Gls{mds} is a dimensionality reduction technique that builds a vector-space representation from pairwise similarity judgements. It takes a \gls{dissimmat} as input and returns a fixed-dimensional embedding in which original distances are kept as close to the ones of the \gls{dissimmat} as possible. 
  
+-> See meine Stichpunkte in der discussion ob MDS jetzt sinnvoll war oder nicht
 
 \subsection{Word Embeddings}
 
@@ -140,7 +141,7 @@ Don't forget to mention \gls{distribhyp}
 * Main things: LSA/LSI and LDA. https://towardsdatascience.com/2-latent-methods-for-dimension-reduction-and-topic-modeling-20ff6d7d547
     * LSA mainly dimension reduction;  LDA mainly topic modeling 
     * Input for both: Bag-of-words matrix
-
+    * [AGKS18] says what they do is similar to LDA -> explain/understand LDA
 
 ### Latent Semantic Analysis (LSA) / Latend Semantic Indexing (LSI)
 

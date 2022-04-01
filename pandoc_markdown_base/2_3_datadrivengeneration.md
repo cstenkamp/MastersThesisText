@@ -1,3 +1,5 @@
+<!-- ich kriege ein Problem - ich muss extrem oft bei required algorithms and techniques auf den algorithm vorgreifen und das macht's echt awkward (später werden wir xyz gebrauchen)..... => BASE IDEA OF THE ALGORITHM MUSS SCHON VOR DER METHODS SECTION, FOR REQUIRED ALGORITHMS, STEHEN!!! -->
+
 Thesis goals: We want to automatically generate conceptual spaces for the domain of educational resources to generate explainable recommendation. So far, we established  that Conceptual Spaces are a good framework for that. The part that's missing is the automatic generation. The work of \cite{Derrac2015} is great because it basically does what Gärdenfors suggested using classical AI algorithms, and \cite{Ager2018} and \cite{Alshaikh2019} provided some useful additions for it without changing the main logic. So, we'll work with their algorithm, also only making small improvemenents. So the two main areas of work are implementing the original algorithm, and changing small details of it where most appropriate such that it works well for the domain we're interested in.
 
 

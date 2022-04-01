@@ -7,11 +7,13 @@ As we also wanted to test the architecture itself, we'll run our code for Placet
 
 **Main questions we want to answer:**
 
+(hinleitung vom generellen "thesis goal" zu konkreten measruable sachen)
+
 * Implementation correct?
-* Dataset comparisons
+* Dataset comparisons (features that the algorithm produces)
 * Does the Methodik work on the Domain?
 * Best Parameters?
-
+(* Architecture blub)
 
 ## How do we know what we do is good?  (What are we interested in, whay may good results be?)
 
@@ -21,6 +23,8 @@ As we also wanted to test the architecture itself, we'll run our code for Placet
         * DESC15 "evaluate the practical usefulness of the considered semantic relations" by checking "their use in commonsense reasoning based classifiers", like interpolation and a fortiori inference (chap 5)
         * Section 6.1: Evaluate whether the derived relations are sufficiently accurate for classification, and 6.2 is then comparison with crowdsourcing experiments (more subjective aspects, the question “are the relations useful explanations?”)
     * Both \cite{Ager2018} and \cite{Alshaikh2020} train shallow decision-trees (depth 1 and depth 3 each), on their feature-based representations (such that the 1 or 3 most distinct interpretable dimensions are used) on a known property of the data (genres for movies, category in some taxonomy for placetypes, fachbereich for mine) - in the assumption that these eg in the movie domain the genre (or rather *terms accurately predicting it*) is among the features, we will do that too. Grains of salt:
+        *  GRAIN OF SALT: dass sie nie erwähnen ob sie bei den shallow decision trees one-vs-rest machen --> HOW DID THEY achieve even okay-ish accuracies with the shallow decision-trees? a depth 3 tree has max 2^3 = 8 leaves, so if your to-be-categorized has 100 classes, you'll definitely suck!
+            * read https://machinelearningmastery.com/one-vs-rest-and-one-vs-one-for-multi-class-classification/ wegen one-vs-all undso
         * This only checks a subset (like that would be 10 important features, but what about the other 190?) 
         * This doesn't test if the names of the direcitons are good
         * decision tree based on their features, check if it can classify a held out test dataset

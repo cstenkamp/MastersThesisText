@@ -3,6 +3,12 @@
 
 Erstmal sanity-check "mein algorithmus performt wie die paper, -> reasonable dass richtig", DANN analyse im hinblich auf die fachbereiche, and interpreting the results in discussion.
 
+PLOTS HERE	
+* Plots/Tables mit set-overlaps von meinen placetypes zu deren
+* Die in den Zwischenschritten rauspurzelnden Sachen, wie "entities with close embeddings"
+* Nen Plot der closeness im embedding mit levensthein-distanz und anzahl-gleicher-wörter korreliert und schaut wie explainable das ist
+
+
 ### Implementation correct?
 
 * Is my implementation ok
@@ -13,12 +19,15 @@ Erstmal sanity-check "mein algorithmus performt wie die paper, -> reasonable das
 			* Set-Overlap of candidate-terms for different #dimensions OF THEM
 			* Die Performances von allen \mainalgos in ner tabelle reporten und mit meinen vergleichen, sowohl quantitativ als auch qualitativ!
 	* result: set overlap of my extracted candidates for placetypes and theirs (und auch die big_21222.yml ergebnisse danach auswerten) (nicht nur overlap, ich kann auch verhältnis set intersect zu set union machen, und die als true/false positive/negative deklarieren und dann accuracy, f1 etc analysieren und halt anhand dessen "die hyperparam kombi die am closesten zu deren ergebnissen ist" rausbekommen)
+		* `from derive_conceptualspace.load_data.load_semanticspaces import get_all_goodkappa`
+	* gucken ob die clustercenters ("nature", ..) von denen auch bei mir gut sind für placetypes => AND THEN ALSO FIGURE OUT THE DATA FOR THE TABLE FOR PLACETYPES
 
 
 ### Dataset comparisons (is our dataset worse?)
 
 * Can we produce the same number of features etc than Derrac2015
 	* \ref{tab:generated_stuff}
+	* Grafik: How often are keyphrases in the documents (currently in THROWN OUT)
 
 ### Methodik auf Domäne?
 
@@ -32,8 +41,11 @@ Erstmal sanity-check "mein algorithmus performt wie die paper, -> reasonable das
 			* kommt accuracy etc von den shallow decision trees für fachbereich close an die vom fb-classifier?
 * Are human categories predictable from our extracted directions?
 	* decision tree performance
+		* Are the results comparable with those of the FB-Classifier?
 		* Do the extracted directions look any good if so (QUALITATIVE)
 		  -> \ref{fig:dims_for_fb}
+		  -> vorstellen in den results, interpretieren in discussion.
+		     (also NICHT sagen "psychologie in humanwissenschaften klingt logisch", ABER DARF sagen "mint-fächer klappen besser")
     	* How does a machine classification look
 		  -> \ref{fig:boxes_rechtswis}	  
 * Is the produced embedding (which is necessarily a loss of information) still adequate?
@@ -41,6 +53,7 @@ Erstmal sanity-check "mein algorithmus performt wie die paper, -> reasonable das
 		( \ref{fig:boxes_rechtswis} vs \ref{fig:mds_3d_hyperplane} )
 	* check if courses can be recovered 
 		(TODO: table from `recover_course_from_embeds` results)
+			* btw diese table auch shcreiben dass "der space nicht genug ausgefüllt ist", course of dimensionality, in 3D ist like 80% des unitcubevolumens im unitball, im 200D nur like 0.00001%
 
 #### What we wanted to look at in the Qualitative Analysis
 
@@ -60,6 +73,10 @@ Erstmal sanity-check "mein algorithmus performt wie die paper, -> reasonable das
 * Final Embeddings	
 	* Is there a direction for "more advanced course"? 
 	* Language Courses, Mathe für Anwender 1 & 2, Info A & B
+* Find the top-ranked objects for some of the features (!!)
+
+* Das wie gerade auch in der duplicate-per-combi-of-ndims-and-ncats sichtbar wird dass letztlich halt "kurs 123" und "!!FÄLLT AUS!! kurs 123" auf den selben fallen, was zwar quantiativ scheiße ist aber ACTUALLY GOOD (das ist aber granulare interpretation, das eher in discussion. "nen paar sachen kann man einfacher diskutieren als umfassend data-driven machen")
+
 
 
 ### Now that we have established that we have reason to assume that our algorithm is good, what does it say about the dataset?
@@ -73,5 +90,8 @@ Erstmal sanity-check "mein algorithmus performt wie die paper, -> reasonable das
 * What leads to the highest number of good-kappas?
 	* \todoparagraph{As described in} \autoref{sec:workflow}, a good first approximation is to check how many candidate-terms we get. \autoref{tab:kappa_table} shows the results of many runs with different parameter-combinations with the purpose of figuring out which combination of parameters and kappa-metrics lead to enough candidate-terms (\todoparagraph{Also ref the figure of workflow where I check what threshold was realistic})
 	* \ref{tab:cands_per_config}
+* reclassify-algorithm better than desc15-one (\ref{tab:text_per_dim})
+	* NUR ZEIGEN!! ERST IN DER DISCUSSION SAGEN DASS ICHS BESSER FINDE
+	* weiteres line of reasoning hier: wäre-das-nicht-sogar-ein-guter-candidate-für-die-direction-name?
 * What is the BEST CONFIG?
 	* TODO: !!!

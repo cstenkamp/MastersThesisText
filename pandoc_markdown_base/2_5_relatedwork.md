@@ -37,12 +37,16 @@ main idea is to learn a representation in terms of salient features, where each 
 
 ### Tag-Genome
 
+[AGKS18] says that [Vig et al (2012)] propose a movie recommendation system in which the user can specify that they want to see suggestions for movies that are “similar to this one, but scarier”.
+
 Tag Genome, is based on keywords that users have explicitly as- signed to movies, together with a supervised learning process aimed at re- ducing the sparsity of these assignments and to learn a degree of relevance for terms (rather than just having binary assignments).
 
 => Schreiben dass in nem Klassifikationstask von DESC15 "welches keyword beschreibt den unterschied zwischen film1 und film2 am besten?" tag genome DEUTLICH besser war, aber well das ist halt supervised.
 
 
 ### SidBERT
+
+TODO: Bert in required algorithms als "bestes Neural language Model" vorstellen!
 
 With the "Academic Interests" recommender there is already a system in place that recommends courses, having seen the same need to aid students in finding educational resources, information about which is only implicit. It does that by using a custom head on a BERT encoder that maps courses onto 905 classes derived from the third DDC \cite{Dewey1876} level 
 
@@ -57,3 +61,15 @@ SidBERT: SidBERT is BERT-base model + custom classification head, from Huggingfa
 BERT - based on transfomer (text doesn't need to be added sequentially). 12 stacked self-attention+feedforward encoder layers to create deep phrase embeddings, trained with masked-token inference tasks where the hidden word must be predicted
 
 Currently 62.2% recall, 45.2% accuracy for 905 classes (chance would be 0.11) (CITE TO BE PUBLISHED), preliminary qualitative analysis showing that the internal representation does indeed partially capture the hierachical structure of DDCs.
+
+
+### LSA
+
+* Explain the logic of LSA as written in the main LSA paper paper
+    * that it's useful if something "may just as well have been in there"
+    * Ager/Alshaikh also compare with LSA, explain why it is comparable in what it does
+    * that you could use LSA even to find the name of the semantic direction (if the vector of a document is closest to the vectors of the respective entities)
+    * dass LSA das bag-of-words problem beheben würde
+    * Can use this to, once the corresponding clusters are found, select a good one of that as representative: add pseudodocs with only one term and that term as name, and then let all DOCUMENTNAMES be candidates
+
+* [AGKS18] says what they do is similar to LDA -> explain/understand LDA

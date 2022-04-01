@@ -8,7 +8,7 @@ This thesis is part of SIDDATA, from the idea to add to this platform a recommen
 
 * Motivation for SIDDATA in general
 	* Steal from SIDDATA-Papers (..and cite them)
-* What we specifically want to do (our Use Case): Explainable Course Generation, "Ich hätte gerne einen Kurs wie Codierungstheorie & Kryptographie, aber mit weniger Mathe"
+* What we specifically want to do (our Use Case): Explainable Course Recommendation, "Ich hätte gerne einen Kurs wie Codierungstheorie & Kryptographie, aber mit weniger Mathe"
 	=> We want feature-directions.
 	* Show Sample: Movie Tuner Interface (here or [*])
 	* Standard for Recommendation ist ja der Amazon-Approach "kunden die X kauften kauften auch Y" = Similarity-Based Reasoning

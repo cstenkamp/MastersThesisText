@@ -1,5 +1,13 @@
 ## General 
 
+PLOTS HERE:
+* Snakemake-Graph mit Configs wie für DESC15
+* Beispiel für "faithful" induced ranking vs "not faithful" one
+
+
+* take stuff from \cite{Turney2010} (->sublime), but not too long
+
+* TODO: Mention where future work could be incorporatted already here
 
 * Important Features: 
     * Unsupervised, data-driven (in contrast to \cite{VISR12})
@@ -38,7 +46,13 @@
         * Do Kappa on Binary (-> see later)
             * for them, the binary "does the word occur in the description" is the only sensible signal, no ppmi or anything! (page 2, footnote 1 of RaZb20)
 
-        
+* dass das hier auf bag-of-words basiert und dass es daher wie alle bag-of-words sachen das problem hat das einunddasselbe sehr verschieden ausgedrückt werden kann, und LSA wäre einer der wege das zu beheben (another one: word embeddings)
+
+
+* that I'm using BOW and that I dislike it \cite{Le2014}: "Despite their popularity, bag-of-words features have two major weaknesses: they lose the order- ing of the words and they also ignore semantics of the words. For example, “powerful,” “strong” and “Paris” are equally distant" Bag-of-n-grams would alleviate this, but even though it "considers the word order in short context, it suffers from data sparsity and high dimensionality" (bag of n-grams model would create a very high-dimensional representation that tends to generalize poorly)
+
+* was >15 seithen theoretisch ist lieber als "Munition für Discussion" (wenn meine ergebnisse anders sind als die von dem paper kann ich halt erst dann sagen "das widerspricht demunddem hier, die proposen dass und ich kann es (nicht) confirmen".)
+
 
 <!-- ##############################################################
      ##############################################################
@@ -70,11 +84,9 @@
 
 
 
-
-
 ### Embed
 
-* Multi-Dimensional Scaling (MDS) as their algorithm of choice, which takes 
+* Multi-Dimensional Scaling (MDS) as their algorithm of choice, which takes [...]
 
 
 ### Extract Candidates (Steps 4, 5 and 6: Extracting Candidate Terms, Postprocessing them, creating the Doc-Term-Matrix for the Candidate-Terms and filtering it)
@@ -100,6 +112,8 @@
 
 Here we bring together the embedding of the individual entities and the extracted keyphrases. For that, we split those samples where a keyphrase occurs from those where it doesn't, using a linear classifier. The orthogonal to the resulting decision-hyperplane is then used as axis, onto which the entities are mapped - the further away from the plane the mapping of a point onto the orthogonal, the more the entity is said to have the attribute encoded by the phrase responsible for the hyperplane. A score function compares the ranking induced by this to the ranking induced by number of occurences (or quantification-value) of the respective keyphrase of all documents, such that only those terms where the correspondance of these rankings exceeds a certain threshold are considered as candidate directions henceforth.
 
+* ref fig:3d_hyperplane_ortho !!
+* neuer plot "wann ist ein induziertes ranking faithful pos/neg example" (grafische Darstellung von "if the ranking induced by the SVM corresponds to the count/PPMI, we see it as faithful measure", also ein beispiel wo's passt und ein Beispiel wo's nicht passt)
 * For every candidate-term, take the quantifications from the doc-term-matrix and binarize it, such that we have two classes: one with all descriptions in which the term does occur and one with those where it doesn't.
 * On that we then train a linear classifier such as an SVM. From that, we can then calculate binary classification-quality-metrics such as accuracy, precision, recall, f1 and bin2bin-kappa. 
     * dass wir ja nur ne dulli-SVM ohne kernel trick machen, weil wir ja eben with-hyperplane-linear für den eigentlichen space sein wollen (kerneltrick ist ja "Projecten in nem anderen space, damit das was da linear ist bei uns nonlinear ist" und ich will linear sein)
@@ -120,16 +134,27 @@ Here we bring together the embedding of the individual entities and the extracte
     * It *IS* okay if common words (like "course") are in clusters, it is NOT the case that as soon as the word occurs once it is said to have a certain property. ("Wenn cluster-threshold zu groß, kommt “A1” in ein cluster mit “Course” and everything is over" is FALSE). However it IS not too good -> A cluster with many words like "course" in it has a high degree of randomness (there is no information gain by such words, it occurs random across courses, a cluster of courses that mention that they are courses is useless) The word occurs randomly, if a course is assumed to have a certain property because of that it's certainly wrong
 * \cite{Alshaikh2020} use affinity propagation "for getting rid of the clusters of informative words", similar to how they did it in their 2019 paper. That one doesn't get the #clusters as param so you can set that only indirectly, but they say it's good
 * Dass ich, genau wie (wars ager oder alshaikh?), auch die möglcihkeit hab eine neue svm für die cluster_directions zu machen, und dafür halt den best-30%-weg gehe weil gerne mal zu viele positive samples isnd
+	* NACHDEM ich geclustert habe, nochmal ne SVM draufwerfen, und die descriptions in denen signifikant viele Terms aus diesem Cluster vs die mit kaum/keinen begriffen trennen? (Da kann ich ja sogar die thresholds so setzen dass in beiden klassen möglichst gleich viele vorkommen, und edge cases einfach rauswerfen!) -> mich zu nem richtigerem ergebnis bootstrappen  [ähnlich wie Alshaik2020, die ja nochmal ne SVM für das komplette cluster machen]
     * The new techniques to generate the cluster direction
     * Weighted by kappa or other things
     * Re-calculate by re-fitting an SVM (like Alshaikh2020: "Cluster direction found by the normal vector of the hyperplane of a linear classifier separating entities whose description contains at least one of the words from the cluster from the others")
 * (see the cluster&filter options)
+* Beim letzten Schritt of merging candidate directions es nicht wie die machen (alle nehmen und die zum closestem herclustern und dann die richtung des T^0.5 übernehmen):
+	* die mit zu großer distanz ebennicht nehmen
+	* Die Richtung (wie Alshaikh2020) eben mit ner neuen SVM-Hyperplane bestimmen
 
 
-### Embed with Semantic Directions
+
+### Embed with Semantic Directions (includes find cluster names)
 * Das mit dem Koordinatensystem drehen passiert gar nicht so wie ich dachte dass es passiert...?!
 * My Techniques to find the cluster-name (keybert, embeddings)
+    * die bert-embeddings für die Cluster der candidate directions averagen und den closesten als Name der Dimension geben
+    * keybert (thresholded close bert embeddings)
     * TODO: Mention Camel2009 one!!
+
+### Post-processing
+
+* TODO: Basiert der fine-tuning step von \cite{Ager2018} auf Supervised learning?
 
 
 <!-- ##############################################################
@@ -137,6 +162,7 @@ Here we bring together the embedding of the individual entities and the extracte
      ########################################################### -->
 
 ## Make the decision-trees
+
 * Decision-Trees:
     * which additional to test against
     * if all-at-once or one-vs-rest
@@ -149,12 +175,35 @@ Here we bring together the embedding of the individual entities and the extracte
      ########################################################### -->
 
 ## Reasonable Params:
+
 * Translate-policy: Obviously the translation won't be perfect, so we lose quality from translating, but on the other hand if it's in english you can use wordnet, which is a lot better than GermaNet, and also embedding-wise it's better
     * "Da, based on [source die die accuracy von dem gtranslate algorithm mit denen von menschen vergleicht], a gtranslate translation is as good as the average lecturer, it is assumed that translating the texts to english before using an english model can lead to better results
 * Candidate word threshold: movies has samples-to-threshold value of 100, placetypes has 35, 20newsgrups has 614 so for 8000 courses any threshold from 2 to 25 seems reasonable? \cite{Derrac2015} say they intentionally kept the number of candidateterms approximate equal (at around 22.000), so to do the same I'd need a threshold of [TODO: optimal value]
 * PPMI has high complexity, hence I use tf-idf
 
 
+<!-- ##############################################################
+     ##############################################################
+     ##############################################################  -->
+
+## Features
+
+* Be able to enable/disable or select between all components
+	Like...
+	- [ ]  the contribution of [AGKS18] or [ALBS20]
+	- [ ]  which classifier to use to split positives and negatives in step 1 (SVM, logistic regression)
+	- [ ]  Cohen's Kappa vs Accuracy vs NDCG
+	- [ ]  Kmeans vs [DESC15]'s clustering-algorithm
+	- [ ]  how to create semantic space(step 0) (MDS, PCI, Doc2Vec, Average GloVe ([https://nlp.stanford.edu/projects/glove/](https://nlp.stanford.edu/projects/glove/))
+* Hyperparameters
+	- [x]  #dims of the vector-space (50,100,200)
+	- [ ]  #dims as input to the clustering algorithm (500,1000,2000)
+	- [ ]  number of clusters (1*inputdimsforclusalgorithm, 2*inputdimsforclusalgorithm)
+* Extracting Candiate Terms
+	- The way of DESC15
+	- The way I'm doing it right now
+	- The Tag-LSI-Sim as [VISR12] do it (page 13:15)
+	    [[VISR12] have the Tag-LSI-SIM, die brauch ich](https://www.notion.so/VISR12-have-the-Tag-LSI-SIM-die-brauch-ich-0868f6c7a20147f582029163f39c225e)
 
 
 <!-- ##############################################################
@@ -191,9 +240,8 @@ Here we bring together the embedding of the individual entities and the extracte
     * Regarding Kappa-Weighting-Algorithm:
         * Yet another point where \cite{Derrac2015} are really low on information what parameters they used. Sklearn allows different weighting types\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.cohen_kappa_score.html\#sklearn.metrics.cohen_kappa_score}} - TODO: explain what that changes respectively!!}, and as this plot: ![kappa_weighting_funcs](graphics/figures/which_weigthing_algo.png){#fig:which_weighting_algo} TODO: also generally write about if Kappa is a good choice (see eg \url{https://en.wikipedia.org/wiki/Cohen%27s_kappa})
     * DESC15 write they select Kappa "due to its tolerance to class imbalance", but don't menation any parameters -> Class imbalance weighting? Also [see plot] which other weighting value?
-* ..mein grain-of-salt dass ich nicht sicher bin ob es relevant ist dass der schritt von dem sie sagen dass er metric sein muss metric sein muss?!
-    * In deren Papern klang das so als würden sie die Dinge für die das relevant ist (betweenness etc) schon vor dem re-embedden machen!
-    * in [DESC15] machen die wirklich immer ne SVM für genau einen Term, und gucken sich anschließend an was für terms dann ähnlich clustern. [VISR12] hingegen (und viele andere!) versuchen erst latent kram zu finden, wodurch das das clustering imo viel besser funktionieren wird weil es viel weniger sparse ist (->und die "contains one-of-the-terms" klasse nicht so verschwindend gering ist compared mit der "doesn't-contain-the-one-term") Laut [DESC15] gibt's da keine Methoden die den metric space erhalten, die frage ist halt wie wichtig das ist für das was man erreichen will!
+
+* in [DESC15] machen die wirklich immer ne SVM für genau einen Term, und gucken sich anschließend an was für terms dann ähnlich clustern. [VISR12] hingegen (und viele andere!) versuchen erst latent kram zu finden, wodurch das das clustering imo viel besser funktionieren wird weil es viel weniger sparse ist (->und die "contains one-of-the-terms" klasse nicht so verschwindend gering ist compared mit der "doesn't-contain-the-one-term") Laut [DESC15] gibt's da keine Methoden die den metric space erhalten, die frage ist halt wie wichtig das ist für das was man erreichen will!
 
 * Der letzte Schritt mit dem Clustern der good-kappa-ones ist wirklich very basic und hat very much room for improvement
 * \cite{Alshaikh2020} do Kappa on binary, I can't believe that's good

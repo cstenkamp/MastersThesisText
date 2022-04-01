@@ -12,6 +12,7 @@ But in any case, the two stated goals are thus:
 2) As an exemplary usecase for that, figure out if the Methodik of the paper (the algorithm) works and is useful for the domain of educational resources 
 	* ...to find regularities for explainable and smart (based on user input and feedback) recommendation
 	* ..and also provide some additions to the algorithm such that it works on datasets that are not specifically curated for this algorithm (my contribution is more than just re-develop something existing exactly)
+	* we are interested in if the dataset is different and if we have to do things differently (evaluation metrics wird detallierter in diesen Punkten, also wie ist das technisch umgesetzt was ich hier frage, wie kommt man dahin dass man über die fragen ne aussage treffen kann, wie quantifizier ich stuff)
 
 <!-- Interpretable Dimensions for Courses
 * Is the paper any good?
