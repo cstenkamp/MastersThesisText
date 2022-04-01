@@ -22,13 +22,20 @@
 		* What-Configs-Are-Available-Where (TABLE??)
 		* What-other-things-one-could-have-done-thereandthere
 
-
-
-
-
 * Results
     * Levensthein-distance-comparison!
-	* in results schon schreiben (und tabellen haben!) wie schön nah sich ähnliche dinge schon in BoW-embedding und dimreduced-embedding sind. Neben den ganzen ["asd (tutorial 1)", "asd (tutorial 2)"] auch welche mit ner mindest-levensthein-distance haben, UND nen Plot wie sehr levensthein-distance und nähe im embedding korellieren. UND ne tabelle wie ähnlich nahe-kurse im BoW-embedding und im dimreduced-embedding sind möglicherweise einfach nen kappa score um das ranking der ähnlichsten zu vergleichen
+		* in results schon schreiben (und tabellen haben!) wie schön nah sich ähnliche dinge schon in BoW-embedding und dimreduced-embedding sind. Neben den ganzen ["asd (tutorial 1)", "asd (tutorial 2)"] auch welche mit ner mindest-levensthein-distance haben, UND nen Plot wie sehr levensthein-distance und nähe im embedding korellieren. UND ne tabelle wie ähnlich nahe-kurse im BoW-embedding und im dimreduced-embedding sind möglicherweise einfach nen kappa score um das ranking der ähnlichsten zu vergleichen
+	* Generate new Occurences-per-Keyphrases plot
+		* the `Untitled.ipynb` notebook does that already!
+	* Die Decision-Trees für DDC sind auch ziemlich pretty
+	* Für ALLE configs die level-1-decisiontrees machen und die terms des jeweils-entscheidenen-clusters collecten
+	* Well, WHAT IS THE BEST CONFIG
+
+
+	* I don't care for duplicates yet!!
+	* TODO: die BESTE Parameter-kombi dafür rausfinden
+	* TODO: für ALLE configs die level-1-decisiontrees machen und die terms des jeweils-entscheidenen-clusters collecten
+	* TODO: movietuner
 
 
 * Appendix

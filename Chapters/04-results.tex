@@ -48,6 +48,8 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\fo
 \begin{table}
 	\resizebox{0.6\textwidth}{!}{%
 	\caption{This algorithm on Placetypes}
+	\label{tab:places_results}
+	% möchte sagen: Wenn ich meine Sachen auf placetypes werfe hab ich comparable metrics -> my implementation is ok
 	\begin{tabular}{llrrr}
 	\toprule
 	 & \textbf{Depth:} & \textbf{1} & \textbf{2} & \textbf{3} \\
@@ -71,6 +73,7 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\fo
 	  \includegraphics[width=0.9\textwidth]{graphics/dataset_new/scatter_mds_tsne_e2a70a9bf2.pdf}
 	  \slcaption{2D Visualization of the Course-Dissimilarity-Matrix, generated with \gls{tsne}. See \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualize_embeddings.ipynb} for the origin of this plot as well as a 3D-plot on unaltered 3D-MDS-data that doesn't rely on t-SNE.}
 	  \label{fig:scatter_mds}
+	  % möchte sagen: Die Embeddings Clustern -> es lassen sich "sinnvolle Sachen" (wie faculty) draus ziehen.
 	\end{center}
 \end{figure}
 
@@ -82,6 +85,7 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\fo
 		\includegraphics[width=1.3\textwidth]{graphics/dataset_new/dims_for_fb.pdf}
 		\slcaption{Learned Level-1-Decisiontrees.}
 		\label{fig:dims_for_fb}
+		% möchte sagen: Unsere Extracted Dimensions entsprehcen human concepts wie Fachbereich
 	  }
 	\end{center}
 \end{figure}
@@ -92,6 +96,8 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\fo
 		\includegraphics[width=1.1\textwidth]{graphics/dataset_new/boxes_rechtswis.png}
 		\slcaption{A classification with a Level-3-Decisiontree. Visualize in 3D: \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/display_top3_SIDDATA.ipynb} }
 		\label{fig:boxes_rechtswis}
+		% möchte sagen: How does a decision look graphically, and how does it compare to the original 3D?
+		% TODO: add accuracy 
 	  }
 	\end{center}
 \end{figure}
@@ -103,10 +109,23 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\fo
 		\includegraphics[width=1.1\textwidth]{graphics/dataset_new/possibledecision_sprachlit.png}
 		\slcaption{A possible Hyperplane on a 3-Dimensional Embedding. The SVM depicted here would reach an Accuracy of 67.9\% (Precision: 39.8\%, Recall: 70.5\%). Visualize interactively: \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualize_embeddings_mds.ipynb} }
 		\label{fig:mds_3d_hyperplane}
-		%TODO: why do I have this plot? -> To say what the lower boundary of what a 3D-Embedding of NON-CLASS-SPECIFIC dimensions can yield for classification
+		%möchte sagen: To say what the lower boundary of what a 3D-Embedding of NON-CLASS-SPECIFIC dimensions can yield for classification, 
+		% wie related der space von fig:boxes_rechtswis mit den interpretable dimensions zu IRGENDEINEM 3D-Space
 	  }
 	\end{center}
 \end{figure}
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\figwidth]{svm_mathematik_highlight_infoAB.png}
+	\caption[3D-Plot with an SVM for the term "Mathematik"]{
+		\label{fig:3dplot_mathe_infoab}
+		3D-Plot with an SVM for the term "Mathematik", also highlighting the courses "Informatik A" and "Informatik B"
+	}
+\end{figure}
+
 
 \includeMD{pandoc_generated_latex/4_1_qualitativeresults}
 
@@ -116,7 +135,142 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\fo
 
 \input{include/results_table_1}
 
+
+\begin{table}
+	\caption{Duplicates per Combination of n-dims and n-categories-per-dim}
+	\begin{tabular}{lrrrrrr}
+	\toprule
+	 & \textbf{2} & \textbf{11} & \textbf{23} & \textbf{116} & \textbf{232} & \textbf{1160} \\
+	\#dims &  &  &  &  &  &  \\
+	\midrule
+	3 & 100\% & 99.85\% & 68.98\% & 6.85\% & 5.25\% & 3.97\% \\
+	5 & 100\% & 24.91\% & 9.79\% & 5.25\% & 4.72\% & 3.42\% \\
+	10 & 100\% & 10.18\% & 6.90\% & 4.67\% & 4.23\% & 2.11\% \\
+	20 & 100\% & 7.41\% & 5.58\% & 4.23\% & 3.52\% & 0.79\% \\
+	50 & 99.97\% & 5.46\% & 4.72\% & 3.19\% & 1.89\% & 0.05\% \\
+	100 & 99.88\% & 4.80\% & 4.18\% & 1.94\% & 0.65\% & 0\% \\
+	200 & 99.55\% & 4.36\% & 3.44\% & 0.67\% & 0.09\% & 0\% \\
+	\bottomrule
+	\end{tabular}
+\end{table}
+
+
+\begin{table}
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{rlllcc}
+	& & & & \multicolumn{2}{c}{\textbf{Prediction Accuracy}} \\
+	\textbf{Faculty} & \multicolumn{3}{c}{\textbf{Top 3 Directions}} & \textbf{Depth 3} & \textbf{Depth 1} \\
+	\midrule
+	\textbf{Erziehungs-/Kulturwissenschaften} & erziehungswissenschaft & okumenisch & english for & 78.02\% & 75.50\% \\
+	\textbf{Rechtswissenschaften} & juristisch & bgb & bgb & 95.86\% & 91.10\% \\
+	\textbf{Wirtschaftswissenschaften} & {\scriptsize center betriebswirtschaftlich kompetenz } & religionsunterrichts & design & 89.65\% & 79.10\% \\
+	\textbf{Kultur-/Geowissenschaften} & tourismus & gi & stadtgeographie & 75.50\% & 77.44\% \\
+	\textbf{Mathematik/Informatik} & programmiersprache & menge & hoffnung & 93.00\% & 91.85\% \\
+	\textbf{Sprach-/Literaturwissenschaften} & deutsch literaturwissenschaft & sprache & okumenisch & 86.71\% & 85.10\% \\
+	\textbf{Humanwissenschaften} & psychologie & metaphysik & internationalisierung & 86.84\% & 85.51\% \\
+	\textbf{Physik} & neu entwicklung & mitarbeiterinnen & {\small regelmassig aktiv teilnahme} & 78.27\% & 77.36\% \\
+	\textbf{Biologie/Chemie} & aktivierung studierend & brd & berucksichtigung finden & 85.22\% & 62.13\% \\
+	\textbf{Sozialwissenschaften} & arbeitsmarkt & regieren & multiple & 78.60\% & 67.63\% \\
+	\end{tabular}
+	\caption{Top 3 Directions to detect the respective faculty from the data. a (!) behind a direction means that its inversed (LOW values point towards the class)}
+	\label{tab:courses_top3}
+	}
+\end{table}
+
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[]
+	\centering
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{rlllcc}
+	\multicolumn{1}{l}{} &                                               &  &  & \multicolumn{2}{c}{\textbf{Prediction Accuracy}} \\
+	\textbf{Faculty}     & \multicolumn{1}{c}{\textbf{Top 3 Directions}} &  &  & \textbf{Top 1}          & \textbf{Top 3}         \\
+	\textbf{Erziehungs-/Kulturwissenschaften} & padagogisch    &  &  &  &  \\
+	\textbf{Rechtswissenschaften}             & recht          &  &  &  &  \\
+	\textbf{Wirtschaftswissenschaften}        & management     &  &  &  &  \\
+	\textbf{Kultur-/Geowissenschaften}        & geographisch   &  &  &  &  \\
+	\textbf{Mathematik/Informatik}            & computer       &  &  &  &  \\
+	\textbf{Sprach-/Literaturwissenschaften}  & literarisch    &  &  &  &  \\
+	\textbf{Humanwissenschaften}              & therapeutisch  &  &  &  &  \\
+	\textbf{Physik}                           & gestik         &  &  &  &  \\
+	\textbf{Biologie/Chemie}                  & geschichte (!) &  &  &  &  \\
+	\textbf{Sozialwissenschaften}             & politik        &  &  &  & 
+	\end{tabular}%
+	}
+	\caption{Top 3 Directions to detect the respective faculty from the data. a (!) behind a direction means that its inversed (LOW values point towards the class)}
+	\label{tab:courses_top3_2}
+\end{table}
+
+
+
 \includeMD{pandoc_generated_latex/4_2_quantitativeresults}
+
+% Other configs: {'dataset': 'siddata2022', 'debug': 'False', 'prim_lambda': '0.5', 'sec_lambda': '0.2', 'classifier_succmetric': 'kappa_digitized_onlypos_2', 'cluster_direction_algo': 'reclassify', 'kappa_weights': 'quadratic', 'embed_dimensions': '200', 'embed_algo': 'mds', 'quantification_measure': 'tfidf', 'dcm_quant_measure': 'count', 'extraction_method': 'tfidf', 'translate_policy': 'onlyorig', 'pp_components': 'mfauhtcsldp', 'language': 'de', 'min_words_per_desc': '80'}
+% Args for best Tree: balance_classes=True, one_vs_rest=True, dt_depth=1, test_percentage_crossval=0.33
+\begin{table}
+	\resizebox{\textwidth}{!}{%
+	\caption{Decision-Tree-Accuracies for different Parameter-Combinations}
+	\begin{tabular}{lllrrrrrr}
+	\toprule
+	 &  &  & \textbf{ppmi} & \textbf{ppmi} & \textbf{ppmi} & \textbf{tfidf} & \textbf{tfidf} & \textbf{tfidf} \\
+	pp_components & dcm_quant_measure & classifier_succmetric &  &  &  &  &  &  \\
+	\midrule
+	\multirow[t]{7}{*}{mfauhcsd2} & \multirow[t]{3}{*}{count} & k_c2r+ & - & 40.58\% & 38.76\% & 36.24\% & 45.16\% & - \\
+	 &  & k_dig+_2 & - & 74.83\% & 77.10\% & 74.82\% & 80.42\% & - \\
+	 &  & k_r2r+_min & - & 73.59\% & 74.91\% & 77.58\% & 80.71\% & - \\
+	\cline{2-3}
+	 & \multirow[t]{2}{*}{ppmi} & k_dig+_2 & 62.11\% & 58.63\% & 61.94\% & 79.97\% & - & - \\
+	 &  & k_r2r+_min & {\cellcolor{lightgreen}} 70.75\% & 75.52\% & 74.12\% & 81.10\% & - & - \\
+	\cline{2-3}
+	 & \multirow[t]{2}{*}{tfidf} & k_dig+_2 & 57.86\% & 76.35\% & 76.88\% & 77.58\% & 80.49\% & - \\
+	 &  & k_r2r+_min & 67.31\% & 73.45\% & 72.65\% & 77.17\% & 78.81\% & - \\
+	\cline{1-3} \cline{2-3}
+	\multirow[t]{7}{*}{mfauhtcsldp} & \multirow[t]{3}{*}{count} & k_c2r+ & 49.72\% & 40.70\% & 41.94\% & 53.79\% & 49.17\% & 63.38\% \\
+	 &  & k_dig+_2 & 58.25\% & 74.86\% & 77.67\% & 78.00\% & 79.73\% & 44.39\% \\
+	 &  & k_r2r+_min & 66.51\% & 72.03\% & 69.78\% & 78.45\% & 79.15\% & 61.95\% \\
+	\cline{2-3}
+	 & \multirow[t]{2}{*}{ppmi} & k_dig+_2 & - & - & 65.67\% & 77.58\% & 80.08\% & 58.58\% \\
+	 &  & k_r2r+_min & - & - & {\cellcolor{lightgreen}} 80.41\% & {\cellcolor{lightgreen}} 81.41\% & {\cellcolor{lightgreen}} 81.41\% & {\cellcolor{lightgreen}} 64.36\% \\
+	\cline{2-3}
+	 & \multirow[t]{2}{*}{tfidf} & k_dig+_2 & 64.88\% & 76.31\% & 77.81\% & 77.24\% & - & 59.18\% \\
+	 &  & k_r2r+_min & 58.92\% & {\cellcolor{lightgreen}} 78.05\% & 76.49\% & 77.09\% & - & 63.02\% \\
+	\bottomrule
+	\end{tabular}
+	}
+\end{table}
+
+
+
+\begin{table}[]
+	\centering
+	\begin{tabular}{l|ll}
+	\textbf{Dimension}               & \textbf{reclassify} & \textbf{main}       \\ \midrule
+	\textbf{isawyoufirst}            & beach               & beach               \\
+	\textbf{workspace}               & office              &                     \\
+	\textbf{nutrition}               & restaurant          & deli                \\
+	\textbf{goalie}                  & stadium             & footballstadium     \\
+	\textbf{pumperbuilding}          & county              &                     \\
+	\textbf{starwoodhotels}          & hotelroom           & pool                \\
+	\textbf{interstate10}            & highway             & mongolianrestaurant \\
+	\textbf{urban}                   & interior            & movietheater        \\
+	\textbf{tuolumne}                & creek               & nationalforest      \\
+	\textbf{cabs}                    & downtown            &                     \\
+	\textbf{investment}              & school              & stockexchange       \\
+	\textbf{stripmall}               & downtown            & departmentstore     \\
+	\textbf{michiganstateuniversity} & school              & campus              \\
+	\textbf{ews}                     & railroad            & train               \\
+	\textbf{anchored}                & boat                & pier                \\
+	\textbf{a10}                     & airport             &                     \\
+	\textbf{wc2}                     & restaurant          & square              \\
+	\textbf{airbase}                 & airport             & airbase             \\
+	\textbf{joshuatreenationalpark}  & canyon              &                     \\
+	\textbf{clinker}                 & building            &                    
+	\end{tabular}
+	\caption{Highest-ranking descriptions per dimension for the reclassify-algorithm and the main-algorithm}
+	\label{tab:text_per_dim}
+\end{table}
+
 
 \section{Conclusion for Results}
 

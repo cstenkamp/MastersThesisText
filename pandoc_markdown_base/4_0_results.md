@@ -1,70 +1,77 @@
+<!-- Hier: was KOMMT RAUS bei den Sachen die mich interessieren (NUR BESCHREIBEN!nicht drüber reden ob und warum das mit den decisiontrees sinnvoll ist, und erst in der discussion darauf zurückkommen OB das sinnvoll ist -->
+<!-- See the stuff from DO_IF_TIME!! -->
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\figwidth]{graphics/figures/keyphrases_histogram.png}
-	%plot created with scripts/create_siddata_dataset.py filter-keyphrases /home/chris/Documents/UNI_neu/Masterarbeit/DATA_CLONE --verbose
-	\caption[Occurences in all Documents per Keyphrase]{
-		\label{fig:keyphrases_histogram}
-		Occurences in all Documents per Keyphrase (for all keyphrases that occur $\geq$ 5 times, cut off at the 93th percentile).
-		7007 of 45295 terms occur at least 5 times.
-		Most frequent phrases: seminar (4173), course (3722), students (2923), it (2671), language (2071), work (1980), event (1842), research (1731), lecture (1723), law (1719).
-		}
-\end{figure}
+Erstmal sanity-check "mein algorithmus performt wie die paper, -> reasonable dass richtig", DANN analyse im hinblich auf die fachbereiche, and interpreting the results in discussion.
 
-* When we make a histogram counting for every keyword how many documents it appears in, we see an exponential decrease (plot: "Docs per Keyword")
+### Implementation correct?
 
-
-Maximum occurrences:
-`term_doc_matrix.index[np.unravel_index(term_doc_matrix.to_numpy().argmax(), term_doc_matrix.to_numpy().shape)[0]], term_doc_matrix.columns[np.unravel_index(term_doc_matrix.to_numpy().argmax(), term_doc_matrix.to_numpy().shape)[1]]`
-
-→ 'Information Systems (Wirtschaftsinformatik) M III: IT-Risikomanagement (Übung)' und 'risk'
+* Is my implementation ok
+	* throw onto placetypes: \ref{tab:places_results}
+		* Display the "closest embeddings": eg. "airplane cabin" und "aircraft cabin"
+			* Is that the case for 3D as well? => is 3D any good?
+		* compare the results of throwing my code onto their placetypes-dataset and how my results compare to theirs 
+			* Set-Overlap of candidate-terms for different #dimensions OF THEM
+			* Die Performances von allen \mainalgos in ner tabelle reporten und mit meinen vergleichen, sowohl quantitativ als auch qualitativ!
+	* result: set overlap of my extracted candidates for placetypes and theirs (und auch die big_21222.yml ergebnisse danach auswerten) (nicht nur overlap, ich kann auch verhältnis set intersect zu set union machen, und die als true/false positive/negative deklarieren und dann accuracy, f1 etc analysieren und halt anhand dessen "die hyperparam kombi die am closesten zu deren ergebnissen ist" rausbekommen)
 
 
-* Brauch ich mehr/bessere Daten? Wenn ich nur die 1000 mit den längsten Beschreibungen behalten würde und dann 10 solcher subsets hätte wären halt die Fälle wie "Tutoren sind: Susi Sorglos Willi Wacker" etc raus
+### Dataset comparisons (is our dataset worse?)
+
+* Can we produce the same number of features etc than Derrac2015
+	* \ref{tab:generated_stuff}
+
+### Methodik auf Domäne?
+
+* Is it reasonable to assume that stuff like faculty CAN be extracted?
+	* look at clusterings \ref{fig:scatter_mds}
+	* look at 3D-hyperplane \ref{fig:mds_3d_hyperplane}
+	* results of FB-Classifier
+		* Ich hab ja den Fachbereichs-Classifier gemacht, wenn ich jetzt noch die shallow decision trees mache kann ich ja legit accuracies vergleichen !!
+			* To see if it is possible to extract any kind of structured data from the unstructured course descriptions, a Neural Network classifier was trained on the dataset, classifying courses to the faculty they run under. $\rightarrow$ Der FB-Classifier kommt auf $95.33\%$ train, $90.96\%$ Test accuracy nach 10 epochs, that's a lot!!
+			==> CORRECTION: auf Siddata2022 kommt er auf $85.19\%$ test, $94.13\%$ train, siehe \todoparagraph{link to notebook}
+			* kommt accuracy etc von den shallow decision trees für fachbereich close an die vom fb-classifier?
+* Are human categories predictable from our extracted directions?
+	* decision tree performance
+		* Do the extracted directions look any good if so (QUALITATIVE)
+		  -> \ref{fig:dims_for_fb}
+    	* How does a machine classification look
+		  -> \ref{fig:boxes_rechtswis}	  
+* Is the produced embedding (which is necessarily a loss of information) still adequate?
+	* compare accuracies: 3D-embedding of us with standard 3D-embedding
+		( \ref{fig:boxes_rechtswis} vs \ref{fig:mds_3d_hyperplane} )
+	* check if courses can be recovered 
+		(TODO: table from `recover_course_from_embeds` results)
+
+#### What we wanted to look at in the Qualitative Analysis
+
+* \ref{fig:3dplot_mathe_infoab}
+	* In \autoref{fig:3dplot_mathe_infoab} we see a 3D-Embedding for courses, splitting courses which contain the term "mathematics" from those that don't, also hightlighting the terms "Informatik A" and "Informatik B". We see they are close we see the SVM is not to bad, and even though neiher Info A nor Info B contains the word "mathematik", thy are both on the "mathematical side" of courses. Negative samples are hidden for better visibility, and entities that contain the word more-often-than-the 75th (???) percentile have bigger markers.
+* doc-cand-matrix
+	* the term-frequencies for terms that I WOULD LIKE are really low
+		`for term in ["computer", "mathe", "mathematik", "wissenschaft"]: print(f"TF of `{term}`: {filtered_dcm.term_freq(term, relative=True):.2%}")`: 1.0%, 0%, 0.8%, 3.3%
+	* the `Untitled.ipynb` notebook does that already!
+* embedding & dissim-mat
+	* 3D-Embedding & t-SNE on (veryveryhigh-dim) dissim-mat, colored by Fachbereich 
+		* shows that, at least regarding this feature, okay-ish
+		* TODO: show one of Placetypes and compare!!!
+	* Show 10 courses that are close according to the embedding and manually look if they are similar
+		* Look at courses that I KNOW to be similar and check if their embedding is close
+			* Language Courses, Mathe für Anwender 1 & 2, Info A & B
+* Final Embeddings	
+	* Is there a direction for "more advanced course"? 
+	* Language Courses, Mathe für Anwender 1 & 2, Info A & B
+
+
+### Now that we have established that we have reason to assume that our algorithm is good, what does it say about the dataset?
 
 
 
-* The original papers of course came up with some tricks: What we can do is EXPLAINABLE CLASSIFIERS
-	* little detail how Derrac2015 did that
-		* \cite{Derrac2015} evaluated using a bunch of commonsense reasoning based classifiers (want to show that at least as performant than standard approaches, but can give intuitive explanations) (these reasoning-classifiers can be linked to intuitive explanations: 1-NN is "Y is of the same class as X because X closest to Y", but also more complex ones.) 
-		* DESC15 "evaluate the practical usefulness of the considered semantic relations" by checking "their use in commonsense reasoning based classifiers", like interpolation and a fortiori inference (chap 5)
-		* Section 6.1: Evaluate whether the derived relations are sufficiently accurate for classification, and 6.2 is then comparison with crowdsourcing experiments (more subjective aspects, the question “are the relations useful explanations?”)
-	* Explain the idea behind the shallow decision-trees
-		* decision tree based on their features, check if it can classify a held out test dataset
-		* "To evaluate whether the discovered features are semantically meaningful, we test how similar they are to natural categories, by training depth-1 decision trees"
-		* My Argumentation that the way Ager & Alshaikh report their accuracies it must be the case that they did that per class (see also Slack with Johannes!)
-	* Ein anderer Weg zum testen wäre auch ein classifier der nur anhand der most salient generated features versucht den kurs wiederherzustellen (das zeigt natürlich nicht ob es similar to how humans do it but part of it)
-
-* A result is certainly a thing like the movie-tuner! Can I implement that thing quickly?? If yes, that's a separate section!
+### Best Parameters?
 
 
-# Results regarding the Goals for the architecture 
-
-<!-- Eine meiner 2 research questions ja war "wie sieht eine gute architecture aus", so if the architecture is good and how it (and thus a good architecture) looks are results!! -->
-
-
-We remember, we also wanted to build a good architecture and set goals for that, such as adaptability to new datasets etc.
-We said a good architecture would show in adaptability, scability, ..., so we wanna show that these are achieved. 
-More basic than that, we want to show that 
-
-* this implementation works
-* the results of \mainalgos are not a fluke (that the algorithm works at all)
-
-For those two points lemme present my results for placetypes
-
-
-## My implementation on movies & placetypes:
-
-* Display the "closest embeddings": eg. "airplane cabin" und "aircraft cabin"
-	* Is that the case for 3D as well? => is 3D any good?
-* compare the results of throwing my code onto their placetypes-dataset and how my results compare to theirs 
-	* Set-Overlap of candidate-terms for different #dimensions OF THEM
-	* Die Performances von allen \mainalgos in ner tabelle reporten und mit meinen vergleichen, sowohl quantitativ als auch qualitativ!
-
-result: set overlap of my extracted candidates for placetypes and theirs (und auch die big_21222.yml ergebnisse danach auswerten) (nicht nur overlap, ich kann auch verhältnis set intersect zu set union machen, und die als true/false positive/negative deklarieren und dann accuracy, f1 etc analysieren und halt anhand dessen "die hyperparam kombi die am closesten zu deren ergebnissen ist" rausbekommen)
-
-## Results in terms of architecture quality
-
-* We are scalable and can run massively parallel (that you'll have to believe me, it's one command to run on the grid and I would say that's pretty noice).
-* Keep in mind when reading the other sections of the results that all plots and tables you'll see are explictly linked and easily re-creatable and runnable
-* We ran the stuff on other datasets\footnote{See Table with datasets and the respective notebooks and the quick datasets section} and it ran through, so we're adaptable.
+* Highest-ranking descriptions per dimension: \ref{fig:text_per_dim}. We see that using the respectively best-fitting DOCUMENT (without LSI or anything, just the one with the highest ranking!)  is often even the MUCH BETTER direction!!! 
+* What leads to the highest number of good-kappas?
+	* \todoparagraph{As described in} \autoref{sec:workflow}, a good first approximation is to check how many candidate-terms we get. \autoref{tab:kappa_table} shows the results of many runs with different parameter-combinations with the purpose of figuring out which combination of parameters and kappa-metrics lead to enough candidate-terms (\todoparagraph{Also ref the figure of workflow where I check what threshold was realistic})
+	* \ref{tab:cands_per_config}
+* What is the BEST CONFIG?
+	* TODO: !!!

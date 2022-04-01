@@ -1,3 +1,6 @@
+* Nen Sample-Env-File fürs Grid!!!
+
+
 * Dass gerade die größere größe von siddata2022 mehr hardware erfordert hat, vorher lief das ez in nem dockercontainer mit 8gb ram
 
 ## Faculty-Classifier

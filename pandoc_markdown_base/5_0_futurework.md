@@ -1,6 +1,9 @@
 <!--oder: OUTLOOK -->
 
 
+* A result is certainly a thing like the movie-tuner! Can I implement that thing quickly?? If yes, that's a separate section!
+
+
 
 ## WHAT ONE COULD HAVE DONE IN EVERY ALGORITHM STEP
 
