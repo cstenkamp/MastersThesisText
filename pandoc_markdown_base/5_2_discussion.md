@@ -8,7 +8,32 @@
 Research Question: Ich will die Methodik von dem Paper auf educational resources Applien. Das unbedingt in discussion & conclusion aufgreifen.
 
 
+## SORT ME
+
+* Neben den Clustern die ich mir anzeigen lassen kann und qualitativ analysieren kann, kann ich mir auch die distances to the origins of the respective dimensions (induced by the clusters), what induces the respective rankings! (see DESC15 p.24u, proj2 of load_semanticspaces.load_projections) anzeigen lassen - da kann ich sagen "term xyz ist bei "nature" am höchsten".
+	* FRAGE: sind dafür ÜBERHAUPT IRGENDWIE die cluster relevant??! Ich meine es wird nur die distance zur hyperplane vom main-term considered, so why the hell even cluster?!
+
+
+
+
 ## Interpreting results
+
+### Placetypes
+
+* Elaborate why I am better than they 
+    *  GRAIN OF SALT: dass sie nie erwähnen ob sie bei den shallow decision trees one-vs-rest machen --> HOW DID THEY achieve even okay-ish accuracies with the shallow decision-trees? a depth 3 tree has max 2^3 = 8 leaves, so if your to-be-categorized has 100 classes, you'll definitely suck!.
+        * read https://machinelearningmastery.com/one-vs-rest-and-one-vs-one-for-multi-class-classification/ wegen one-vs-all undso
+    * What else?
+        * I assume it's bc I looked for the best config for this particular task, which is a different one for each combination of dataset x dt-depth x classification-target, and I assume the others did some hyperparam-tuning before and then decided for one config for all datasets (or rather 3-4 different ones, but independent of dataset,dt-depth,classificaiton-target)
+        * Weil ich beste param-kombi nehme (dataset x dt-depth x classification-target) 
+            * das ist nicht worauf der algo optimiert ist, ich nehm aber dann das beste von 80
+        * verweis auf full-tfidf-vs-ppmi-table: tf-idf ist much better
+        * bin mir nicht sicher ob die 1vsrest machen oder nicht
+            * begründung dafür... ABER sie schreiben ja auch dass sie sklearn nutzen -> doc sagt muss so
+        * dass die für mehr entities labels haben, die aber nicht public sind?
+
+
+### Siddata
 
 * In den results sind ja quantifizierbare und gute Zahlen drin, das ist ja in der discussion ein argument dafür dass es funktioneirt
     * Welche Fachbereiche hab ich gut klassifiziert und welche schlecth? (...das kann ich auch mit den preliminary results in Johannes sidBERT vergleichen, see slack 29.3. 10:00)

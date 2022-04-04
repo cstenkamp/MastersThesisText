@@ -2,7 +2,7 @@
 
 %TODO: IST KLAR GENUG: "ich replizier diese 3 algorithmen, aus diesen 3 papern"
 
-This chapter explains the methods that were used to achieve the two goals of replicating the algorihm of \textcite{Derrac2015} with the improvements of \cite{Ager2018,Alshaikh2020} with a sustainable architecture and applying it to the domain of educational resources.  
+This chapter explains the methods that were used to achieve the two goals of replicating the algorithm of \textcite{Derrac2015} with the improvements of \cite{Ager2018,Alshaikh2020} with a sustainable architecture and applying it to the domain of educational resources.  
 
 To do that, we will firstly look at the datasets \mainalgos used as well as our own dataset and compare key statistics. The subsequent section then explains the used algorithm broadly before looking at each of its steps in detail. Based on that, the specific architecture that was created as well as the workflow used to generate meaningful results will be introduced to demonstrate its process. The final section explains what kind of methods and metrics were used to generate and interpret the results that will follow in the next chapter.
 
@@ -43,10 +43,10 @@ A very distinctive difference of the datasets is their size: the movies-dataset 
 		&  \textbf{Entities}   & \multicolumn{6}{c}{\textbf{Words per Entity}}                                 \\
 		&       & \multicolumn{3}{c}{\textbf{Unique}} & \multicolumn{3}{c}{\textbf{Non-Unique}} \\
 	 &  & \textbf{5\textsuperscript{th}} & \textbf{Med} & \textbf{95\textsuperscript{th}} & \textbf{5\textsuperscript{th}} & \textbf{Med} & \textbf{95\textsuperscript{th}} \\ \midrule
-	\textbf{movie reviews}                                                          & 13978 & 565       & 1358       & 5510       & 962        & 3179        & 38378        \\
-	\textbf{place types}                                                          & 1383  & 159       & 2215       & 18117      & 2378       & 55422       & 886233       \\
-	\textbf{Siddata (all)}     & 26346 & 19        & 60         & 169        & 22         & 71          & 239          \\
-	\textbf{Siddata} ($\geq 80$ words) & 11601 & 63        & 99         & 211        & 83         & 124         & 323         
+	\textbf{movie reviews}             & 13\,978 & 565    & 1358 & 5\,510  & 962   & 3179    & 38\,378     \\
+	\textbf{place types}               & 1383    & 159    & 2215 & 18\,117 & 2378  & 55\,422 & 886\,233    \\
+	\textbf{Siddata (all)}    		   & 26\,346 & 19     & 60     & 169   & 22    & 71      & 239         \\
+	\textbf{Siddata} ($\geq 80$ words) & 11\,601 & 63     & 99     & 211   & 83    & 124     & 323         
 	\end{tabular}
 	\slcaption{Sizes of the text-corpora of the Siddata-dataset and those of \cite{Derrac2015}. The columns \textit{Words per Entity} list the 5\textsuperscript{th}, 50\textsuperscript{th}, and 95\textsuperscript{th} percentile respectively.}
 	\label{tab:corpussizes}
@@ -60,9 +60,9 @@ A very distinctive difference of the datasets is their size: the movies-dataset 
 	  \textbf{1} & \textbf{2} & \textbf{5} &  \textbf{25} &
 	  \textbf{50} & \textbf{100} & \textbf{500} & \textbf{1000} &
 	  \textbf{\acrshort{df}/10} & \textbf{\acrshort{df}/4} \\ \midrule
-	\textbf{Siddata} & 163285 & 80802  & 35697  & 9702   & 5535   & 3059   & 570   & 210   & 23     & 2    \\
-	\textbf{Places}  & 746180 & 428810 & 182906 & 41320  & 21833  & 11166  & 1452  & 183   & 8047   & 2669 \\
-	\textbf{Movies}  & 589727 & 279429 & 128850 & 55429  & 39976  & 28768  & 11431 & 6931  & 1786   & 332 
+	\textbf{Siddata} & 163\,285 & 80\,802  & 35\,697  & 9702     & 5535     & 3059     & 570     & 210     & 23     & 2    \\
+	\textbf{Places}  & 746\,180 & 428\,810 & 182\,906 & 41\,320  & 21\,833  & 11\,166  & 1452    & 183     & 8047   & 2669 \\
+	\textbf{Movies}  & 589\,727 & 279\,429 & 128\,850 & 55\,429  & 39\,976  & 28\,768  & 11\,431 & 6931  & 1786   & 332 
 	\end{tabular}
 	}
 	\slcaption{Words that exceed various \gls{df} thresholds for the Siddata, Places and Movies datasets. In \cite{Derrac2015}, the candidate-threshold for placetypes was 50, and the threshold for movies 100. Note that the last two columns are relative and depend on the dataset-size.}
@@ -84,7 +84,7 @@ The Siddata-dataset unfortunately does not share this property, as the texts tha
 
 \input{include/dataset_table}
 
-\subsection{SIDDATA-courses}
+\subsection{Siddata-courses}
 
 \label{sec:dataset_siddata}
 
@@ -201,7 +201,8 @@ There are two datasets used by all three authors: place-types and movie-reviews 
 \section{Architecture}
 \label{sec:architecture}
 
-\todoparagraph{TODO: nen Dag (also von dot) mit den configs wie für desc15 in die Arbeit  (try out `--dag`, `--rulegraph` and `--filegraph`)}
+TODO: nen dot-Dag mit den configs wie für desc15 in die Arbeit 
+(try out --dag, --rulegraph and --filegraph)
 
 As elaborated in \autoref{sec:reproducibility}, one of the main motivations for this thesis was to create a publicly available \textit{open-source} version of the algorithm that is easily \textit{understood} and \textit{reproduced}, \textit{adaptable} for other datasets and methods, as well as fast and \textit{scalable}, meaning it can be run maximally efficient on single machines but also on compute clusters, such as the \acrshort{ikw} Grid.
 %TODO: Hier schon eindeutig sagen dass es auf ner single machine infeasibly lange läuft und deswegen der ganze Bums fürs Grid nötig war!!
@@ -300,6 +301,13 @@ It was originally unexpected, but implementing an appropriate architecture for t
 \includeMD{pandoc_generated_latex/3_3_architecture}
 
 
+\subsection*{Faculty-Classifier}
+\label{sec:faculty_classifier}
+
+As one of the evaluations is to compare the results of classifiers based on the algorithm here with a powerful classification algorithm, a neural network that classifies the Faculty of a course in the Siddata-Dataset was also implemented. The implementation for that will not be elaborated upon except that it is available at \todoparagraph{Link to the repo}, it relies on sacred\footnote{\todoparagraph{link to sacred, note that to get the results like I did you'll need a MongoDB in a docker container, see this link}}, and that it uses Google's `universal-sentence-encoder-multilingual` in Version 3 (linear in textlength, thus managable time and space requirements) plus a few classification layers ontop. The encoder is trained \q{on a number of natural language prediction tasks that require modeling the meaning of word sequences rather than just individual words}\footnote{Quote from their description at \url{https://tfhub.dev/google/collections/universal-sentence-encoder/1} (accessed \date{2022}{03}{25})}, aimed being the base for architectures for many NLP tasks through the usage of sentence embeddings \cite{Cer2018}. It was trained on with a train-test-split of 90/10 (the results being consitent through sampled cross-validation)
+
+
+
 \section{Workflow}
 \label{sec:workflow}
 
@@ -311,6 +319,53 @@ It was originally unexpected, but implementing an appropriate architecture for t
 \section{Evaluation Metrics}
 \label{sec:eval_metrics}
 % Johannes 25.3.: das "How to Evaluate" ans ende von "Methods", und "Evaluation Metrics" nennen
+
+Two goals were stated in this thesis' introduction: To implement a reliable software-architecture that successfully replicates the works of \textcite{Derrac2015}, and figure out if their methodology also works for the domain of educational reasources. Given that there is not one single correct target that the algorithm needs to optimize for, there are also no obvious measurable metrics that can be applied straight-forward to test the performance of the algorithm and no obvious \textit{optimal results}. As the quality of the desired results is defined purely over its subjective appeal to humans, the only evaluation method that could quantify that would be a large-scale study with human evaluators, which unfortunately lies outside the scope of this thesis.
+
+% hinleitung vom generellen "thesis goal" zu konkreten measruable sachen
+Instead, one has to rely on qualitative analysis of certain produced features as well as proxy metrics. This section explains what kind of results have been chosen to represent the algorithm's performance as well as why these results are suitable proxies. Furthermore it is important to test if the architecture itself works reliably, which will be tested by generating results for the placetypes-dataset and comparing them with those of the literature.
+
+Specifically, we are interested in the following questions:
+
+\begin{enumerate}
+	\item[\saveref{sec:results_placetypes}{1.}] Is the implementation correct? / Can it replicate the results of the original implementation?
+	\item[\saveref{sec:results_datasetdiffs}{2.}] Is the algorithm able to cope with the Siddata-dataset despite it's different size and features?
+	\item[\saveref{sec:results_siddata}{3.}] Does the general methodology work for the domain of educational resources?
+	\item[\saveref{sec:results_params}{4.}] What combination of components and hyperparameters leads to the best results?
+	\item[\saveref{sec:results_architecture}{5.}] Does the architecture fulfill the features requested in \autoref{sec:goals_research_questions}?
+\end{enumerate}
+
+The first question is easily answered by applying the same evaluation that \mainalgos used and comparing results. To answer question two, we will compare the quantity and quality of some interim results of the algorithm being applied to placetypes with their counterparts for the siddata-dataset. Question three and four rely on some quantifiable notion of what constitutes a \emph{good} result, so this is the first question that needs to be answered to know if the algorithm produces meaningful results.
+
+\subsection{Proxies hinting at meaningful results}
+
+% "To evaluate whether the discovered features are semantically meaningful, we test how similar they are to natural categories, by training depth-1 decision trees"
+The goal of the algorithm is to find semantic directions in the data and re-embed the entities into a vector space spun up by these interpretable human concepts as its axes. Thus, to evaluate if the emerged features are semantically meaningful, it can be measured if any known \textit{natural categories} are among the detected semantic directions or similar to them. More specifically (as the algorithm works with \glspl{bow} which lose any information about synonymity and similarity of tokens) %TODO: irgendwo das quote von \cite{Le2014} über BoW einbringen und darauf hier linken!
+it is enough to answer if \emph{terms accurately predicting} such are among the detected semantic directions. This method requires that the dataset is annotated with the respective concept, as that will be the respective classification target. The only easily obtainable target for the Siddata-dataset is a course's faculty, the targets for the datasets of \mainalgos are listed in \autoref{tab:all_datasets}.
+
+\paragraph{Semantic Classifiers} This evaluation method is used extensively in \cite{Derrac2015}, who evaluated the practical usefulness of the created semantic directions by creating many different classifiers which only receive the entity's \gls{rank} \wrt the detected semantic direction as input. In line with the analogy of reasoning in conceptual spaces (see \ref{sec:TODO:reasoning_in_cs_etc}), all their created classifiers correspond to commonsense reasoning patterns and are accordingly linked to intuitive explanations, such as a 1-nearest-neighbor classifier linked to the explanation \textit{\q{Y is in the same class as X because Y is closest to Y}}. Using these, they evaluate if their derived relations are sufficiently accurate to allow for classification that is comparable to standard classification approaches while also allowing to give intuitive explanations that are compatible with high-level human reasoning such as interpolation and a fortiori inference.
+
+\paragraph{Shallow Decision Trees} Instead of a full suite of commonsense reasoning based classifiers, \cite{Ager2018} and \cite{Alshaikh2020} train depth-limited \glspl{dt} \cite{breiman1984classification} on the entities' \glspl{fbr}. \Glspl{dt} are supervised learning models that predict the target value by inferring binary \textit{if-then-else} decision rules from the feature vector in a tree-like structure. The trees are constructed using the CART algorithm, which at every level finds the combination of attribute and threshold value that maximizes the prediction accuracy for the subset that falls into the respective tree's branch and partitions the attribute accordingly, to do the same on resulting subtrees (thus maximizing \emph{information gain}). %https://scikit-learn.org/stable/modules/tree.html#tree-algorithms-id3-c4-5-c5-0-and-cart 
+Restricting the tree's depth ensures that only the features that are most important for the decision are selected. The tree then classifies by finding the most important features for the decision, thus finding the terms that most accurately predict the demanded concept in an intuitive and interpretable way\footnote{Sample depth-1 decision trees are visualized in \autoref{fig:3dplot_mathe_infoab}. The decision-rule of a depth-3 decision tree corresponds to checking if a 3D-vector falls into one of $2^3/2=4$ boxes, as visualized in \autoref{fig:boxes_rechtswis}.}. Accordingly, if a depth-restricted tree that can accurately predict the demanded property reasonably well can be found would provide evidence that the semantic directions correspond to actual human concepts. The performance is measured by checking their classification on a held-out test dataset seperately for each of the target's classes in a one-vs-rest fashion. To get an estimate for the maximally possible classification performance only on basis of the text corpus, it can be compared to state-of-the-art text classification techniques such as the one described in \autoref{sec:faculty_classifier}.
+
+Unfortunately, this does not test if the names of the discovered semantic features are meaningful. It should further be noted that regardless of the classifier, only those features that predict the existing classificiation targets can be tested with this method, which in the case of the Siddata-dataset means that even if 10 features perfectly correspond to the respective faculties, all other features are still unaccounted for. In order to get additional targets, we will also compare the classification into the \gls{ddc}-categories as deteced by SidBERT (see \autoref{sec:TODO}).
+
+\paragraph{Recovering entities from salient directions} Re-embedding the entities into a conceptual space involves dimensionality reduction and thus necessarily goes along with a loss of information. Apart from testing the meaningfulness of the directions, it can be tested if any relevant information was lost. To account for that, we will test if it is possible to recover the original entities using only a subset of the most salient generated features. For that, we will also analyze under which conditions separate entities fall onto the same position in the semantic space. This also provides evidence about how far the samples are distributed in the vector-space. The linear classifiers used to create semantic directions profit from data that is split far apart instead of being on a compact hypersphere which due to the \textit{curse of dimensionality} fills only a neglibile volume of the according vector-space\footnote{cf. \url{https://en.wikipedia.org/wiki/Curse_of_dimensionality\#Distance_function}}. 
+
+\subsection{Scientific Qualitative Analysis}
+
+Regardless of the performance of proxy metrics, the most important measure the algorithm's quality is its subjective appeal, which can only be assessed by a qualitative analysis. Unfortunately, subjectively evaluating at a subset of the resulting features and samples is, even with the best intentions, also prone to  \textit{cherry-picking}, as the selected samples may not be representative. Despite of that, a qualitative analysis provides important insight into the algorithm. To alleviate these problems, it is reasonable to use the scientific method and ask the question \textbf{``Before looking at the data, seeing what kind of results would make us think the algorithm correctly does what we hope it does?''}
+
+Specifically, we will try to find evidence for the following questions:
+
+\begin{description}
+	\item[Are the phrases making up the semantic-direction-clusters similar?] \textcite{Derrac2015} have shown that for example in the \textit{scary} dimensions, there were semantically related words such as \textit{horror} and \textit{gore}. Reversing this, we can look if things we know to be similar are actually in the same clusters, such as the names different epochs hinting at culture-related courses, or names of languages hinting at language-courses. Additionally, we expect languages to co-occur with terms signifying language-levels such as \textit{A1}, \textit{A2} or \textit{B1}. Optimally, there are further not too many words outside of this scope in the respective clusters. Furthermore it can be checked if the word-embeddings of words inside a cluster differ from their inter-cluster counterparts. As word-embeddings are known to also capture semantic information \cite{Mikolov:Regularities} as directions, the average cosine-distance of inter-cluster-embeddings is expected to be significantly lower.
+	\item[Are there dimensions encoding the COVID-19 pandemic?] Exploratory analysis of the data has shown that many courses from 2020 on indicated their cancellation due to the pandemic. We can check if any of the dimensions captures this, and use the course's semester that is annotated as meta-information in the dataset to cross-check if primarily courses from 2020 on fall under the respective category. Furthermore it can be tested if reversing such a direction reliably points back to a previous iteration of the respective course before the pandemic, if it exists.
+	\item[Are intuitively appealing phrases among the semantic directions?] Given the task of manually embedding courses into a semantic space, there are some intuitive candidates one may think of that capture some important aspects of a course. For example, a word like \emph{computer} hinting at computer-science related courses. Other obvious candidates that will be checked include \emph{math, culture, science, school} and \emph{sport}.
+	\item[Is there a direction capturing \textit{advanced courses}?] In their semantic space of movies, \textcite{Derrac2015} detected a direction that encodes \textit{continuation}: The vector between \textit{Back to the Future 2} and \text{Back to the Future} is roughly parallel to the vector from \textit{Terminator 2} and \textit{Terminator}. Equivalently it can be tested if the vectors between \eg \textit{Mathematik für Anwender 2} and \textit{Mathematik für Anwender} and \textit{Statistik und Datenanalyse 2} and \textit{Statistik und Datenanalyse} are also parallel. An optimal result would be that such courses differ in only a single vector-component.
+	\item[Are embeddings of known similar entities close?] An embedding that would put similar courses far apart from each other would not capture human intuition. Accordingly, the embeddings of exemplary courses such as \textit{Informatik A} and \textit{Informatik B} can be verified. In particular it can be checked if \gencite{Mikolov:Regularities} findings that vector-arithmetic corresponds of embeddings matches semantic content (see \autoref{eq:w2vregularity}) by checking if \textit{vec(Codierungstheorie und Kryptographie) - vec(mathe) + vec(informatik)} $\approx$ \textit{vec(Kryptographische Methoden in der Informatik)}
+\end{description}
+
 
 
 \includeMD{pandoc_generated_latex/3_5_evaluation_metrics}

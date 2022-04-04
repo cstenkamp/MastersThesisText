@@ -1,98 +1,103 @@
+## My workflow to generate results:
+
+* In Notebooks zum results anzeigen `getfiles_allconfigs` (bspw `configs, print_cnf = getfiles_allconfigs("clusters", verbose=True)` wenn ich durch alle durchiterieren möchte, `get_best_conf` wenn ich die beste according to decision trees haben will (bspw `conf, perf = get_best_conf("Geonames", verbose=True, balance_classes=True, one_vs_rest=True, dt_depth=1, test_percentage_crossval=0.33)`). Davor `load_envfiles("placetypes")`, welches das envfile für placetypes auswählt und anhand dessen dataset und whatever.
+* Zum runnen env-files pro dataset, conf-files pro runconfig erzeugen, und dann entweder
+	* locally, mit click falls single files oder snakemake für multiple configs
+	* submitted-to-grid, by ssh'ing and using `MA_ENV_FILE=siddata.env submit -r by_config --configfile config/derrac2015_edited.yml --keep-going` and downloading from the scratch (snakefile & grid-config-yamls specifying resource allocation and another env-file specifying stuff like bare paths that differ on grid and loal). To keep track of statuses run `~/derive_conceptualspaces/workflow/sge/util/logfile_for.py`.
+
+
+
+
+
 * Nen Sample-Env-File fürs Grid!!!
-
-
 * Dass gerade die größere größe von siddata2022 mehr hardware erfordert hat, vorher lief das ez in nem dockercontainer mit 8gb ram
 
-## Faculty-Classifier
 
-As one of the evaluations is to compare the results of classifiers based on the algorithm here with a powerful classification algorithm, a neural network that classifies the Faculty of a course in the SIDDATA-Dataset was also implemented. The implementation for that will not be elaborated upon except that it is available at \todoparagraph{Link to the repo}, it relies on sacred\footnote{\todoparagraph{link to sacred, note that to get the results like I did you'll need a MongoDB in a docker container, see this link}}, and that it uses Google's `universal-sentence-encoder-multilingual` in Version 3 (linear in textlength, thus managable time and space requirements) plus a few classification layers ontop. The encoder is trained \q{on a number of natural language prediction tasks that require modeling the meaning of word sequences rather than just individual words}\footnote{Quote from their description at \url{https://tfhub.dev/google/collections/universal-sentence-encoder/1} (accessed \date{2022}{03}{25})}, aimed being the base for architectures for many NLP tasks through the usage of sentence embeddings \cite{Cer2018}. It was trained on with a train-test-split of 90/10 (the results being consitent through sampled cross-validation)
+== ARCHITECTURE left2do ==
 
+* Meta-workflow vorgreifen
+	* mit snakemake zig parameter-kombinationen auf dem cluster ausführen kann und mir dann mit `generate-conceptualspace show-data-info` die dabei generierten outputs (like the metrics for the clusters) angucken kann, und wenn mir die gefallen öffne ich den ganzen kram ebenfalls nochmal in nem jupyter-notebook (wo ich dank config-hash fix erkenne obs die selbe config ist), um mir dort dann bspw die überschneidungen der configs anzuschauen
+	* dass ich ja Ne shitton an Parameter-Kombis ausführen (besonders da wo im Text nicht eindeutig ist bspw ob sie mit dem PPMI-Ranking oder dem Count-Embedding vergleichen)
+	* An vielen Schritten kann man sich Dinge angucken (dissimiliarity-matrix und emedding jeweils die closest entitites, bei den clustern sieht man ja ob ähnliche clustern)
+	* an möglist vielen stellen gucken können ob's klappt oder nicht -> modularity
+	* workflow mit grid und yamls für kombis und runterladen
+	*  Grundlage: Das Gelöt ist in Schritte einteilbar, an gewissen Schritten werde gewisse Params relevant
 
-	* == ARCHITECTURE left2do ==
+* Main goal: BETTER ARCHITECTURE. Most important things for that: scalability, modularity, transparency, reproducibility, understandability, objectiveness, systematicacy, sustainability, adaptability
+	* describing this because I want to encourage extending the code etc and for that not only the algorithm but also the architecture should be described 
+	* and I think that was successful: This codebase contains everything and finally fulfills code-standards! 
+		* It is a proper python-package (that you can run with `python -m derive_conceptualspace`), there is a working Docker-container that can be installed with one command and run on any VM even in a thousand years (fixed dependencies etc, reference a reproducibility paper!), 
 
-		* Meta-workflow vorgreifen
-			* mit snakemake zig parameter-kombinationen auf dem cluster ausführen kann und mir dann mit `generate-conceptualspace show-data-info` die dabei generierten outputs (like the metrics for the clusters) angucken kann, und wenn mir die gefallen öffne ich den ganzen kram ebenfalls nochmal in nem jupyter-notebook (wo ich dank config-hash fix erkenne obs die selbe config ist), um mir dort dann bspw die überschneidungen der configs anzuschauen
-			* dass ich ja Ne shitton an Parameter-Kombis ausführen (besonders da wo im Text nicht eindeutig ist bspw ob sie mit dem PPMI-Ranking oder dem Count-Embedding vergleichen)
-			* An vielen Schritten kann man sich Dinge angucken (dissimiliarity-matrix und emedding jeweils die closest entitites, bei den clustern sieht man ja ob ähnliche clustern)
-			* an möglist vielen stellen gucken können ob's klappt oder nicht -> modularity
-			* workflow mit grid und yamls für kombis und runterladen
-			*  Grundlage: Das Gelöt ist in Schritte einteilbar, an gewissen Schritten werde gewisse Params relevant
+		* it has workflow-management tools (reference snakemake),
 
-		* Main goal: BETTER ARCHITECTURE. Most important things for that: scalability, modularity, transparency, reproducibility, understandability, objectiveness, systematicacy, sustainability, adaptability
-			* describing this because I want to encourage extending the code etc and for that not only the algorithm but also the architecture should be described 
-			* and I think that was successful: This codebase contains everything and finally fulfills code-standards! 
-				* It is a proper python-package (that you can run with `python -m derive_conceptualspace`), there is a working Docker-container that can be installed with one command and run on any VM even in a thousand years (fixed dependencies etc, reference a reproducibility paper!), 
+		* it can easily be installed on a grid (for SLURM I refer to https://github.com/frankier/singslurm2, but as our university still uses the sun grid engine, there are `.sge` files that allow to run the snakemake-workflow there), etc etc etc!
+	* 3 Ways to run:
+		* 1, 2, 3, yadda yadda
+		* (grid, snakemake, docker, python-package:click, python-package: jupyter)
+		* Of course there's also a docker-container, so if you don't want to look at any of the code and just execute for a given dataset, you can run it on any PC with docker with the following command: [...] and for a list of all commands, it is referred to appendix xyz which lists a shitton of ways (all snakemake ones, examples of how to include a config, examples of how to look at results using the `generate-conceptualspace show-data-info` command, examples of how to look at results and intermediate results and plots in jupyterlab, ...)
+	* Source-code is ofc open, available under github under this link, it is referred to the signed commit xyz
+	* Reference Snakemake-Paper (and at least look a the abstract of that, they also talk about that in science you need reproducible, adaptable and transparency including definitions of what that means!)
+	* FOR ALL PLOTS, reference how plots are created or general code examples with the real thing, including how what you're seeing was generated and can be reproduced
 
-				* it has workflow-management tools (reference snakemake),
+* Foremost design principle: Modularity
 
-				* it can easily be installed on a grid (for SLURM I refer to https://github.com/frankier/singslurm2, but as our university still uses the sun grid engine, there are `.sge` files that allow to run the snakemake-workflow there), etc etc etc!
-			* 3 Ways to run:
-				* 1, 2, 3, yadda yadda
-				* (grid, snakemake, docker, python-package:click, python-package: jupyter)
-				* Of course there's also a docker-container, so if you don't want to look at any of the code and just execute for a given dataset, you can run it on any PC with docker with the following command: [...] and for a list of all commands, it is referred to appendix xyz which lists a shitton of ways (all snakemake ones, examples of how to include a config, examples of how to look at results using the `generate-conceptualspace show-data-info` command, examples of how to look at results and intermediate results and plots in jupyterlab, ...)
-			* Source-code is ofc open, available under github under this link, it is referred to the signed commit xyz
-			* Reference Snakemake-Paper (and at least look a the abstract of that, they also talk about that in science you need reproducible, adaptable and transparency including definitions of what that means!)
-			* FOR ALL PLOTS, reference how plots are created or general code examples with the real thing, including how what you're seeing was generated and can be reproduced
+		* Dass sich das ding historisch von "speziell für das dateiformat wie DESC15 veröffentlicht hat" über "speziell für siddata2022 (extract kurstypes etc)" zu "möglichst allgemein funktionierende pipeline mit guten dateiformaten und so modular wie irgendwie möglich" entwickelt hat
 
-		* Foremost design principle: Modularity
+		-> So this way, when I run the 8th step for the pipeline from the command-line, it figures out if all dependency are there. If they are, I can execute what I want to execute, and if not, it can automatically (using the build-system) create all dependencies - but if the config I demand differs only in the third step from something that is already there, the build system automatically only executes steps 4-7.
+		-> Now I have the problem of depencies, were some stuff needs to be scheduled as soon as its dependencies are there etc etc => I need a scheduler
 
-				* Dass sich das ding historisch von "speziell für das dateiformat wie DESC15 veröffentlicht hat" über "speziell für siddata2022 (extract kurstypes etc)" zu "möglichst allgemein funktionierende pipeline mit guten dateiformaten und so modular wie irgendwie möglich" entwickelt hat
+	* Dass eine key component meiner architecture halt ist dass in zwischenschritten produzierte Dinger, egal welcher algorithmus benutzt wurde, am ende das selbe dateiformat hat damit man easy damit weiterarbeiten kann. Und sanity-checks.
+	* In the development process of re-creating the algorithm of DESC15, I noticed that most of the time I'll be on hyperparameter tuning -> because of that, the highest focus for the architecture must lie on modularity and scalability - I want to be able to run a shitton of paramameter-combinations as quickly and efficiently as possible
+		-> resulting architecture completely modular, and individual steps can be executed using the CLI, AND the combination of all using Snakemake, AND to load interim results 
+	* Dass das SKlearn-Preprocessing ein klein wenig meine reihenfolge der steps zerstört und deswegen honestly 2x läuft
+	* Der ganze Jsonpersister kram!! von wegen dass logs custom geschrieben werden und so 
+	* * How I usually call it (in SIMPLE, with EXAMPLES), also von wegen ich provide einfach den pfad zu nem env-file und in dem env-file steht dann nochmal welche config er lesen soll, so ist drauf geachtet dass ich die selben settings für alle steps der pipeline hab (what wouldn't be the case if I used cmd-args), and that I can this way have fixed configs for the suggested params of eg the papers I rely on 
+		* PLOTS from snakemake and also from the json-persister!
 
-				-> So this way, when I run the 8th step for the pipeline from the command-line, it figures out if all dependency are there. If they are, I can execute what I want to execute, and if not, it can automatically (using the build-system) create all dependencies - but if the config I demand differs only in the third step from something that is already there, the build system automatically only executes steps 4-7.
-				-> Now I have the problem of depencies, were some stuff needs to be scheduled as soon as its dependencies are there etc etc => I need a scheduler
+das was in jupyternotebooks sein soll ist in jupyternotebooks... Und auch mit wie man in jedem schritt die parameter einbauen kann, schöne plots wie dieser hier der von snakemake mit dem kommando ausgeführt werden kann, und dieser der nochmal zeigt wann welche konfig relevant ist der mein code mit diesem kommando ausführt
 
-			* Dass eine key component meiner architecture halt ist dass in zwischenschritten produzierte Dinger, egal welcher algorithmus benutzt wurde, am ende das selbe dateiformat hat damit man easy damit weiterarbeiten kann. Und sanity-checks.
-			* In the development process of re-creating the algorithm of DESC15, I noticed that most of the time I'll be on hyperparameter tuning -> because of that, the highest focus for the architecture must lie on modularity and scalability - I want to be able to run a shitton of paramameter-combinations as quickly and efficiently as possible
-				-> resulting architecture completely modular, and individual steps can be executed using the CLI, AND the combination of all using Snakemake, AND to load interim results 
-			* Dass das SKlearn-Preprocessing ein klein wenig meine reihenfolge der steps zerstört und deswegen honestly 2x läuft
-			* Der ganze Jsonpersister kram!! von wegen dass logs custom geschrieben werden und so 
-			* * How I usually call it (in SIMPLE, with EXAMPLES), also von wegen ich provide einfach den pfad zu nem env-file und in dem env-file steht dann nochmal welche config er lesen soll, so ist drauf geachtet dass ich die selben settings für alle steps der pipeline hab (what wouldn't be the case if I used cmd-args), and that I can this way have fixed configs for the suggested params of eg the papers I rely on 
-				* PLOTS from snakemake and also from the json-persister!
+	* Dass alles was rauspurzelt (plots, prints, results) custom methoden haben muss und hat um im snakemake-grid-workflow zu funktionieren - im grid läufts halt auf individuellen maschinen (mit shared storage (results)) und wird in logfiles an random positionen geschrieben (prints) und da es nicht im mainthread ist kann ich (plots) nicht rendern
+	* terabytes of data on the grid storeage, rsynced for inspection
+		* seafileupdown
 
-		das was in jupyternotebooks sein soll ist in jupyternotebooks... Und auch mit wie man in jedem schritt die parameter einbauen kann, schöne plots wie dieser hier der von snakemake mit dem kommando ausgeführt werden kann, und dieser der nochmal zeigt wann welche konfig relevant ist der mein code mit diesem kommando ausführt
+* Very short subsection of this: Architecture of the fachbereich-classifier using sacred and my code (max 0.5 page!)
 
-			* Dass alles was rauspurzelt (plots, prints, results) custom methoden haben muss und hat um im snakemake-grid-workflow zu funktionieren - im grid läufts halt auf individuellen maschinen (mit shared storage (results)) und wird in logfiles an random positionen geschrieben (prints) und da es nicht im mainthread ist kann ich (plots) nicht rendern
-			* terabytes of data on the grid storeage, rsynced for inspection
-				* seafileupdown
-
-		* Very short subsection of this: Architecture of the fachbereich-classifier using sacred and my code (max 0.5 page!)
-
-		The build-system / wie du mit der pipeline umgehst
-			* Allows to build everything from the env-vars (default), to build EVERY possible combination (until a specific step), to build from config-file (where you can have lists for values, and it automatically creates all files necessary for the product of these combinations, to build for a filename, ..)
-			* SO, if you want to run something, you specify the parameters you want to have (using cmd-line-args, env-vars, a configfile, ... (with explicit way of resolving priorities and making sure that eg. already-used-settings are not changed lateron, ..)), and it automatically resolves which previous files it needs. Then, when loading these files in, you get a bunch of new settings from the dependencies, so again we need to resolve priorities, check for inconsistencies, etc.
-				* then there are also settings (debug, randomseed) that ARE allowed to be different from now to the dependencies
-			* The JsonPersister!! All outputs, all created figures, all settings (including date of their use) etc is all logged, and all intermediary files also note down which dependencies THEY needed (incl. their date of creation and commit), such that going through these files is really easy, and there is of course also a command that allows to go through these files and look at their outputs etc, and of course it's also easy to load these into jupyter (in fact, that's why we need a context that is basically the same but minimally different for click, jupyter and snakemake, as all have different requirements (click: sub-commands and cmd-args (btw, why is it practical that subcommands), jupyter: automatically and easily loading as much as possible, snakemake: config-files work differently and having to do stuff using environment-variables))
-				* Configurations are only suggested, and their real value is (according to the priorities) only determined when they are needed, and that it fails if an already-used configuration should be overwritten with something different, or if a demanded config differs with what a dependency needed (though only IF it needed it), ...
-					* This however differs for the jsonpersister, also there you can load all combis at once
+The build-system / wie du mit der pipeline umgehst
+	* Allows to build everything from the env-vars (default), to build EVERY possible combination (until a specific step), to build from config-file (where you can have lists for values, and it automatically creates all files necessary for the product of these combinations, to build for a filename, ..)
+	* SO, if you want to run something, you specify the parameters you want to have (using cmd-line-args, env-vars, a configfile, ... (with explicit way of resolving priorities and making sure that eg. already-used-settings are not changed lateron, ..)), and it automatically resolves which previous files it needs. Then, when loading these files in, you get a bunch of new settings from the dependencies, so again we need to resolve priorities, check for inconsistencies, etc.
+		* then there are also settings (debug, randomseed) that ARE allowed to be different from now to the dependencies
+	* The JsonPersister!! All outputs, all created figures, all settings (including date of their use) etc is all logged, and all intermediary files also note down which dependencies THEY needed (incl. their date of creation and commit), such that going through these files is really easy, and there is of course also a command that allows to go through these files and look at their outputs etc, and of course it's also easy to load these into jupyter (in fact, that's why we need a context that is basically the same but minimally different for click, jupyter and snakemake, as all have different requirements (click: sub-commands and cmd-args (btw, why is it practical that subcommands), jupyter: automatically and easily loading as much as possible, snakemake: config-files work differently and having to do stuff using environment-variables))
+		* Configurations are only suggested, and their real value is (according to the priorities) only determined when they are needed, and that it fails if an already-used configuration should be overwritten with something different, or if a demanded config differs with what a dependency needed (though only IF it needed it), ...
+			* This however differs for the jsonpersister, also there you can load all combis at once
 
 
-		====== REST VOM SNAKEMAKE-PAPER ======: 
+====== REST VOM SNAKEMAKE-PAPER ======: 
 
-			* Then, Snakemake goes on recursively for the latter, until all input files of all jobs are either generated by another job or already present in the used storage
-				* The file-centric description of workflows makes it intuitive to to infer dependencies between steps;
+	* Then, Snakemake goes on recursively for the latter, until all input files of all jobs are either generated by another job or already present in the used storage
+		* The file-centric description of workflows makes it intuitive to to infer dependencies between steps;
 
-			* MODULARIZATION
-			* portability: conda integration (one env per rule easy), ocntainer ingetragion 
-			* traceability: all information from inputs, outputs, arguments, etc can be exported
-			* scalability - supports workflow management systems and also grid engines. Snakemake’s design ensures that scaling a workflow to a spe- cific platform should only entail the modification of command line parameters. The workflow itself can remain untouched
-			* Also allows graph partitioning (to reduce overhead when scheduling), caching between workflows, iteratively executing rules condidtional execution, benchmarking (logging runtime, CPU, memory etc), parameter space exploration
+	* MODULARIZATION
+	* portability: conda integration (one env per rule easy), ocntainer ingetragion 
+	* traceability: all information from inputs, outputs, arguments, etc can be exported
+	* scalability - supports workflow management systems and also grid engines. Snakemake’s design ensures that scaling a workflow to a spe- cific platform should only entail the modification of command line parameters. The workflow itself can remain untouched
+	* Also allows graph partitioning (to reduce overhead when scheduling), caching between workflows, iteratively executing rules condidtional execution, benchmarking (logging runtime, CPU, memory etc), parameter space exploration
 
-		============== Später dazugekommen ==============
+============== Später dazugekommen ==============
 
-		* the automatically generated dependency-plot and the snakemake one 
-			* vor allem auch einen mit 20.000 generated files um zu demonstrieren dass dependency resolution schon komplex ist
-		* erwähnen dass der snakemake-kram mittlerweile kaum overhead ist weil das auch nur 2-3 Zeilen code pro Rule hat, and that is the same as for the click-commands
-		* Dass Snakemake ja auch die Anzahl Cores undso angeben kann und dass man damit ja viel Cluster-Config vorwegnimmt
-		* Downsides von Snakemake, dass es halt ebennicht sowas wie CPU tatsächlich nutzt, bzw halt tatsächlich echt fucking wenig tut
-		* When talking about docker, mention reproducibility again
-		* deutlicher drauf eingehen dass man wegen dem ganzen bums mit intermediate files undso speziell drauf achten muss dass 
-			* keine plots/prints verloren gehen
-			* man mitschreibt wann welche configs genutzt werden
-			* immer eindeutig drauf geachtet wird dass dependencies für genau die konfigurationen as demanded verwendet werden!! 
-		* `print(ctx.display_output("embedding"))` and `show-data-info` !!
-		* Dass man die configurationen fürs grid in special grid-config-files und dem snakefile festlegt 
-		* MORE PLOTS!!! Snakemake-alles-auf-einmal-plot, mein dependency-plot, was-auch-immer noch geht!!
-		* dass PPMI und auch viele andere Sachen von der größe des Datasets abhängen und exporbitant RAM verbrauchen
+* the automatically generated dependency-plot and the snakemake one 
+	* vor allem auch einen mit 20.000 generated files um zu demonstrieren dass dependency resolution schon komplex ist
+* erwähnen dass der snakemake-kram mittlerweile kaum overhead ist weil das auch nur 2-3 Zeilen code pro Rule hat, and that is the same as for the click-commands
+* Dass Snakemake ja auch die Anzahl Cores undso angeben kann und dass man damit ja viel Cluster-Config vorwegnimmt
+* Downsides von Snakemake, dass es halt ebennicht sowas wie CPU tatsächlich nutzt, bzw halt tatsächlich echt fucking wenig tut
+* When talking about docker, mention reproducibility again
+* deutlicher drauf eingehen dass man wegen dem ganzen bums mit intermediate files undso speziell drauf achten muss dass 
+	* keine plots/prints verloren gehen
+	* man mitschreibt wann welche configs genutzt werden
+	* immer eindeutig drauf geachtet wird dass dependencies für genau die konfigurationen as demanded verwendet werden!! 
+* `print(ctx.display_output("embedding"))` and `show-data-info` !!
+* Dass man die configurationen fürs grid in special grid-config-files und dem snakefile festlegt 
+* MORE PLOTS!!! Snakemake-alles-auf-einmal-plot, mein dependency-plot, was-auch-immer noch geht!!
+* dass PPMI und auch viele andere Sachen von der größe des Datasets abhängen und exporbitant RAM verbrauchen
 
 
 

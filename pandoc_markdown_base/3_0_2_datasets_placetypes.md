@@ -14,6 +14,8 @@ DATASETS:PLACETYPES SECTION PRE-TEXT
 * The fact that this dataset is created precisely to be good for the respective algorithm, in contrast to mine!
 * Ref link for Geonames categories: http://www.geonames.org/export/codes.html
 * look/think was die anderen auszeichnet - bei dem placetypedataset ists ja gar kein fließtext sondern direkt ein bag-of-tags
+* TODO: link geonames and foursquare and say how many entities have a class
+
 
 So, infos from \cite{Derrac2015}:
 * GeoNames has 667 place-types in 9 categories (403 used)

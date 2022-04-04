@@ -54,7 +54,7 @@
 
 
 * Appendix
-	* Algorihm-als-Sourcecode besser machen
+	* Algorithm-als-Sourcecode besser machen
 
 
 

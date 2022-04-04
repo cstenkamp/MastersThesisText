@@ -103,10 +103,8 @@ There were some Hyperparameters (also Algorithmen/Komponenten) von \cite{Ager201
     * The stuff that VISR12 did
     * Bootstrapping good clustered directions (with iterative application of SVM-Kappa and just literally with "which words occur in the same texts" and also with the LSA/LDA (which one) method like VISR12 did)
     * Not compare Rankings, but [WHAT]
-    * Bootstrap your way to more candidates
-        * using LSI or smth (see below)    
-	* Das sich-die-richtigen-wörter-per-candidate-svm-bootstrappen
-        * war das das mit dem statistical "die haben einen hohen overlap, so that term might as well have been in there"?   
+    * Bootstrap your way to more candidates (using LSI or smth (see below)    )
+	* Das sich-die-richtigen-wörter-per-candidate-svm-bootstrappen (war das das mit dem statistical "die haben einen hohen overlap, so that term might as well have been in there"?  )
 	* Mit LSI rausfinden welche Terme genausogut in dem Text hätten vorkommen können (hab ich auch irgendwo schon)
 	* Explizit einfach zu gucken "Welche Terme kommen oft in den gleichen dokumenten vor" (und das inverse (steht iwo im code)), und dann ne candidate SVM für grouped terms anstelle von einzelterms machen (auch schon iwo als code)
 	* Mit Wordnet hypernyms/hyponyns und synonyms zu finden damit ebenfalls zu arbeiten (kann man wit wordnet angeben welches abstraktionsniveau ich haben will?)

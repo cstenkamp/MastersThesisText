@@ -1,6 +1,10 @@
 <!-- Hier: was KOMMT RAUS bei den Sachen die mich interessieren (NUR BESCHREIBEN!nicht drüber reden ob und warum das mit den decisiontrees sinnvoll ist, und erst in der discussion darauf zurückkommen OB das sinnvoll ist -->
 <!-- See the stuff from DO_IF_TIME!! -->
 
+
+<!-- TODO: add parts of the "How to Evaluate" section back (currently comments in text)-->
+
+
 Erstmal sanity-check "mein algorithmus performt wie die paper, -> reasonable dass richtig", DANN analyse im hinblich auf die fachbereiche, and interpreting the results in discussion.
 
 PLOTS HERE	
@@ -8,26 +12,27 @@ PLOTS HERE
 * Die in den Zwischenschritten rauspurzelnden Sachen, wie "entities with close embeddings"
 * Nen Plot der closeness im embedding mit levensthein-distanz und anzahl-gleicher-wörter korreliert und schaut wie explainable das ist
 
+* TODO: mehr qualitative stuff rein
+	* Which are the most frequent phrases (done in Untitled.ipynb)
+	* 
+
 
 ### Implementation correct?
 
 * Is my implementation ok
-	* throw onto placetypes: \ref{tab:places_results}
+	* throw onto placetypes:
 		* Display the "closest embeddings": eg. "airplane cabin" und "aircraft cabin"
 			* Is that the case for 3D as well? => is 3D any good?
-		* compare the results of throwing my code onto their placetypes-dataset and how my results compare to theirs 
-			* Set-Overlap of candidate-terms for different #dimensions OF THEM
-			* Die Performances von allen \mainalgos in ner tabelle reporten und mit meinen vergleichen, sowohl quantitativ als auch qualitativ!
+		* Set-Overlap of candidate-terms for different #dimensions OF THEM
+
 	* result: set overlap of my extracted candidates for placetypes and theirs (und auch die big_21222.yml ergebnisse danach auswerten) (nicht nur overlap, ich kann auch verhältnis set intersect zu set union machen, und die als true/false positive/negative deklarieren und dann accuracy, f1 etc analysieren und halt anhand dessen "die hyperparam kombi die am closesten zu deren ergebnissen ist" rausbekommen)
 		* `from derive_conceptualspace.load_data.load_semanticspaces import get_all_goodkappa`
 	* gucken ob die clustercenters ("nature", ..) von denen auch bei mir gut sind für placetypes => AND THEN ALSO FIGURE OUT THE DATA FOR THE TABLE FOR PLACETYPES
 
+	* TODO: Add table: ALL hyperparams I had for placetypes
+	* full table wo ich tf-idf und ppmi vergleiche für einen Placetypes-case um später den case zu machen dass tf-idf besser ist
 
-### Dataset comparisons (is our dataset worse?)
 
-* Can we produce the same number of features etc than Derrac2015
-	* \ref{tab:generated_stuff}
-	* Grafik: How often are keyphrases in the documents (currently in THROWN OUT)
 
 ### Methodik auf Domäne?
 
@@ -42,6 +47,14 @@ PLOTS HERE
 * Are human categories predictable from our extracted directions?
 	* decision tree performance
 		* Are the results comparable with those of the FB-Classifier?
+			* My Argumentation that the way Ager & Alshaikh report their accuracies it must be the case that they did that per class (see also Slack with Johannes!)
+			* Faculty
+				* does it cluster such that the Faculty is reconizable (->Fig 4.1) (`notebooks/analyze_results/siddata/decisiontrees_bestconfig.ipynb`)
+				* Can we get Faculty from shallow decision-trees (like \cite{Ager2018,Alshaik2020}) (->Fig 4.2)
+				* is that able to compete with state-of-the-art classification algorithms? "To see if it is possible to extract any kind of structured data from the unstructured course descriptions, a Neural Network classifier was trained on the dataset, classifying courses to the faculty they run under. Accuracy of that: (WO WAR DAS?!)"
+			* DDC
+				* decision-trees for that (`notebooks/analyze_results/siddata/decisiontrees_bestconfig.ipynb`)
+				* TODO: schaff ich's level 2 davon auch zu machen wie \cite{Alshaikh2020}?
 		* Do the extracted directions look any good if so (QUALITATIVE)
 		  -> \ref{fig:dims_for_fb}
 		  -> vorstellen in den results, interpretieren in discussion.
@@ -49,6 +62,9 @@ PLOTS HERE
     	* How does a machine classification look
 		  -> \ref{fig:boxes_rechtswis}	  
 * Is the produced embedding (which is necessarily a loss of information) still adequate?
+	* Can we recover courses from the detected direcitons?
+		* for that, we train unbounded decision trees without a train/test-split and check if the prediction can recover
+		* "Ein anderer Weg zum testen wäre auch ein classifier der nur anhand der most salient generated features versucht den kurs wiederherzustellen (das zeigt natürlich nicht ob es similar to how humans do it but part of it) -> recover_course_from_embeds.ipynb"
 	* compare accuracies: 3D-embedding of us with standard 3D-embedding
 		( \ref{fig:boxes_rechtswis} vs \ref{fig:mds_3d_hyperplane} )
 	* check if courses can be recovered 
@@ -68,8 +84,7 @@ PLOTS HERE
 		* shows that, at least regarding this feature, okay-ish
 		* TODO: show one of Placetypes and compare!!!
 	* Show 10 courses that are close according to the embedding and manually look if they are similar
-		* Look at courses that I KNOW to be similar and check if their embedding is close
-			* Language Courses, Mathe für Anwender 1 & 2, Info A & B
+		* Look at courses that I KNOW to be similar and check if their embedding is close (eg Language Courses, Mathe für Anwender 1 & 2, Info A & B)
 * Final Embeddings	
 	* Is there a direction for "more advanced course"? 
 	* Language Courses, Mathe für Anwender 1 & 2, Info A & B

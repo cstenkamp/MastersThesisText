@@ -43,6 +43,8 @@ The main goal of this thesis was to create a conceptual space of courses, automa
             * "Siehe Gruppe A"
             * "s. Modulbeschreibung"
             * "Literatur:wird noch bekannt gegeben"
+    * Further exploratory data analysis:
+        * seit 2020 gibt's einige mit "!!FÄLLT AUS!! xyz", das macht manchmal das matching zu previosu iterations schwer. Außerdem sind oft die jahrelang-gleich-gebliebenen descriptions um 1-2 sätze die corona ansprehcen ergänzt, further complicating it.
     * Metadata:
         * \ref{tab:siddata_metadata}
         * dass es ja version 2 des Kurs-Datensatzes von Johannes ist

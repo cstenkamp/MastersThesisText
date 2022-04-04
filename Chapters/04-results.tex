@@ -1,39 +1,139 @@
 \chapter{Results}
 
-This section will summarize the results that the described algorithm achieved on the described datasets. Before going into detail about the performance on the SIDDATA-dataset (\ref{sec:dataset_siddata}), a brief summary of the results on the placetypes-dataset (\ref{sec:dataset_placetypes}) should demonstrate if the specific implementation can achieve comparable results to \mainalgos, thus putting the other results into perspective in terms of what the algorithm can realistically achieve on dedicated high-quality datasets.
+This section summarizes the results that the described algorithm achieved on the described datasets according to the described metrics. Before going into detail about the performance on the Siddata-dataset, a brief summary of the results on the placetypes-dataset serves to demonstrate if the specific implementation can achieve comparable results to \mainalgos, thus putting the other results into perspective in terms of what the algorithm can realistically achieve on dedicated high-quality datasets.
 
-\section{How to Evaluate}
+% Due to the implemented algorithm being an \gls{unsupervised} algorithm, there is no explicit target value for each of the considered samples, making it impossible to straight-forwardly apply well-known \gls{ml} metrics such as \Gls{acc} or \gls{f1}. What this algorithm tries to achieve is a lot \textit{fuzzier} than in the realm of classification: The end-goal of it is to embed the given \glspl{entity} into a vector-space that consists of semantically meaniningful directions, so the only actual metric would be a comparison checking if the respective categorization here corresponds closely to human judgement. To do that, the best evaluation is likely a study that asks for feedback of users that see the results of a developed system\footnote{An example for such a system is the \textit{Movie Tuner} interface from \textcite{VISR12}, reprinted as \autoref{fig:movetuner}.}. \textcite{Derrac2015} performed crowdsourcing experiments on CrowdFlower\footnote{\url{http://www.crowdflower.com}}, asking users among other tasks which of several candidates could best describe the difference between two movies. They also compared their results with those of running the supervised algorithm of \cite{VISR12} on a subset of their data. Furthermore they tested if the explainable classifiers generated from this algorithm (see \autoref{sec:reasoning}) \q{help users spot incorrect classifications} \cite[48]{Derrac2015}, as well as if their algorithmic classification corresponds to human judgement\footnote{The task was set only for classification into OpenCYC and Foursquare Taxonomies of the placetypes-dataset (see column `\textbf{classification classes}' in \autoref{tab:all_datasets}).}. 
+% \todoparagraph{TODO: Should I also quickly mention their results?}
+% While similar studies could be done in the Siddata-\gls{dsa} \cite{Schurz2021} without additional costs, carrying these out is outside the scope of this thesis.
 
-Due to the implemented algorithm being an \gls{unsupervised} algorithm, there is no explicit target value for each of the considered samples, making it impossible to straight-forwardly apply well-known \gls{ml} metrics such as \Gls{acc} or \gls{f1}. What this algorithm tries to achieve is a lot \textit{fuzzier} than in the realm of classification: The end-goal of it is to embed the given \glspl{entity} into a vector-space that consists of semantically meaniningful directions, so the only actual metric would be a comparison checking if the respective categorization here corresponds closely to human judgement. To do that, the best evaluation is likely a study that asks for feedback of users that see the results of a developed system\footnote{An example for such a system is the \textit{Movie Tuner} interface from \textcite{VISR12}, reprinted as \autoref{fig:movetuner}.}. \textcite{Derrac2015} performed crowdsourcing experiments on CrowdFlower\footnote{\url{http://www.crowdflower.com}}, asking users among other tasks which of several candidates could best describe the difference between two movies. They also compared their results with those of running the supervised algorithm of \cite{VISR12} on a subset of their data. Furthermore they tested if the explainable classifiers generated from this algorithm (see \autoref{sec:reasoning}) \q{help users spot incorrect classifications} \cite[48]{Derrac2015}, as well as if their algorithmic classification corresponds to human judgement\footnote{The task was set only for classification into OpenCYC and Foursquare Taxonomies of the placetypes-dataset (see column `\textbf{classification classes}' in \autoref{tab:all_datasets}).}. 
-\todoparagraph{TODO: Should I also quickly mention their results?}
-While similar studies could be done in the SIDDATA-\gls{dsa} \cite{Schurz2021} without additional costs, carrying these out is outside the scope of this thesis.
 
-This thesis relies on both qualitative analysis and quantitative anlaysis in order to quantify the algorithm's performance.\\ 
-In the \textit{qualitative analysis}, exemplary partial results of the algorithm will be showcased that should intuitively show if what the algorithm does looks \textit{realistic} from a human perspective. It should be noted that analyses of this kind are always to be taken with care, because there is no guarantee that the picked examples are actually representative and not the result of (intentional or accidental) cherry-picking.\footnote{\todoparagraph{TODO: and I'll also quickly show that DESC15 weren't always perfect as well}}\\
-To also generate unambiguous facts, a \textit{quantitative analysis} was performed as well. Due to the aforementioned lack of obvious metrics however, workarounds must be found to generate clear quantifiable performance estimates. Like \mainalgos, this thesis makes use of \textit{Shallow Decision Trees} that are trained to recover a known category of the dataset from the generated semantic directions.
-% TODO: *HOW* I evaluated is not part of the results, is it?!
+% This thesis relies on both qualitative analysis and quantitative anlaysis in order to quantify the algorithm's performance. In the \textit{qualitative analysis}, exemplary partial results of the algorithm will be showcased that should intuitively show if what the algorithm does looks \textit{realistic} from a human perspective. 
 
-\includeMD{pandoc_generated_latex/4_0_results}
+\section{Replicating the results for placetypes}
+\label{sec:results_placetypes}
 
-The plots \ref{fig:scatter_mds_movies} and \ref{fig:scatter_mds_placetypes} show a 2D-representation of the MDS %TODO: link MDS anyway, if not to the glossary than to the section
-of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\footnote{\url{https://www.cs.cf.ac.uk/semanticspaces/}}. Visually comparing them to their equivalent to the SIDDATA-dataset (\autoref{fig:scatter_mds}) \todoparagraph{shows that while the movie-embeddings looks pretty clustered}, the clustering of the placetypes-dataset looks in fact a lot worse than that of the SIDDATA-dataset.
-%TODO: obviously write again. What do we see? A 2D-Version of the MDS. If we see very distinct clusters in that, we can conclude that it sounds possible that we can detect whatever-we-colored-by from this embeddings to an okay degree.
+To check if the implementation correctly produces the claimed results, it was applied to \gencite{Derrac2015} placetypes-dataset and its results compared to those of the literature. \autoref{fig:scatter_mds_placetypes} in \autoref{ap:more_plots} shows a two-dimensional \gls{tsne}-embedding of the original representations of \cite{Derrac2015}, colored by their Geonames-class. This figure indicates that only few of the entities are linked with a class and that the embeddings barely cluster when compared to their embeddings for the movies-dataset (displayed in \autoref{fig:scatter_mds_movies}). 
+
+Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, depth-3 and unbounded decision trees classifying an entities' category according to the Placetypes- and Geonames-taxonomy. \autoref{tab:f1_mainalgos_me_short} lists their results as well as some of their baselines in comparison with the results of this work. As shown in the table, this implementation outperforms the previous results for all configurations. \autoref{tab:f1_geonames_foursquare_all} shows the results of different configurations to generate the decision-tree classification. In contrast to the results reported in \ref{tab:f1_mainalgos_me_short} which are optimized for their respective classification target, these results are from a single parameter-combination and robustly reproducible. 
+
+\begin{table}[H]
+	\begin{subtable}{.627\linewidth}
+		\centering
+		\resizebox{\textwidth}{!}{
+			\begin{tabular}{rrcccc}
+				\toprule
+				 & \textbf{Depth} & \textbf{-} & \textbf{1} & \textbf{2} & \textbf{3} \\
+				\textbf{1vsRest} & \textbf{Balanced} &  &  &  &  \\
+				\midrule
+				\multirow[t]{2}{*}{\textbf{False}} & \textbf{False} & 0.377 & {\cellcolor{lightgreen}} 0.484 & {\cellcolor{lightgreen}} 0.496 & 0.496 \\
+				 & \textbf{True} & 0.394 & 0.134 & 0.238 & 0.256 \\
+				\cline{1-2}
+				\multirow[t]{2}{*}{\textbf{True}} & \textbf{False} & 0.424 & 0.320 & 0.332 & 0.366 \\
+				 & \textbf{True} & {\cellcolor{lightgreen}} 0.441 & 0.482 & 0.489 & {\cellcolor{lightgreen}} 0.513 \\
+				\bottomrule
+			\end{tabular}
+		}
+		\caption{GeoNames}\label{tab:f1_geonames_all}
+	\end{subtable}%
+	\begin{subtable}{.373\linewidth}
+		\centering
+		\resizebox{\textwidth}{!}{
+			\begin{tabular}{cccc}
+				\toprule
+				\textbf{-} & \textbf{1} & \textbf{2} & \textbf{3} \\
+				&  &  &  \\
+				\midrule
+				0.506 & 0.330 & 0.417 & 0.455 \\
+				{\cellcolor{lightgreen}} 0.550 & 0.113 & 0.294 & {\cellcolor{lightgreen}} 0.499 \\
+				0.511 & 0.319 & 0.403 & 0.417 \\
+				0.505 & {\cellcolor{lightgreen}} 0.451 & {\cellcolor{lightgreen}} 0.521 & 0.498 \\
+				\bottomrule
+			\end{tabular}
+		}
+		\caption{Foursquare}\label{tab:f1_foursquare_all}
+	\end{subtable}
+	\slcaption{F1-Scores of various-depth decision trees predicting GeoNames- and Foursquare-labels. All scores are the result of 5-fold cross-validation averaged across 10 random seeds, but from a single parameter-configuration. Rows correspond to different hyperparameters for the \gls{dt}. If not \textit{1vsRest}, a single tree must predict all classes at once (max. 2\textsuperscript{depth}).}.
+	\label{tab:f1_geonames_foursquare_all}
+\end{table}
+
+
+
+\begin{table}[H]
+	\centering
+	% \resizebox{\textwidth}{!}{%
+	\begin{tabular}{rr|ccc|ccc|cc}
+	\textbf{Target} &
+	  \textbf{Cls} &
+	  \textbf{Ran} &
+	  \textbf{LDA} &
+	  \textbf{BL} &
+	  \textbf{\cite{Derrac2015}} &
+	  \textbf{\cite{Ager2018}} &
+	  \textbf{\cite{Alshaikh2020}} &
+	  \textbf{this work} \\ \midrule
+	\textbf{Foursquare}  & \textbf{D1}  & 0.39 & \textbf{0.55} & -             & 0.38*          & 0.41 & \textbf{0.45} & \textbf{0.50} \\
+						 & \textbf{D3}  & 0.5  & 0.48          & -             & 0.42*          & 0.44 & \textbf{0.57} & \textbf{0.58} \\
+						 & \textbf{DN}  & -    & 0.47          & \textbf{0.53} & \textbf{0.53}  & 0.42 & -             & \textbf{0.57} \\
+	\multicolumn{1}{l}{} & \textbf{Any} & -    & -             & 0.72          & \textbf{0.73}  & -    & -             & -             \\
+	\textbf{Geonames}    & \textbf{D1}  & 0.23 & \textbf{0.34} & -             & \textbf{0.32*} & 0.32 & 0.28          & \textbf{0.51} \\
+						 & \textbf{D3}  & 0.27 & 0.32          & -             & 0.31*          & 0.31 & \textbf{0.34} & \textbf{0.54} \\
+						 & \textbf{DN}  & -    & 0.27          & 0.2           & \textbf{0.37}  & 0.24 & -             & \textbf{0.46} \\
+	\multicolumn{1}{l}{} & \textbf{Any} & -    & -             & 0.36          & \textbf{0.41}  & -    & -             & -            
+	\end{tabular}%
+	% } %resizebox
+	\slcaption{F1-Scores of classifiers predicting GeoNames- and Foursquare-labels for three baselines, \mainalgos and this work. \textbf{Cls} column encodes the classifier: \textbf{D1/3} are \glspl{dt} of depth 1/3, \textbf{DN} an unbounded \gls{dt}. Condition \textbf{Any} refers to the best of \cite{Derrac2015}'s  semantic classifiers. \hspace{1ex}
+	Baseline-columns: \textbf{Ran} is the \textit{Random} baseline as reported by \cite{Alshaikh2020}, \textbf{LDA} is the result of \acrshort{lda} as reported by \cite{Ager2018}, and \textbf{BL} is the best baseline-condition from \cite{Derrac2015}. \hspace{1ex}
+	Columns \textbf{\cite{Derrac2015}, \cite{Ager2018}} and \textbf{\cite{Alshaikh2020}} encode the best respectively reported scores. Starred values in column \textbf{\cite{Derrac2015}} refer to results that \cite{Ager2018} reported for the configuration of \cite{Derrac2015} for conditions not covered by the latter. Final column reports the results of this work (unlike \autoref{tab:f1_geonames_foursquare_all}, this reports the respectively optimal parameter-configuration) with a literature-consistent train-test-split of 70-30. A longer version of this table listing more configurations per author can be found in the Appendix as \autoref{tab:f1_placetypes_long}.}
+	\label{tab:f1_mainalgos_me_short}
+\end{table}
+
+
+% \begin{table}[H]
+% 	\resizebox{0.6\textwidth}{!}{%
+% 	\caption{Results of the decision trees trained on }
+% 	\label{tab:places_results}
+% 	% möchte sagen: Wenn ich meine Sachen auf placetypes werfe hab ich comparable metrics -> my implementation is ok
+% 	\begin{tabular}{llrrr}
+% 	\toprule
+% 	 & \textbf{Depth:} & \textbf{1} & \textbf{2} & \textbf{3} \\
+% 	\textbf{1vsRest} & \textbf{Balanced} &  &  &  \\
+% 	\midrule
+% 	\multirow[t]{2}{*}{\textbf{False}} & \textbf{False} & 0.427 & 0.474 & 0.477 \\
+% 	 & \textbf{True} & 0.057 & 0.107 & 0.139 \\
+% 	\cline{1-2}
+% 	\multirow[t]{2}{*}{\textbf{True}} & \textbf{False} & {\cellcolor{lightgreen}} 0.745 & {\cellcolor{lightgreen}} 0.795 & {\cellcolor{lightgreen}} 0.811 \\
+% 	 & \textbf{True} & 0.529 & 0.660 & 0.681 \\
+% 	\bottomrule
+% 	\end{tabular}
+% 	}
+% \end{table}
+
+\todoparagraph{Because of the big difference, we also report our results per param-combi and show that PPMI suuucks}
+
+
+\section{Dataset differences} % Dataset comparisons (is our dataset worse?)
+\label{sec:results_datasetdiffs}
+
+
+Having established that the implementation works correctly for the domain of placetypes, we will now check if the quantity of some key characteristics produced as interim results of the algorithm differ across domains. \autoref{tab:generated_stuff} contrasts the number of feature vectors, candidate terms and cluster elements for the movies-, placetypes- and Siddata-dataset.
+
+\todoparagraph{With that, we want to figure out if anything is possible and if so, the correct parameters like the candidate-min-term-count}
 
 \begingroup
-\renewcommand*{\arraystretch}{2}
-\begin{table}[]
-	\centering
-	\begin{tabular}{rccccc}
-										  & \multicolumn{3}{c}{\textbf{Feature vectors}}           & \textbf{Candidates} & \textbf{Cluster Elements}   \\
-										  & \textbf{Mean L.} & \textbf{Vectors} & \textbf{Clusters} &                     & \textbf{($\kappa\geq0.1$}) \\
-    \midrule	
-										  
-	\textbf{movies \cite{Derrac2015}}     & 12083            & 589727           & 3864              & 22903               & 9389              		   \\
-	\textbf{placetypes \cite{Derrac2015}} &                  &                  &                   &                     &                   		   \\
-	\textbf{SIDDATA}                      &                  &                  &                   &                     &                  
-	\end{tabular}
-	\caption{Statistics on generated features of the algorithm}
-	\label{tab:generated_stuff}
+\begin{table}[H]
+	\resizebox{\textwidth}{!}{%
+		\centering
+		\begin{tabular}{r|ccc|cc}
+		& \multicolumn{3}{c}{\textbf{Feature vectors}}           & \textbf{Candidates} & \textbf{Cluster Elements}   \\
+		& \textbf{Mean L.} & \textbf{Vectors} & \textbf{Clusters} &                     & \textbf{($\kappa\geq0.1$}) \\
+		\midrule
+		\textbf{movies \cite{Derrac2015}}     & 12\,083 & 589\,727 & 3\,864 & 22\,903 & 9\,389 \\
+		\textbf{placetypes \cite{Derrac2015}} &         &          &        & 21\,833 &        \\
+		\textbf{Siddata}                      &         &          &        & 10\,060 &        
+		\end{tabular}
+		\caption{Statistics on generated features of the algorithm}
+		\label{tab:generated_stuff}
+	}
 \end{table}
 \endgroup
 % movies:
@@ -45,25 +145,35 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\fo
 % candidate-terms: 22903 (unclustered)
 % clusters: ndims*2 clusters with all in all (for 20d) 9389 values (->9429 words have kappa>=0.5)
 
-\begin{table}
-	\resizebox{0.6\textwidth}{!}{%
-	\caption{This algorithm on Placetypes}
-	\label{tab:places_results}
-	% möchte sagen: Wenn ich meine Sachen auf placetypes werfe hab ich comparable metrics -> my implementation is ok
-	\begin{tabular}{llrrr}
-	\toprule
-	 & \textbf{Depth:} & \textbf{1} & \textbf{2} & \textbf{3} \\
-	\textbf{1vsRest} & \textbf{Balanced} &  &  &  \\
-	\midrule
-	\multirow[t]{2}{*}{\textbf{False}} & \textbf{False} & 0.427 & 0.474 & 0.477 \\
-	 & \textbf{True} & 0.057 & 0.107 & 0.139 \\
-	\cline{1-2}
-	\multirow[t]{2}{*}{\textbf{True}} & \textbf{False} & {\cellcolor{lightgreen}} 0.745 & {\cellcolor{lightgreen}} 0.795 & {\cellcolor{lightgreen}} 0.811 \\
-	 & \textbf{True} & 0.529 & 0.660 & 0.681 \\
-	\bottomrule
-	\end{tabular}
-	}
-\end{table}
+The Siddata-dataset consists of more but shorter texts associated with an entity (visualized in \autoref{tab:corpussizes}), which is why there are much less words in the respective texts that exceed a given \gls{df} for the Siddata when compared to the originally used ones (visualized in \autoref{tab:summed_unique_words}). The algorithm uses a \gls{svm} to split entities that contain a phrase from those that do not, which performs bad for heavily imbalanced class sizes. \autoref{fig:candidate_histogram} shows the distribution of texts per candidate as histogram. It shows that 90\% of the 10\,060 candidates occur in 26 to 375 of the 11\,601 documents. The median number of documents is 49, meaning that for half of the keyphrases only 0.42\% of the samples are in the positive class.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\figwidth]{graphics/dataset_new/docs_per_phrase.pdf}
+	\caption[Distribution of texts per candidate]{Distribution of texts per candidate (log scale), cut off at the 97\textsuperscript{th} percentile. \Gls{df}-threshold for a candidate is set to 25, yielding 10\,060 candidates for 11\,601 documents. Median number of documents per candidate is 49 and for the 95\textsuperscript{th} percentile 375. 2595 candidates occur in at least 100 descriptions.}
+	% Occurences in all Documents per Keyphrase (for all keyphrases that occur $\geq$ 5 times, cut off at the 93th percentile). 7007 of 45295 terms occur at least 5 times. Most frequent phrases: seminar (4173), course (3722), students (2923), it (2671), language (2071), work (1980), event (1842), research (1731), lecture (1723), law (1719).
+	\label{fig:candidate_histogram}
+\end{figure}
+
+\todoparagraph{This doesnt look good but lets look at the results!}
+
+\section{Results for the Siddata-dataset}
+\label{sec:results_siddata}
+
+As previously described, the primary method used here to check if the described methodology works for the domain of educational resources is to check if low-depth decision trees trained on the extracted semantic directions of the Siddata-dataset can classify a courses' faculty. Before doing that however, it is important to first validate if it can reasonably assumed that the faculty \textit{can generally} be extracted from only the descriptions associated with the entities.
+
+
+
+
+
+\includeMD{pandoc_generated_latex/4_0_results}
+
+The plots \ref{fig:scatter_mds_movies} and \ref{fig:scatter_mds_placetypes} show a 2D-representation of the MDS %TODO: link MDS anyway, if not to the glossary than to the section
+of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\footnote{\url{https://www.cs.cf.ac.uk/semanticspaces/}}. Visually comparing them to their equivalent to the SIDDATA-dataset (\autoref{fig:scatter_mds}) \todoparagraph{shows that while the movie-embeddings looks pretty clustered}, the clustering of the placetypes-dataset looks in fact a lot worse than that of the SIDDATA-dataset.
+%TODO: obviously write again. What do we see? A 2D-Version of the MDS. If we see very distinct clusters in that, we can conclude that it sounds possible that we can detect whatever-we-colored-by from this embeddings to an okay degree.
+
+
+
 
 
 \section{Qualitative Analysis}

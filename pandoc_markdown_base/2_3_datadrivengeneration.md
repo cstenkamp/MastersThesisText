@@ -28,3 +28,6 @@ TALK ABOUT that actually, in CS concepts (=types) are regions, BUT we have only 
         * the domain is different than the theoretical idea of Gärdenfors - especially stuff like movies and courses, what ARE they? are they type or token? Rather both at once - the region of the course XYZ is composed of only one token, at least until we take into account a much bigger dataset that would allow us to do reasoning on "the set of all introductory computer science courses" or something. (For placetypes however we ARE dealing with types!) 
     * we ARE dealing with a mostly metric space	
         * ..however we use cosine distance instead of euclidian
+
+
+Am ende soll rauskommen: A \textbf{feature-based representation}

@@ -13,7 +13,7 @@ PLOTS HERE:
     * Unsupervised, data-driven (in contrast to \cite{VISR12})
     * Modular (subcomponents may be exchanged)
     * Optimized to "look good to humans" (no straight-forward metrics or obvious evaluations)
-
+    * The result is a "feature-based representation"
 
 * \cite{Alshaikh2020}: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candi- date word w a linear classifier which separates the embed- dings of entities that have w in their description from the oth- ers. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
 
@@ -151,10 +151,13 @@ Here we bring together the embedding of the individual entities and the extracte
     * die bert-embeddings für die Cluster der candidate directions averagen und den closesten als Name der Dimension geben
     * keybert (thresholded close bert embeddings)
     * TODO: Mention Camel2009 one!!
+* In the end we re-embed the entities into a space where each of the vector components is a semantic directions and the value are the respective \gls{rank}ings. That's what we then finally call its \textbf{feature-based representation} 
 
 ### Post-processing
 
 * TODO: Basiert der fine-tuning step von \cite{Ager2018} auf Supervised learning?
+
+
 
 
 <!-- ##############################################################

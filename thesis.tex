@@ -140,7 +140,7 @@
 \robustify\itshape
 % end 
 
-
+\usepackage{subcaption}
 \usepackage{lipsum}
 \usepackage{pdflscape} % if this is used, those pages within {landscape} are turned when viewed digitally (https://tex.stackexchange.com/a/141444/108199)
 \usepackage{footmisc}
@@ -227,12 +227,14 @@
 \newacronym{lms}{LMS}{Learning Management System}
 \newacronym{oer}{OER}{Open Educational Resources}
 \newacronym{ddc}{DDC}{Dewey Decimal Classification}
+\newacronym{dt}{DT}{Decision Tree}
 % END Acronym definitions
 %TODO: update acronym script for Plural!!
 %TODO: also let the acronym script define eg. an \svm command that is just an alias for \gls{svm} and an \svms for \glspl{svm}
 \newacronym[plural=MOOCs]{mooc}{MOOC}{Massive Open Online Course}
 \newacronym[plural=BoWs, firstplural=Bags of Words]{bow}{BoW}{Bag of Words}
 \newacronym{tsne2}{t-SNE}{T-distributed Stochastic Neighbor Embedding}
+\newacronym{lda}{LDA}{Latent Dirichlet Allocation (see \autoref{sec:lda})}
 
 \glsunset{cpu}
 \glsunset{ram}
@@ -441,6 +443,19 @@
 % see https://github.com/jgm/pandoc/issues/4941#issuecomment-425975499, https://github.com/jgm/pandoc/issues/4384#issuecomment-367585913
 
 \usepackage{enumitem} % long descriptions
+
+% https://stackoverflow.com/a/13120787/5122790
+\setlistdepth{9}
+\setlist[itemize,1]{label=$\bullet$}
+\setlist[itemize,2]{label=$\bullet$}
+\setlist[itemize,3]{label=$\bullet$}
+\setlist[itemize,4]{label=$\bullet$}
+\setlist[itemize,5]{label=$\bullet$}
+\setlist[itemize,6]{label=$\bullet$}
+\setlist[itemize,7]{label=$\bullet$}
+\setlist[itemize,8]{label=$\bullet$}
+\setlist[itemize,9]{label=$\bullet$}
+\renewlist{itemize}{itemize}{9}
 
 % ##################################################################################
 % === CODE LISTINGS ===
@@ -738,16 +753,16 @@
 
 % let ALL paragraphs not have an indent but an empty line between
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{1ex}
-\RedeclareSectionCommand[beforeskip=-5.5ex plus -1ex minus -.2ex,
-						 afterskip=4.3ex plus -.2ex]{chapter}
-\RedeclareSectionCommand[beforeskip=-4ex plus -1ex minus -.2ex,
-						 afterskip=2ex plus -.2ex]{section}
+\setlength{\parskip}{0.8ex}
 \RedeclareSectionCommand[beforeskip=-2.5ex plus -1ex minus -.2ex,
-						 afterskip=1ex plus -.2ex]{subsection}
-\RedeclareSectionCommand[beforeskip=-2ex plus -1ex minus -.2ex,
-						 afterskip=1ex plus -.2ex]{subsubsection}					 
-\RedeclareSectionCommand[beforeskip=-1ex plus -1ex minus -.2ex]{paragraph}		
+						 afterskip=3.3ex plus -.2ex]{chapter}
+\RedeclareSectionCommand[beforeskip=-2.5ex plus -1ex minus -.2ex,
+						 afterskip=1ex plus -.2ex]{section}
+\RedeclareSectionCommand[beforeskip=-1.5ex plus -1ex minus -.2ex,
+						 afterskip=0.5ex plus -.2ex]{subsection}
+\RedeclareSectionCommand[beforeskip=-1ex plus -1ex minus -.2ex,
+						 afterskip=0.5ex plus -.2ex]{subsubsection}					 
+\RedeclareSectionCommand[beforeskip=-0.5ex plus -1ex minus -.2ex]{paragraph}		
 % https://tex.stackexchange.com/a/469110/108199
 
 
@@ -941,7 +956,7 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 	\addtokomafont{section}{\LARGE}
 	\addtokomafont{subsection}{\Large}
 	\addtokomafont{subsubsection}{\large}
-
+	%TODO: header is wrong from appendix C on >.<
 
 	\cleardoubleoddpage
 	\phantomsection
