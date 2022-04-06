@@ -1,0 +1,54 @@
+\usepackage{xfp}
+
+\makeatletter
+\def\@syllog[#1]#2#3#4{%
+  % Define the propositions -----------------------------------------------
+  \def\@SYLpropA{\ignorespaces#2\unskip}%
+  \def\@SYLpropB{\ignorespaces#3\SY@PuncPB\unskip}%
+  \def\@SYLpropC{\ignorespaces#4\unskip\nolinebreak\hspace{\SY@SpConEG}\SY@ErgoSign}%
+  %
+  \settowidth{\SY@LenPA}{\@SYLpropA}
+  \settowidth{\SY@LenPB}{\@SYLpropB}
+  \settowidth{\SY@LenC}{\@SYLpropC}
+  %
+  \setlength{\SY@LenLab}{\widthof{#1}}%
+  \ifdim\SY@LenLab>\z@
+    \addtolength{\SY@LenLab}{\SY@SpLabel}
+  \fi
+  %
+  % Set the rule's length ----------------------------------------------
+  \setlength{\SY@LenRule}{%
+    \fpeval{max(\SY@LenPA,\SY@LenPB,\SY@LenC)}pt}%
+  \ifdim\dimexpr\SY@LenRule+\SY@Pre+\SY@LenLab\relax>\dimexpr\columnwidth-\SY@Pre\relax
+    \setlength{\SY@LenRule}{\columnwidth-2\SY@Pre-\SY@LenLab}%
+  \fi
+  % Construction of the Syllogism ----------------------------------------
+  \par\vspace{\SY@LenSepA}\noindent % V-space before the syllogism
+  \if@SYParam                       % Conditional H-space before syllogism
+      \hspace{\SY@Pre}#1\hspace{\SY@SpLabel}%
+   \else
+      \hspace{\SY@Pre}%
+  \fi
+  %
+  \begin{minipage}{\SY@LenRule}
+    \raggedright
+    \begin{list}{}
+      {%
+        \setlength{\parsep}{\z@}%
+        \setlength{\itemsep}{\z@}%
+        \setlength{\leftmargin}{1em}%
+        \setlength{\itemindent}{-\leftmargin}%
+        \setlength{\labelwidth}{0pt}%
+        \setlength{\labelsep}{0pt}%
+      }
+      \item \@SYLpropA
+      \item \@SYLpropB\vspace{\dimexpr-\ht\strutbox+\dp\strutbox}
+      \item \rule{\SY@LenRule}{\SY@HiRule}
+      \item \@SYLpropC
+    \end{list}
+  \end{minipage}
+  \par\vspace{\SY@LenSepB}%                 V-space after the syllogism
+  %
+  \@SYRestoreBooleans% Restore booleans
+}
+\makeatletter
