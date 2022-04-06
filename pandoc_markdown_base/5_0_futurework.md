@@ -74,6 +74,10 @@ There were some Hyperparameters (also Algorithmen/Komponenten) von \cite{Ager201
 * Postprocessing
     * The Fine-Tuning of \cite{Ager2018}
 
+
+* Distance-Functions
+    * in \cite{Schockaert2011}, they define similarity through a variation of the Jaccard-distance (IoU, Overlap-Area divided by Union-Area)
+
 ### Complex Algorithm-Addendums
 
 * [AGKS18] speculates that performance could be improved for such categories by integrating domain knowledge into the fine-tuning method. ==> Maybe combine this with [ALBS20]??

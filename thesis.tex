@@ -49,6 +49,20 @@
 
 \usepackage[T1]{fontenc}
 \usepackage{ textcomp }
+% \usepackage{mdframed}
+% \usepackage{ntheorem}
+% \theoremstyle{nonumberplain} %https://tex.stackexchange.com/a/79101/108199
+% \newmdtheoremenv[outerlinewidth=2,leftmargin=10,%
+% rightmargin=10,innertopmargin=\topskip,%
+% splittopskip=\topskip,skipbelow=\baselineskip,%
+% skipabove=\baselineskip,ntheorem]{cs}{Conceptual Space}
+% \newmdtheoremenv{cs}{Conceptual Space}
+% fucking shit is incompatible with ams-packages
+
+% https://tex.stackexchange.com/a/30040/108199
+\usepackage{amsthm}
+\theoremstyle{plain}
+
 
 \newcommand{\saveref}[2]{\texorpdfstring{\hyperref[#1]{#2}}{#2}}
 
@@ -94,6 +108,21 @@
 
 % ===
 
+\usepackage{syllogism}
+\input{redefinesyllog.tex}
+% https://tex.stackexchange.com/a/493338/108199 by default there is no effing way to change the width of a syllogism, how fucking stupid is that
+% yo what the fuck is even the point of that package.
+\usepackage{amssymb}
+\newcommand\syllogism[3][]{%
+%   \begin{center}
+  \def\tmp{#1}%
+  \ifx\tmp\empty\else(#1)\quad\fi
+  \begin{tabular}{@{}l@{}}
+    #2\\\hline#3\quad$\therefore$
+  \end{tabular}
+%   \end{center}
+}
+% https://tex.stackexchange.com/a/577867/108199
 
 
 \usepackage[utf8]{inputenc}
@@ -236,6 +265,7 @@
 \newacronym{nlp}{NLP}{Natural Language Processing}
 \newacronym{vsm}{VSM}{Vector Space Model}
 \newacronym{cl}{CL}{Computational Linguistics}
+\newacronym{cs}{CS}{Conceptual Space}
 % END Acronym definitions
 %TODO: update acronym script for Plural!!
 %TODO: also let the acronym script define eg. an \svm command that is just an alias for \gls{svm} and an \svms for \glspl{svm}

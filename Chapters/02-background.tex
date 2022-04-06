@@ -10,17 +10,146 @@
 
 \section{Conceptual Spaces}
 
-\includeMD{pandoc_generated_latex/2_2_conceptualspaces}
+This section will introduce conceptual spaces as tool of choice as well as how to generate them and how reasoning on them works, as well as some other related work to what's done in this thesis.
 
-\subsection{Data-Driven Generation of Conceptual Spaces}
+\subsection*{Theory of Conceptual Spaces}
 
-\includeMD{pandoc_generated_latex/2_3_datadrivengeneration}
+The theory of Conceptual Spaces was first introduced by Peter Gärdenfors in his 2000 book \citetitle{Gardenfors2000a} \cite{Gardenfors2000a} both as a theoretical model of human concept formation, but also as format for knowledge representation in artificial systems \cite{Gardenfors2004}. 
 
-\textbf{Conceptual Space in our Case = Euclidian space with interpretable dimensions}
+On the one hand, \glspl{cs} should serve as bridge between symbolistic and connectionistic approaches to knowledge representation. By having CS as layer of reasoning and representation in between both, classical symbols would be grounded in noisy high-dimensional data, allowing for high-level syllogistic reasoning from real-world data. 
+
+If a computer has a knowledge base that says $\exists x.Red(x) \& Apple(x)$, does it know what "red" and "apple" mean? We need to ground symbols, to express meaning!
+
+According to Gärdenfors, concept-representation in humans is represented by three levels of accounting for observations: The symbolic level, the conceptual level and the subconceptual level \cite[204]{Gardenfors2000a}:
+\begin{description}
+    \item[Subconceptual] Observations are the firing of the neurons of our sensory receptors, without any conceptualization.  (connectionism, \glspl{ann})
+    \item[Conceptual] Observations are defined not as token of a symbol, but as vector in a conceptual space of some quality  (prototype theory, linear algebra)
+    \item[Symbolic] represents observations by describing them in some specified language (formal logic, syllogisms, symbolism, classical AI, logical positivism)
+\end{description}
+
+Importantly, these levels are not in conflict, but different models of the same phenonemon where each cover distinct important aspects. The process of inducing a general rule from few samples for example is represented as pattern-matching on the firing patterns in the subconceptual level, which translates to the conceptual level as geometric reasoning through regions and direction. As another example, semantic relations such as hyponyms from the symbolic level are modelled as geometric sub-regions on the conceptual level. So on the one hand, automatically generated conceptual spaces could allow for high-level syllogistic reasoning on real-world data without the need to manually add countless facts. However it also provides a new way to model reasoning and inference for both other levels through geometric relations, providing explanations for the noisy subconceptual level and computationally less complex algorithms for the symbolic level. The validity of the statement \textit{a robin is a bird} is given because robins are gemmetrically a subregion of the region of birds.
+
+So on the one hand it's a framework for scientific theories, but on the other hand a model of human concept formation from phenomenal observations. Regardless of the theory's aspiration to accurately model human conceptualization and reasoning, it provides a useful knowledge representation method and tool that allows to model kinds of human reasoning with novel algorithms that cannot be done with both other well-researched methods \cite[Sec.~6.7]{Gardenfors2000a}. 
+
+In practical applications, it can serve as representational format to express semantic relations for the semantic web \cite{Gardenfors2004}. After years of trying to model information processing through pure deductive reasoning and classical ontologies (\eg RDS, OWL or WordNet), turns out there may be be more to it than strict is-a relationships and explicit, unambiguous, universal truths, as for example similarity, which CS can model due to its richer semantic structure. 
+
+\subsection*{Definition}
+
+\todoparagraph{iff = if and only if}
+
+In conceptual spaces, concepts are represented as convex regions in domain-specific, human-interpretable spaces. For example, the concept of "apple" is a region that in the dimension "color" is somewhere between red and green, in the dimension "form" at roughly round, in the dimension "taste" somwhere between sweet and sour, etc. Every instance of an apple is thus a vector that lies inside the region of the concept. This allows for high-level reasoning, such as the question "does any Instance of concept X fit into my bag?" -> If the "size" dimension of the whole region is smaller than the size of my bag, it will.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{graphics/stolenfigures/apple_space.png}
+	\slcaption{
+		CS for an apple. Stolen from \cite{Hernandez-Conde2017}, who in turn stole it from xyz
+	}
+\end{figure}
+
+
+
+\fbox{\begin{minipage}{37em}
+    \newtheorem*{theorem*}{Conceptual Space}
+    \begin{theorem*}
+        A conceptual space is a geometric structure used to encode the meaning of natural language terms, properties and concepts. The metric space is spanned by \emph{quality dimensions} denoting basic domain-specific properties based on perception or sub-symbolic processing. Natural language categories (\emph{concepts}) correspond to convex regions, whereas points denote individual objects (instances/\emph{entities}, allowing for geometric solutions to commonsense reasoning tasks such as \emph{betweeness} or \emph{induction}.
+        % \cite{Derrac2015}: "Conceptual spaces \cite{Gardenfors2000a} are metric spaces which are used to encode the meaning of natural language concepts and properties."
+    \end{theorem*}
+\end{minipage}}
+
+Formally defined, a conceputal spaces needs the following definitions:
+\begin{description}
+    \item[Quality Dimensions] are atomic units of perception. Some of these are necessarily linked (such as hue and saturation), making them \textit{integral}, whereas others (\eg. temperature and weight) are \textit{seperable}. Typically each dimension corresponds to a primitive cognitive feature.
+    \item[Domain] A set of integral dimensions that are seperable from others, like the \textit{color} domain made up from hue, saturation and value. Conceptual spaces are grouped into several low-dimensional subspaces according to these domains.
+    \item[Similarity] is defined as inverse distance, which requries a metric. A distinction can be made for the aggregation of integral and separable dimensions. 
+    \item[Betweenness] An object Y is between two other objects X and Z iff d(x,y) + d(y,z) = d(x,z).
+    \item[Natural Properties (\textit{criterion P} \cite{Gardenfors2000a})] are defined as convex regions of a domain in a conceptual space. A convex region has the property that an interpolation between any two points in this region is necessarily also in this region. 
+    \item[Concepts (\textit{criterion C} \cite{Gardenfors2000a})] are combinations of (potentially correlated) properties. \q{A concept is represented as a set of convex regions in a number of
+    domains together with a prominence assignment to the domains and information about how the regions in different domains are correlated} \cite[8]{Gardenfors2004}
+    \item[Entities] are specific instances (tokens) of a concept, encoded as points. 
+    \item[Context] can be modelled in a CS by weighting certain dimensions higher than others, influencing distance and how concepts are fromed from properties.
+\end{description}
+
+Some corollaries: 
+
+\begin{itemize}
+    \item Each conceptual space contains only items for which the space's dimensions make sense, so you wouldn't find kings in a conceptual space of cabbages.
+    \item Concept combination depends on the compatibility of the respective domain: For fully compatible domains, this narrows the new concept down (a \textit{green banana} is both green and bitter). If the modifier is incompatible with the original vaue, it replaces that information (\eg a \textit{pink elephant}), furhter replacing other incompatible domains (\eg to a \textit{stone lion}, the concepts of \textit{habitat} and \textit{life span} don't apply).
+    \item From the criterion of convexity for natural properties and the definition of betweenness, it follows that if an object Y is between X and Z, and both X and Z have a property, Y must also have this property.
+    \item Relative properties can be defined as regions on a relative scale - the property "\textit{tall}" acccordingly can be defined to be true iff the entity is in the top 33\% \wrt the size-property of all relevant objects.
+\end{itemize}
+
+% \includeMD{pandoc_generated_latex/2_2_conceptualspaces}
+\todoparagraph{look if I want to take a paragraph from 22conceptualspacesMD}
+\todoparagraph{Rudiger had a formal definition in the CS course}
+
+
+\todoparagraph{Removed Data Driven Generation of Conceptual Spaces section}
+
+% \subsection{Data-Driven Generation of Conceptual Spaces}
+
+% \includeMD{pandoc_generated_latex/2_3_datadrivengeneration}
+
+
 
 \subsection{Explainable Reasoning with Conceptual Spaces}
 % was "computational reasoning"
 \label{sec:reasoning}
+
+\textbf{Similarity-based reasoning}
+
+\noindent
+\begin{minipage}{.5\textwidth}
+  \syllogism{Alice likes \textit{the Lord of the Rings} \\
+           \textit{The Hobbit} and \textit{Lord of the Rings} are similar}{Alice will probably like \textit{The Hobbit}}
+\end{minipage}% 
+\begin{minipage}{.5\textwidth}
+  \syllogism{\textbf{A} has property \textbf{x} \\
+             \textbf{B} is  similar to \textbf{A}}
+             {\textbf{B} likely also has property \textbf{x}}
+\end{minipage}% 
+
+
+\vspace{2ex}
+\textbf{Interpolative Reasoning}
+
+\noindent
+\begin{minipage}{.5\textwidth}
+  \syllogism{Cars have tires \\
+             Bikes have tires \\
+             Motorcycles are between cars and bikes
+             }{Motorcycles likely also have tires}
+\end{minipage}% 
+\begin{minipage}{.5\textwidth}
+    \syllogism{\textbf{A} has property \textbf{x} \\
+               \textbf{C} has property \textbf{x} \\
+               \textbf{B} is conceptually between \textbf{A} and \textbf{C}}
+               {\textbf{B} likely also has property \textbf{x}}
+\end{minipage}% 
+
+\vspace{2ex}
+\textbf{A fortiori reasoning}
+
+\noindent
+\begin{minipage}{.5\textwidth}
+    \syllogism{\textit{The shining} is a horror film \\
+            \textit{The shining} is scary \\
+            \textit{It} is more scary than \textit{The shining}}
+            {\textit{It} is likely also a horror film}
+\end{minipage}% 
+\begin{minipage}{.5\textwidth}
+    \syllogism{\textbf{A} has property \textbf{x} \\
+               \textbf{B} is \textit{more severe} than \textbf{A}}
+               {\textbf{B} likely also has property \textbf{x} \\ 
+               \vspace{-0.5em} or a \textit{more severe} property}
+\end{minipage}% 
+
+
+Analogical Reasoning
+
+\q{Concepts which differ in analogous ways have properties which differ in analaogous ways} - geometric parallelism
+
+
 \includeMD{pandoc_generated_latex/2_4_typesofreasoning}
 
 \subsection{Other Related Work}
@@ -32,6 +161,17 @@
 \section{Required Algorithms and Techniques}
 
 Note that those that are not defined here are likely to be found in the Glossary \nameref{glo:defs}.
+
+\subsubsection*{Multidimensional Scaling}
+
+From a set of pairwise distances, induce a finite space with fixed dimensions. Formally:
+
+given distances $d(p_i, p_j) \forall 1 \leq i, i \leq j$ and dimension k, compute points $v_1, ..., v_n \in \mathds{R}^k$ that maintains distances as well as possible by minimizing 
+
+$$ \sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(d(p_i, p_j) - \lVert v_i - v_j \rVert)^2 $$
+
+Can be used for dimensionality reduction
+
 
 \subsubsection*{Semantic Knowledge Bases}
 
