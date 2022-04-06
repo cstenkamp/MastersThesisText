@@ -125,6 +125,11 @@
 % https://tex.stackexchange.com/a/577867/108199
 
 
+\usepackage{array}
+\usepackage{ragged2e}
+\newcolumntype{P}[1]{>{\RaggedRight\arraybackslash\hspace{0pt}}p{#1}}
+
+
 \usepackage[utf8]{inputenc}
  
 \usepackage{afterpage} % https://tex.stackexchange.com/a/78285/108199
@@ -266,6 +271,7 @@
 \newacronym{vsm}{VSM}{Vector Space Model}
 \newacronym{cl}{CL}{Computational Linguistics}
 \newacronym{cs}{CS}{Conceptual Space}
+\newacronym{rcc}{RCC}{Region Connection Calculus}
 % END Acronym definitions
 %TODO: update acronym script for Plural!!
 %TODO: also let the acronym script define eg. an \svm command that is just an alias for \gls{svm} and an \svms for \glspl{svm}

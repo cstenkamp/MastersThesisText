@@ -13,6 +13,8 @@ There's also \cite{Alshaikh2021}
 
 % dass das alles vergleichbar mit InfoGAN etc für Bilder ist.. (siehe auch text von \cite{Alshaikh2019})
 
+\cite{Alshaikh2019} geht drauf ein warum man infoGAN und VAEs für bilder als pretty much sowas betrachten kann
+
 % \cite{Derrac2015}: "It is convenient to represent the meaning of terms or documents as points,vectors or regions in a Euclidean space. Such representations are known as vector-space models [...].  ==> FUCKING WORD2VEC!!!
  
 % \cite{Derrac2015}: some form of dimensionality reduction is typically used to obtain vectors whose components correspond to concepts. One of the most popular techniques, called latent semantic analysis (LSA [39]), uses singular value decomposition (SVD) to this end. Multi-dimensional scaling (MDS [40]) is another popular method for dimen- sionality reduction, which builds a vector-space representation from pairwise similarity judgements.

@@ -9,11 +9,6 @@ PLOTS HERE:
 
 * TODO: Mention where future work could be incorporatted already here
 
-* Important Features: 
-    * Unsupervised, data-driven (in contrast to \cite{VISR12})
-    * Modular (subcomponents may be exchanged)
-    * Optimized to "look good to humans" (no straight-forward metrics or obvious evaluations)
-    * The result is a "feature-based representation"
 
 * \cite{Alshaikh2020}: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candi- date word w a linear classifier which separates the embed- dings of entities that have w in their description from the oth- ers. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
 
@@ -82,6 +77,7 @@ PLOTS HERE:
     * For this thesis, the creation of the dissimiliarity-matrix and the embedding are split into individual steps because both have a substantial runtime, and as the number of dimensions for the embedding is only relevant in the embedding-step, a lot of runtime can be saved if the dissimiliarity-matrix can be re-used for different embeddings and dimensions.
 * Because this dissimilarity-Matrix is far too high-dimensional and sparse, a dimensionality-reduction is applied. Because it is important to DESC15 that the embedding is a euclidian space, they go for MDS. 
 
+* in \cite{Schockaert2011}, they define similarity through a variation of the Jaccard-distance (IoU, Overlap-Area divided by Union-Area)
 
 
 ### Embed

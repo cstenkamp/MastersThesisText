@@ -74,6 +74,7 @@ Some corollaries:
 
 \begin{itemize}
     \item Each conceptual space contains only items for which the space's dimensions make sense, so you wouldn't find kings in a conceptual space of cabbages.
+    \item Concepts roughly correspond to (non-proper) nouns, adjectives to properties and proper nouns (the name of a particular person, place, organization, or thing to points.)
     \item Concept combination depends on the compatibility of the respective domain: For fully compatible domains, this narrows the new concept down (a \textit{green banana} is both green and bitter). If the modifier is incompatible with the original vaue, it replaces that information (\eg a \textit{pink elephant}), furhter replacing other incompatible domains (\eg to a \textit{stone lion}, the concepts of \textit{habitat} and \textit{life span} don't apply).
     \item From the criterion of convexity for natural properties and the definition of betweenness, it follows that if an object Y is between X and Z, and both X and Z have a property, Y must also have this property.
     \item Relative properties can be defined as regions on a relative scale - the property "\textit{tall}" acccordingly can be defined to be true iff the entity is in the top 33\% \wrt the size-property of all relevant objects.
@@ -83,74 +84,162 @@ Some corollaries:
 \todoparagraph{look if I want to take a paragraph from 22conceptualspacesMD}
 \todoparagraph{Rudiger had a formal definition in the CS course}
 
+\subsection{Data-Driven Generation of Conceptual Spaces}
 
-\todoparagraph{Removed Data Driven Generation of Conceptual Spaces section}
-
-% \subsection{Data-Driven Generation of Conceptual Spaces}
-
-% \includeMD{pandoc_generated_latex/2_3_datadrivengeneration}
-
-
+\includeMD{pandoc_generated_latex/2_3_datadrivengeneration}
 
 \subsection{Explainable Reasoning with Conceptual Spaces}
 % was "computational reasoning"
 \label{sec:reasoning}
 
-\textbf{Similarity-based reasoning}
+\todoparagraph{However a short paragraph about reasoning-based classifiers and the respective intutitive explanations for known classifiers}
+
+The goal of this thesis is to provide explainable recommendation for educational resources. This section elaborates how the framework of \glspl{cs} allows to computationally model commonsense reasoning through analytic geometry and algebra.
+
+\todoparagraph{We are looking how symbolistic stuff relates to CS}
+
+According to \cite{Gardenfors2000a}, Representations don't need to be similiar to the objects they represent, but the *similarity relations of the representations* should correspond to those of the objects they represent
+
+\subsubsection*{Categories and Ontologies}
+
+% CS and with it ontologies "automatically" (BIG question mark) arise from prototypes + metric domain + voronoi tesselation
+
+\todoparagraph{Vor allem sollte hier ruberkommen warum das gut fur mich und meinen recommender fur educational resources ist argh}
+
+Logic-Based reasoning/inference can do many things already, however it requires the knowledge to be encoded in logic (a lot of manual work) and doesn't allow for fuzzyness.
+In formal logic/ontologies/lexical databases, semantic relations of concepts are explicitly modelled. The \gls{rcc} \cite{Cohn1997a} links these relations to their geometric interpretation, providing a bridge between this and Conceptual Spaces \cite{Gardenfors2001}. Once you have created the structure, the following emerges automatically:
+
+\vspace{2ex}
+
+\begin{tabularx}{1.05\textwidth}{P{0.16\textwidth}|P{0.25\textwidth}|P{0.25\textwidth}|X}
+    Ontology Relation & Other Names        & RCC5 \cite{Cohn1997a} analog / \textit{Geometric equivalent} & Example \\ \midrule
+
+    Type Identity     & Equality of Concepts, Synonymy & Identical Regions (EQ)      & Animals with a liver \& Animals with a heart \\ 
+
+    Subsumption       & Hyponyms/ Hypernyms, \textit{is-a-relationship}, Concept Hierachies, Taxonomies 
+                                           & Proper Parts(PP, PP\textsuperscript{-1}), \textit{Subregions}
+                                                                          & \textit{Every pizzaria is a restaurant} \\  
+    
+    Mutual 
+    Exclusiveness     &                    & Discrete Regions (DR), \textit{unconnected/disjoint regions}
+                                                                          & \textit{No Restaurant can be a beach} \\  
+
+    Overlapping 
+    Concepts          &                    & Partial Overlap (PO)         & \textit{Some bars serve wine, but not all} \\  
+
+    Opposites         &                    & \textit{Set inverse}         & Humans \& Non-human animals \\ 
+
+    Token Identity    & Equality of Names, Synonymy  & \textit{Equal coordinates}   & Morning star \& Venus \\ 
+    Meronymy/Holonymy & \textit{part-whole realationship} & -             & Trees \& Leaves
+\end{tabularx}
+
+\vspace{4ex}
+
+% Also: characteristics of properties (transitivity, symmetry) (from intrinsic features of dimensions (time is linear because the dimension is linear))
+
+So for example the validity of "a robin is a bird" is encoded by it being a subregion. So, no reason for a symbolic inference when using the richer structure of CS instead of ontologies.
+
+So except Meronymy, a CS can model all semantic relations of classical ontologies/formal logic/symbolistic approaches/knowledge bases. However as it encodes more than just a taxonomy of concepts, it for higher/more forms of inference and (common-sense) reasoning, among others by enabling for interpolation and extrapolation of knowledge. These are:
+
+\subsubsection*{Similarity-based reasoning}
+
+\label{sec:similaritybasedreasoning}
+
+As discussed already in \autoref{sec:amazonalgo}, modern recommendation algorithms often rely on similarity-based reasoning by suggesting that users that liked and item may also like similar items (collaborative filtering). In terms of classification, this corresponds to the 1-Neirest-Neighbor approach, where an object is assigned the class of the most similar item\footnote{1-NN: \textit{Y is of the same class as X because X closest to Y}}:
 
 \noindent
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.6\textwidth}
   \syllogism{Alice likes \textit{the Lord of the Rings} \\
            \textit{The Hobbit} and \textit{Lord of the Rings} are similar}{Alice will probably like \textit{The Hobbit}}
 \end{minipage}% 
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.4\textwidth}
   \syllogism{\textbf{A} has property \textbf{x} \\
              \textbf{B} is  similar to \textbf{A}}
              {\textbf{B} likely also has property \textbf{x}}
 \end{minipage}% 
 
-
 \vspace{2ex}
-\textbf{Interpolative Reasoning}
+
+This is something that cannot be done by classical logic, which can not model degrees of something but only universal full truths. Another advantage is that it's easy to train, however a disadvantage is that it requires enough similar concepts which may not be given This algorithm however lacks \textit{explainability}: The employed distance function does not encode \textit{in what respect} two items are similar. For human reasoning however, there is no \textbf{overall Similarity} - instead similarity is relative to a domain and only meaningful in context \cite{Goodman1972-GOOPAP-3}: \q{any measurement of similarity is based on assumptions concerning the properties of a similarity relation} \cite[110]{Gardenfors2000a}. In a conceptual space, this can be modelled: The distance function can give weight for certain dimensions depending on context or objects of different concepts can be considered similar if they share enough properties. Most importantly however, in a CS a system for recommendation can ask users what dimensions of a given entity the user liked to suggest items that are similar in that regard.
+% a system serving me a similar wine to the one I want that is not available can ask me what dimensions of that wine were important before suggesting new ones.
+
+\subsubsection*{Induction}
 
 \noindent
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.6\textwidth}
+    Another very important tool of human common-sense reasoning is abstraction/generalization/ \textbf{induction}, going from single observations to general rules. For that, we need to decide which properties of the respective observation are relevant, distilling sensible information from the receptors from unimportant information to make inferences from limited information about an object? The connectionistic answer to that would be "pattern matching", and ML algorithms work extremely well for that, however this lacks explainability, and also we want to model the underlying algorithm and the underlying patterns. All three levels can model some kinds of induction and generalization, remember they are not in conflict. On the Conceptual Level you can eg model \textit{If two different entities of the same class have a property, maybe all entities of that class have a property}, which would be \textit{categroical inductive inverences}
+\end{minipage}% 
+\begin{minipage}{.4\textwidth}
+    \syllogism{Grizzly bears love onions \\
+               Polar bears love onions}
+               {All bears love onions \cite[226]{Gardenfors2000a}}
+\end{minipage}% 
+
+Other kinds of inductive reasoning we can model:
+
+\textbf{Interpolative Reasoning}
+
+\cite{Schockaert2011}: \q{intermediary conditions lead to intermediary conclusions} 
+
+\noindent
+\begin{minipage}{.6\textwidth}
   \syllogism{Cars have tires \\
              Bikes have tires \\
              Motorcycles are between cars and bikes
              }{Motorcycles likely also have tires}
 \end{minipage}% 
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.4\textwidth}
     \syllogism{\textbf{A} has property \textbf{x} \\
                \textbf{C} has property \textbf{x} \\
                \textbf{B} is conceptually between \textbf{A} and \textbf{C}}
                {\textbf{B} likely also has property \textbf{x}}
 \end{minipage}% 
 
+% Source looking into it ([28] of [DESC15]): M. Abraham, D. Gabbay, U. Schild, Analysis of the talmudic argumen- tum a fortiori inference rule (kal vachomer) using matrix abduction, Studia Logica 92 (2009) 281–364.
+
 \vspace{2ex}
 \textbf{A fortiori reasoning}
 
 \noindent
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.6\textwidth}
     \syllogism{\textit{The shining} is a horror film \\
             \textit{The shining} is scary \\
             \textit{It} is more scary than \textit{The shining}}
-            {\textit{It} is likely also a horror film}
+            {\phantom{penis} \\ 
+            \textit{It} is likely also a horror film}
 \end{minipage}% 
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.4\textwidth}
     \syllogism{\textbf{A} has property \textbf{x} \\
-               \textbf{B} is \textit{more severe} than \textbf{A}}
+               \textbf{B} is \textit{more severe} than \textbf{A} \\ \phantom{penis}}
                {\textbf{B} likely also has property \textbf{x} \\ 
                \vspace{-0.5em} or a \textit{more severe} property}
 \end{minipage}% 
 
+\vspace{2ex}
 
-Analogical Reasoning
+\textbf{Extrapolative reasoning (Analogical Reasoning)} \cite{Schockaert2011}: \q{Analogous changes in the conditions should lead to analogous changes in the conclusion}, or \q{Concepts which differ in analogous ways have properties which differ in analaogous ways}. This is \textit{relational similarity}: If the analogical proportion a : b :: c : d holds, the pairs (a, b) and (c, d) are called relationally similar. Simply maps to geometric parallelism. 
 
-\q{Concepts which differ in analogous ways have properties which differ in analaogous ways} - geometric parallelism
+I wrote down the syllogisms here, however that's not the only way to apply it, I can also "look for things that". In the case of analogies, I can ask "what is the thing that behaves to waterski like snowboarding to skiing"?
+
+\textbf{Metaphors / Metonymy} (saying "the Pentagon" when referring to the US military) follow from a fortiori/analogical reasoning
 
 
-\includeMD{pandoc_generated_latex/2_4_typesofreasoning}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{graphics/stolenfigures/reasoning_samples.png}
+	\slcaption{
+		Different forms of reasoning represented graphically. Holy shit remove me
+	}
+    \label{fig:graphic_reasoning}
+\end{figure}
+
+To automate these forms of inference, we need a richer form of knowledge than what is available in calssical logic: We need a notion of / Information about \textbf{Betweenness} and \textbf{Directionality}.
+
+To model the stuff in \autocite{fig:graphic_reasoning}, we need a good metric, and what we see there definitely sounds euclidian!
+
+\textbf{Summarized, CS are better than symbolism because we save the inference engine (plus we can extend and simulate knowledge bases with commonsense reasoning, just like humans deal with incomplete knowledge!) and better than connectionism because they are explainable. Klar soweit?!}
+
+% \includeMD{pandoc_generated_latex/2_4_typesofreasoning}
 
 \subsection{Other Related Work}
 \label{sec:otherwork}

@@ -73,6 +73,7 @@ Research Question: Ich will die Methodik von dem Paper auf educational resources
 * The fact that I don't use intercepts of the decision_planes in derive_conceptualspace.semantic_directions.create_candidate_svm.select_salient_terms (dass ich beim ganzen koordinatensystem-schieben den intercept ignoriere!)
 * dass das hier auf bag-of-words basiert und dass es daher wie alle bag-of-words sachen das problem hat das einunddasselbe sehr verschieden ausgedrückt werden kann, und LSA wäre einer der wege das zu beheben (another one: word embeddings)
 
+
 <!-- ========================================================================= -->
 <!-- ========================================================================= -->
 <!-- ========================================================================= -->
@@ -142,6 +143,11 @@ We remember, we also wanted to build a good architecture and set goals for that,
     * Uhhhm ist es nicht scheißegal ob der ursprüngliche space metrisch (MDS) ist oder nicht, wenn letztlich EBENNICHT nur das koordinatensystem gedreht wird sondern die rankings für die einzelnen word-directions genutzt werden?! weil ob das metrisch ist oder nicht ist doch komplett unabhängig davon obs ursprünglisch metrisch war?!
     * Gärdenfors basically said we could build a CS with "Dimensionality Reduction from the high-dimensional input (neurons) eg using MDS into a euclidian space, and then geometric reasoning on that" including some examples of kinds of reasoning, so actually the exact algorithm \cite{Derrac2015} did was extremely naheliegend (put some obvious NLP modelling to that like \cite{Turney2010} explained and you're pretty much exactly at their algorithm)
     * ....but even more reason to make me think that it may have been their error to keep the enforcement that the MDS-result must be a euclidian space, when afterwards they have the additional step of using their rankings anyway! (...which btw brings me to the question what that does to distances?!)
+    * Gärdnefors already said stuff like "Dimensionality Reduction from the high-dimensional input (neurons) eg using MDS into a euclidian space, and then geometric reasoning on that" including some examples of kinds of reasoning, so actually the exact algorithm \cite{Derrac2015} did was extremely naheliegend (put some obvious NLP modelling to that like \cite{Turney2010} explained and you're pretty much exactly at their algorithm) 
+        * ....but even more reason to make me think that it may have been their error to keep the enforcement that the MDS-result must be a euclidian space, when afterwards they have the additional step of using their rankings anyway! (...which btw brings me to the question what that does to distances?!)
+
+
+
 
 * We say we're dealing with POINTS but we're constantly doing cosine similarity, isn't the important difference between points and vectors that cosine would be relevant for vectors, but euclidian(/..) distance for points?!
     * We're always concerned with points, not with vectors!!! gucken was das für auswirkungen hat!!! (AUCH: points, not convex regions (like CS SHOULD be))     
@@ -150,6 +156,9 @@ We remember, we also wanted to build a good architecture and set goals for that,
         * ...WO merkt man denn überhaupt dass sie punkte haben und nicht vektoren? Bei der SVM (siehe meine Stackoverflow frage!) ists ja relevant.... und da nutzen sie punkte... riiight? Am I doing it like they did? Are we all doing it correct?
         * (see also "The fact that I don't use intercepts of the decision_planes" in shortcomings )
 
+### Criticism towards the entire concept of CS
+
+* no need for a symbolic inference engine anymore [WELL BUT this is computationally easily MORE demanding [..SOURCE!!]]
 
 
 ## Conclusion
