@@ -16,9 +16,15 @@ Problem that both SIDDATA and this thesis want to solve:
 
 * e-learning becomes more and more important, and recommendation in the educational section is very helpful.
 
-Users have MANY educational resources but limited time, so the actual problem now is the choice of the right resources. Academics nowadays must engage with a multitude of interconnected, digital and open practices and technologies \cite{Atenas2014}. High-quality \glspl{oer} become more and more widespread, and that's great, as they \q{may ultimately be the genuine equalizer for education and for empowering social inclusion in a pluralistic, multicultural, and imperfect world} \cite[2]{Olcott2012}. However they fundamentally change the landscape of higher education - now there's an overwhelming quantity of high quality  material available, so the new problem is how to find something in this ocean of information. Searching and retreiving \gls{oer} is often challenging as materials are difficult to locate and retrive or to figure out what differentiates from one another \cite{Atenas2014}.
+Users have MANY educational resources but limited time, so the actual problem now is the choice of the right resources. 
+
+<!-- 
+Already used in Intro:
+Academics nowadays must engage with a multitude of interconnected, digital and open practices and technologies \cite{Atenas2014}. High-quality \glspl{oer} become more and more widespread, and that's great, as they \q{may ultimately be the genuine equalizer for education and for empowering social inclusion in a pluralistic, multicultural, and imperfect world} \cite[2]{Olcott2012}. However they fundamentally change the landscape of higher education - now there's an overwhelming quantity of high quality  material available, so the new problem is how to find something in this ocean of information. Searching and retreiving \gls{oer} is often challenging as materials are difficult to locate and retrive or to figure out what differentiates from one another \cite{Atenas2014}.
 
 The \emph{Future Skills Report}\footnote{\url{www.nextskills.org}} on the future of learning and higher education \cite{Ehlers2019} suggests that future academic education will look fundamentally different from today, in that it will likely become increasingly multi-institutional with students individually having their own personalized, flexible curriculum selected from a vast set of resources, in constrast to the current rigid available study programmes \cite{Ehlers2019}. 
+-->
+
 
 \cite{Ehlers2019} lists 16 crucial skills regarding individual abilities and development, instrumental skills such as self-organized knowledge acquisition as well as social and cooperation skills. Future is life-long learning and individualization of educational paths, so self-regulatory competencies and being able to find educational pathways is more important, and regarding object-related skills being able to find relevant resources becomes more and more a problem.
 

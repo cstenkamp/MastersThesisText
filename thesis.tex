@@ -46,6 +46,10 @@
 
 % ====================== /parts from MastersDoctoralThesis.cls ======================
 
+
+\usepackage[T1]{fontenc}
+\usepackage{ textcomp }
+
 \newcommand{\saveref}[2]{\texorpdfstring{\hyperref[#1]{#2}}{#2}}
 
 
@@ -135,6 +139,7 @@
 \usepackage[table,dvipsnames]{xcolor} %dvipsnames for yaml-code-listings
 \usepackage{siunitx}
 \colorlet{lightgreen}{green!40!white}
+\newcommand{\bst}{{\cellcolor{lightgreen}}}
 \usepackage{etoolbox}
 \robustify\bfseries
 \robustify\itshape
@@ -228,6 +233,9 @@
 \newacronym{oer}{OER}{Open Educational Resources}
 \newacronym{ddc}{DDC}{Dewey Decimal Classification}
 \newacronym{dt}{DT}{Decision Tree}
+\newacronym{nlp}{NLP}{Natural Language Processing}
+\newacronym{vsm}{VSM}{Vector Space Model}
+\newacronym{cl}{CL}{Computational Linguistics}
 % END Acronym definitions
 %TODO: update acronym script for Plural!!
 %TODO: also let the acronym script define eg. an \svm command that is just an alias for \gls{svm} and an \svms for \glspl{svm}

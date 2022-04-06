@@ -14,21 +14,76 @@ Throughout this thesis we'll use the "we" als \emph{Pluralis Auctoris}, signifyi
 	4 results, 5 conclusion, that's it.
 }
 
+\paragraph*{Digital Version}
+
+\todoparagraph{If you're not reading the digital version, I highly recommend it}. The digital version of the document is highly hyperlinked (all glossary entries are linked, you can jump forward and back for sections and citations and references, lists that are detailed later are also forward and backward linked, etc). There is a version with colored links, which I recommend if you're reading digitally. Further, there are many plots in later sections. Unfortunately, a PDF is static so three-dimensional plots are not very obvious. Because of that, sometimes only 2D-Versions are printed here and the 3D-version only referenced. It is highly recommended to follow these links, as they refer interactive plots which can not only be twisted and turned to truly understand them, but also show much additional information that cannot be statically shown, such as detailed information about the respective entities of a scatterplot on mouse-over.
+
+
 \paragraph*{Regarding Terminology}
 
 Throughout this thesis, many abbreviations, symbols and technical terms will be used. \todoparagraph{I hope that all of that cannot be exptected to be known by the reader are defined. At the end of this thesis there is a} \nameref{sec:glossary} \todoparagraph{with the subsections yadda yadda. If you are reading this document digitally, all occurrences of the terms described there should be a hyperlink (as are all section, table, figure, etc references). If you don't have the version with colored hyperlinks, you can download it here:} \url{https://nightly.link/cstenkamp/MastersThesisText/workflows/create_pdf_artifact/master/Thesis.zip}
 
 \section{Motivation}
 
-\includeMD{pandoc_generated_latex/1_1_motivation}
+\subsection{Course Recommendation}
 
-We see evidence that VSMs capture the meaning of words by how simple vector arithmetic corresponds to semantic: 
+This thesis explores a novel method to generate explainable recommendations for university-courses and other educational resources. The results will be eventually be incorporated into the \emph{Siddata}-platform, helping students to find courses that fit their interests.
+
+\subsubsection*{Overwhelming amounts of resources}
+
+The university landscape has changed drastically in recent years. In 1999, the \textit{Bologna declaration} was signed by the 29 countries of the the \textit{European Higher Education Area} (now 45), reforming their education systems to allow for international compatibility. Where before 1999, there were between 70 and 180 different elementary studies\footnote{ Schröder, Marco (2015). Studienwahl unter den Folgen einer radikalen Differenzierung. Bad Heilbrunn: Klinkhardt.} in germany, that number has risen to 2554 in 2003\footnote{\url{https://www.che.de/download/im_blickpunkt_ausdifferenzierung_studiengaenge-pdf/?wpdmdl=10620&refresh=624af74f6f7921649080143}}, become more than 5000 in 2008, and currently (winter semester 2020/2021) peaks at 9168 unique courses of study\footnote{\url{https://www.hrk.de/fileadmin/redaktion/hrk/02-Dokumente/02-03-Studium/02-03-01-Studium-Studienreform/HRK_Statistik_BA_MA_UEbrige_WiSe_2020_21_finale.pdf}, page 10 \label{fnote:degreenums}}. The number of subjects in total has almost doubled in the past thirteen years, from 11\,265 in 2007 to 20\,359 in 2020\footnoteref{fnote:degreenums}. According to the german \textit{Centrum für Hochschulentwicklung}, nowadays only 18.7\% of degrees are \textit{classical}, \ie tailored to a specific subject such as \textit{Physics}, the rest falling unter the categories hybrid, interdisciplinary or topic-focused\footnote{\url{https://www.che.de/wp-content/uploads/upload/Im_Blickpunkt_Die_Vielfalt_der_Studiengaenge_2017.pdf}}.
+
+Where before there was a rigid schedule of mandatory courses, modern courses of studies become increasingly modular, allowing students to draw up individual educational plans composed of a wide selection of courses\footnote{\url{https://www.pedocs.de/volltexte/2008/285/pdf/heft98.pdf}}. Due to to globalisation and the introduction of the \emph{European Credit Transfer System}, the selection of courses for this may span any course at any european university.
+
+Finally, thanks to increasing digitalization and especially boosted in recent years by the COVID-19-Pandemic, the number of publicly available \glspl{oer} has skyrocketed. For example, the number of \glspl{mooc} available on the e-learning platform \textit{Udemy}\footnote{\url{https://www.udemy.com/}} has increased from 20\,000 in 2015 to more than 157\,000 in January of 2021\footnote{\url{https://www.classcentral.com/report/udemy-by-the-numbers/}}.
+
+Academics nowadays must engage with a multitude of interconnected, digital and open practices and technologies \cite{Atenas2014}. High-quality \glspl{oer} become more and more widespread and \q{may ultimately be the genuine equalizer for education and for empowering social inclusion in a pluralistic, multicultural, and imperfect world} \cite[2]{Olcott2012}. All these trends fundamentally change the landscape of higher education, leaving studentds with overwhelming quantities of high-quality educational resources available. As however the time at the hand of the students is limited now as before, the choice of the right resources in this ocean of information increasingly becomes problematic. Locating, retrieving and differentiating the avaiable resources becomes increasingly challenging \cite{Atenas2014}.
+
+The \emph{Future Skills Report}\footnote{\url{www.nextskills.org}} on the future of learning and higher education \cite{Ehlers2019} suggests that this trend will continue: According to the study, future academic education will look fundamentally different from today, in that it will likely become increasingly multi-institutional with students individually having their own personalized, flexible curriculum selected from a vast set of resources, compared to which the currently available study programmes are as rigid as they have ever been \cite{Ehlers2019}.
+
+\subsubsection*{Explainable Recommendation}
+
+The Siddata-platform already contains a tool that generates recommendations based on acadmic interests specified by the user. The novel idea explored here however shall fall under the realm of \textbf{Explainable Artificial Intelligence} and work interactively, with the user \textit{in the loop}. The use case considered for this thesis is the following: A system should be found that provides well-founded recommendations for resources, based on input and feedback by the user. A specific sample interaction that shall be made possible\footnote{... happens to be the exact request \me had some time ago} is a user requesting 
+\begin{displayquote}
+	\textit{\guillemotright A course like \emph{Codierungstheorie und Kryptographie}, but with less maths.\guillemotleft}
+\end{displayquote}
+
+To be able to work with such requests, the system would need some sort of \textit{feature directions}: it must recognize \emph{math} as a feature that any course may have and it must be able to rank all courses according to how much the feature \emph{math} applies to each of them.
+
+\todoparagraph{Feature-directions, movie-tuner}
+%TODO: Show Sample: Movie Tuner Interface (here or [*])
+
+The default approach for recommendation has been for more than twenty years now that of \emph{Collaborative Filtering}, summarized in the well-known phrase \q{Customers who bought items in your Shopping cart also bought: [...]} \cite{Sarwar2000}. Traditionally, this algorithm represents every customer as a vector, whose components are the number of times this customer has bought an item for all items of the store. To suggest new products to the user, items from the vectors of customers whose purchase history is similar to this user, calculated by \eg the \gls{cos}, are suggested \cite{Linden2003}. Because this is computationally very expensive, there are several alternatives, for example algorithms that cluster users based on their similarity to other users before matching, or search-based algorithms. Even Amazon's recommendation system, one of the most world-defining algorithms in the word, uses the same base algorithm, coined \q{\textit{item-to-item collaborative filtering}}. It only differs from the traiditional techniques in that it builds a similarity matrix based on the \gls{cos} for items instead of customers. Developed in 1997, this algorithm is still not only in use today at Amazon, but also adopted by YouTube and Netflix, amongst many others \cite{Smith2017}. Many improvements in efficiency, distance calcuation techniques or time-dependency have been added since then and the algorithm is more optimized than likely only very few others, the fact that it's a simple \textit{similarity-based reasoning technique} has remained ever since. 
+
+As will be explained in more detail later\footnote{\todoparagraph{Will it?!}}, both in terms of classication algorithms and classic logical reasoning, the technique to classify a sample with the class of it's most similar neighbors (\emph{k-Nearest-Neighbors}) is considered one of the most basic techniques.
+
+On the other hand, \textit{feature directions} are not unknown in the field of Computational Linguistics. As famously demonstrated by \textcite{Mikolov:Regularities} in their 2013 paper \citetitle{Mikolov:Regularities}, modern neural language models that represent words as high-dimensional continuous-space vectors exhibit astonishing semantic regularities. Not only does the usage of such embeddings boost the performance of many classical \gls{nlp} tasks \cite{Mikolov2013a,Le2014, Devlin2019}, but there is strong evidence that \glspl{vsm} capture the meaning of words on the basis of the \gls{distribhyp}. This best shows in the famous example that links simple vector arithmetic to word semantics\footnote{The latter two eamples are adapted from \url{https://devmount.github.io/GermanWordEmbeddings/}}:
+
 \begin{align}
 	vec(king) - vec(man) + vec(woman) &\approx vec(queen) \nonumber \\ 
 	vec(planet) + vec(water) &\approx vec(earth)  \label{eq:w2vregularity}\\
 	vec(house) + vec(movie) &\approx vec(cinema) \nonumber
 \end{align}
-%TODO: the latter two https://devmount.github.io/GermanWordEmbeddings/
+% So "Codierungstheorie & Kryptographie - Mathe + Info = Kryptographische Algorithmen"
+
+This can be considered semantic directions and would seem to allow the example stated at the start of this section, however it is not suited to allow data-driven explainable recommendation as demanded for the use-case of this thesis. This is because in these embeddings, there are no meaningful \textbf{unit vectors}. There is no obvious direction designating a gender in this space, but instead \textit{man} is one of millions of vectors in this space, its direction obfuscated throughout all of its vector components, and the actual direction solely depends on the initial random distribution. 
+
+Intuitively, a vector-space that allows for the kind of explainable recommendation we are looking for would need to be specified such that there are a few most basic \textit{bare properties} of all entities of the respective domain. These properties would correspond linearly independent unit vectors, which are the \textit{dimensions} spanning the vector space: \textbf{human-interpretable feature directions}.
+
+%TODO: Show Sample: Movie Tuner Interface (here or [*])
+This would allow to rank objects according to how much they apply to each of a few basic features, allowing a wide variety of tasks, such as interpretable rule-based classifiers, search engines working with gradual and ill-defined features (\eg \textit{popular movies}), or critique-based recommender systems with the user in the loop (cf. \cite{Ager2018}). Most importantly, such a ranking could be used to build up a \textit{structured knowledge base} from the domain. Many \gls{cl} tasks rely on such knowledge bases, however generating them has occcupied scientists for dozens of years with only little significant progress, making its automatic creation an important achievement for the entire field.
+
+\subsection{The algorithm of \textcite{Derrac2015}}
+
+To summarize, the kind of recommendation aimed for here would require a structured knowledge base that can be created forom any domain in a data-driven way. This knowledge base can be represented as a vector space human-interpretable, linearly independent components. A euclidian distance metric for the space would ease human interpretation. 
+
+Famously, the idea of \textbf{Conceptual Spaces} fulfills these criteria. Introduced by Peter Gärdenfos in his 2000 book \citetitle{Gardenfors2000a} \cite{Gardenfors2000a} as a bridge between symbolic and subsymbolic processing, conceptual spaces represent knowledge in a geometric structure consisting of various quality dimensions. While well-known primarily as theoretical model, an algorithm to automatically generate such spaces in a data-driven way was first proposed by \citename{Derrac2015} in 2015.
+
+
+
+
+
+\includeMD{pandoc_generated_latex/1_1_motivation}
 
 
 \section{Research Questions \& Thesis Goals}

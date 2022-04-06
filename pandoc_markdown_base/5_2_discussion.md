@@ -13,7 +13,7 @@ Research Question: Ich will die Methodik von dem Paper auf educational resources
 * Neben den Clustern die ich mir anzeigen lassen kann und qualitativ analysieren kann, kann ich mir auch die distances to the origins of the respective dimensions (induced by the clusters), what induces the respective rankings! (see DESC15 p.24u, proj2 of load_semanticspaces.load_projections) anzeigen lassen - da kann ich sagen "term xyz ist bei "nature" am höchsten".
 	* FRAGE: sind dafür ÜBERHAUPT IRGENDWIE die cluster relevant??! Ich meine es wird nur die distance zur hyperplane vom main-term considered, so why the hell even cluster?!
 
-
+* My Argumentation that the way Ager & Alshaikh report their accuracies it must be the case that they did that per class (see also Slack with Johannes!)
 
 
 ## Interpreting results

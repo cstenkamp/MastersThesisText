@@ -168,3 +168,47 @@
 First five columns are the exact results reported by \cite{Alshaikh2020}, next five columns those by \cite{Ager2018}, afterwards the best config of \cite{Derrac2015} and the best baseline-condition of \cite{Derrac2015}. The exact conditions of that work are (left to right, top to bottom): C4.5\textsubscript{dir}, C4.5\textsubscript{MDS}, Col, 1-NN (100D), C4.5\textsubscript{dir}, C4.5\textsubscript{MDS}, Analog\textsubscript{C}, 1-NN (50D). Explanations of the respective conditions can be found in their work. \\
 All scores are reported with a train-test split of 70\% to 30\%. Note that the reported results of \cite{Ager2018} are unrepresentive when compared to the other datasets: For the placetypes-dataset, \textbf{LDA} performs consistently better than their methods, which is not the case for all other datasets used by them. In the case of \cite{Alshaikh2020}, the results for the placetypes-dataset seem to indicate that the \textbf{Ortho}-condition performs consistently better than the \textbf{Sub}-condition, which was however not the case for any of the other datasets the authors considered. \\
 Final columns are the results of this work. Column \textbf{Best-all} encodes a different for each row, specifically the one that yields the best result for the respective classification task, whereas column \textbf{Mean-Best} refers to the single configuration that achieved the best results on average.
+
+\section{F1-scores per Faculty}
+
+
+\begin{table}[H]
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{rcccc}
+		\toprule
+		\textbf{Depth} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{unbound} \\
+		\midrule
+		\textbf{Sozialwissenschaften} & 0.386 ± 0.029 & 0.414 ± 0.031 & 0.403 ± 0.024 & 0.580 ± 0.034 \\
+		\textbf{Kultur-/Geowissenschaften} & 0.454 ± 0.023 & 0.514 ± 0.034 & 0.591 ± 0.026 & 0.685 ± 0.020 \\
+		\textbf{Erziehungs-/Kulturwissenschaften} & 0.600 ± 0.019 & 0.701 ± 0.015 & 0.713 ± 0.019 & 0.765 ± 0.015 \\
+		\textbf{Physik} & 0.096 ± 0.019 & 0.117 ± 0.012 & 0.145 ± 0.023 & 0.552 ± 0.072 \\
+		\textbf{Biologie/Chemie} & 0.133 ± 0.019 & 0.178 ± 0.043 & 0.247 ± 0.063 & 0.611 ± 0.084 \\
+		\textbf{Mathematik/Informatik} & 0.215 ± 0.032 & 0.211 ± 0.046 & 0.260 ± 0.057 & 0.542 ± 0.070 \\
+		\textbf{Sprach-/Literaturwissenschaften} & 0.652 ± 0.020 & 0.685 ± 0.014 & 0.733 ± 0.014 & 0.790 ± 0.017 \\
+		\textbf{Humanwissenschaften} & 0.177 ± 0.028 & 0.245 ± 0.061 & 0.276 ± 0.078 & 0.484 ± 0.043 \\
+		\textbf{Wirtschaftswissenschaften} & 0.198 ± 0.022 & 0.219 ± 0.059 & 0.236 ± 0.040 & 0.596 ± 0.084 \\
+		\textbf{Rechtswissenschaften} & 0.617 ± 0.108 & 0.456 ± 0.037 & 0.641 ± 0.050 & 0.841 ± 0.032 \\
+		\textbf{Mean (weighted)} & 0.505 ± 0.026 & 0.553 ± 0.026 & 0.597 ± 0.026 & 0.710 ± 0.026 \\
+		\textbf{Mean (unweighted)} & 0.353 ± 0.032 & 0.374 ± 0.035 & 0.424 ± 0.039 & 0.645 ± 0.047 \\
+		\bottomrule
+		\end{tabular}
+	}
+	\slcaption{Robust F1-scores per Faculty of a well-performing configuration. The reported results are mean and standard deviation from the result of ten runs with 5-fold crossvalidation each.}
+	\label{tab:robustresults_perfb_f1}
+\end{table}
+
+
+\section{Sample Classification}
+
+
+\begin{figure}[h]
+	\begin{center}
+	  \makebox[\textwidth][c]{
+		\includegraphics[width=1.1\textwidth]{graphics/dataset_new/boxes_rechtswis.png}
+		\slcaption{A classification with a Level-2-Decisiontree. Visualize in 3D: \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/display_top3_SIDDATA.ipynb} }
+		\label{fig:boxes_rechtswis}
+		% möchte sagen: How does a decision look graphically, and how does it compare to the original 3D?
+		% TODO: add accuracy 
+	  }
+	\end{center}
+\end{figure}

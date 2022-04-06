@@ -1,3 +1,8 @@
+\newcommand{\mfauhcsdT}{\specialcell[t]{\tabitem \textbf{Sentence-} \\ \textbf{~~~wise merge} \\ \tabitem \textbf{add titles} \\ \tabitem \textbf{add subtitles} \\ \tabitem \textbf{rm HTML-tags} \\ \tabitem \textbf{lower-case} \\ \tabitem \textbf{rm stopwords} \\ \tabitem \textbf{rm diacritics} \\ \tabitem \textbf{use SK-Learn} }}
+
+\newcommand{\mfauhtcsldp}{\specialcell[t]{\tabitem \textbf{Sentence-} \\ \textbf{~~~wise merge} \\ \tabitem \textbf{add titles} \\ \tabitem \textbf{add subtitles} \\ \tabitem \textbf{rm HTML-tags} \\ \tabitem \textbf{Sentence-} \\ \textbf{~~~tokenization} \\ \tabitem \textbf{lower-case} \\ \tabitem \textbf{rm stopwords} \\ \tabitem \textbf{Lemmatize} \\ \tabitem \textbf{rm diacritics} \\ \tabitem \textbf{rm punctuation} }}
+
+
 \chapter{Results}
 
 This section summarizes the results that the described algorithm achieved on the described datasets according to the described metrics. Before going into detail about the performance on the Siddata-dataset, a brief summary of the results on the placetypes-dataset serves to demonstrate if the specific implementation can achieve comparable results to \mainalgos, thus putting the other results into perspective in terms of what the algorithm can realistically achieve on dedicated high-quality datasets.
@@ -160,10 +165,303 @@ The Siddata-dataset consists of more but shorter texts associated with an entity
 \section{Results for the Siddata-dataset}
 \label{sec:results_siddata}
 
+\todoparagraph{The plots here show the results from several different parameter-configurations. Because of that, the extracted semantic directions and also the metrics may differ between the plots. This is not a bug but a feature - they are all differnent but all are nice}
+
 As previously described, the primary method used here to check if the described methodology works for the domain of educational resources is to check if low-depth decision trees trained on the extracted semantic directions of the Siddata-dataset can classify a courses' faculty. Before doing that however, it is important to first validate if it can reasonably assumed that the faculty \textit{can generally} be extracted from only the descriptions associated with the entities.
 
+\subsection*{Extracing Faculty without the algorithm}
+
+\begin{figure}[h]
+	\begin{center}
+	  \includegraphics[width=0.9\textwidth]{graphics/dataset_new/scatter_mds_tsne_e2a70a9bf2.pdf}
+	  \slcaption{2D Visualization of the Course-Dissimilarity-Matrix, generated with \gls{tsne}. See \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualize_embeddings.ipynb} for the origin of this plot as well as a 3D-plot on unaltered 3D-MDS-data that doesn't rely on t-SNE.}
+	  \label{fig:scatter_mds_siddata}
+	  % möchte sagen: Die Embeddings Clustern -> es lassen sich "sinnvolle Sachen" (wie faculty) draus ziehen.
+	\end{center}
+\end{figure}
+
+To see if it is possible to extract any kind of structured data from the unstructured course descriptions, a \gls{bert}-based Neural Network classifier was trained on the dataset, classifying the subset of courses that are for the \gls{uos} to the faculty they belong to. The classifier trained for 12 epochs before \emph{stopping early} due to its performance on the test-set decreasing. It achieved an accuracy of \textbf{85.19\%} for the test-set (94.13\% on the training set), providing strong indication that the faculty can be considered a latent property of its description. Because \gls{bert} is one of the best general language classifiers to date \cite{Devlin2019}, this accuracy will be considered the upper boundary for the results of our algorithm.
+
+\autoref{fig:scatter_mds_siddata} displays a \gls{tsne}-representation of the dissimilarity-matrix generated from the normalized angular distances (\autoref{eq:norm_ang_dist}) of the \gls{bow}-representations generated from the courses (only those that have one, which are \todoparagraph{somany}) Compared to the placetypes-dataset (\autoref{fig:scatter_mds_placetypes}), at least some of the classes seem to cluster well. 
+
+From this distance matrix, the algorithm subsequently creates an embedding using the \gls{mds}-algorithm to afterwards train multiple \glspl{svm} for each of the extracted candidate-dimensions before re-embedding the entities into a new space where the dimensions encode the \gls{rank} for each of the extracted features. To evaluate the algorithm, we will check if it is to be able to classify the faculty with a decision tree that uses between one and maximally $2^3=8$ of these features. To provide a context for the resulting performance, we will first look at a classification which does not use the feature-based representation, but on a raw low-dimensional embedding without class-specific dimensions. This can be seen as the lower boundary of what a classification without selecting the most relevant dimensions but instead use an optimal but general three-dimensional space can achieve. A classification-performance of low-level decision trees that use only the most important features from all available ones that is higher than this thus provides evidence that the detected features encode important distinctive properties. \autoref{fig:mds_3d_hyperplane} visually represents the result of the classification using a linear \gls{svm} on a three-dimensional space generated as result of \gls{mds} on the dissimilarity-matrix of the entities. Averaged over all Faculties, this classifier reaches a weighted accuracy of 64.3\% (unweighted accuracy 69.0\%, weighted F1: 0.414, unweighted F1: 0.269). Note that these values are reached by training on the full data without a separate testing-set.
+% text_referenced_plots/siddata_analysis/visualize_embeddings_mds.ipynb
 
 
+\begin{figure}[h]
+	\begin{center}
+	  \makebox[\textwidth][c]{
+		\includegraphics[width=1.1\textwidth]{graphics/dataset_new/possibledecision_sprachlit.png}
+		\slcaption{A possible Hyperplane on a 3-Dimensional Embedding. The SVM depicted here reaches an Accuracy of 67.9\% (Precision: 39.8\%, Recall: 70.5\%). Visualize interactively: \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualize_embeddings_mds.ipynb} }
+		\label{fig:mds_3d_hyperplane}
+		%möchte sagen: To say what the lower boundary of what a 3D-Embedding of NON-CLASS-SPECIFIC dimensions can yield for classification, 
+		% wie related der space von fig:boxes_rechtswis mit den interpretable dimensions zu IRGENDEINEM 3D-Space
+	  }
+	\end{center}
+\end{figure}
+
+Now that we have established upper and lower boundary for what can reasonably be expected from the algorithm, let us finally look at the performance of its decision-trees, to gain evidence if human concepts are encoded in its extracted features. \autoref{tab:robustresults_perfb} lists average accuracies per faculty for decision trees created on the basis of a single hyperparameter-configuration that was selected to achive high performance on average. The respective values are the average and standard-deviation of runs with 5-fold crossvalidation each for trees of various depths.
+
+\begin{table}[H]
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{rcccc}
+		\toprule
+		\textbf{Depth} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{unbound} \\
+		\midrule
+		\textbf{Sozialwissenschaften} & 0.831 ± 0.021 & 0.811 ± 0.033 & 0.780 ± 0.028 & 0.918 ± 0.006 \\
+		\textbf{Kultur-/Geowissenschaften} & 0.806 ± 0.010 & 0.728 ± 0.066 & 0.813 ± 0.022 & 0.873 ± 0.008 \\
+		\textbf{Erziehungs-/Kulturwissenschaften} & 0.791 ± 0.010 & 0.824 ± 0.010 & 0.828 ± 0.020 & 0.868 ± 0.008 \\
+		\textbf{Physik} & 0.747 ± 0.054 & 0.770 ± 0.033 & 0.818 ± 0.038 & 0.983 ± 0.003 \\
+		\textbf{Biologie/Chemie} & 0.787 ± 0.044 & 0.838 ± 0.049 & 0.890 ± 0.036 & 0.982 ± 0.004 \\
+		\textbf{Mathematik/Informatik} & 0.866 ± 0.031 & 0.844 ± 0.051 & 0.882 ± 0.038 & 0.978 ± 0.004 \\
+		\textbf{Sprach-/Literaturwissenschaften} & 0.832 ± 0.009 & 0.832 ± 0.009 & 0.862 ± 0.009 & 0.902 ± 0.008 \\
+		\textbf{Humanwissenschaften} & 0.630 ± 0.130 & 0.768 ± 0.103 & 0.781 ± 0.093 & 0.949 ± 0.005 \\
+		\textbf{Wirtschaftswissenschaften} & 0.903 ± 0.015 & 0.910 ± 0.034 & 0.924 ± 0.018 & 0.989 ± 0.003 \\
+		\textbf{Rechtswissenschaften} & 0.948 ± 0.031 & 0.894 ± 0.015 & 0.952 ± 0.011 & 0.985 ± 0.003 \\
+		\textbf{Mean (weighted)} & 0.814 ± 0.035 & 0.822 ± 0.040 & 0.853 ± 0.031 & 0.943 ± 0.005 \\
+		\textbf{Mean (unweighted)} & 0.810 ± 0.020 & 0.806 ± 0.031 & 0.835 ± 0.023 & 0.901 ± 0.007 \\
+		\bottomrule
+		\end{tabular}
+	}
+	\slcaption{Robust Accuracies per Faculty of a well-performing configuration. The reported results are mean and standard deviation from the result of ten runs with 5-fold crossvalidation each.}
+	\label{tab:robustresults_perfb}
+\end{table}
+
+Keep in mind that accuracies often makes the situation look better than it is. The weighted average F1-scores are between 0.505 (depth 1) and 0.710 (unbounded depth). For the full table of F1-scores it is referred to the appendix, specifically \autoref{tab:robustresults_perfb_f1}. 
+
+Compared with the results of the \gls{bert}-based classifier (85.19\%), the achieved results are suprisingly competative, with the weighted mean of trees of depth 1 and two only slighly below that and that of deeper trees achieving even higher accuracies. Importantly however, the results reported here are those of a sepearate classifier per faculty (1-vs-rest), differentiating only between the respective faculty as positive class and all other faculties as negative class. As will be further elaborated in the discussion, this is however the only realistic way of doing it: A binary tree of depth 1 can distinct between maximally two classes and thus maximally achieve a classification by perfectly classifying the most frequent class and labelling all samples as the second most frequent class, which in the case of faculties is $(2011+1665)/7081=51.9\%$. Results for such trees are reported in \autoref{tab:robustresults_allatonce}.
+
+\begin{table}[H]
+	\begin{tabular}{rccccc}
+		\toprule
+		\textbf{Depth} &  \textbf{1} & \textbf{2} & \textbf{3} & \textbf{any} \\
+		\midrule
+		\textbf{Accuracy} & 0.056 ± 0.008 & 0.078 ± 0.042 & 0.196 ± 0.017 & 0.584 ± 0.015 \\
+		\textbf{F1}       & 0.072 ± 0.006 & 0.125 ± 0.014 & 0.199 ± 0.007 & 0.513 ± 0.020 \\
+		\bottomrule
+	\end{tabular}
+	\slcaption{Robust Scores of a well-performing configuration when classifying all faculties at once. The reported results are mean and standard deviation from the result of ten runs with 5-fold crossvalidation each.}
+	\label{tab:robustresults_allatonce}
+\end{table}
+
+\todoparagraph{We also wanted to check if the produced embedding is still adequate, but we will do that later}
+
+\subsection{Qualitative Analysis}
+
+The main goal of the algorithm is not to optimally classify the respective faculties optimally, but to find semantic directions. Thus, once it has been established that the performance is reasonably well, looking at the names of these directions is just as important. \autoref{fig:dims_for_fb} visually represents decision-trees for each of the faculties of depth one, \ie trees that can only use a single semantic direction for their decision. With the exception of the faculties \emph{Physik} and \emph{Biologie/Chemie}, the semantic directions that best predict each faculty appear very relevant to the respective topic.
+
+\begin{figure}[h]
+	\begin{center}
+	  \makebox[\textwidth][c]{
+		\includegraphics[width=1.3\textwidth]{graphics/dataset_new/dims_for_fb.pdf}
+		\slcaption{Resulting \glspl{dt} with only a single decision for each of the faculties. The white boxes show a semantic direction and the maximal rank \wrt to this direction for an entity to fall under the class designated by the respective left branch.}
+		\label{fig:dims_for_fb}
+		% möchte sagen: Unsere Extracted Dimensions entsprehcen human concepts wie Fachbereich
+	  }
+	\end{center}
+\end{figure}
+
+For trees deeper than one level, the selected features from the second level on are not necessarily the most important ones. Instead it is possible to extract the most important features for a classification by looking at the respective information gain achieved by splitting it. \autoref{tab:courses_top3} displays three most important directions for each of the respective faculties. While the details of this result will be eloborated upon in the discussion, most of the detected features appear convincing. Regarding an acutal classification using these features, \autoref{fig:boxes_rechtswis} in the Appendix displays the result of a sample classification of a decision tree with three features.
+
+
+\begin{table}[H]
+	\makebox[\textwidth][c]{
+		\resizebox{1.1\textwidth}{!}{%
+		\setlength{\tabcolsep}{2pt}
+		\begin{tabular}{r@{\hskip 8pt}lllcr@{\hskip 6pt}c}
+		& & & & \multicolumn{2}{c}{\textbf{Accuracy}} \\
+		\textbf{Faculty} & \multicolumn{3}{c}{\textbf{Top 3 Directions}} & \textbf{Top 3} & \textbf{Top 1} \\
+		\midrule
+		\textbf{Erziehungs-/Kulturw.} & erziehungswissenschaft & okumenisch & english for & 78.02\% & 75.50\% \\
+		\textbf{Rechtswissenschaften} & juristisch & bgb & bgb & 95.86\% & 91.10\% \\
+		\textbf{Wirtschaftsw.} & {\scriptsize center betriebswirtschaftlich kompetenz } & religionsunterrichts & design & 89.65\% & 79.10\% \\
+		\textbf{Kultur-/Geow.} & tourismus & gi & stadtgeographie & 75.50\% & 77.44\% \\
+		\textbf{Mathem./Informatik} & programmiersprache & menge & hoffnung & 93.00\% & 91.85\% \\
+		\textbf{Sprach-/Literaturw.} & deutsch literaturwissenschaft & sprache & okumenisch & 86.71\% & 85.10\% \\
+		\textbf{Humanwissenschaften} & psychologie & metaphysik & internationalisierung & 86.84\% & 85.51\% \\
+		\textbf{Physik} & neu entwicklung & mitarbeiterinnen & {\small regelmassig aktiv teilnahme} & 78.27\% & 77.36\% \\
+		\textbf{Biologie/Chemie} & aktivierung studierend & brd & berucksichtigung finden & 85.22\% & 62.13\% \\
+		\textbf{Sozialwissenschaften} & arbeitsmarkt & regieren & multiple & 78.60\% & 67.63\% \\
+		\end{tabular}
+		\caption{Top 3 Directions to detect the respective faculty from the data. Note that it may also be the case that low values for the respective feature encode class membership.}
+		\label{tab:courses_top3}
+		}
+	}
+\end{table}
+
+
+
+
+
+\subsubsection{Are the phrases making up the semantic-direction-clusters similar?}
+
+\todoparagraph{TODO}
+
+\subsubsection{Are there dimensions encoding the COVID-19 pandemic?}
+
+\todoparagraph{TODO}
+
+\subsubsection{Are intuitively appealing phrases among the semantic directions?}
+
+\todoparagraph{TODO}
+
+\subsubsection{Is there a direction capturing advanced courses?}
+
+\todoparagraph{TODO}
+
+\subsubsection{Are embeddings of known similar entities close?}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\figwidth]{svm_mathematik_highlight_infoAB.png}
+	\caption[3D-Plot with an SVM for the term \textit{mathematik}]{
+		\label{fig:3dplot_mathe_infoab}
+		3D-Plot with an SVM for the term \textit{mathematik}, also highlighting the courses \textit{Informatik A} and \textit{Informatik B}. Negative samples are hidden for better visibility, and entities that contain the word more often than the 75\textsuperscript{th} percentile have bigger markers.
+	}
+\end{figure}
+
+\autoref{fig:3dplot_mathe_infoab} displays a 3D-Embedding for courses, splitting courses which contain the term "\textit{mathematik}" from those that don't, also hightlighting the courses \textit{Informatik A} and \textit{Informatik B}. Both courses appear comparably close (\todoparagraph{their distance, mean distance}) to each other. Further, even though neither course description contains the word \textit{mathematik}, both courses are would receive high values for this feature, indicated by the distance to the decision plane\footnote{Both statements are better visible in the interactive version of the plot, which can be found at \todoparagraph{link!!}}.
+
+\subsubsection{More stuff}
+
+\todoparagraph{Also interesting: The top-ranked entities for some of the features }
+\begin{table}[H]
+	\makebox[\textwidth][c]{
+	\resizebox{1.1\textwidth}{!}{%
+	\begin{tabular}{rcl}
+	\textbf{Faculty} & \textbf{Top Direction} & \textbf{Top Course for Direction} \\
+	\midrule
+	\textbf{Erziehungs-/Kulturw.} & erziehungswissenschaft & BA GM 3.2: Der Kinder Zukunft aus elementarpädagogischer Sicht \\
+	\textbf{Rechtswissenschaften} & schuldrecht & Strafprozessuales Ermittlungsverfahren, [...] \\
+	\textbf{Wirtschaftsw.} & fallstudie & WIWI-B-18001-WI: Management Support Systems B I (BI-Praktikum SAP/BW) \\
+	\textbf{Kultur-/Geow.} & stadtgeographie & Mittelseminar/Angewandtes Seminar: Geographische Handelsforschung [...] \\
+	\textbf{Mathem./Informatik} & mechanik & Technische Mechanik IV für Maschinenbau \\
+	\textbf{Sprach-/Literaturw.} & deutschen literatur & Deutsch - diachron: Historische Linguistik und Sprachwandel in der Gegenwart [...] \\
+	\textbf{Humanwissenschaften} & gehirn & Willensfreiheit und Hirnforschung [...] \\
+	\textbf{Physik} & klar & B1-B2 Schwedisch Erweiterungskurs: Schweden - das Land und die Menschen (DIGITAL) \\
+	\textbf{Biologie/Chemie} & stattgefunden & Transformation wohlfahrtsstaatlicher Regime in Europa: Aktuelle Forschungskontroversen \\
+	\textbf{Sozialwissenschaften} & parteien & Modul Vergleichende Politikwissenschaft I: Westliche Regierungssysteme im Vergleich \\
+	\end{tabular}
+	\caption{Highest ranking courses per feature that best predicts the faculty}
+	\label{tab:highest_ranking}
+	}}
+\end{table}
+
+
+
+
+\section{Optimal Parameters}
+\label{sec:results_params}
+
+The previous sections displayed results for a parameter-combination that performed well on average for the aforementioned classification-task. This section compares all of the parameter-combinations that were considered. 
+
+As described in \autoref{sec:workflow}, a good first approximation is to check how many candidate-terms get a kappa-score which is above the threshold of 0.5. \autoref{tab:kappa_table} shows the results of many runs with different parameter-combinations with the purpose of figuring out which combination of parameters and kappa-metrics lead to enough candidate-terms (\todoparagraph{Also ref the figure of workflow where I check what threshold was realistic})
+
+\input{include/results_table_1}
+
+\todoparagraph{What kappas mean what}
+
+After preliminary analysis with the number of kappas, let us also look at the performance of the parameter-combinations for the decision-trees. \autoref{tab:best_params} lists the accuracies of of the decision-trees classifying a course's faculty per parameter-combination. Specifically, this compares accuracies for several one-vs-rest decision trees of depth one with a test-set size of 33\%.
+
+
+\newcommand{\SmfauhcsdT}{\setlength\extrarowheight{-5pt} \scriptsize \mfauhcsdT}
+\newcommand{\Smfauhtcsldp}{\setlength\extrarowheight{-5pt} \scriptsize \mfauhtcsldp}
+
+% Other configs: {'dataset': 'siddata2022', 'debug': 'False', 'prim_lambda': '0.5', 'sec_lambda': '0.2', 'classifier_succmetric': 'kappa_digitized_onlypos_2', 'cluster_direction_algo': 'reclassify', 'kappa_weights': 'quadratic', 'embed_dimensions': '200', 'embed_algo': 'mds', 'quantification_measure': 'tfidf', 'dcm_quant_measure': 'count', 'extraction_method': 'tfidf', 'translate_policy': 'onlyorig', 'pp_components': 'mfauhtcsldp', 'language': 'de', 'min_words_per_desc': '80'}
+% Args for best Tree: balance_classes=True, one_vs_rest=True, dt_depth=1, test_percentage_crossval=0.33
+% \begin{table}[H]
+% 	\resizebox{\textwidth}{!}{%
+% 	\caption{Decision-Tree-Accuracies for different Parameter-Combinations}
+% 	\label{tab:best_params}
+% 	\begin{tabular}{lllrrrrrr}
+% 	\toprule
+% 	\multicolumn{3}{r}{\textbf{DTM-Quantification}} & \textbf{ppmi} &  &  & \textbf{tfidf} &  &  \\
+% 	\textbf{Preprocessing} & \specialcell[b]{\textbf{Quanti-}\\ \textbf{fication}} & \textbf{Metric} &  &  &  &  &  &  \\
+% 	\midrule
+% 	\multirow[t]{7}{*}{\SmfauhcsdT} & \multirow[t]{3}{*}{count}   & k_c2r+ 	  & - 		& 40.58\% & 38.76\% & 36.24\% & 45.16\% & - \\
+% 	 &  													     & k_dig+_2   & - 		& 74.83\% & 77.10\% & 74.82\% & 80.42\% & - \\
+% 	 & 														     & k_r2r+_min & - 		& 73.59\% & 74.91\% & 77.58\% & 80.71\% & - \\
+% 	\cline{2-3}
+% 	 & \multirow[t]{2}{*}{ppmi} 							 	 & k_dig+_2   & 62.11\% & 58.63\% & 61.94\% & 79.97\% & - 		& - \\
+% 	 & 													         & k_r2r+_min & 70.75\% & 75.52\% & 74.12\% & 81.10\% & - 		& - \\
+% 	\cline{2-3}
+% 	 & \multirow[t]{2}{*}{tfidf} 						         & k_dig+_2   & 57.86\% & 76.35\% & 76.88\% & 77.58\% & 80.49\% & - \\
+% 	 &  													     & k_r2r+_min & 67.31\% & 73.45\% & 72.65\% & 77.17\% & 78.81\% & - \\
+% 	\cline{1-3} \cline{2-3}
+% 	\multirow[t]{7}{*}{\Smfauhtcsldp} & \multirow[t]{3}{*}{count} & k_c2r+	  & 49.72\% & 40.70\% & 41.94\% & 53.79\% & 49.17\% & 63.38\% \\
+% 	 &  														 & k_dig+_2   & 58.25\% & 74.86\% & 77.67\% & 78.00\% & 79.73\% & 44.39\% \\
+% 	 &  														 & k_r2r+_min & 66.51\% & 72.03\% & 69.78\% & 78.45\% & 79.15\% & 61.95\% \\
+% 	\cline{2-3}
+% 	 & \multirow[t]{2}{*}{ppmi}									& k_dig+_2 	 & - 		& - 	  & 65.67\% & 77.58\% & 80.08\% & 58.58\% \\
+% 	 &  														& k_r2r+_min & - 		& - 	  & 80.41\% & \bst 81.41\% & \bst 81.41\% & 64.36\% \\
+% 	\cline{2-3}
+% 	 & \multirow[t]{2}{*}{tfidf} 								& k_dig+_2 	 & 64.88\% 	& 76.31\% & 77.81\% & 77.24\% & -  & 59.18\% \\
+% 	 &  														& k_r2r+_min & 58.92\% 	& 78.05\% & 76.49\% & 77.09\% & -  & 63.02\% \\
+% 	\bottomrule
+% 	\end{tabular}
+% 	}
+% \end{table}
+
+
+% Other configs: {'dataset': 'siddata2022', 'debug': 'False', 'prim_lambda': '0.5', 'sec_lambda': '0.2', 'classifier_succmetric': 'kappa_digitized_onlypos_2', 'cluster_direction_algo': 'reclassify', 'kappa_weights': 'quadratic', 'embed_dimensions': '200', 'embed_algo': 'mds', 'quantification_measure': 'tfidf', 'dcm_quant_measure': 'count', 'extraction_method': 'tfidf', 'translate_policy': 'onlyorig', 'pp_components': 'mfauhtcsldp', 'language': 'de', 'min_words_per_desc': '80'}
+% Args for best Tree: balance_classes=True, one_vs_rest=True, dt_depth=1, test_percentage_crossval=0.33
+\begin{table}
+	\resizebox{\textwidth}{!}{%
+	\caption{Decision-Tree-Accuracies for different Parameter-Combinations}
+	\label{tab:best_params}
+	\begin{tabular}{rrrrllllll}
+	\toprule
+	 &  \multicolumn{3}{r}{\textbf{Dimensions}} & \multicolumn{2}{l}{\textbf{3}} & \multicolumn{2}{l}{\textbf{50}} & \multicolumn{2}{l}{\textbf{200}} \\
+	 &  \multicolumn{3}{r}{\textbf{Lambda$_2$}} & \textbf{0.1} & \textbf{0.2} & \textbf{0.1} & \textbf{0.2} & \textbf{0.1} & \textbf{0.2} \\
+	 \textbf{Preprocessing} & \specialcell[b]{\textbf{Quanti-}\\ \textbf{fication}} & \specialcell[b]{\textbf{DCM}\\ \textbf{quant}} & \textbf{Metric} &  &  &  &  &  &  \\
+	\midrule
+	\multirow[t]{14}{*}{\textbf{\SmfauhcsdT}} & \multirow[t]{7}{*}{\textbf{ppmi}} & \multirow[t]{3}{*}{\textbf{count}} & {c2r+} & 53.24\% & 47.22\% & 48.36\% & 41.91\% & 40.87\% & 36.57\% \\
+	 &  &  & {dig+2} & 49.66\% & 58.22\% & 74.73\% & 71.75\% & 80.32\% & 76.81\% \\
+	 &  &  & {r2r+min} & 67.79\% & 65.09\% & 74.99\% & 72.61\% & 74.51\% & 73.72\% \\
+	\cline{3-4}
+	 &  & \multirow[t]{2}{*}{\textbf{ppmi}} & {dig+2} & 63.49\% & 64.76\% & 55.78\% & 61.40\% & 55.10\% & 65.32\% \\
+	 &  &  & {r2r+min} & 62.43\% & 67.83\% & 75.30\% & 75.99\% & 76.97\% & 73.84\% \\
+	\cline{3-4}
+	 &  & \multirow[t]{2}{*}{\textbf{tfidf}} & {dig+2} & 55.81\% & 62.23\% & 75.22\% & 73.88\% & 76.34\% & 79.14\% \\
+	 &  &  & {r2r+min} & 63.23\% & 62.35\% & 70.58\% & 72.60\% & 77.69\% & 72.75\% \\
+	\cline{2-4} \cline{3-4}
+	 & \multirow[t]{7}{*}{\textbf{tfidf}} & \multirow[t]{3}{*}{\textbf{count}} & {c2r+} & 44.99\% & 59.00\% & 60.27\% & 37.56\% & 56.05\% & 43.24\% \\
+	 &  &  & {dig+2} & 45.45\% & 49.86\% & 75.75\% & 77.77\% & 76.25\% & 80.86\% \\
+	 &  &  & {r2r+min} & 61.91\% & 63.94\% & 72.69\% & 76.24\% & - & 79.49\% \\
+	\cline{3-4}
+	 &  & \multirow[t]{2}{*}{\textbf{ppmi}} & {dig+2} & 59.96\% & 61.40\% & 75.72\% & 79.54\% & 73.05\% & 74.02\% \\
+	 &  &  & {r2r+min} & 53.73\% & 55.10\% & 78.20\% & 79.53\% & 80.77\% & 79.47\% \\
+	\cline{3-4}
+	 &  & \multirow[t]{2}{*}{\textbf{tfidf}} & {dig+2} & 56.14\% & 54.78\% & 75.32\% & 76.83\% & - & 79.44\% \\
+	 &  &  & {r2r+min} & 60.44\% & 59.72\% & 78.26\% & 77.56\% & 78.81\% & 77.69\% \\
+	\cline{1-4} \cline{2-4} \cline{3-4}
+	\multirow[t]{14}{*}{\textbf{\Smfauhtcsldp}} & \multirow[t]{7}{*}{\textbf{ppmi}} & \multirow[t]{3}{*}{\textbf{count}} & {c2r+} & - & 47.07\% & 40.11\% & 49.73\% & 44.68\% & 40.19\% \\
+	 &  &  & {dig+2} & 58.27\% & 58.48\% & 75.51\% & 73.56\% & 78.86\% & 78.04\% \\
+	 &  &  & {r2r+min} & 56.83\% & 69.00\% & 72.68\% & 72.59\% & 71.81\% & 72.63\% \\
+	\cline{3-4}
+	 &  & \multirow[t]{2}{*}{\textbf{ppmi}} & {dig+2} & 58.72\% & 59.84\% & 69.96\% & 72.66\% & 71.10\% & 65.55\% \\
+	 &  &  & {r2r+min} & 59.29\% & 67.17\% & 76.10\% & 79.40\% & 77.18\% & 80.27\% \\
+	\cline{3-4}
+	 &  & \multirow[t]{2}{*}{\textbf{tfidf}} & {dig+2} & 62.89\% & 63.42\% & 76.44\% & 73.92\% & 75.15\% & 78.93\% \\
+	 &  &  & {r2r+min} & 57.79\% & 59.07\% & 76.81\% & 76.61\% & 72.92\% & 74.68\% \\
+	\cline{2-4} \cline{3-4}
+	 & \multirow[t]{7}{*}{\textbf{tfidf}} & \multirow[t]{3}{*}{\textbf{count}} & {c2r+} & 61.90\% & 61.22\% & 46.97\% & 51.90\% & 48.99\% & 53.48\% \\
+	 &  &  & {dig+2} & 50.29\% & 50.43\% & 79.51\% & 78.89\% & 80.32\% & 78.37\% \\
+	 &  &  & {r2r+min} & 61.62\% & 57.49\% & 75.26\% & 79.52\% & 79.93\% & 78.67\% \\
+	\cline{3-4}
+	 &  & \multirow[t]{2}{*}{\textbf{ppmi}} & {dig+2} & 60.45\% & 58.77\% & 79.95\% & 80.03\% & 79.68\% & 80.63\% \\
+	 &  &  & {r2r+min} & 63.10\% & 63.56\% & 78.56\% & 79.89\% & 80.49\% & 80.70\% \\
+	\cline{3-4}
+	 &  & \multirow[t]{2}{*}{\textbf{tfidf}} & {dig+2} & 62.14\% & 63.87\% & 77.97\% & 80.25\% & 76.66\% & 78.65\% \\
+	 &  &  & {r2r+min} & 63.09\% & 62.09\% & 78.27\% & 76.41\% & 79.06\% & \bst 80.92\% \\
+	\bottomrule
+	\end{tabular}
+	}
+\end{table}
+
+
+\todoparagraph{What do we see? We see that tfidf is besser than ppmi blablabla}
+\todoparagraph{Die alte table sieht viel besser aus} (hier druber)
 
 
 \includeMD{pandoc_generated_latex/4_0_results}
@@ -176,73 +474,6 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\fo
 
 
 
-\section{Qualitative Analysis}
-
-\begin{figure}[h]
-	\begin{center}
-	  \includegraphics[width=0.9\textwidth]{graphics/dataset_new/scatter_mds_tsne_e2a70a9bf2.pdf}
-	  \slcaption{2D Visualization of the Course-Dissimilarity-Matrix, generated with \gls{tsne}. See \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualize_embeddings.ipynb} for the origin of this plot as well as a 3D-plot on unaltered 3D-MDS-data that doesn't rely on t-SNE.}
-	  \label{fig:scatter_mds}
-	  % möchte sagen: Die Embeddings Clustern -> es lassen sich "sinnvolle Sachen" (wie faculty) draus ziehen.
-	\end{center}
-\end{figure}
-
-
-
-\begin{figure}[h]
-	\begin{center}
-	  \makebox[\textwidth][c]{
-		\includegraphics[width=1.3\textwidth]{graphics/dataset_new/dims_for_fb.pdf}
-		\slcaption{Learned Level-1-Decisiontrees.}
-		\label{fig:dims_for_fb}
-		% möchte sagen: Unsere Extracted Dimensions entsprehcen human concepts wie Fachbereich
-	  }
-	\end{center}
-\end{figure}
-
-\begin{figure}[h]
-	\begin{center}
-	  \makebox[\textwidth][c]{
-		\includegraphics[width=1.1\textwidth]{graphics/dataset_new/boxes_rechtswis.png}
-		\slcaption{A classification with a Level-3-Decisiontree. Visualize in 3D: \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/display_top3_SIDDATA.ipynb} }
-		\label{fig:boxes_rechtswis}
-		% möchte sagen: How does a decision look graphically, and how does it compare to the original 3D?
-		% TODO: add accuracy 
-	  }
-	\end{center}
-\end{figure}
-
-
-\begin{figure}[h]
-	\begin{center}
-	  \makebox[\textwidth][c]{
-		\includegraphics[width=1.1\textwidth]{graphics/dataset_new/possibledecision_sprachlit.png}
-		\slcaption{A possible Hyperplane on a 3-Dimensional Embedding. The SVM depicted here would reach an Accuracy of 67.9\% (Precision: 39.8\%, Recall: 70.5\%). Visualize interactively: \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualize_embeddings_mds.ipynb} }
-		\label{fig:mds_3d_hyperplane}
-		%möchte sagen: To say what the lower boundary of what a 3D-Embedding of NON-CLASS-SPECIFIC dimensions can yield for classification, 
-		% wie related der space von fig:boxes_rechtswis mit den interpretable dimensions zu IRGENDEINEM 3D-Space
-	  }
-	\end{center}
-\end{figure}
-
-
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\figwidth]{svm_mathematik_highlight_infoAB.png}
-	\caption[3D-Plot with an SVM for the term "Mathematik"]{
-		\label{fig:3dplot_mathe_infoab}
-		3D-Plot with an SVM for the term "Mathematik", also highlighting the courses "Informatik A" and "Informatik B"
-	}
-\end{figure}
-
-
-
-\section{Quantiative Analysis}
-
-\todoparagraph{As described in} \autoref{sec:workflow}, a good first approximation is to check how many candidate-terms we get. \autoref{tab:kappa_table} shows the results of many runs with different parameter-combinations with the purpose of figuring out which combination of parameters and kappa-metrics lead to enough candidate-terms (\todoparagraph{Also ref the figure of workflow where I check what threshold was realistic})
-
-\input{include/results_table_1}
 
 
 \begin{table}
@@ -264,88 +495,31 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\fo
 \end{table}
 
 
-\begin{table}
-	\resizebox{\textwidth}{!}{%
-	\begin{tabular}{rlllcc}
-	& & & & \multicolumn{2}{c}{\textbf{Prediction Accuracy}} \\
-	\textbf{Faculty} & \multicolumn{3}{c}{\textbf{Top 3 Directions}} & \textbf{Depth 3} & \textbf{Depth 1} \\
-	\midrule
-	\textbf{Erziehungs-/Kulturwissenschaften} & erziehungswissenschaft & okumenisch & english for & 78.02\% & 75.50\% \\
-	\textbf{Rechtswissenschaften} & juristisch & bgb & bgb & 95.86\% & 91.10\% \\
-	\textbf{Wirtschaftswissenschaften} & {\scriptsize center betriebswirtschaftlich kompetenz } & religionsunterrichts & design & 89.65\% & 79.10\% \\
-	\textbf{Kultur-/Geowissenschaften} & tourismus & gi & stadtgeographie & 75.50\% & 77.44\% \\
-	\textbf{Mathematik/Informatik} & programmiersprache & menge & hoffnung & 93.00\% & 91.85\% \\
-	\textbf{Sprach-/Literaturwissenschaften} & deutsch literaturwissenschaft & sprache & okumenisch & 86.71\% & 85.10\% \\
-	\textbf{Humanwissenschaften} & psychologie & metaphysik & internationalisierung & 86.84\% & 85.51\% \\
-	\textbf{Physik} & neu entwicklung & mitarbeiterinnen & {\small regelmassig aktiv teilnahme} & 78.27\% & 77.36\% \\
-	\textbf{Biologie/Chemie} & aktivierung studierend & brd & berucksichtigung finden & 85.22\% & 62.13\% \\
-	\textbf{Sozialwissenschaften} & arbeitsmarkt & regieren & multiple & 78.60\% & 67.63\% \\
-	\end{tabular}
-	\caption{Top 3 Directions to detect the respective faculty from the data. a (!) behind a direction means that its inversed (LOW values point towards the class)}
-	\label{tab:courses_top3}
-	}
-\end{table}
 
+% % Please add the following required packages to your document preamble:
+% % \usepackage{graphicx}
+% \begin{table}[]
+% 	\centering
+% 	\resizebox{\textwidth}{!}{%
+% 	\begin{tabular}{rlllcc}
+% 	\multicolumn{1}{l}{} &                                               &  &  & \multicolumn{2}{c}{\textbf{Prediction Accuracy}} \\
+% 	\textbf{Faculty}     & \multicolumn{1}{c}{\textbf{Top 3 Directions}} &  &  & \textbf{Top 1}          & \textbf{Top 3}         \\
+% 	\textbf{Erziehungs-/Kulturwissenschaften} & padagogisch    &  &  &  &  \\
+% 	\textbf{Rechtswissenschaften}             & recht          &  &  &  &  \\
+% 	\textbf{Wirtschaftswissenschaften}        & management     &  &  &  &  \\
+% 	\textbf{Kultur-/Geowissenschaften}        & geographisch   &  &  &  &  \\
+% 	\textbf{Mathematik/Informatik}            & computer       &  &  &  &  \\
+% 	\textbf{Sprach-/Literaturwissenschaften}  & literarisch    &  &  &  &  \\
+% 	\textbf{Humanwissenschaften}              & therapeutisch  &  &  &  &  \\
+% 	\textbf{Physik}                           & gestik         &  &  &  &  \\
+% 	\textbf{Biologie/Chemie}                  & geschichte (!) &  &  &  &  \\
+% 	\textbf{Sozialwissenschaften}             & politik        &  &  &  & 
+% 	\end{tabular}%
+% 	}
+% 	\caption{Top 3 Directions to detect the respective faculty from the data. a (!) behind a direction means that its inversed (LOW values point towards the class)}
+% 	\label{tab:courses_top3_2}
+% \end{table}
 
-% Please add the following required packages to your document preamble:
-% \usepackage{graphicx}
-\begin{table}[]
-	\centering
-	\resizebox{\textwidth}{!}{%
-	\begin{tabular}{rlllcc}
-	\multicolumn{1}{l}{} &                                               &  &  & \multicolumn{2}{c}{\textbf{Prediction Accuracy}} \\
-	\textbf{Faculty}     & \multicolumn{1}{c}{\textbf{Top 3 Directions}} &  &  & \textbf{Top 1}          & \textbf{Top 3}         \\
-	\textbf{Erziehungs-/Kulturwissenschaften} & padagogisch    &  &  &  &  \\
-	\textbf{Rechtswissenschaften}             & recht          &  &  &  &  \\
-	\textbf{Wirtschaftswissenschaften}        & management     &  &  &  &  \\
-	\textbf{Kultur-/Geowissenschaften}        & geographisch   &  &  &  &  \\
-	\textbf{Mathematik/Informatik}            & computer       &  &  &  &  \\
-	\textbf{Sprach-/Literaturwissenschaften}  & literarisch    &  &  &  &  \\
-	\textbf{Humanwissenschaften}              & therapeutisch  &  &  &  &  \\
-	\textbf{Physik}                           & gestik         &  &  &  &  \\
-	\textbf{Biologie/Chemie}                  & geschichte (!) &  &  &  &  \\
-	\textbf{Sozialwissenschaften}             & politik        &  &  &  & 
-	\end{tabular}%
-	}
-	\caption{Top 3 Directions to detect the respective faculty from the data. a (!) behind a direction means that its inversed (LOW values point towards the class)}
-	\label{tab:courses_top3_2}
-\end{table}
-
-
-
-% Other configs: {'dataset': 'siddata2022', 'debug': 'False', 'prim_lambda': '0.5', 'sec_lambda': '0.2', 'classifier_succmetric': 'kappa_digitized_onlypos_2', 'cluster_direction_algo': 'reclassify', 'kappa_weights': 'quadratic', 'embed_dimensions': '200', 'embed_algo': 'mds', 'quantification_measure': 'tfidf', 'dcm_quant_measure': 'count', 'extraction_method': 'tfidf', 'translate_policy': 'onlyorig', 'pp_components': 'mfauhtcsldp', 'language': 'de', 'min_words_per_desc': '80'}
-% Args for best Tree: balance_classes=True, one_vs_rest=True, dt_depth=1, test_percentage_crossval=0.33
-\begin{table}
-	\resizebox{\textwidth}{!}{%
-	\caption{Decision-Tree-Accuracies for different Parameter-Combinations}
-	\begin{tabular}{lllrrrrrr}
-	\toprule
-	 &  &  & \textbf{ppmi} & \textbf{ppmi} & \textbf{ppmi} & \textbf{tfidf} & \textbf{tfidf} & \textbf{tfidf} \\
-	pp_components & dcm_quant_measure & classifier_succmetric &  &  &  &  &  &  \\
-	\midrule
-	\multirow[t]{7}{*}{mfauhcsd2} & \multirow[t]{3}{*}{count} & k_c2r+ & - & 40.58\% & 38.76\% & 36.24\% & 45.16\% & - \\
-	 &  & k_dig+_2 & - & 74.83\% & 77.10\% & 74.82\% & 80.42\% & - \\
-	 &  & k_r2r+_min & - & 73.59\% & 74.91\% & 77.58\% & 80.71\% & - \\
-	\cline{2-3}
-	 & \multirow[t]{2}{*}{ppmi} & k_dig+_2 & 62.11\% & 58.63\% & 61.94\% & 79.97\% & - & - \\
-	 &  & k_r2r+_min & {\cellcolor{lightgreen}} 70.75\% & 75.52\% & 74.12\% & 81.10\% & - & - \\
-	\cline{2-3}
-	 & \multirow[t]{2}{*}{tfidf} & k_dig+_2 & 57.86\% & 76.35\% & 76.88\% & 77.58\% & 80.49\% & - \\
-	 &  & k_r2r+_min & 67.31\% & 73.45\% & 72.65\% & 77.17\% & 78.81\% & - \\
-	\cline{1-3} \cline{2-3}
-	\multirow[t]{7}{*}{mfauhtcsldp} & \multirow[t]{3}{*}{count} & k_c2r+ & 49.72\% & 40.70\% & 41.94\% & 53.79\% & 49.17\% & 63.38\% \\
-	 &  & k_dig+_2 & 58.25\% & 74.86\% & 77.67\% & 78.00\% & 79.73\% & 44.39\% \\
-	 &  & k_r2r+_min & 66.51\% & 72.03\% & 69.78\% & 78.45\% & 79.15\% & 61.95\% \\
-	\cline{2-3}
-	 & \multirow[t]{2}{*}{ppmi} & k_dig+_2 & - & - & 65.67\% & 77.58\% & 80.08\% & 58.58\% \\
-	 &  & k_r2r+_min & - & - & {\cellcolor{lightgreen}} 80.41\% & {\cellcolor{lightgreen}} 81.41\% & {\cellcolor{lightgreen}} 81.41\% & {\cellcolor{lightgreen}} 64.36\% \\
-	\cline{2-3}
-	 & \multirow[t]{2}{*}{tfidf} & k_dig+_2 & 64.88\% & 76.31\% & 77.81\% & 77.24\% & - & 59.18\% \\
-	 &  & k_r2r+_min & 58.92\% & {\cellcolor{lightgreen}} 78.05\% & 76.49\% & 77.09\% & - & 63.02\% \\
-	\bottomrule
-	\end{tabular}
-	}
-\end{table}
 
 
 

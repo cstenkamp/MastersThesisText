@@ -55,9 +55,6 @@ The considered algorithm first embeds the collection of texts into a vector spac
  %TODO: talk about a fucking DOC-TERM-MATRIX, A MATRIX OF FREQUENCIES!!!
   and smoothing the space using dimensionality reduction, before calculating the similarities on the resulting embedding. While the considered algorithm requires more steps before calculating the similarities to allow for domain-specific and more complex forms of reasoning, it also adheres to this structure, as will be shown in section~\nameparanref{sec:generate_vectorspaces}.
 
-
-\includeMD{pandoc_generated_latex/3_1_algorithm}
-
 The core idea of the algorithm is to (unsupervised, data-driven) find a a set of features which can be modelled as directions for a vector-space representation of the respective entities. For that, the steps are:
 
 \label{sec:algorithmsteps}
@@ -185,6 +182,14 @@ In their algorithm, the \gls{dissimmat} is created using the \emph{normalized an
 
 % TODO: komplettes 4 von \cite{Turney2010}, außerdem der ganze bums von Deerwester!
 
+normalized angular distances according to \cite{Derrac2015}:
+
+\begin{align}
+	ang(e_i, e_j) &= \frac{2}{\pi} * \arccos \left( \frac{\vec[m]{v_{e_i}} * \vec[m]{v_{e_j}}} { \lVert \vec[m]{v_{e_i}} \rVert * \lVert \vec[m]{v_{e_j}} \rVert }  \right)  \label{eq:norm_ang_dist} \\
+	&= \frac{2}{\pi} * \arccos(1-\cos(\vec[m]{v_{e_i}},\vec[m]{v_{e_j}})) \text{, where $\cos$ is the default cosine-distance} \nonumber
+\end{align}
+
+
 
 \subsubsection{Filter Candidates by Classifier Performance\arrowref{sec:algorithmsteps}}
 
@@ -201,3 +206,5 @@ An analysis of \cite{Carmel2009} showed that a statistical method to extract fea
 
 
 
+
+\includeMD{pandoc_generated_latex/3_1_algorithm}
