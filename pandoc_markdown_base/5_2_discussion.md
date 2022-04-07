@@ -31,7 +31,7 @@ Research Question: Ich will die Methodik von dem Paper auf educational resources
         * bin mir nicht sicher ob die 1vsrest machen oder nicht
             * begründung dafür... ABER sie schreiben ja auch dass sie sklearn nutzen -> doc sagt muss so
         * dass die für mehr entities labels haben, die aber nicht public sind?
-
+    * well, their code is crap https://github.com/rana-alshaikh/Hierarchical_Linear_Disentanglement/ so I wouldn't be suprised if they just had errors
 
 ### Siddata
 

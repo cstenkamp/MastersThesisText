@@ -31,7 +31,7 @@ This thesis explores a novel method to generate explainable recommendations for 
 
 \subsubsection*{Overwhelming amounts of resources}
 
-The university landscape has changed drastically in recent years. In 1999, the \textit{Bologna declaration} was signed by the 29 countries of the the \textit{European Higher Education Area} (now 45), reforming their education systems to allow for international compatibility. Where before 1999, there were between 70 and 180 different elementary studies\footnote{ Schröder, Marco (2015). Studienwahl unter den Folgen einer radikalen Differenzierung. Bad Heilbrunn: Klinkhardt.} in germany, that number has risen to 2554 in 2003\footnote{\url{https://www.che.de/download/im_blickpunkt_ausdifferenzierung_studiengaenge-pdf/?wpdmdl=10620&refresh=624af74f6f7921649080143}}, become more than 5000 in 2008, and currently (winter semester 2020/2021) peaks at 9168 unique courses of study\footnote{\url{https://www.hrk.de/fileadmin/redaktion/hrk/02-Dokumente/02-03-Studium/02-03-01-Studium-Studienreform/HRK_Statistik_BA_MA_UEbrige_WiSe_2020_21_finale.pdf}, page 10 \label{fnote:degreenums}}. The number of subjects in total has almost doubled in the past thirteen years, from 11\,265 in 2007 to 20\,359 in 2020\footnoteref{fnote:degreenums}. According to the german \textit{Centrum für Hochschulentwicklung}, nowadays only 18.7\% of degrees are \textit{classical}, \ie tailored to a specific subject such as \textit{Physics}, the rest falling unter the categories hybrid, interdisciplinary or topic-focused\footnote{\url{https://www.che.de/wp-content/uploads/upload/Im_Blickpunkt_Die_Vielfalt_der_Studiengaenge_2017.pdf}}.
+The university landscape has changed drastically in recent years. In 1999, the \textit{Bologna declaration} was signed by the 29 countries of the the \textit{European Higher Education Area} (now 45), reforming their education systems to allow for international compatibility. Where before 1999, there were between 70 and 180 different elementary studies \cite{Schroder2015} in germany, that number has risen to 2554 in 2003\footnote{\url{https://www.che.de/download/im_blickpunkt_ausdifferenzierung_studiengaenge-pdf/?wpdmdl=10620&refresh=624af74f6f7921649080143}}, become more than 5000 in 2008, and currently (winter semester 2020/2021) peaks at 9168 unique courses of study\footnote{\url{https://www.hrk.de/fileadmin/redaktion/hrk/02-Dokumente/02-03-Studium/02-03-01-Studium-Studienreform/HRK_Statistik_BA_MA_UEbrige_WiSe_2020_21_finale.pdf}, page 10 \label{fnote:degreenums}}. The number of subjects in total has almost doubled in the past thirteen years, from 11\,265 in 2007 to 20\,359 in 2020\footnoteref{fnote:degreenums}. According to the german \textit{Centrum für Hochschulentwicklung}, nowadays only 18.7\% of degrees are \textit{classical}, \ie tailored to a specific subject such as \textit{Physics}, the rest falling unter the categories hybrid, interdisciplinary or topic-focused\footnote{\url{https://www.che.de/wp-content/uploads/upload/Im_Blickpunkt_Die_Vielfalt_der_Studiengaenge_2017.pdf}}.
 
 Where before there was a rigid schedule of mandatory courses, modern courses of studies become increasingly modular, allowing students to draw up individual educational plans composed of a wide selection of courses\footnote{\url{https://www.pedocs.de/volltexte/2008/285/pdf/heft98.pdf}}. Due to to globalisation and the introduction of the \emph{European Credit Transfer System}, the selection of courses for this may span any course at any european university.
 
@@ -50,46 +50,112 @@ The Siddata-platform already contains a tool that generates recommendations base
 
 To be able to work with such requests, the system would need some sort of \textit{feature directions}: it must recognize \emph{math} as a feature that any course may have and it must be able to rank all courses according to how much the feature \emph{math} applies to each of them.
 
-\todoparagraph{Feature-directions, movie-tuner}
 %TODO: Show Sample: Movie Tuner Interface (here or [*])
 
 \label{sec:amazonalgo}
 
-The default approach for recommendation has been for more than twenty years now that of \emph{Collaborative Filtering}, summarized in the well-known phrase \q{Customers who bought items in your Shopping cart also bought: [...]} \cite{Sarwar2000}. Traditionally, this algorithm represents every customer as a vector, whose components are the number of times this customer has bought an item for all items of the store. To suggest new products to the user, items from the vectors of customers whose purchase history is similar to this user, calculated by \eg the \gls{cos}, are suggested \cite{Linden2003}. Because this is computationally very expensive, there are several alternatives, for example algorithms that cluster users based on their similarity to other users before matching, or search-based algorithms. Even Amazon's recommendation system, one of the most world-defining algorithms in the word, uses the same base algorithm, coined \q{\textit{item-to-item collaborative filtering}}. It only differs from the traiditional techniques in that it builds a similarity matrix based on the \gls{cos} for items instead of customers. Developed in 1997, this algorithm is still not only in use today at Amazon, but also adopted by YouTube and Netflix, amongst many others \cite{Smith2017}. Many improvements in efficiency, distance calcuation techniques or time-dependency have been added since then and the algorithm is more optimized than likely only very few others, the fact that it's a simple \textit{similarity-based reasoning technique} has remained ever since. 
+The default approach for recommendation has been for more than twenty years now that of \emph{Collaborative Filtering}, summarized in the well-known phrase \q{Customers who bought items in your Shopping cart also bought:} \cite{Sarwar2000}. Traditionally, this algorithm represents every customer as a vector, whose components are the number of times this customer has bought an item for all items of the store. To suggest new products to the user, items from the vectors of customers whose purchase history is similar to this user, calculated by \eg the \gls{cos}, are suggested \cite{Linden2003}. Because this is computationally very expensive, there are several alternatives, for example algorithms that cluster users based on their similarity to other users before matching, or search-based algorithms. Even Amazon's recommendation system, one of the most world-defining algorithms in the word, uses the same base algorithm, coined \q{\textit{item-to-item collaborative filtering}}. It only differs from the traiditional techniques in that it builds a similarity matrix based on the \gls{cos} for items instead of customers. Developed in 1997, this algorithm is still not only in use today at Amazon, but also adopted by YouTube and Netflix, amongst many others \cite{Smith2017}. Many improvements in efficiency, distance calcuation techniques or time-dependency have been added since then and the algorithm is more optimized than likely only very few others, the fact that it's a simple \textit{similarity-based reasoning technique} has remained ever since. 
 
 As will be explained in more detail in \autoref{sec:similaritybasedreasoning}, both in terms of classication algorithms and classic logical reasoning, the technique to classify a sample with the class of it's most similar neighbors (\emph{k-Nearest-Neighbors}) is considered one of the most basic techniques.
 
 On the other hand, \textit{feature directions} are not unknown in the field of Computational Linguistics. As famously demonstrated by \textcite{Mikolov:Regularities} in their 2013 paper \citetitle{Mikolov:Regularities}, modern neural language models that represent words as high-dimensional continuous-space vectors exhibit astonishing semantic regularities. Not only does the usage of such embeddings boost the performance of many classical \gls{nlp} tasks \cite{Mikolov2013a,Le2014, Devlin2019}, but there is strong evidence that \glspl{vsm} capture the meaning of words on the basis of the \gls{distribhyp}. This best shows in the famous example that links simple vector arithmetic to word semantics\footnote{The latter two eamples are adapted from \url{https://devmount.github.io/GermanWordEmbeddings/}}:
 
+\setlength{\belowdisplayskip}{3pt}
+\vspace{-6.5ex}
 \begin{align}
 	vec(king) - vec(man) + vec(woman) &\approx vec(queen) \nonumber \\ 
 	vec(planet) + vec(water) &\approx vec(earth)  \label{eq:w2vregularity}\\
 	vec(house) + vec(movie) &\approx vec(cinema) \nonumber
 \end{align}
 % So "Codierungstheorie & Kryptographie - Mathe + Info = Kryptographische Algorithmen"
+% \vspace{-3ex}
 
 This can be considered semantic directions and would seem to allow the example stated at the start of this section, however it is not suited to allow data-driven explainable recommendation as demanded for the use-case of this thesis. This is because in these embeddings, there are no meaningful \textbf{unit vectors}. There is no obvious direction designating a gender in this space, but instead \textit{man} is one of millions of vectors in this space, its direction obfuscated throughout all of its vector components, and the actual direction solely depends on the initial random distribution. 
 
 Intuitively, a vector-space that allows for the kind of explainable recommendation we are looking for would need to be specified such that there are a few most basic \textit{bare properties} of all entities of the respective domain. These properties would correspond linearly independent unit vectors, which are the \textit{dimensions} spanning the vector space: \textbf{human-interpretable feature directions}.
 
-%TODO: Show Sample: Movie Tuner Interface (here or [*])
-This would allow to rank objects according to how much they apply to each of a few basic features, allowing a wide variety of tasks, such as interpretable rule-based classifiers, search engines working with gradual and ill-defined features (\eg \textit{popular movies}), or critique-based recommender systems with the user in the loop (cf. \cite{Ager2018}). Most importantly, such a ranking could be used to build up a \textit{structured knowledge base} from the domain. Many \gls{cl} tasks rely on such knowledge bases, however generating them has occcupied scientists for dozens of years with only little significant progress, making its automatic creation an important achievement for the entire field.
+This would allow to rank objects according to how much they apply to each of a few basic features, allowing a wide variety of tasks, such as interpretable rule-based classifiers, search engines working with gradual and ill-defined features (\eg \textit{popular movies}), or critique-based recommender systems with the user in the loop (cf. \cite{Ager2018}). Most importantly, such a ranking could be used to build up a \textit{structured knowledge base} from the domain.
+
+In search of literature that with related goals, the approach of \cite{VISR12} stood out: In their paper, they create a structured knowledge base for the domain of movies and provide an interface that allows a user to select a movie based on a set of clear-defined semantic features. This interface is reprinted in \autoref{fig:movietuner}.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{graphics/stolenfigures/movietuner.png}
+	\slcaption{
+		The Movie-Tuner Interface from \cite{VISR12} %TODO: cite exact figure (" … as seen in [8, Fig. 33]")
+		\label{fig:movietuner}}
+\end{figure}
+
+While the result of their algorithm aligns very much with the desired goal of this work, their implementation relies on supervised learning that requires a hand-labelled dataset.
 
 \subsection{The algorithm of \textcite{Derrac2015}}
 
+% Many \gls{cl} tasks rely on such knowledge bases, however generating them has occcupied scientists for dozens of years with only little significant progress, making its automatic creation an important achievement for the entire field.
+
 To summarize, the kind of recommendation aimed for here would require a structured knowledge base that can be created forom any domain in a data-driven way. This knowledge base can be represented as a vector space human-interpretable, linearly independent components. A euclidian distance metric for the space would ease human interpretation. 
 
-Famously, the idea of \textbf{Conceptual Spaces} fulfills these criteria. Introduced by Peter Gärdenfos in his 2000 book \citetitle{Gardenfors2000a} \cite{Gardenfors2000a} as a bridge between symbolic and subsymbolic processing, conceptual spaces represent knowledge in a geometric structure consisting of various quality dimensions. While well-known primarily as theoretical model, an algorithm to automatically generate such spaces in a data-driven way was first proposed by \citename{Derrac2015} in 2015.
+Famously, the idea of \textbf{Conceptual Spaces} fulfills these criteria. Introduced by Peter Gärdenfos in his 2000 book \citetitle{Gardenfors2000a} \cite{Gardenfors2000a} as a bridge between symbolic and subsymbolic processing, conceptual spaces represent knowledge in a geometric structure consisting of various quality dimensions. While well-known primarily as theoretical model, an algorithm to automatically generate such spaces in a data-driven way was proposed by \citename{Derrac2015} in 2015.
 
+Their primary motivation is the following: Classical symbolistic AI relying on semantic knowledge bases can provide intuitive explanations for its decisions, but automatic creation of such has thus far been unsuccessful. Inspired by the way humans deal with incomplete knowledge, they draw a connection between commonsense reasoning patterns and the relation of concepts and entities in a conceptual space, claiming that qualitative spatial relations in the latter corresponds to the semantic relations required for reasoning that helps to fill gaps in these knowledge bases. In doing that, they create multiple classifiers that providide intuitive explanations for each decisions. 
 
+Given the widely accepted assumption that algorithmically, recommendation is nothing beyond classification \cite{Linden2003,Ai2018,Sarwar2000}, this algorithm seems the perfect base to allow for explainable recommendation as required here if it works reasonably well for the given domain.
+%TODO: movie tuner doch schon eher einbringen und die connection ziehen "sowas wollen wir, aber data-driven, und Derrac2015 macht ebendas"?
 
+Precise study of the pertinent literature has shown that there is a small but active community publishing improvements to this algorithm. On the other hand, most of these follow-up works include one of the authors of the primary paper, Steven Schockaert, as co-author \cite{Ager2018,Alshaikh2020}, indicating a small impact beyond this community. Further, most of the considered literature use manually created datasets collected from multiple human reviews or tags, and given that the algorithm relies on the fact that relevant words occur more often in the text corpus, there is reason to assume that it may struggle when applied to the corpus given in this thesis. For these reasons it seemed reasonable to thoroughly test the domain transfer of the algorithm.
 
+Unfortunately, the available open-source implementations that were found\footnote{\cite{Alshaikh2020}: \url{https://github.com/rana-alshaikh/Hierarchical_Linear_Disentanglement}\\ \indent \phantom{\textsuperscript{10}} \cite{Ager2018}: \url{https://github.com/ThomasAger/Autoencoder-Explanations}} proved undocumented and obscure\footnote{Relying for example on 70 unnamed command-line arguments: \url{https://github.com/ThomasAger/Autoencoder-Explanations/blob/master/src/_archive/lr_pipeline.py\#L1211-L1283}}
+, which is why it was decided that a complete re-implementation is the better idea and also less work. 
 
-\includeMD{pandoc_generated_latex/1_1_motivation}
+This however also brought up the new goal to create a reliable architecture for the algorithm that adheres to modern standards of software quality as specified in \textbf{ISO/IEC 9126} and its replacement \textbf{ISO/IEC 25010:2011} in the hope of making future research just like this one where the validity of the algorithm and its ability to transfer to new domains is tested easier than it was for \me.
+
+% \includeMD{pandoc_generated_latex/1_1_motivation}
 
 
 \section{Research Questions \& Thesis Goals}
 % Goals of this work & Research-Questions
 \label{sec:goals_research_questions}
 
-\includeMD{pandoc_generated_latex/1_2_thesisgoals}
+Summarized, the primary motivation for this thesis is to test if the methodology of \textcite{Derrac2015} is applicable to the domain of educational resources to find regularities in the data and allow for explainable recommendation of these. 
+
+The methodology relies on many modular components with no obvious reason to choose any hyperparameter or component over another, resulting in a combinatorical explosion of runs, each with a significant runtime. Throughout the development of the respective code, the importance of a solid software-foundation became clear, leading to a shift in focus away from quickly generating results towards the methodology for a scalable, adaptable and qualitative architecture that may serve as foundation to answer many related research questions in the future. Among others, this includes to allow the algorithm on compute clusters such as the \gls{ikw} Grid Engine. The domain transfer to educational resources shall however still serve as prototypical application and answers will be generated.
+
+So this thesis shall not only replicate the results of \cite{Derrac2015} and transfer it to a domain with practical benefits, but also deliver qualitative software for future research, like \me would have wished to have existed before this thesis. To make this even easier, there will be a strong textual focus on the architecture as well in the hope of allowing other scientists to work with this code-base. To show that the implemenation works, it will be also applied to an original dataset of \cite{Derrac2015} and the results compared.
+
+\textbf{Clearly defined, the two stated goals of this thesis are thus:}
+
+\begin{enumerate}
+	\item Implement and describe a qualitative, scalable and adaptable software-architecture for the replicated algorithm, that can be used to easily apply it to new domains.
+	\item Apply the methodology to the domain of educational resources to verify if the algorithm works and is useful to find regularities in it, allowing to
+	provide explainable recommendation. In terms of original contributions, this includes finding differences in the structure of the given datasets and providing additions to the algorithm such that it works not only on specifically curated datasets.
+\end{enumerate}
+
+\subsection{Success conditions}
+
+Exact evaluation metrics will be explained in detail later, but let us quickly define a few conditions that indicate successful execution of these goals.
+
+\subsubsection*{Regarding the architecture}
+
+A successful architecture is given if 
+
+\begin{itemize}
+	\item The results of \cite{Derrac2015} and its follow-up works \cite{Ager2018,Alshaikh2020} can be replicated for at least one of their original datasets
+	\item The architecture sucessfully runs on the compute grid, indicating scalability and modularity.
+	\item The criteria for software quality as specified in \textbf{ISO 25010} and open science are fulfilled.
+	\item The code is open-sourced, well-documented and understandable.
+\end{itemize}
+
+\subsubsection*{Regarding the application of the algorithm to a new domain}
+
+The main question to be answered here is \textit{Is the algorithm applicable for the domain of educational reasources}. This question must be explicitly answered by first stating the hypothesis, explainining the methods used, reporting results and subsequently discussing them. Unfortunately, the main success criterion of the algorithm is its subjective persuasiveness, which is hard to objectively and quantitatively evaluate without a study. For that reason, there is the need to find good surrogate metrics instead. Criteria for success include:
+
+\begin{itemize}
+	\item The difference from the given dataset to the originally used ones is elaborated and regarded for.
+	\item Proper scientific methodology will be conducted for the evaluation of the results.
+	\item The resulting semantic directions are \textit{convincing} in a sense that they fulfill demanded criteria that were specified before loooking at results.
+	\item The resuling semantic directions can be used as basis for explainable recommenders.
+	\item These recommenders achieve similar performances than modern \gls{ml} techniques when applied to find human categories such as a course's faculty from the data.
+\end{itemize}
+
+
+% \includeMD{pandoc_generated_latex/1_2_thesisgoals}

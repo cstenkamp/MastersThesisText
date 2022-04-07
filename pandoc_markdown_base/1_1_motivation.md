@@ -12,13 +12,10 @@ TODO: quotes from Johannes about how making the choice easier for students is ve
 
 -->
 
-* What they did can definitely be used for what I want to do here if it works well enough
-* Their motivation is thus also mine: Explainable AI but data-driven 
-	* They want to get "commonsense reasoning such as interpolation and a fortiori inference", but learned automatically. 
-	* As they claim, "commonsense reasoning" <=> "how different concepts and entities are semantically related" <=> CS
-		because "CS qualitative spatial relations" <=> "required semantic relations for reasoning"
-		=> Their aim is to create a structured knowledge base (see [+])
-* Few grains of salt (no regions but only dots, domain-specific)
+* die citen nur sich selbst
+* datasets are manually created and have a common structure
+* scheiß coe
+
 * Does their algorithm work for the given dataset?
 * Seems like a small community of only these guys
 	* Active Community, cool ideas, but only citing themselves and all basing on Derrarc2015 (..and having him as co-author)
