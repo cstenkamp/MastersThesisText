@@ -80,6 +80,8 @@ There were some Hyperparameters (also Algorithmen/Komponenten) von \cite{Ager201
 
 ### Complex Algorithm-Addendums
 
+* dass das hier auf bag-of-words basiert und dass es daher wie alle bag-of-words sachen das problem hat das einunddasselbe sehr verschieden ausgedrückt werden kann, und LSA wäre einer der wege das zu beheben (another one: word embeddings)
+
 * [AGKS18] speculates that performance could be improved for such categories by integrating domain knowledge into the fine-tuning method. ==> Maybe combine this with [ALBS20]??
 * Footnote 22 from [DESC15]: For some abstract properties, the most appropriate term may not occur in the corpus. In such cases, external resources such as WordNet or Wikipedia could be used to identify additional terms that are relevant for the considered domain.
 
@@ -155,3 +157,17 @@ There were some Hyperparameters (also Algorithmen/Komponenten) von \cite{Ager201
         * damit kann's auch Paper recommenden ;)
 * Conceptual Space an Kursen erstellen (die dann bspw die komplette Domäne der Mathematik erschließen ;)
 
+
+
+## Regarding data 
+
+
+* You could do the shallow-decisiontrees-thingy for other attributes of the dataset than I currently have (possible Attributes für eine Taxonomie von Kursen) (see: https://studip-etherpad.uni-osnabrueck.de:9001/p/SIDDATA_AI_Categories)
+    - "Schwierigkeit" -> Durchschnittsnoten?
+    - "Komplexität" -> Avg. Semester der Teilnehmer?
+    - "Offenheit" -> #Students eines anderen Fachbereichs
+    - Aufwand -> #ECTS die der Kurs gibt
+    - Vorraussetzungen -> stehen in StudIP, sonst profile der studierenden die ihn belegen
+* Mit meinen Attributen gibt's einige Probleme. Noten gibt's nicht, "allerschweste Datenschutzbedenken". Was studiert wer und in welchem Semester haben wir nur für den Zeitpunkt der Abfrage -> in kombi mit der k-anonymisierung wirds da schwer zu sagen in welchem semester leute was belegt haben
+* IntroAI für dieses Jahr ist in Stud.IP nen komplett anderer Kurs als für letztes jahr 
+    * Tobias hat was gebaut dass die abgleicht! Und er will k-anonymisierung machen. Das vergrößert die Daten sodass es für jedes Datum mindestens k (say 10) Studierende gibt für die etwas zutrifft. Da muss man Daten wegwerfen.

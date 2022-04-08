@@ -6,7 +6,7 @@
 \begin{figure}[h]
 	\begin{center}
 	  \includegraphics[width=\textwidth]{graphics/figures/scatter_mds_tsne_places_Geonames.pdf}
-	  \slcaption{2D Visualization of the Placetypes-Dissimilarity-Matrix \todoparagraph{not mine, but the one of Derrac}, generated with \gls{tsne}. See \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/desc15_mds_2d3d.ipynb} for the origin of this plot.}
+	  \slcaption{2D Visualization of the Placetypes-Dissimilarity-Matrix \todoparagraph{not mine, but the one of Derrac}, generated with \gls{tsne}. See \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/desc15_mds_2d3d.ipynb} for the origin of this plot. Individual class frequencies: spot,building,farm: 176 | stream,lake: 74 | mountain,hill,rock: 68 | parks,area: 28 | undersea: 27 | road,railroad: 16 | forest,heath: 14}
 	  \label{fig:scatter_mds_placetypes}
       %TODO: "colored by Geonames"
 	\end{center}
@@ -31,31 +31,32 @@
 \begin{table}[H]
 	\centering
 	\makebox[\textwidth][c]{
-		\resizebox{1.2\textwidth}{!}{%
-		\begin{tabular}{rr|ccccc|ccccc|cc|cc}
+		\resizebox{1.16\textwidth}{!}{%
+		\begin{tabular}{r@{}r|ccccc|ccccc|cc|ccc}
 		&
 		&
 		\multicolumn{5}{c|}{\textbf{\textcite{Alshaikh2020} (MDS)}} &
 		\multicolumn{5}{c|}{\textbf{\textcite{Ager2018}}} &
-		\multicolumn{2}{c|}{\textbf{\textcite{Derrac2015}}} &
-		\multicolumn{2}{c}{\textbf{This work}} \\
+		\multicolumn{2}{c|}{\textbf{{\scriptsize Der. \& Sch.} \cite{Derrac2015}}} &
+		\multicolumn{3}{c}{\textbf{This work}} \\
 		&
 		&
-		\textbf{Random} &
+		\textbf{\footnotesize Rand.} &
 		\textbf{AHC} &
-		\textbf{Primary} &
+		\textbf{\footnotesize Prim.} &
 		\textbf{Sub} &
-		\textbf{Ortho} &
-		\textbf{FT MDS} &
+		\textbf{\footnotesize Ortho} &
+		\textbf{\footnotesize FTMDS} &
 		\textbf{MDS} &
-		\textbf{FT AWV} &
+		\textbf{\footnotesize FTAWV} &
 		\textbf{AWV} &
 		\textbf{LDA} &
 		\textbf{Best} &
-		\textbf{Best BL} &
-		\textbf{Best-all} &
-		\textbf{Mean-Best} \\ \midrule
-		\textbf{Foursquare} &
+		\textbf{\footnotesize Best BL} &
+		\textbf{B-all} &
+		\textbf{Avg-B} &
+		\textbf{A-UnW} \\ \midrule
+		\multirow[t]{2}{*}{\specialcell[t]{\textbf{Four-}\\ \textbf{square}}} &
 		\textbf{D1} &
 		0.39 &
 		0.36 &
@@ -68,7 +69,7 @@
 		0.32 &
 		\textbf{0.55} &
 		\multicolumn{2}{c|}{-} &
-		\textbf{0.50} & 0.45
+		\textbf{0.50} & 0.45 & 0.36
 		\\
 		&
 		\textbf{D3} &
@@ -83,7 +84,7 @@
 		0.37 &
 		0.48 &
 		\multicolumn{2}{c|}{-} &
-		\textbf{0.58} & 0.5
+		\textbf{0.58} & 0.5 & 0.54
 		\\
 		&
 		\textbf{DN} &
@@ -95,7 +96,7 @@
 		0.47 &
 		\textbf{0.53} &
 		\textbf{0.53} &
-		\textbf{0.57} & 0.55
+		\textbf{0.57} & 0.55 & 0.54
 		\\
 		\multicolumn{1}{l}{} &
 		\multicolumn{1}{l|}{\textbf{Any}} &
@@ -103,9 +104,9 @@
 		\multicolumn{5}{c|}{-} &
 		\textbf{0.73} &
 		0.72 &
-		- & -
+		- & - & -
 		\\
-		\textbf{Geonames} &
+		\multirow[t]{2}{*}{\specialcell[t]{\textbf{Geo-}\\ \textbf{names}}} &
 		\textbf{D1} &
 		0.23 &
 		0.22 &
@@ -118,7 +119,7 @@
 		0.28 &
 		\textbf{0.34} &
 		\multicolumn{2}{c|}{-} &
-		\textbf{0.51} & 0.48
+		\textbf{0.51} & 0.48 & 0.49
 		\\
 		&
 		\textbf{D3} &
@@ -133,7 +134,7 @@
 		0.28 &
 		0.32 &
 		\multicolumn{2}{c|}{-} &
-		\textbf{0.54} & 0.51
+		\textbf{0.54} & 0.51 & 0.29
 		\\
 		&
 		\textbf{DN} &
@@ -145,7 +146,7 @@
 		0.27 &
 		\textbf{0.37} &
 		0.2 &
-		\textbf{0.46} & 0.44
+		\textbf{0.46} & 0.44 & 0.42
 		\\
 		\multicolumn{1}{l}{} &
 		\multicolumn{1}{l|}{\textbf{Any}} &
@@ -153,12 +154,12 @@
 		\multicolumn{5}{c|}{-} &
 		\textbf{0.41} &
 		0.36 &
-		- & -
+		- & - & -
 		
 		\end{tabular}%
 		} % resizebox
 	} % makebox
-	\caption{F1-Scores of classifiers predicting GeoNames- and Foursquare-labels for baselines, \mainalgos and this work (long)}
+	\caption{F1-Scores of classifiers predicting GeoNames- and Foursquare-labels for baselines, \mainalgos and this work (long). Described in detail below.}
 	\label{tab:f1_placetypes_long}
 \end{table}
 
@@ -167,7 +168,10 @@
 \textbf{Cls} column encodes the classifier: \textbf{D1/3} are \glspl{dt} of depth 1/3, \textbf{DN} an unbounded \gls{dt}. Condition \textbf{Any} refers to the best of all semantic classifiers developed by \cite{Derrac2015}. \\
 First five columns are the exact results reported by \cite{Alshaikh2020}, next five columns those by \cite{Ager2018}, afterwards the best config of \cite{Derrac2015} and the best baseline-condition of \cite{Derrac2015}. The exact conditions of that work are (left to right, top to bottom): C4.5\textsubscript{dir}, C4.5\textsubscript{MDS}, Col, 1-NN (100D), C4.5\textsubscript{dir}, C4.5\textsubscript{MDS}, Analog\textsubscript{C}, 1-NN (50D). Explanations of the respective conditions can be found in their work. \\
 All scores are reported with a train-test split of 70\% to 30\%. Note that the reported results of \cite{Ager2018} are unrepresentive when compared to the other datasets: For the placetypes-dataset, \textbf{LDA} performs consistently better than their methods, which is not the case for all other datasets used by them. In the case of \cite{Alshaikh2020}, the results for the placetypes-dataset seem to indicate that the \textbf{Ortho}-condition performs consistently better than the \textbf{Sub}-condition, which was however not the case for any of the other datasets the authors considered. \\
-Final columns are the results of this work. Column \textbf{Best-all} encodes a different for each row, specifically the one that yields the best result for the respective classification task, whereas column \textbf{Mean-Best} refers to the single configuration that achieved the best results on average.
+Final columns are the results of this work. Column \textbf{Best-all} encodes a different for each row, specifically the one that yields the best result for the respective classification task, whereas column \textbf{Mean-Best} refers to the single configuration that achieved the best results on average. \todoparagraph{Last column is best when class weighting of per-class-classifiers is forbidden}
+\todoparagraph{Shortened a few column names, rename them in description}
+
+
 
 \section{F1-scores per Faculty}
 

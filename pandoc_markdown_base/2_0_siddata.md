@@ -41,7 +41,7 @@ This thesis was started while I worked at the SIDDATA\footnote{As \textsc{Siddat
 Problem as before: Data is available but the problem is transparency, target-oriented accessibility, and manageability
 Studies have shown (WHICH specified in \cite{Schurz2021} that setting self-set, self-regulated personal educational goals is good, and DSA can help 
 
-* SIDDATA is a joint interdisciplinary project for \q{\emph{Individualization of Studies through Digital, Data-Driven Assistants}}\footnote{\url{https://www.siddata.de/en/}} of the universities Osnabrück, Bremen and Leibniz Universität Hannover, funded by the german \emph{Federal Ministry of Education and Research}\footnote{BMBF. Funding number: 16DHB2124}. 
+* SIDDATA is a joint interdisciplinary project for \q{\emph{Individualization of Studies through Digital, Data-Driven Assistants}}\footnote{\url{https://www.siddata.de/en/}} of the universities Osnabrück, Bremen and Leibniz Universität Hannover, funded by the German \emph{Federal Ministry of Education and Research}\footnote{BMBF. Funding number: 16DHB2124}. 
 * The deliverable of the project is a flexible data-driven \gls{dsa}, that supports students in higher education in their invidual learning and achievement of personal study goals by giving hints, reminders and recommendation for their individual study paths \cite{Schurz2021}
 * For that, the collaborative project combines unlinked heterogenous data and information (from management systems, offers and resources of other universities and institutions, and data on individual learning and working behavior) in a digital study assistant, integrated into the university's \gls{lms} (Stud.IP \cite{stockmann2005})
 

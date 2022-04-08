@@ -1,8 +1,11 @@
 % * Dataset + Algo Section "teilweise unveständlich"
 % * Verhältnis von Datensatz und Algorithmus wird nicht klar
 
+\todoparagraph{If not explicitly stated otherwise, hyperparameter also refers to exchangeable algorithm components such as which quantification is used}
 
 This section will go into detail about this main algorithm, plus the two other papers that according to my research are good additions to it (in terms of helping to understand it as well as improving on some stuff in it). That we are focusing on only those three papers should by no means imply that they are the only ones in that regard\footnote{see \autoref{sec:otherwork} - \cite{VISR12} and their tag genome, the fact that the algorithm detailed here is basically only one step in \cite{Alshaikh2019}, Gärdenfors himself suggested that one may use self-organizing maps instead of classical AI/NLP algorithms.}.
+
+\todoparagraph{Regarding ager and alshaikh:}
 
 The implementation of this thesis replicates and extends the algorithm proposed by \textcite{Derrac2015} with some novel contributions to deal with the given dataset. Further, some improvements from the works of \textcite{Ager2018} and \textcite{Alshaikh2020} are incorporated, who also replicated and improved the original algorithm\footnote{All three of these works share Prof Steven Schokaert as last author.}.
 
@@ -119,8 +122,8 @@ The following components are developed for the preprocessing, every one of which
 	\itemtext{\todoparagraph{grains of salt for stopwords! Alshaikh2019 just removed too-high-termfreq!}}
 	\item Tokenize words
 	\item \Gls{lemma}tize words
-	\itemtext{\todoparagraph{TODO: Write about details  and HanTa for german etc!}}
-	\item Remove diacritics\footnote{\emph{Diacritics} are glyphs added to basic letters, such as accents or german \emph{Umlaute}. Removing them converts for example the letter \emph{ä} to an \emph{a}}
+	\itemtext{\todoparagraph{TODO: Write about details  and HanTa for German etc!}}
+	\item Remove diacritics\footnote{\emph{Diacritics} are glyphs added to basic letters, such as accents or German \emph{Umlaute}. Removing them converts for example the letter \emph{ä} to an \emph{a}}
 	\item Remove punctuation 
 \end{itemize}
 
@@ -195,6 +198,7 @@ normalized angular distances according to \cite{Derrac2015}:
 
 \label{sec:svm_filter_cands}
 
+\todoparagraph{In methods muss eindeutig stehen} "wir measuren ja die faithfulness der representation by how good the kappa is. Derrac2015 schreibt dass die kappa nutzen, geben aber keine details, allwoing for a shitton of different ways how to implement that. As that's highly relevant, we try many diffeent values and report them in the results. Details what means what in the ipmlementation details" -> und da steht dann kurze erklärung in ner tabelle
 
 
 \subsubsection{Clustering the extracted candidates}

@@ -118,9 +118,9 @@ In formal logic/ontologies/lexical databases, semantic relations of concepts are
 \begin{tabularx}{1.05\textwidth}{P{0.16\textwidth}|P{0.25\textwidth}|P{0.25\textwidth}|X}
     Ontology Relation & Other Names        & RCC5 \cite{Cohn1997a} analog / \textit{Geometric equivalent} & Example \\ \midrule
 
-    Type Identity     & Equality of Concepts, Synonymy & Identical Regions (EQ)      & Animals with a liver \& Animals with a heart \\ 
+    Type Identity     & {\scriptsize Equality of Concepts, Synonymy } & Identical Regions (EQ)      & Animals with a liver \& Animals with a heart \\ 
 
-    Subsumption       & Hyponyms/ Hypernyms, \textit{is-a-relationship}, Concept Hierachies, Taxonomies 
+    Subsumption       & {\scriptsize Hyponyms/ Hypernyms, \textit{is-a-relationship}, Concept Hierachies, Taxonomies }
                                            & Proper Parts(PP, PP\textsuperscript{-1}), \textit{Subregions}
                                                                           & \textit{Every pizzaria is a restaurant} \\  
     
@@ -133,8 +133,8 @@ In formal logic/ontologies/lexical databases, semantic relations of concepts are
 
     Opposites         &                    & \textit{Set inverse}         & Humans \& Non-human animals \\ 
 
-    Token Identity    & Equality of Names, Synonymy  & \textit{Equal coordinates}   & Morning star \& Venus \\ 
-    Meronymy/Holonymy & \textit{part-whole realationship} & -             & Trees \& Leaves
+    Token Identity    & {\scriptsize Equality of Names, Synonymy } & \textit{Equal coordinates}   & Morning star \& Venus \\ 
+    Meronymy / Holonymy & {\scriptsize \textit{part-whole realationship} }& -             & Trees \& Leaves
 \end{tabularx}
 
 \vspace{4ex}
@@ -149,7 +149,7 @@ So except Meronymy, a CS can model all semantic relations of classical ontologie
 
 \label{sec:similaritybasedreasoning}
 
-As discussed already in \autoref{sec:amazonalgo}, modern recommendation algorithms often rely on similarity-based reasoning by suggesting that users that liked and item may also like similar items (collaborative filtering). In terms of classification, this corresponds to the 1-Neirest-Neighbor approach, where an object is assigned the class of the most similar item\footnote{1-NN: \textit{Y is of the same class as X because X closest to Y}}:
+As discussed already in \autoref{sec:amazonalgo}, modern recommendation algorithms often rely on similarity-based reasoning by suggesting that users that liked and item may also like similar items (collaborative filtering). In terms of classification, this corresponds to the 1-Neirest-Neighbor approach, where an object is assigned the class of the most similar item:\footnote{1-NN: \textit{Y is of the same class as X because X closest to Y}}
 
 \noindent
 \begin{minipage}{.6\textwidth}
@@ -169,15 +169,11 @@ This is something that cannot be done by classical logic, which can not model de
 
 \subsubsection*{Induction}
 
-\noindent
-\begin{minipage}{.6\textwidth}
-    Another very important tool of human common-sense reasoning is abstraction/generalization/ \textbf{induction}, going from single observations to general rules. For that, we need to decide which properties of the respective observation are relevant, distilling sensible information from the receptors from unimportant information to make inferences from limited information about an object? The connectionistic answer to that would be "pattern matching", and ML algorithms work extremely well for that, however this lacks explainability, and also we want to model the underlying algorithm and the underlying patterns. All three levels can model some kinds of induction and generalization, remember they are not in conflict. On the Conceptual Level you can eg model \textit{If two different entities of the same class have a property, maybe all entities of that class have a property}, which would be \textit{categroical inductive inverences}
-\end{minipage}% 
-\begin{minipage}{.4\textwidth}
-    \syllogism{Grizzly bears love onions \\
-               Polar bears love onions}
-               {All bears love onions \cite[226]{Gardenfors2000a}}
-\end{minipage}% 
+Another very important tool of human common-sense reasoning is abstraction/generalization/ \textbf{induction}, going from single observations to general rules. For that, we need to decide which properties of the respective observation are relevant, distilling sensible information from the receptors from unimportant information to make inferences from limited information about an object? The connectionistic answer to that would be "pattern matching", and ML algorithms work extremely well for that, however this lacks explainability, and also we want to model the underlying algorithm and the underlying patterns. All three levels can model some kinds of induction and generalization, remember they are not in conflict. On the Conceptual Level you can eg model \textit{If two different entities of the same class have a property, maybe all entities of that class have a property}, which would be \textit{categroical inductive inverences}
+
+\syllogism{Grizzly bears love onions \\
+Polar bears love onions}
+{All bears love onions \cite[226]{Gardenfors2000a}}
 
 Other kinds of inductive reasoning we can model:
 
@@ -268,9 +264,9 @@ Can be used for dimensionality reduction
 
 \subsubsection*{Semantic Knowledge Bases}
 
-Lexical databases of semantic relations between words, the most famous of which being WordNet\footnote{\url{https://wordnet.princeton.edu/}}, link words in a graph that encodes explicit semantic relations like synonyms and hyponyms (subtypes/ \emph{is-a}-relationships). While neural %TODO: nicht neural, aber halt data-driven? naja das was word2vec undso sind... by-context-created/trained...?! similarity-based? -> DISTRIBUTIONAL MODELS (ones trained from the co-occurrence patterns of temrs)
+Lexical databases of semantic relations between words, the most famous of which being WordNet,\footnote{\url{https://wordnet.princeton.edu/}} link words in a graph that encodes explicit semantic relations like synonyms and hyponyms (subtypes/ \emph{is-a}-relationships). While neural %TODO: nicht neural, aber halt data-driven? naja das was word2vec undso sind... by-context-created/trained...?! similarity-based? -> DISTRIBUTIONAL MODELS (ones trained from the co-occurrence patterns of temrs)
 embeddings may encode similar information implicitly, when relying on dictionary-based word encodings they are an important tool when using classical linguistic techniques. For the developed algorithm, the information how many hyponyms of a candidate word for a semantic direction %TODO: did I explain the algorithm well enough before this to throw this much information at the reader?!
-occur in its corresponding text-corpus is highly relevant. To do that, WordNet \cite{Miller1995} and it's german equivalent, GermaNet \cite{hamp-feldweg-1997-germanet,Henrich}\footnote{\url{(https://uni-tuebingen.de/fakultaeten/philosophische-fakultaet/fachbereiche/neuphilologie/seminar-fuer-sprachwissenschaft/arbeitsbereiche/allg-sprachwissenschaft-computerlinguistik/ressourcen/lexica/germanet-1/)}}, are required in the respective step.
+occur in its corresponding text-corpus is highly relevant. To do that, WordNet \cite{Miller1995} and it's German equivalent, GermaNet \cite{hamp-feldweg-1997-germanet,Henrich},\footnote{\url{(https://uni-tuebingen.de/fakultaeten/philosophische-fakultaet/fachbereiche/neuphilologie/seminar-fuer-sprachwissenschaft/arbeitsbereiche/allg-sprachwissenschaft-computerlinguistik/ressourcen/lexica/germanet-1/)}} are required in the respective step.
 
 
 \subsubsection*{Word-weighting techniques}

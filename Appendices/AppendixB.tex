@@ -35,7 +35,7 @@ see \autoref{sec:algo_preproc}
 To check the languages of the entities, the \codeother{langdetect}\footnote{\url{https://pypi.org/project/langdetect/}, \textcite{nakatani2010langdetect}} library is used, which is a direct port of a java library that claims to have 99.8\% accuracy on longer texts \cite{nakatani2010langdetect}. 
 \newline
 
-Depending on the translation-policy, it is possible to either take only those entities of the demanded language, ignore it and consider all entities in their original language, or enforce the demanded language by translating all entities from their original language to the demanded one. The accompaning code for this thesis contains extensive code to do that using the \emph{Google Cloud Translation API}\footnote{\url{https://cloud.google.com/translate}}. Many descriptions of the SIDDATA-dataset were translated using this technique\footnote{As, however, only 500.000 characters per google-account and month can be translated \href{https://cloud.google.com/translate/pricing}{free of charge}, the translation-process for the descriptions is still in progress.}. As of now, Google's Cloud Translation Service uses an embedding-based neural model of a hybrid architecture that has a transformer encoder, followed by an RNN decoder \cite{Chen2018}. All of the languages detected in the SIDDATA-dataset are supported by the system - translating between the languages german, english and spanish, which make up \todoparagraph{HOWMANY} percent of the SIDDATA-descriptions, is what the system is particularly optimized for. 
+Depending on the translation-policy, it is possible to either take only those entities of the demanded language, ignore it and consider all entities in their original language, or enforce the demanded language by translating all entities from their original language to the demanded one. The accompaning code for this thesis contains extensive code to do that using the \emph{Google Cloud Translation API}\footnote{\url{https://cloud.google.com/translate}}. Many descriptions of the SIDDATA-dataset were translated using this technique\footnote{As, however, only 500.000 characters per google-account and month can be translated \href{https://cloud.google.com/translate/pricing}{free of charge}, the translation-process for the descriptions is still in progress.}. As of now, Google's Cloud Translation Service uses an embedding-based neural model of a hybrid architecture that has a transformer encoder, followed by an RNN decoder \cite{Chen2018}. All of the languages detected in the SIDDATA-dataset are supported by the system - translating between the languages German, English and Spanish, which make up \todoparagraph{HOWMANY} percent of the SIDDATA-descriptions, is what the system is particularly optimized for. 
 \todoparagraph{write short about their percentage, bleu score etc}
 
 \includeMD{pandoc_generated_latex/6_1_implementationdetails}
@@ -57,6 +57,49 @@ The KeyBERT-model was incorporated to extract key-phrases for this codebase in t
 \paragraph{KeyBERT-preprocessed} alleviates this problems by running the algorithm on already preprocessed texts. This may however lead to worse results, as the algorithm was trained on unprocessed natural sentences.
 
 In practice, though both variants extracted different phrases, the results for either of the technqiues did not differ significantly.
+
+
+\subsection*{Candidate Filtering}
+
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{llllll}
+    \textbf{Long}                    & \textbf{Short} & \textbf{Data} & \textbf{Quantifications} & \textbf{Distances} & \textbf{Comments}                \\ \midrule
+    rank2rank\_dense          & r2r-d          & all           & Dense-Ranked           & Dense-Ranked     &                                  \\
+    rank2rank\_min            & r2r-min        & all           & Min-Ranked               & Dense-Ranked     &                                  \\
+    bin2bin                   & b2b            & all           & Binary                   & Binary             & Disregards rankings              \\
+    digitized &
+      dig &
+      all &
+      Digitized &
+      Digitized &
+      \begin{tabular}[c]{@{}l@{}}Bins decided by np.histogram\_bin\_edges \\ from min and max of all data\end{tabular} \\
+    count2rank\_onlypos       & c2r+           & positive      & Unchanged                & Dense-Ranked     & Only for Count as Quantification \\
+    rank2rank\_onlypos\_dense & r2r+d          & positive      & Dense-Ranked           & Dense-Ranked     &                                  \\
+    rank2rank\_onlypos\_min   & r2r+min        & positive      & Min-Ranked               & Min-Ranked         &                                  \\
+    rank2rank\_onlypos\_max   & r2r+max        & positive      & Max-Ranked               & Max-Ranked         &                                  \\
+    digitized\_onlypos\_1 &
+      dig+1 &
+      positive &
+      Digitized &
+      Digitized &
+      \begin{tabular}[c]{@{}l@{}}Bins decided by np.histogram\_bin\_edges \\ from min and max of all data\end{tabular} \\
+    digitized\_onlypos\_2 &
+      dig+2 &
+      positive &
+      Digitized &
+      Digitized &
+      \begin{tabular}[c]{@{}l@{}}Bins decided by np.histogram\_bin\_edges \\ from min and max of all positive data\end{tabular}
+    \end{tabular}%
+    }
+    \caption{Dense means: if there are 14.900 zeros, the next is a 1
+    Min means: if there are 14.900 zeros, the next one is a 14.901
+    Max means: if there are 14.900 zeros, they all get the label 14.900
+    These scores are weighted}
+    \label{tab:kappa_measures}
+\end{table}
+
 
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 

@@ -7,9 +7,9 @@
 
 This section summarizes the results that the described algorithm achieved on the described datasets according to the described metrics. Before going into detail about the performance on the Siddata-dataset, a brief summary of the results on the placetypes-dataset serves to demonstrate if the specific implementation can achieve comparable results to \mainalgos, thus putting the other results into perspective in terms of what the algorithm can realistically achieve on dedicated high-quality datasets.
 
-% Due to the implemented algorithm being an \gls{unsupervised} algorithm, there is no explicit target value for each of the considered samples, making it impossible to straight-forwardly apply well-known \gls{ml} metrics such as \Gls{acc} or \gls{f1}. What this algorithm tries to achieve is a lot \textit{fuzzier} than in the realm of classification: The end-goal of it is to embed the given \glspl{entity} into a vector-space that consists of semantically meaniningful directions, so the only actual metric would be a comparison checking if the respective categorization here corresponds closely to human judgement. To do that, the best evaluation is likely a study that asks for feedback of users that see the results of a developed system\footnote{An example for such a system is the \textit{Movie Tuner} interface from \textcite{VISR12}, reprinted as \autoref{fig:movetuner}.}. \textcite{Derrac2015} performed crowdsourcing experiments on CrowdFlower\footnote{\url{http://www.crowdflower.com}}, asking users among other tasks which of several candidates could best describe the difference between two movies. They also compared their results with those of running the supervised algorithm of \cite{VISR12} on a subset of their data. Furthermore they tested if the explainable classifiers generated from this algorithm (see \autoref{sec:reasoning}) \q{help users spot incorrect classifications} \cite[48]{Derrac2015}, as well as if their algorithmic classification corresponds to human judgement\footnote{The task was set only for classification into OpenCYC and Foursquare Taxonomies of the placetypes-dataset (see column `\textbf{classification classes}' in \autoref{tab:all_datasets}).}. 
+Due to the implemented algorithm being an \gls{unsupervised} algorithm, there is no explicit target value for each of the considered samples, making it impossible to straight-forwardly apply well-known \gls{ml} metrics such as \Gls{acc} or \gls{f1}. What this algorithm tries to achieve is a lot \textit{fuzzier} than in the realm of classification: The end-goal of it is to embed the given \glspl{entity} into a vector-space that consists of semantically meaniningful directions, so the only actual metric would be a comparison checking if the respective categorization here corresponds closely to human judgement. To do that, the best evaluation is likely a study that asks for feedback of users that see the results of a developed system.\footnote{An example for such a system is the \textit{Movie Tuner} interface from \textcite{VISR12}, reprinted as \autoref{fig:movetuner}.} \textcite{Derrac2015} performed crowdsourcing experiments on CrowdFlower,\footnote{\url{http://www.crowdflower.com}} asking users among other tasks which of several candidates could best describe the difference between two movies. They also compared their results with those of running the supervised algorithm of \cite{VISR12} on a subset of their data. Furthermore they tested if the explainable classifiers generated from this algorithm (see \autoref{sec:reasoning}) \q{help users spot incorrect classifications} \cite[48]{Derrac2015}, as well as if their algorithmic classification corresponds to human judgement.\footnote{The task was set only for classification into OpenCYC and Foursquare Taxonomies of the placetypes-dataset (see column `\textbf{classification classes}' in \autoref{tab:all_datasets}).} 
 % \todoparagraph{TODO: Should I also quickly mention their results?}
-% While similar studies could be done in the Siddata-\gls{dsa} \cite{Schurz2021} without additional costs, carrying these out is outside the scope of this thesis.
+While similar studies could be done in the Siddata-\gls{dsa} \cite{Schurz2021} without additional costs, carrying these out is outside the scope of this thesis.
 
 
 % This thesis relies on both qualitative analysis and quantitative anlaysis in order to quantify the algorithm's performance. In the \textit{qualitative analysis}, exemplary partial results of the algorithm will be showcased that should intuitively show if what the algorithm does looks \textit{realistic} from a human perspective. 
@@ -19,45 +19,94 @@ This section summarizes the results that the described algorithm achieved on the
 
 To check if the implementation correctly produces the claimed results, it was applied to \gencite{Derrac2015} placetypes-dataset and its results compared to those of the literature. \autoref{fig:scatter_mds_placetypes} in \autoref{ap:more_plots} shows a two-dimensional \gls{tsne}-embedding of the original representations of \cite{Derrac2015}, colored by their Geonames-class. This figure indicates that only few of the entities are linked with a class and that the embeddings barely cluster when compared to their embeddings for the movies-dataset (displayed in \autoref{fig:scatter_mds_movies}). 
 
-Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, depth-3 and unbounded decision trees classifying an entities' category according to the Placetypes- and Geonames-taxonomy. \autoref{tab:f1_mainalgos_me_short} lists their results as well as some of their baselines in comparison with the results of this work. As shown in the table, this implementation outperforms the previous results for all configurations. \autoref{tab:f1_geonames_foursquare_all} shows the results of different configurations to generate the decision-tree classification. In contrast to the results reported in \ref{tab:f1_mainalgos_me_short} which are optimized for their respective classification target, these results are from a single parameter-combination and robustly reproducible. 
+Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, depth-3 and unbounded decision trees classifying an entities' category according to the Placetypes- and Geonames-taxonomy. \autoref{tab:f1_mainalgos_me_short} lists their results as well as some of their baselines in comparison with the results of this work. As shown in the table, this implementation outperforms the previous results for all classification-task-configurations. \autoref{tab:f1_geonames_foursquare_all} shows the results of different configurations to generate the decision-tree classification. In contrast to the results reported in \autoref{tab:f1_mainalgos_me_short} which are optimized for their respective classification target, these results are from a single parameter-combination and robustly reproducible. 
+\todoparagraph{Again, in the first I took a generally-good hyperparam-combination, and in the second I selected both for this work and for the literature, for every generated result that hyperparam-combi leading to the best results for best comparability.}
+
+\todoparagraph{nicht wundern dass D3 manchmal schlechter als D1 ist, war es bei Ager auch (overfit on train)}
+
+% \begin{table}[H]
+% 	\begin{subtable}{.627\linewidth}
+% 		\centering
+% 		\resizebox{\textwidth}{!}{
+% 			\begin{tabular}{rrcccc}
+% 				\toprule
+% 				 & \textbf{Depth} & \textbf{Any} & \textbf{1} & \textbf{2} & \textbf{3} \\
+% 				\textbf{1vsRest} & \textbf{Balanced} &  &  &  &  \\
+% 				\midrule
+% 				\multirow[t]{2}{*}{\textbf{False}} & \textbf{False} & 0.377 & {\cellcolor{lightgreen}} 0.484 & {\cellcolor{lightgreen}} 0.496 & 0.496 \\
+% 				 & \textbf{True} & 0.394 & 0.134 & 0.238 & 0.256 \\
+% 				\cline{1-2}
+% 				\multirow[t]{2}{*}{\textbf{True}} & \textbf{False} & 0.424 & 0.320 & 0.332 & 0.366 \\
+% 				 & \textbf{True} & {\cellcolor{lightgreen}} 0.441 & 0.482 & 0.489 & {\cellcolor{lightgreen}} 0.513 \\
+% 				\bottomrule
+% 			\end{tabular}
+% 		}
+% 		\caption{GeoNames}\label{tab:f1_geonames_all}
+% 	\end{subtable}%
+% 	\begin{subtable}{.373\linewidth}
+% 		\centering
+% 		\resizebox{\textwidth}{!}{
+% 			\begin{tabular}{cccc}
+% 				\toprule
+% 				\textbf{Any} & \textbf{1} & \textbf{2} & \textbf{3} \\
+% 				&  &  &  \\
+% 				\midrule
+% 				0.506 & 0.330 & 0.417 & 0.455 \\
+% 				{\cellcolor{lightgreen}} 0.550 & 0.113 & 0.294 & {\cellcolor{lightgreen}} 0.499 \\
+% 				0.511 & 0.319 & 0.403 & 0.417 \\
+% 				0.505 & {\cellcolor{lightgreen}} 0.451 & {\cellcolor{lightgreen}} 0.521 & 0.498 \\
+% 				\bottomrule
+% 			\end{tabular}
+% 		}
+% 		\caption{Foursquare}\label{tab:f1_foursquare_all}
+% 	\end{subtable}
+% 	\slcaption{F1-Scores of various-depth decision trees predicting GeoNames- and Foursquare-labels. All scores are the result of 5-fold cross-validation averaged across 10 random seeds, but from a single parameter-configuration. Rows correspond to different hyperparameters for the \gls{dt}. If not \textit{1vsRest}, a single tree must predict all classes at once (max. 2\textsuperscript{depth}), in the other the performance of one classifier per class is averaged. If \textit{Balanced}, class weights are inversely propertional to class frequencies.}
+% 	\label{tab:f1_geonames_foursquare_all}
+% \end{table}
+
 
 \begin{table}[H]
-	\begin{subtable}{.627\linewidth}
+	\begin{subtable}{.625\linewidth}
 		\centering
 		\resizebox{\textwidth}{!}{
 			\begin{tabular}{rrcccc}
 				\toprule
-				 & \textbf{Depth} & \textbf{-} & \textbf{1} & \textbf{2} & \textbf{3} \\
+				 & \textbf{Depth} & \textbf{Any} & \textbf{1} & \textbf{2} & \textbf{3} \\
 				\textbf{1vsRest} & \textbf{Balanced} &  &  &  &  \\
 				\midrule
-				\multirow[t]{2}{*}{\textbf{False}} & \textbf{False} & 0.377 & {\cellcolor{lightgreen}} 0.484 & {\cellcolor{lightgreen}} 0.496 & 0.496 \\
-				 & \textbf{True} & 0.394 & 0.134 & 0.238 & 0.256 \\
+				\multirow[t]{2}{*}{\textbf{False}} & \textbf{False} & \bst \textbf{0.419} & \bst \textbf{0.494} & 0.471 & 0.496 \\
+				 & \textbf{True} & 0.394 & 0.109 & 0.298 & 0.342 \\
 				\cline{1-2}
-				\multirow[t]{2}{*}{\textbf{True}} & \textbf{False} & 0.424 & 0.320 & 0.332 & 0.366 \\
-				 & \textbf{True} & {\cellcolor{lightgreen}} 0.441 & 0.482 & 0.489 & {\cellcolor{lightgreen}} 0.513 \\
+				\multirow[t]{2}{*}{\textbf{True}} & \textbf{False} & 0.413 & 0.314 & 0.331 & 0.378 \\
+				 & \textbf{True} & 0.382 & 0.487 & \bst 0.505 & \bst 0.506 \\
+				\cline{1-2}
+				\multirow[t]{2}{*}{\textbf{T,U}} & \textbf{False} & 0.218 & 0.103 & 0.116 & 0.152 \\
+				 & \textbf{True} & 0.195 & 0.284 & \textbf{0.294} &  \textbf{0.292} \\
 				\bottomrule
 			\end{tabular}
 		}
 		\caption{GeoNames}\label{tab:f1_geonames_all}
 	\end{subtable}%
-	\begin{subtable}{.373\linewidth}
+	\begin{subtable}{.375\linewidth}
 		\centering
 		\resizebox{\textwidth}{!}{
 			\begin{tabular}{cccc}
 				\toprule
-				\textbf{-} & \textbf{1} & \textbf{2} & \textbf{3} \\
+				\textbf{Any} & \textbf{1} & \textbf{2} & \textbf{3} \\
 				&  &  &  \\
 				\midrule
-				0.506 & 0.330 & 0.417 & 0.455 \\
-				{\cellcolor{lightgreen}} 0.550 & 0.113 & 0.294 & {\cellcolor{lightgreen}} 0.499 \\
-				0.511 & 0.319 & 0.403 & 0.417 \\
-				0.505 & {\cellcolor{lightgreen}} 0.451 & {\cellcolor{lightgreen}} 0.521 & 0.498 \\
+				0.527 & \textbf{0.358} & \textbf{0.453} & \textbf{0.540} \\
+				\textbf{0.535} & 0.128 & 0.189 & 0.281 \\
+				0.513 & 0.229 & 0.453 & 0.494 \\
+				\bst 0.548 & \bst 0.488 & \bst 0.563 & \bst 0.558 \\
+				0.218 & 0.103 & 0.116 & 0.152 \\
+				0.195 & 0.284 & 0.294 & 0.292 \\
 				\bottomrule
 			\end{tabular}
 		}
 		\caption{Foursquare}\label{tab:f1_foursquare_all}
 	\end{subtable}
-	\slcaption{F1-Scores of various-depth decision trees predicting GeoNames- and Foursquare-labels. All scores are the result of 5-fold cross-validation averaged across 10 random seeds, but from a single parameter-configuration. Rows correspond to different hyperparameters for the \gls{dt}. If not \textit{1vsRest}, a single tree must predict all classes at once (max. 2\textsuperscript{depth}).}.
+	\slcaption{F1-Scores of various decision trees predicting GeoNames- and Foursquare-labels. All scores result from 5-fold cross-validation averaged across 10 random seeds, all from the parameter-configuration. Rows correspond to different hyperparameters for the \gls{dt}: If not \textit{1vsRest}, a single tree must predict all classes at once (max. 2\textsuperscript{depth}), otherwise performances of one classifier per class are averaged. Middle rows report scores weighted by class frequency, bottom rows (Condition \textbf{T,U}) unweighted averages of the same classifiers. If \textit{Balanced}, class weights are inversely propertional to class frequencies. Results highlighted in green are respectively optimal scores, bold results are optimal scores if class-score-weighting is forbidden.}
 	\label{tab:f1_geonames_foursquare_all}
 \end{table}
 
@@ -66,7 +115,8 @@ Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, 
 \begin{table}[H]
 	\centering
 	% \resizebox{\textwidth}{!}{%
-	\begin{tabular}{rr|ccc|ccc|cc}
+	\begin{tabular}{rr|ccc|ccc|cc} 
+	& & \multicolumn{3}{c|}{\footnotesize \textbf{Literature baselines}} & \multicolumn{3}{c|}{\footnotesize \textbf{Literature results}} & \\ \noalign{\vskip-2pt}
 	\textbf{Target} &
 	  \textbf{Cls} &
 	  \textbf{Ran} &
@@ -76,19 +126,19 @@ Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, 
 	  \textbf{\cite{Ager2018}} &
 	  \textbf{\cite{Alshaikh2020}} &
 	  \textbf{this work} \\ \midrule
-	\textbf{Foursquare}  & \textbf{D1}  & 0.39 & \textbf{0.55} & -             & 0.38*          & 0.41 & \textbf{0.45} & \textbf{0.50} \\
-						 & \textbf{D3}  & 0.5  & 0.48          & -             & 0.42*          & 0.44 & \textbf{0.57} & \textbf{0.58} \\
-						 & \textbf{DN}  & -    & 0.47          & \textbf{0.53} & \textbf{0.53}  & 0.42 & -             & \textbf{0.57} \\
-	\multicolumn{1}{l}{} & \textbf{Any} & -    & -             & 0.72          & \textbf{0.73}  & -    & -             & -             \\
 	\textbf{Geonames}    & \textbf{D1}  & 0.23 & \textbf{0.34} & -             & \textbf{0.32*} & 0.32 & 0.28          & \textbf{0.51} \\
 						 & \textbf{D3}  & 0.27 & 0.32          & -             & 0.31*          & 0.31 & \textbf{0.34} & \textbf{0.54} \\
 						 & \textbf{DN}  & -    & 0.27          & 0.2           & \textbf{0.37}  & 0.24 & -             & \textbf{0.46} \\
-	\multicolumn{1}{l}{} & \textbf{Any} & -    & -             & 0.36          & \textbf{0.41}  & -    & -             & -            
+	\multicolumn{1}{l}{} & \textbf{Any} & -    & -             & 0.36          & \textbf{0.41}  & -    & -             & -            \\
+	\textbf{Foursquare}  & \textbf{D1}  & 0.39 & \textbf{0.55} & -             & 0.38*          & 0.41 & \textbf{0.45} & \textbf{0.50} \\
+	& \textbf{D3}  & 0.5  & 0.48          & -             & 0.42*          & 0.44 & \textbf{0.57} & \textbf{0.58} \\
+	& \textbf{DN}  & -    & 0.47          & \textbf{0.53} & \textbf{0.53}  & 0.42 & -             & \textbf{0.57} \\
+\multicolumn{1}{l}{} & \textbf{Any} & -    & -             & 0.72          & \textbf{0.73}  & -    & -             & -             
 	\end{tabular}%
 	% } %resizebox
-	\slcaption{F1-Scores of classifiers predicting GeoNames- and Foursquare-labels for three baselines, \mainalgos and this work. \textbf{Cls} column encodes the classifier: \textbf{D1/3} are \glspl{dt} of depth 1/3, \textbf{DN} an unbounded \gls{dt}. Condition \textbf{Any} refers to the best of \cite{Derrac2015}'s  semantic classifiers. \hspace{1ex}
-	Baseline-columns: \textbf{Ran} is the \textit{Random} baseline as reported by \cite{Alshaikh2020}, \textbf{LDA} is the result of \acrshort{lda} as reported by \cite{Ager2018}, and \textbf{BL} is the best baseline-condition from \cite{Derrac2015}. \hspace{1ex}
-	Columns \textbf{\cite{Derrac2015}, \cite{Ager2018}} and \textbf{\cite{Alshaikh2020}} encode the best respectively reported scores. Starred values in column \textbf{\cite{Derrac2015}} refer to results that \cite{Ager2018} reported for the configuration of \cite{Derrac2015} for conditions not covered by the latter. Final column reports the results of this work (unlike \autoref{tab:f1_geonames_foursquare_all}, this reports the respectively optimal parameter-configuration) with a literature-consistent train-test-split of 70-30. A longer version of this table listing more configurations per author can be found in the Appendix as \autoref{tab:f1_placetypes_long}.}
+	\slcaption{F1-Scores of classifiers predicting GeoNames- and Foursquare-labels for three baselines, \mainalgos and this work. \textbf{Cls} column encodes the classifier: \textbf{D1/3} are \glspl{dt} of depth 1/3, \textbf{DN} unbounded \gls{dt}. Condition \textbf{Any} refers to the best of \cite{Derrac2015}'s  semantic classifiers. \hspace{1ex}
+	Baseline-columns: \textbf{Ran} is the \textit{Random} baseline as reported by \cite{Alshaikh2020}, \textbf{LDA} is \acrshort{lda} as reported by \cite{Ager2018}, \textbf{BL} is the best baseline-condition from \cite{Derrac2015}. \hspace{1ex}
+	Columns \textbf{\cite{Derrac2015}, \cite{Ager2018}}, \textbf{\cite{Alshaikh2020}} encode the best reported scores per publication. Starred values in column \textbf{\cite{Derrac2015}} refer to results that \cite{Ager2018} reported for the configuration of \cite{Derrac2015} for conditions not covered by the latter. Final column reports the results of this work (with balanced samples and 1vsRest-condition; unlike \autoref{tab:f1_geonames_foursquare_all}, this reports the respectively optimal parameter-configuration just like the best reported config from \mainalgos) with a literature-consistent train-test-split of 70-30. A longer version of this table listing more configurations per publication can be found in the Appendix as \autoref{tab:f1_placetypes_long}.}
 	\label{tab:f1_mainalgos_me_short}
 \end{table}
 
@@ -119,8 +169,7 @@ Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, 
 \section{Dataset differences} % Dataset comparisons (is our dataset worse?)
 \label{sec:results_datasetdiffs}
 
-
-Having established that the implementation works correctly for the domain of placetypes, we will now check if the quantity of some key characteristics produced as interim results of the algorithm differ across domains. \autoref{tab:generated_stuff} contrasts the number of feature vectors, candidate terms and cluster elements for the movies-, placetypes- and Siddata-dataset.
+Having established that the implementation works correctly for the domain of placetypes, we will now check if the quantity of some key characteristics produced as interim results of the algorithm differ across domains. As discussed in \autoref{sec:datasets}, our dataset differs in some properties from those of the literature. Because interim resuls may already indicate the performance of the algorithm, looking at them provides useful information that can be considered in the performance evalaution. \autoref{tab:generated_stuff} contrasts the number of feature vectors, candidate terms and cluster elements for the movies-, placetypes- and Siddata-dataset.
 
 \todoparagraph{With that, we want to figure out if anything is possible and if so, the correct parameters like the candidate-min-term-count}
 
@@ -160,6 +209,8 @@ The Siddata-dataset consists of more but shorter texts associated with an entity
 	\label{fig:candidate_histogram}
 \end{figure}
 
+These results show that the algorithm produces a much less candidates for our dataset compared with the originally considered ones. Because of that, the subsequent steps of the algorithm have a less rich representation to choose from, decreasing the chance to achieve good performances downstream.
+
 \todoparagraph{This doesnt look good but lets look at the results!}
 
 \section{Results for the Siddata-dataset}
@@ -182,7 +233,7 @@ As previously described, the primary method used here to check if the described 
 
 To see if it is possible to extract any kind of structured data from the unstructured course descriptions, a \gls{bert}-based Neural Network classifier was trained on the dataset, classifying the subset of courses that are for the \gls{uos} to the faculty they belong to. The classifier trained for 12 epochs before \emph{stopping early} due to its performance on the test-set decreasing. It achieved an accuracy of \textbf{85.19\%} for the test-set (94.13\% on the training set), providing strong indication that the faculty can be considered a latent property of its description. Because \gls{bert} is one of the best general language classifiers to date \cite{Devlin2019}, this accuracy will be considered the upper boundary for the results of our algorithm.
 
-\autoref{fig:scatter_mds_siddata} displays a \gls{tsne}-representation of the dissimilarity-matrix generated from the normalized angular distances (\autoref{eq:norm_ang_dist}) of the \gls{bow}-representations generated from the courses (only those that have one, which are \todoparagraph{somany}) Compared to the placetypes-dataset (\autoref{fig:scatter_mds_placetypes}), at least some of the classes seem to cluster well. 
+\autoref{fig:scatter_mds_siddata} displays a \gls{tsne}-representation of the dissimilarity-matrix generated from the normalized angular distances (\autoref{eq:norm_ang_dist}) of the \gls{bow}-representations generated from the courses (only those that have one, which are \todoparagraph{somany}) A first comparison of this scatter-plot and its placetypes-counterpart (\autoref{fig:scatter_mds_placetypes}) reveals that siddata appears to have more homogenous clusters.
 
 From this distance matrix, the algorithm subsequently creates an embedding using the \gls{mds}-algorithm to afterwards train multiple \glspl{svm} for each of the extracted candidate-dimensions before re-embedding the entities into a new space where the dimensions encode the \gls{rank} for each of the extracted features. To evaluate the algorithm, we will check if it is to be able to classify the faculty with a decision tree that uses between one and maximally $2^3=8$ of these features. To provide a context for the resulting performance, we will first look at a classification which does not use the feature-based representation, but on a raw low-dimensional embedding without class-specific dimensions. This can be seen as the lower boundary of what a classification without selecting the most relevant dimensions but instead use an optimal but general three-dimensional space can achieve. A classification-performance of low-level decision trees that use only the most important features from all available ones that is higher than this thus provides evidence that the detected features encode important distinctive properties. \autoref{fig:mds_3d_hyperplane} visually represents the result of the classification using a linear \gls{svm} on a three-dimensional space generated as result of \gls{mds} on the dissimilarity-matrix of the entities. Averaged over all Faculties, this classifier reaches a weighted accuracy of 64.3\% (unweighted accuracy 69.0\%, weighted F1: 0.414, unweighted F1: 0.269). Note that these values are reached by training on the full data without a separate testing-set.
 % text_referenced_plots/siddata_analysis/visualize_embeddings_mds.ipynb
@@ -229,7 +280,10 @@ Now that we have established upper and lower boundary for what can reasonably be
 
 Keep in mind that accuracies often makes the situation look better than it is. The weighted average F1-scores are between 0.505 (depth 1) and 0.710 (unbounded depth). For the full table of F1-scores it is referred to the appendix, specifically \autoref{tab:robustresults_perfb_f1}. 
 
-Compared with the results of the \gls{bert}-based classifier (85.19\%), the achieved results are suprisingly competative, with the weighted mean of trees of depth 1 and two only slighly below that and that of deeper trees achieving even higher accuracies. Importantly however, the results reported here are those of a sepearate classifier per faculty (1-vs-rest), differentiating only between the respective faculty as positive class and all other faculties as negative class. As will be further elaborated in the discussion, this is however the only realistic way of doing it: A binary tree of depth 1 can distinct between maximally two classes and thus maximally achieve a classification by perfectly classifying the most frequent class and labelling all samples as the second most frequent class, which in the case of faculties is $(2011+1665)/7081=51.9\%$. Results for such trees are reported in \autoref{tab:robustresults_allatonce}.
+Compared with the results of the \gls{bert}-based classifier (85.19\%), the achieved results are suprisingly competative, with the weighted mean of trees of depth 1 and two only slighly below that and that of deeper trees achieving even higher accuracies. 
+% "suprisingly competative" ersetzen mit "soundso ist der przentsatz, soundso ist unserer, wir observen soundsoeinen unterschied"
+\todoparagraph{We said in the previous section that there are less candidates, making it harder. These quantifiable results show that it appears to work anyway}  % "wie in 4.2 gibts weniger candidates, was es downstream schwieriger macht, aber wie in 4.3 klappts ja trotzdem." => Das geht selbst in results, da es eine quantifizierbare darstellung von verhältnismäßigkeiten ist und keine bewertung
+Importantly however, the results reported here are those of a sepearate classifier per faculty (1-vs-rest), differentiating only between the respective faculty as positive class and all other faculties as negative class. As will be further elaborated in the discussion, this is however the only realistic way of doing it: A binary tree of depth 1 can distinct between maximally two classes and thus maximally achieve a classification by perfectly classifying the most frequent class and labelling all samples as the second most frequent class, which in the case of faculties is $(2011+1665)/7081=51.9\%$. Results for such trees are reported in \autoref{tab:robustresults_allatonce}.
 
 \begin{table}[H]
 	\begin{tabular}{rccccc}
@@ -261,7 +315,7 @@ The main goal of the algorithm is not to optimally classify the respective facul
 	\end{center}
 \end{figure}
 
-For trees deeper than one level, the selected features from the second level on are not necessarily the most important ones. Instead it is possible to extract the most important features for a classification by looking at the respective information gain achieved by splitting it. \autoref{tab:courses_top3} displays three most important directions for each of the respective faculties. While the details of this result will be eloborated upon in the discussion, most of the detected features appear convincing. Regarding an acutal classification using these features, \autoref{fig:boxes_rechtswis} in the Appendix displays the result of a sample classification of a decision tree with three features.
+For trees deeper than one level, the selected features from the second level on are not necessarily the most important ones. Instead it is possible to extract the most important features for a classification by looking at the respective information gain achieved by splitting it. \autoref{tab:courses_top3} displays three most important directions for each of the respective faculties. While the details of this result will be eloborated upon in the discussion, most of the detected features appear convincing. \todoparagraph{remove sentence} Regarding an acutal classification using these features, \autoref{fig:boxes_rechtswis} in the Appendix displays the result of a sample classification of a decision tree with three features.
 
 
 \begin{table}[H]
@@ -320,11 +374,17 @@ For trees deeper than one level, the selected features from the second level on 
 	}
 \end{figure}
 
-\autoref{fig:3dplot_mathe_infoab} displays a 3D-Embedding for courses, splitting courses which contain the term "\textit{mathematik}" from those that don't, also hightlighting the courses \textit{Informatik A} and \textit{Informatik B}. Both courses appear comparably close (\todoparagraph{their distance, mean distance}) to each other. Further, even though neither course description contains the word \textit{mathematik}, both courses are would receive high values for this feature, indicated by the distance to the decision plane\footnote{Both statements are better visible in the interactive version of the plot, which can be found at \todoparagraph{link!!}}.
+\autoref{fig:3dplot_mathe_infoab} displays a 3D-Embedding for courses, splitting courses which contain the term "\textit{mathematik}" from those that don't, also hightlighting the courses \textit{Informatik A} and \textit{Informatik B}. Both courses appear comparably close (\todoparagraph{their distance, mean distance}) to each other. Further, even though neither course description contains the word \textit{mathematik}, both courses are would receive high values for this feature, indicated by the distance to the decision plane.\footnote{Both statements are better visible in the interactive version of the plot, which can be found at \todoparagraph{link!!}}
 
-\subsubsection{More stuff}
+\subsubsection{Extended analysis}
 
 \todoparagraph{Also interesting: The top-ranked entities for some of the features }
+
+\todoparagraph{Neben den Clustern die ich mir anzeigen lassen kann und qualitativ analysieren kann}, kann ich mir auch die distances to the origins of the respective dimensions (induced by the clusters), what induces the respective rankings! (see DESC15 p.24u, proj2 of load_semanticspaces.load_projections) anzeigen lassen - da kann ich sagen "term xyz ist bei "nature" am höchsten".
+
+To further analyse the quality of the results, we are interested in the top courses of those directions that best represent the different faculties. \autoref{tab:highest_ranking} displays the most prototypical examples for each of those, which is directly derived from the rankings induced by the classifier.
+
+
 \begin{table}[H]
 	\makebox[\textwidth][c]{
 	\resizebox{1.1\textwidth}{!}{%
@@ -353,13 +413,15 @@ For trees deeper than one level, the selected features from the second level on 
 \section{Optimal Parameters}
 \label{sec:results_params}
 
+\todoparagraph{Die narrative vorher} ist "ja es funktioniert across domain", zusätzlich hab cih noch hyperparameter search gemacht, was in contrast do derrac15 etc ging dank meiner scalable implementation, blubblub, die reporte ich jetzt natürlich, aber sie ist für die kernaussage nicht so relevant.
+
 The previous sections displayed results for a parameter-combination that performed well on average for the aforementioned classification-task. This section compares all of the parameter-combinations that were considered. 
 
 As described in \autoref{sec:workflow}, a good first approximation is to check how many candidate-terms get a kappa-score which is above the threshold of 0.5. \autoref{tab:kappa_table} shows the results of many runs with different parameter-combinations with the purpose of figuring out which combination of parameters and kappa-metrics lead to enough candidate-terms (\todoparagraph{Also ref the figure of workflow where I check what threshold was realistic})
 
 \input{include/results_table_1}
 
-\todoparagraph{What kappas mean what}
+\todoparagraph{What kappas mean what} is explained in the implementation details in  \autoref{tab:kappa_measures}
 
 After preliminary analysis with the number of kappas, let us also look at the performance of the parameter-combinations for the decision-trees. \autoref{tab:best_params} lists the accuracies of of the decision-trees classifying a course's faculty per parameter-combination. Specifically, this compares accuracies for several one-vs-rest decision trees of depth one with a test-set size of 33\%.
 
@@ -459,6 +521,8 @@ After preliminary analysis with the number of kappas, let us also look at the pe
 	}
 \end{table}
 
+\todoparagraph{As exptected, 3D is not too good, and we see that the best combination is blablabla}
+
 
 \todoparagraph{What do we see? We see that tfidf is besser than ppmi blablabla}
 \todoparagraph{Die alte table sieht viel besser aus} (hier druber)
@@ -467,7 +531,7 @@ After preliminary analysis with the number of kappas, let us also look at the pe
 \includeMD{pandoc_generated_latex/4_0_results}
 
 The plots \ref{fig:scatter_mds_movies} and \ref{fig:scatter_mds_placetypes} show a 2D-representation of the MDS %TODO: link MDS anyway, if not to the glossary than to the section
-of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\footnote{\url{https://www.cs.cf.ac.uk/semanticspaces/}}. Visually comparing them to their equivalent to the SIDDATA-dataset (\autoref{fig:scatter_mds}) \todoparagraph{shows that while the movie-embeddings looks pretty clustered}, the clustering of the placetypes-dataset looks in fact a lot worse than that of the SIDDATA-dataset.
+of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}.\footnote{\url{https://www.cs.cf.ac.uk/semanticspaces/}} Visually comparing them to their equivalent to the SIDDATA-dataset (\autoref{fig:scatter_mds}) \todoparagraph{shows that while the movie-embeddings looks pretty clustered}, the clustering of the placetypes-dataset looks in fact a lot worse than that of the SIDDATA-dataset.
 %TODO: obviously write again. What do we see? A 2D-Version of the MDS. If we see very distinct clusters in that, we can conclude that it sounds possible that we can detect whatever-we-colored-by from this embeddings to an okay degree.
 
 
@@ -494,6 +558,7 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}\fo
 	\end{tabular}
 \end{table}
 
+\todoparagraph{By the way, I also wanted to test if any important information gets lost when using only the extracted semantic directions} - the results for unbounded decision trees (\autoref{tab:robustresults_perfb}) which achieve 94.3\% weighted accuracies indicate that at least regarding inforomation about the faculty seems to not get lost, and keep in mind that we didn't train for the faculty at all, that is just a side effect.
 
 
 % % Please add the following required packages to your document preamble:

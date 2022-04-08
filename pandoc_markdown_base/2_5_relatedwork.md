@@ -58,7 +58,7 @@ AI-based application that categories courses and ohter learning materials into k
 
 DDC has hierachical tree stucture with 10 childs at each level. Childs are subtopics of thir parents, things can have multiple DDCs.
 
-SidBERT: SidBERT is BERT-base model + custom classification head, from Huggingface-transformers. trained on 1.3m book titles & descriptions (uni/hannover/bremen uni + german national libray) 3-4 level.
+SidBERT: SidBERT is BERT-base model + custom classification head, from Huggingface-transformers. trained on 1.3m book titles & descriptions (uni/hannover/bremen uni + German national libray) 3-4 level.
 
 BERT - based on transfomer (text doesn't need to be added sequentially). 12 stacked self-attention+feedforward encoder layers to create deep phrase embeddings, trained with masked-token inference tasks where the hidden word must be predicted
 

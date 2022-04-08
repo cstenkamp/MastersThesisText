@@ -1,3 +1,34 @@
+TOWRITE:
+
+
+* argumentieren
+  * doc2vec nicht implementiert weil schlechter bei ager.
+  * Finetuning nicht drin weil nur marginal besser bei ager (ref tabelle im anhang)
+  * ...ähnliche gründe für alshaikh finden
+
+* As established, a very important difference is that more relevant words do not occur more often. we assumed before that because of that, the kappas that compare rankings are not so good. WELL IS THAT THE CASE
+
+
+* full table wo ich tf-idf und ppmi vergleiche für einen Placetypes-case
+* Noch die Results von der exact config of \cite{Derrac2015} reporten (also kein tf-idf) um zu gucken ob das auf deren niveau ist
+
+
+* Regarding "Dass ich immer die beste config genommen hab aber durchgehend neue generiere, weswegen viele plots inkompatibel (zeigen andere semantic directions und andere werte für accuracy undso) sind aber alle zeigen halt nice sachen":
+  * erstmal wenn ich die cosine distance von "stadtgeographie" und "tourismus"  oder "psychologie" und "gehirn" anschaue sind die extremely nah
+  * Die highlights die ich präsentier sind von verschiedenen params und blablabla
+  * One thing is important: The NAME itself is irrelevant for the classification performances!! Only the direction is relevant
+    * bei den namen ist nur die human-interpretability aus, und die tatsache dass verschiedene aber sinnvolle rauskommen ist eher ein feature als ein bug
+  ==> am anfang klarstellen 
+
+  ==> That's actually another result!! Fucking hell, das problem was ich mit derrac hatte ist ja dass die so unglaublich unrobust waren und fast maximal viele verschiedene rauskamen
+    * Bei den placetypes-results noch den punkt dabei schreiben dass die so verschieden sind
+    * bei mir halt einfach für die verschiedenen configs laufen lassen, die resulting direction clustern und counten wie viele verschiedene terms vorkommen (gehirn vs psyhologie), ob einige besonders oft rauskommen und wi nah (cosine) die sind -> ROBUSTNESS ASSESEN
+
+  * Bei allen plots & tables dabeischreiben ob sie aus ner speziellen oder best-on-avarage kamen
+
+======================================
+
+
 * Überall
 	* ...I USED DOC-FREQ RIGHT ALL ALONG!!! FUCK
 	* fig:3d_hyperplane_ortho nicht als screenshot, sondern als svg drin haben, exported from notebook

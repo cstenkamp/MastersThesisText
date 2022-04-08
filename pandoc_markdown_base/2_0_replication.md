@@ -1,3 +1,6 @@
+TODO: 
+ISO - ISO\_IEC 25010\_2011 - Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — System and software quality models} 
+ist ein paper dass die ISO referenziert das man zitieren kann
 
 
 #### Reproducibility and Sustainability

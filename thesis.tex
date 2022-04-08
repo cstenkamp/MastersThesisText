@@ -264,7 +264,7 @@
 \newacronym{tf}{tf}{Term Frequency}
 \newacronym{df}{df}{Document Frequency}
 \newacronym{lms}{LMS}{Learning Management System}
-\newacronym{oer}{OER}{Open Educational Resources}
+\newacronym{oer}{OER}{Open Educational Resource}
 \newacronym{ddc}{DDC}{Dewey Decimal Classification}
 \newacronym{dt}{DT}{Decision Tree}
 \newacronym{nlp}{NLP}{Natural Language Processing}
@@ -337,7 +337,7 @@
 \usepackage{dirtytalk} %https://de.overleaf.com/learn/latex/Typesetting_quotations
 % \usepackage{csquotes} % Context sensitive quotation.
 \usepackage[autostyle=false, style=english]{csquotes}
-\newcommand{\q}[1]{\hspace{-0.5ex}\enquote{#1}}
+\newcommand{\q}[1]{\enquote{#1}} %\hspace{-0.5ex}
 % \MakeOuterQuote{"} %https://tex.stackexchange.com/a/216166/108199 to auto-replace " with `` '' (parity must be given)
 % See also regarding quotation:
 % IEEE Standard: https://libraryguides.vu.edu.au/ieeereferencing/gettingstarted
@@ -377,8 +377,9 @@
  
 
 %%% Custom definitions %%%
-\newcommand{\me}{the author of this thesis }
-\newcommand{\my}{the author's }
+\usepackage{xspace} % https://tex.stackexchange.com/a/31092/108199
+\newcommand{\me}{the author of this thesis\xspace}
+\newcommand{\my}{the author's\xspace}
 
 % Shorthands
 \newcommand{\ie}{i.\,e.~}
@@ -787,11 +788,12 @@
 
 % If we add the \NoMarkdown at compilation, we won't use any of the \@input. See https://tex.stackexchange.com/a/220101/108199, https://tex.stackexchange.com/a/33577/108199
 \ifdefined\NoMarkdown
-	\newcommand{\includeMD}[1]{\ignorespaces}	
+	\newcommand{\includeMD}[1]{\ignorespaces}
 	\newcommand{\todoparagraph}[1]{\ignorespaces}	
 \else
 	\makeatletter
-	\let\includeMD\input
+	\newcommand{\includeMD}[1]{\color{gray} \input{#1} \color{black}}
+	% \let\includeMD\input
 	\newcommand{\todoparagraph}[1]{\highlight[red]{#1}}
 \fi
 
@@ -856,7 +858,7 @@
 
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
-\renewcommand{\baselinestretch}{1.25}
+\renewcommand{\baselinestretch}{1.2}
 
 \makeatletter
 
