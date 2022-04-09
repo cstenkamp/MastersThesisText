@@ -6,11 +6,88 @@
 
 \section{Replication and Software Quality}
 
-\includeMD{pandoc_generated_latex/2_0_replication}
+Having established the goals of replicating an algorithm for a new domain, let us look at how such a replication should be performed and how software quality can be measured.
+
+\subsection{Replication and Reproducibility}
+\label{sec:howtoreplicate}
+
+The workflow of data science generally follows the same pattern: A paper states there is some problem \textit{X}, claims that their algorithm \textit{Y} may be good at problem \textit{X}, creates datasets \textit{Z} for \textit{X}, and then tests the code on these datasets. This test generally compares \textit{X} to alternative approaches from the literature and explores if any regularities in the algorithm \textit{Y} can be found. This may yield future research opportunities, showing what other domains the algorithm may work for as well.
+
+Replication fills this role by applying an existing algorithm to another domain. Results for this are important, as it helps to see first if the claimed results are valid, and if they work on datasets that are not artificial and specifically created for the sole purpose of testing the algorithm. Furthermore, the details of experiments in publsihed work are often opaque and omit important information to reproduce the algorithm. These issues are mitigated trough repetition: The robustness of the algorithm to changes in parameters or dataset is investigated. If changes in either of these have a major impact on the results, there is reason to doubt generalization of the algorithm, showing that it may not be good to solve problem \textit{X} after all.
+
+It is absolutely crucial in science to ensure that all claims that are made are reproducible and testable, ensuring ease of replication. Reproducibility is the pinnacle of \textit{Open Science}.\footnote{There is no single definition of open science, however reproducibility appears in most tries, such as \eg \url{https://www.talyarkoni.org/blog/2019/07/13/i-hate-open-science/}, accessed at \date{2022}{03}{25}} And \q{Open Science is just science done right}.\footnote{Quote from John Tennant, see \eg \url{https://soundcloud.com/tidningen-curie/jon-tennant-open-science-is-just-science-done-right}, accessed at \date{2022}{03}{25}} Reproducibility refers to the Ability to reproduce - computationally or experimentally - the methods used to produce a given result, by virtue of being accessible and understandable. Being a hot topic in psychology since the reproducibility crisis,\footnote{Baker M: 1,500 scientists lift the lid on reproducibility. Nature. 2016; 533(7604): 452-4. \url{https://www.nature.com/articles/533452a}} the topic is just es relevant in computer science research.\footnote{Mesirov JP: Computer science. Accessible reproducible research. Science. 2010; 327(5964): 415-6. \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3878063/}} In that realm, Reproducibility may be seen as sub-goal of (the more fundamental) Sustainability, as \eg by \textcite{Molder2021a}, who claim that \q{reproducibility alone is not enough to sustain the hours of work that scientists invest in crafting data analyses}.
+
+To ensure that the analysis performed in this thesis is sustainable and adheres to best scientific and software quality standards, let us look at at ways to formally define such.
+
+\subsection{Software Quality}
+\label{sec:reproducibility}
+
+The International Organization for Standardization (ISO) provides an official international standard for the evaluation of software quality as \textbf{ISO/IEC 25010:2011} \cite{2013ISOI}. The full title of the norm is \textit{ISO/IEC 25010:2011 Systems and software engineering - Systems and software Quality Requirements and Evaluation (SQuaRE)}. It has the objective to ensure the quality of software by providing objective and clearly defined standards for definitions of success regarding of software products. It classifies software quality in eight characteristics, which each consists of several sub-characteristics. The main characteristics are \textit{Functional Suitability, Performance Efficiency, Compatibility, Usability, Reliability, Security, Maintainability} and \textit{Portability}. Not all of these are relevant to projects like this, such as \textit{Security}, which mostly measures the ability to track actions and identity of users. 
+
+What is needed here are those goals relevant for sustainable data analysis. In this realm, the stated metrics align much with the hierarchy of aspects to consider for sustainable data analysis as published by \textcite{Molder2021a}, which is is reprinted as \autoref{fig:snakemake_aspect_hierachy}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{graphics/stolenfigures/snakemake_aspect_hierachy.png}
+	\slcaption{
+		Hierarchy of aspects to consider for sustainable data analysis. Reproduced from {\cite[Fig.1]{Molder2021a}} (Creative Commons Attribution License) \label{fig:snakemake_aspect_hierachy}
+	}
+\end{figure}
+
+Some important aspects to conduct proper computer science and data analysis that allows for \textbf{Sustainability} - allowing the analysis to be of lasting impact - thus include \cite{Molder2021a, 2013ISOI}:
+
+\begin{description}
+    \item[Functional Suitability] which means complete, correct and appropriate functionality.
+	\item[Reproducibility] \ie allowing validation and regeneration of results on the original or even new data. This understandable and well documented code (also \textit{Changeability and Stability})
+	\item[Maintainability and Adaptability] the ability to modify the analysis to answer extended or slightly different research questions by allowing modifications.
+	\item[Transparency] \ie the ability for others to understand it well enough to judge if it's technically as well as methodologically valid - also ensuring Understandability, Appropriateness and Accessibility, Analyzability and Testability.
+	\item[Scalability] \ie enabling the scalable execution of the algorithm and each involved step, including deployment on complex compute clusters, grids or clouds. This includes Performance Efficiency and efficient Resource Utilization.
+	\item[Modularity] \ie changes in one component have a minimal impact on others allowing for easy exchange and extension.
+\end{description}
+
+
+% \begin{description}
+%     \item[Functional Suitability], assessing the existance of a set of functions that satisfy the stated needs. It includes \textit{Functional Completeness, Functional Appropriateness (Suitability)} \textit{and Functional Correctness (Accuracy)}
+%     \item[Performance Efficiency], assessing the relationship between the performance and the amount of resources used, specifially \textit{Time behaviour, Resource Utilization} and \textit{Capacity}
+%     \item[Compatibility], consisting of \textit{Co-Existence and Interoperability}
+%     \item[Usability], assessing the effort needed for use, measured by \textit{Appropriateness Recognizability (Understandability), Learnability, Operability, User Error Protection, Accessibility} and \textit{Interface Aesthetics (Attractiveness)}
+%     \item[Reliability], assessing the capacity of software to maintain its level of performance, comprising \textit{Maturity, Fault tolerance, Recoverability} and \textit{Availability}
+%     \item[Security], among others allowing to track actions and identity: \textit{confidentiality, integrity, non-repudiation, accountability} and authenticity
+%     \item[Maintainability], assessing the effort needed to make modifications, which includes \textit{Analyzability, Testability, Modularity} (meaning changes in one component have a minimal impact on others), \textit{reusability} and \textit{modifiability (Changeability+Stability)}
+%     \item[Portability], measruing the ability to be transferred to other environments: \textit{Adaptability, Installability} and \textit{Replaceability}
+% \end{description}
+
+% Some important aspects to conduct proper (computer) science and data analysis that allows for \textbf{Sustainability} (such that the analysis is of lasting impact), may thus be \cite{Molder2021}:
+% \begin{description}
+% 	\item[Reproducibility] \ie allowing validation and regeneration of results on the original or even new data. Requiring understandable and well documented code.
+% 	\item[Adaptability] \ie the ability to modify the analysis to answer extended or slightly different research questions.
+% 	\item[Transparency] \ie the ability for others to understand it well enough to judge if it's technically as well as methodologically valid.
+% 	\item[Scalability] \ie enabling the scalable execution of the algorithm and each involved step, including deployment on complex compute clusters, grids or clouds. 
+% \end{description}
+
+% Principles of open science are very important to me, so I want to ensure that the claims I am making in this thesis are backed by code that is scalable, reproducible, modular, easily-understood, easily set up and run, well documented, ... . To support this, I will as often as necessary refer to the actual code in this thesis, to allow to understand and reproduce the claims and results, and also highly encourage to critically read everything here and check the respective code (...and let me know if you spot any errors! Just open a Github Issue!)
+
+
 
 \section{SIDDATA and Educational Resources}
 
-\includeMD{pandoc_generated_latex/2_0_siddata}
+% \includeMD{pandoc_generated_latex/2_0_siddata}
+
+To get a better understanding of the domain, this section elaborates on the specific use case of recommendation of education resources that shall be handled, and introduces the SIDDATA project and platform under which this thesis was developed.\footnote{As \textsc{Siddata} signifies both the project and the developed digital assistant, the all-upper 'SIDDATA' henceforth refers to the project, while the specific developed software will be denoted 'Siddata' or 'DSA'.}
+
+This thesis was started while working at the SIDDATA project, with the idea to add a recommender to the platform that can generate course recommendations with the user \textit{in the loop}. SIDDATA is a joint interdisciplinary project for \q{\emph{Individualization of Studies through Digital, Data-Driven Assistants}}\footnote{\url{https://www.siddata.de/en/}} of the universities Osnabrück, Bremen and Leibniz Universität Hannover, funded by the German \emph{Federal Ministry of Education and Research}.\footnote{BMBF. Funding number: 16DHB2124} 
+
+The project adresses the same problem as stated in the Introduction (\ref{sec:many_resources}), namely that e-learning and the amount of avilable resources increase, making the choice of right resources an increasingly relevant problem for the learning success of students. Its deliverable is a flexible data-driven \gls{dsa}, that supports students in higher education in their invidual learning and achievement of personal study goals by giving hints, reminders and recommendation for their individual study paths \cite{Schurz2021}, helping students in setting and achiving individual and self-regulated personal educational goals. This is in line with the increasing importance of skills such as self-organized knowledge acquisition and self-regulatory competencies due increasing importance of individualization in educational paths of the globalized learning environment \cite{Ehlers2019,Schurz2021}.
+
+For that, the collaborative project combines heterogenous data and information in a digital study assistant. Data is collected from multiple sources, such as the \gls{lms}, offers and resources of other universities and institutions, and data collected from its users. To allow for this heterogeniety and also future extensions, for example new data sources  such as \glspl{mooc} through several apis APIs, different front-ends, or different recommendation methods, the system relies on a highly modular and extensible architecture. The Frontend is realized as plugin for the  the university's \gls{lms} Stud.IP \cite{stockmann2005}. This not only allows for easy user access, but also to get data about courses from the LMS using cronjobs. The Frontend is connected over a RESTful API to the Backend, which is written in Python on basis of the Web Framework \textit{Django} and relies on a relational \textit{PostgreSQL} database to store information.
+
+The Backend consists of seperate encapsulated recommender modules in a loosely coupled architecture and a common ontology, allowing to easily add new subsystems. The modules generate recommendations towards personal educational goals on basis of the collected data, which are displayed to the user in the Frontend. What comprises a recommender is grouped from a user perspective, such that each each recommender focuses on a topic. The currently implemented recommenders include for example one to find peers with similar interests, get information about scientific careers, personality-based learning behaviour- and study tips, or information regarding local and remote courses and \glspl{oer}. Another module recommends courses using a combination of rule-based and modern \gls{ml} techniques that relate natural language queries with the courses known to the system (picked up in \autoref{sec:sidbert}) \cite{Schurz2021}.
+
+The system is currently in its third prototype, and preliminary evaluation has shown that modules that provide personal recommendation are most well received \cite{Schurz2021}. This and the ease of use to add new recommenders indicate a high likelyhood of success for adding a new module that recommends courses in the way as described above.
+
+The dataset used here was collected through the Siddata platform as well, which collected courses and events from the three universities currently connected to it, as well as other sources for \glspl{mooc} and other \glspl{oer} through respective APIs. More details in \autoref{sec:dataset_siddata}. It should be noted that the dataset is not artificially generated (unlike \mainalgos) but collected from current courses and their descriptions - making an algorithm for this domain incorporated as recommender to the platform a contribution with practical application.
+
+
 
 \section{Conceptual Spaces}
 
@@ -31,29 +108,26 @@ According to Gärdenfors, concept-representation in humans is represented by thr
     \item[Symbolic] represents observations by describing them in some specified language (formal logic, syllogisms, symbolism, classical AI, logical positivism)
 \end{description}
 
-Importantly, these levels are not in conflict, but different models of the same phenonemon where each cover distinct important aspects. The process of inducing a general rule from few samples for example is represented as pattern-matching on the firing patterns in the subconceptual level, which translates to the conceptual level as geometric reasoning through regions and direction. As another example, semantic relations such as hyponyms from the symbolic level are modelled as geometric sub-regions on the conceptual level. So on the one hand, automatically generated conceptual spaces could allow for high-level syllogistic reasoning on real-world data without the need to manually add countless facts. However it also provides a new way to model reasoning and inference for both other levels through geometric relations, providing explanations for the noisy subconceptual level and computationally less complex algorithms for the symbolic level. The validity of the statement \textit{a robin is a bird} is given because robins are gemmetrically a subregion of the region of birds.
+These levels are not in conflict, but different models of the same phenonemon, each covering distinct important aspects and each allowing a set of algorithms. The process of inducing a general rule from few samples for example is represented as pattern-matching on the firing patterns in the subconceptual level, which translates to the conceptual level as geometric reasoning through regions and direction. As another example, semantic relations such as hyponyms from the symbolic level are modelled as geometric sub-regions on the conceptual level. So on the one hand, automatically generated conceptual spaces could allow for high-level syllogistic reasoning on real-world data without the need to manually add countless facts. However it also provides a new way to model reasoning and inference for both other levels through geometric relations, providing explanations for the noisy subconceptual level and computationally less complex algorithms for the symbolic level. The validity of the statement \textit{a robin is a bird} is given because robins are gemmetrically a subregion of the region of birds.
 
-So on the one hand it's a framework for scientific theories, but on the other hand a model of human concept formation from phenomenal observations. Regardless of the theory's aspiration to accurately model human conceptualization and reasoning, it provides a useful knowledge representation method and tool that allows to model kinds of human reasoning with novel algorithms that cannot be done with both other well-researched methods \cite[Sec.~6.7]{Gardenfors2000a}. 
-
-In practical applications, it can serve as representational format to express semantic relations for the semantic web \cite{Gardenfors2004}. After years of trying to model information processing through pure deductive reasoning and classical ontologies (\eg RDS, OWL or WordNet), turns out there may be be more to it than strict is-a relationships and explicit, unambiguous, universal truths, as for example similarity, which CS can model due to its richer semantic structure. 
+Summarized, rregardless of the theory's aspiration to accurately model human conceptualization and reasoning, it provides a useful knowledge representation method and tool that allows to model kinds of human reasoning with novel algorithms that cannot be done with both other well-researched methods \cite[Sec.~6.7]{Gardenfors2000a}. Furthermore it can serve as representational format to express semantic relations for the semantic web \cite{Gardenfors2004} with a richer structure than classical ontologies (\eg RDS, OWL or WordNet) and thus allowing more than deductive reasoning and based on strict is-a relationships and explicit, unambiguous, universal truths.
 
 \subsection*{Definition}
 
-\todoparagraph{iff = if and only if}
-
-In conceptual spaces, concepts are represented as convex regions in domain-specific, human-interpretable spaces. For example, the concept of "apple" is a region that in the dimension "color" is somewhere between red and green, in the dimension "form" at roughly round, in the dimension "taste" somwhere between sweet and sour, etc. Every instance of an apple is thus a vector that lies inside the region of the concept. This allows for high-level reasoning, such as the question "does any Instance of concept X fit into my bag?" -> If the "size" dimension of the whole region is smaller than the size of my bag, it will.
+In conceptual spaces, concepts are represented as convex regions in domain-specific, human-interpretable spaces. \autoref{fig:apple_cs} represents a sample space for the concept of \textit{apple}, such that every instance of an apple is thus a vector that lies inside the region of the concept. This allows for high-level reasoning: The question \textit{\q{Will an apple fit into my bag?}} can be answered by checking if the \textit{size} dimension of the region is smaller than the dimension of the bag.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{graphics/stolenfigures/apple_space.png}
 	\slcaption{
-		CS for an apple. Stolen from \cite{Hernandez-Conde2017}, who in turn stole it from xyz
+		Inner form of a Conceptual Space for an apple, displayed as product of different properties, which are convex regions in different quality domain spaces. Reprinted from \cite{Hernandez-Conde2017}, who adapted it from \cite{Fiorini2013}.
 	}
+    \label{fig:apple_cs}
 \end{figure}
 
 
 
-\fbox{\begin{minipage}{37em}
+\fbox{\begin{minipage}{50em}
     \newtheorem*{theorem*}{Conceptual Space}
     \begin{theorem*}
         A conceptual space is a geometric structure used to encode the meaning of natural language terms, properties and concepts. The metric space is spanned by \emph{quality dimensions} denoting basic domain-specific properties based on perception or sub-symbolic processing. Natural language categories (\emph{concepts}) correspond to convex regions, whereas points denote individual objects (instances/\emph{entities}, allowing for geometric solutions to commonsense reasoning tasks such as \emph{betweeness} or \emph{induction}.
@@ -136,7 +210,7 @@ In formal logic/ontologies/lexical databases, semantic relations of concepts are
     Opposites         &                    & \textit{Set inverse}         & Humans \& Non-human animals \\ 
 
     Token Identity    & {\scriptsize Equality of Names, Synonymy } & \textit{Equal coordinates}   & Morning star \& Venus \\ 
-    Meronymy / Holonymy & {\scriptsize \textit{part-whole realationship} }& -             & Trees \& Leaves
+    Meronymy / Holonymy & {\scriptsize \textit{part-whole realationship} }& \textit{Product spaces} (see \cite{Fiorini2013}        & Trees \& Leaves
 \end{tabularx}
 
 \vspace{4ex}
@@ -249,7 +323,7 @@ To model the stuff in \autocite{fig:graphic_reasoning}, we need a good metric, a
 \section{Other Related Work}
 \label{sec:otherwork}
 
-This thesis will focus on the aforementioned algorithm, primarily considering \cite{Derrac2015} and on top of that only two follow-up works: \cite{Ager2018, Alshaikh2020}, which have shown to provide useful extensions for it without changing its core logic. This shall by no means mean that these are the only ones that could be considered.
+This thesis focuses on the aforementioned algorithm, primarily considering \cite{Derrac2015} and on top of that only two follow-up works: \cite{Ager2018, Alshaikh2020}, which have shown to provide useful extensions for it without changing its core logic. This shall by no means mean that these are the only ones that could be considered.
 
 \paragraph{Tag Genome} 
 
@@ -263,9 +337,11 @@ Generally, what is being done here corresponds to \textbf{Representation Learnin
 
 In the realm of \gls{nlp}, this also relates to \textbf{Topic Modeling}, which aims to extract multiple hidden themes from a given text corpus by discovering groups of co-occuring words unsupervisedly. A well-known algorithm for this is Latent Dirichlet Allocation (LDA) \cite{Blei2003}, which represents documents by its salient \textit{topics}, each of which being a cluster of natural language terms. This technique bases on the assumption that each text consists of various topics, which are in turn made up by various keywords, making it possible to represent texts as multinomial distribution over latent topics which are aggregations of these keywords. Assuming a hierachical bayesian distribution where each text of a corpus is represented as mixture of topics it contains, their unsupervised algorithm extracts these by approximating the underlying infinite mixture of topic with an expectation-maximization (EM) algorithm. This yields a representation where each text is explicitly represented by the most propable words according to this distribution for a finite number of most probable topics. The algorithm finds use in text classification and collaborative filtering, but relies on unflexible \gls{bow} representations, making it hard to incorporate additional information such as correlations between topics \cite{Ager2018}.
 
+\todoparagraph{LDA is still sometimes better than this algo} - see \autoref{tab:f1_mainalgos_me_short}
+
 
 \paragraph{Academic Interests Recommender}
-
+\label{sec:sidbert}
 Regarding the used domain, there is already a system incorporated into the Siddata-\gls{dsa} that aids students by finding and recommending educational resources. SidBERT \cite{Schrumpf2021DELPHI} extracts implicit information from courses and other learning material by their title by categorizing them into one of 905 classes derived from the third or fourth level of the \gls{ddc} \cite{Dewey1876}, a hierachical tree stucture system commonly used to categorize library books. SidBERT uses the same dataset as this work and classifies with a custom classification head ontop of a \gls{bert}-encoder \gls{ann} which is trained on 1.3 million book titles collected from three universities as well as the German National Library, currently achieving 45.2\% test accuracy (62.2\% recall) among 905 classes.
 
 \includeMD{pandoc_generated_latex/2_5_relatedwork}
@@ -276,14 +352,85 @@ Regarding the used domain, there is already a system incorporated into the Sidda
 
 \todoparagraph{dont forget the links for lsa und lda - are in lsa-long-md }
 
-Thus far, we have described the base algorithm that this thesis replicates. Before describing each of its step in details, it is useful to get a grasp of some general concepts of its components. Furthermore, we will to put it into the context of the field of computational \gls{nlp} and some of the required theoretical foundation and quickly look at what other tools can be used for some of its components.
+Thus far, we have described the base algorithm which this thesis replicates. Before describing each of its step in detail, it is useful to get a grasp of some general concepts relevant for it and its components. Furthermore, we will to put it into the context of the field of computational \gls{nlp} and elucidate some of the required theoretical foundation, and finally quickly look at what other techniques can be used for some of its components. \todoparagraph{Also, we need some general linear algebra bc after all these are vector spaces, so let's look quickly at projecting and playing around with coordinates}
 
+\subsection{Classical Vector Space Construction}
 
+\todoparagraph{Mention Distributional Hypothesis}
 
+The algorithm consists of several steps/components, each of it of course is an algorithm in itself. The first steps are basically classical linguistic tools: Preprocessing \textrightarrow ~Bag-of-NGrams \textrightarrow ~Quantification \textrightarrow ~Frequency Matrix \textrightarrow ~Dimensionality Reduction (MDS) - followed by SVM-Classification\&Scoring \textrightarrow ~Clustering \textrightarrow ~Re-Embedding.
+
+Many \gls{nlp} tasks rely on documents being represented as vectors, such as such as Information Retrieval, Recommendation, Text Classification, Translation, Sentiment Analysis among others \cite{Smith2017,bird2009natural,Devlin2019,Le2014,Mikolov2013a,Turney2010,Guo,Chen2018,Maas2011}. The process of turning a collection of texts document into numerical feature vectors is referred to as \textit{vectorization}. Let us explore some theoretical basis for that.
+
+According to \textcite{Turney2010} (who in turn base their work on \textcite{Lowe}), the construction of a \gls{vsm} from texts can be decomposed into a four steps:\footnote{When considering neural embeddings such as \gls{word2vec}, the separation of these steps is hidden in the algorithm and not as distinct, but the principles hold also in these techniques.}
+
+\begin{description}
+    \item[1) Building the Frequency Matrix] which starts with preprocessing such as tokenization followed by normalizing and possibly \gls{lemma}tizing the tokens amongst many other possible techniques, before counting frequencies of either words or \glspl{ngram}, yielding a matrix of \glspl{bow}.
+    \item[2) Transforming Raw Frequency Counts] \q{[B]ecause common words will have high frequencies, yet they are less informative than rare words} \cite{Turney2010}, it may make sense to adjust the weights of the elements of the frequency matrix.
+    \item[3) Smoothing the Frequency Matrix] So far, the matrix is noisy, extremely sparse and extremely high-dimensional. Dimensionality Reduction helps to counter all three issues.
+    \item[4) Calculating Similarities] of individual vectors as final step and aim of most algorithms. This can be done in various ways, a classical technique is to use the \gls{cos}.
+\end{description}
+
+Importantly, our algorithm differs from this four-step-process by injecting several additional steps before calculating similarities. This is because we hold the notion that similarity is necessarily context-dependent and there is no overall similarity (see \autoref{sec:reasoning}), which requires additional dissection of the final step.
+
+Lets look at what all this means
+
+\subsubsection{Bag-of-ngrams representation}
+\label{sec:techniques:bow}
 
 \includeMD{pandoc_generated_latex/2_6_requiredalgos}
 
-\icnludeMD{pandoc_generated_latex/LSA_LONG}
+
+\subsubsection{Word-weighting techniques}
+\label{sec:word_count_techniques}
+
+\todoparagraph{TODO: term? phrase? n-gram?}
+
+When comparing the \gls{bow}-representations of texts, it is reasonable to give more weight to \emph{surprising} words than to expected ones. \q{The hypothesis is that surprising events, if shared by two vectors, are more discriminative of the similarity between the vectors than less surprising events.} \cite[156]{Turney2010} Another crucial reason is, that individual texts in the corpus are of drastically varying length, so longer entities would naturally dominate shorter ones when only comparing the raw counts - considering relative frequencies instead of absolute ones alleviates such problems. Because of these reasons, in the algorithm it will often be talked about \glspl{quant}. The algorithms explained below transforms the raw frequency-counts of a document and an \gls{ngram} into some \emph{score}, dependent on the number of occurences of this term in this document as well as the counts of other \glspl{ngram} and other documents. This score is henceforth called a \gls{quant}.
+
+Let us consider term $t$, corpus $C$, document $d \in C$ (represented as \gls{bow}). Then:\\
+term-frequency $\text{tf}_{t,d}$: How often $t$ occurs in $d$\\
+document-frequency $\text{df}_t$: How many documents $\in C$ contain $t$\\
+summed term-frequency $\text{df}_{t,*} = \sum_{d' \in C} \text{tf}_{t,d'}$: How often $t$ occurs in any document $\in C$
+
+\paragraph{Tf-Idf} The most well-known technique formalizing this concept is the \gls{tf-idf}, which gives a term-document pair a higher weight if the term is generally rare in the corpus (low \textit{df}) and frequent in the respective document (high \textit{tf}):
+\vspace{-3ex}
+$$ w_{t,d} = \text{\textit{tf}}_{t,d} * log(\frac{|C|}{df_t}) $$
+
+%see also: https://towardsdatascience.com/3-basic-approaches-in-bag-of-words-which-are-better-than-word-embeddings-c2cbc7398016
+%\cite{Turney2010} (sec 4.2): Salton and Buckley (1988) defined a large family of tf-idf weighting functions and evaluated them on information re- trieval tasks, demonstrating that tf-idf weighting can yield significant improvements over raw frequency
+
+\paragraph{PPMI}
+% See also: https://stackoverflow.com/a/58725695/5122790
+
+\textcite{Turney2010} suggested to use the \gls{ppmi} measure instead of \gls{tf-idf} to weight the counts in \glspl{doctermmat}, relying on \cite{Bullinaria2007}'s work taking into account psychological models to extract information about lexical semantics from co-occurence statistics. According to \cite{Turney2010,Bullinaria2007}, \gls{ppmi} performs most plausible to measure semantic similarity in word-context matrices compared to human evaluation. For that reason, \textcite{Derrac2015} and its follow-up works \cite{Ager2018,Alshaikh2020} rely solely on this technique. %(sec 4.2) of \cite{Turney2010}: Bullinaria and Levy (2007) demonstrated that PPMI performs better than a wide variety of other weighting approaches when measuring semantic similarity with word-context matrices.
+Like tf-idf, it weights terms that are strongly associated with a document highly by favoring terms frequently associated with document $d$ while infrequent in the corpus overall. For that, it uses the \textit{log} of the probability of the term-document-combination, normalized by the probability of this $d$ with any $t$ and this $t$ with any $d$:
+\vspace{-3ex}
+\begin{align*}
+   w_{t,d} &= max\left(0, log\left( \frac{p_{d,t}}{\sum_{t'}p_{d,t'}*\sum_{d'}p_{d',t}} \right) \right) \\
+   p_{d,t} &= \frac{\text{tf}_{t,d}}{\sum_{d'}\sum_{t'} \text{tf}_{t',d'}}
+\end{align*}
+
+\todoparagraph{In practical terms}, efficient calculation of the PPMI-score for high-dimensional \glspl{doctermmat} requires excessives amounts of RAM, as it does not appear to be implemented in any major Python-library and its calculating requires multiplication of huge matrices.
+
+
+\subsubsection{Dimensionality Reduction and Latent Space Embedding}
+
+Next step is to smooth the frequency matrix. Goal is to keep comparison performance high, but make the  process faster and also ignore irrelevant noise \cite{Turney2010}.
+
+We start with sparse vectors, and then \q{some form of dimensionality reduction is typically used to obtain vectors whose components correspond to concepts.} \cite{Derrac2015}
+
+
+\paragraph*{LSA/LSA}
+
+\textcite{Deerwester}
+
+In fact, when using the right algorithms this has the additional effect to also find latent topics from tehse texts, which IMPOROVES similarity measurements bc now it's as if the latent stuff is in there
+
+LSI relies on the \gls{distribhyp} in that it decomposes the matrix into the product of three matrices and then compresses them. Similar to AutoEncoders, if there is hidden information in the text than that will be used for this compression! 
+
+
+includeMD{pandoc_generated_latex/deleteme}
 
 
 

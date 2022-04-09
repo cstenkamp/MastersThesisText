@@ -1,166 +1,99 @@
 Note that those that are not defined here are likely to be found in the Glossary \nameref{glo:defs}.
 
-\cite{Ager2018}: \q{However, while LDA only uses bag-of-words (BoW) representations, our fo- cus is specifically on identifying and improving features that are modelled as directions in seman- tic spaces. One advantage of using vector spaces is that they offer more flexibility in how additional information can be taken into account, e.g. they allow us to use neural representation learn- ing methods to obtain these spaces.}
 
-* Base algorithm is explained and consists of multiple components: preprocessing -> bag-of-ngrams -> quantification -> frequency matrix -> quantification -> mds -> svm -> kappa. Let's get a grasp of the general concepts before going into algorithm details. Also we'll quickly look into what other tools could have been used. As stated above, the algorithm uses generally classical linguistic tools
 * Generally there's the dichotomy classical/smbolistic linguistic <-> connectionistic stuff  (SEE QUOTES!)
     * classical:
         * on the extreme semantic knowledge bases (see reasoning), which can however also help our cause by looking at hyponyms explicitly
         * rely on BoW / Ngrams (loose word order, synonyms compeltely different)
+            * to mitigate this: smoothing / noise reduciton / diminsionality reduction / finding latent stuff / finding ways to express similar things similarly (all the same! all done by dimens. red.)
     * connectionistic: GANs, word2vec and BERT
         * basically all NLP tasks profit from using embeddings, in contrast to BoW similar words are close 
-* And then also stuff like LSA/LDA, which are kinda doing the same as the entire algorithm (see \autoref{tab:f1_mainalgos_me_short}: LDA is still sometimes better than this algo)
-* Also, we need some general linear algebra bc after all these are vector spaces, so let's look quickly at projecting and playing around with coordinates
-
-* DESC15: "In information retrieval, it is common to represent documents as vectors with one component for every term occurring in the corpus. In many other applications (and sometimes in information retrieval) some form of dimensionality reduction is typically used to obtain vectors whose components correspond to concepts. One of the most popular techniques, called latent semantic analysis (LSA [39]), uses singular value decomposition (SVD) to this end. Multi-dimensional scaling (MDS [40]) is another popular method for dimen- sionality reduction, which builds a vector-space representation from pairwis
 
 
-
-## Classical Linguistics Pipeline
-
-\cite{Lowe,Turney2010} provide a lot of theoretical basis for NLP and what this generally entails
-
-preprocessing -> bag-of-ngrams -> quantification -> frequency matrix -> smoothing
-
-<!-- 
-I can take a bit of the definitions from here:
-  https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction 
-  ("We call vectorization the general process of turning a collection of text documents into numerical feature vectors. This specific strategy (tokenization, counting and normalization) is called the Bag of Words or “Bag of n-grams” representation. Documents are described by word occurrences while completely ignoring the relative position information of the words in the document.")
--->
-
-\textcite{Turney2010} (who in turn rely on \cite{Lowe}) say that generally when generating a \gls{vsm} from texts (without word2vec and this fancy shit), you need these steps:
-genrally, VSM construction can be decomposed into a four-step forcess
-
-
-\begin{description}
-    \item[1) Build the Frequency Matrix] start by tokenizing, normalizing, annotating (maybe lemmatizing) etc as preprocessing, then calculate frequencies by counting.
-    \item[2) Transform raw frequency counts] \q{we may want to adjust the weights of the elements in the matrix, because common words will have high frequencies, yet they are less informative than rare words} \cite{Turney2010}
-    \item[3) Smooth the Space/Frequency matrix] to reduce the amount of random noise and to fill in some of the zero elements in a sparse matrix: \textbf{Dimensionality Reduction}
-    \item[4) Calculate similarities] with stuff like cosine-dist. (actually,  there are many different ways to measure the similarity of two vectors.)
-\end{description}
-
-As elaborated, important for us is that we don't have ONE SINGLE SIMILARTIY; BUT THAT IT's context-dependent!!!!
-
--> we will go into some details on these steps, LSI is a good candidate to smooth the frqeuncy matrix but bc as we said we need a metric space we (like \cite{Derrac2015}) do MDS
-
-
-### Bag-of-Words
-
-\label{sec:techniques:bow}
-
-* Write how a Bag-Of-Words is created and what it shortcomings are and find a source that compares how good a Bag-Of-Words (that necessarily doesn't contain and information about their position) can be, compared to better document embeddings like LSTMs, Doc2Vec or whatever else there is (I mean after all, a "not" may be ignored and the meaning inversed which should be supergau), and also how much better it becomes if one also consideres 2-grams, 3-grams, ...
-
-
-* There is a very important problem in information retrieval and also for our case: Natural language is ambiguous! when trying to match words of queries with words of documents, you want to retrieve on the basis of conceptual content, and individual words provide unreliable evidence about the conceptual topic or meaning of a document. (the words used in the query may not be the same as the ones in the documents, problems here are synonymy (multiple words, same meaning) and polysemy (multiple meanings, same words))
-* There are usually many ways to express a given concept, so the literal terms in a user’s query may not match those of a relevant document, or you'll get results for another meaning of the word you're looking for.
-=> Very important thing is thus to make similar words close. Both LSI and neural embeddings want to solv ethis.
-dass LSA das bag-of-words problem beheben würde
-
-
-The only information that can be taken into account when comparing two texts, or a text and a query, are the words it is made up from (...and their constellation, which is why \gls{word2vec} works better than \gls{bow}-approaches). 
-
-
-### Word-weighting
-
-\subsubsection*{Word-weighting techniques}
-\label{sec:word_count_techniques}
-
-So, making 100\% sure:
-
-\begin{itemize}
-    \item term-frequency tf(term, doc): How often term occurs in doc
-    \item doc-frequency df(term):  the number of documents in the corpus that contain the word
-    \item summed term-frequncy sdf(term): How often term occurs in ANY DOC = tf(term, doc) forall doc
-\end{itemize}
-
-When comparing the \gls{bow}-representations of texts, it is reasonable to give more weight to \emph{surprising} words and less weight to expected ones. \q{The hypothesis is that surprising events, if shared by two vectors, are more discriminative of the similarity between the vectors than less surprising events.} \cite[156]{Turney2010} 
-Another crucial reason is, that the entities's are of drastically varying length, so longer entities would naturally dominate shorter ones when only comparing the raw counts - considering relative frequencies instead of absolute ones alleviates such problems.
-
-Because of these reasons, in the algorithm it will often be talked about \glspl{quant}. The algorithms explained below transforms the raw frequency-counts of a document and an \gls{ngram} into some \emph{score}, dependent on the number of occurences of this term in this document as well as the counts of other \glspl{ngram} and other documents. This score is henceforth called a \gls{quant}.
-%TODO: term? phrase? n-gram?
-
-#### tf-idf
-\paragraph{Tf-Idf}
-
-\gls{tf-idf} 
-
-Words that are rare overall and frequent in this document are weighted highly.
-
-tf-idf for term $x$ within document $y$:
-
-$$ w_{x,y} = \text{\textit{tf}}_{x,y} * log(\frac{N}{df_x}) $$
-
-with $\text{tf}_{x,y}$ as the term-frequency of $x$ in $y$, \
-$df_x$ as the document-frequency (the number of documents containing $x$) \
-and $N$ being the total number of documents
-
-%see also: see also: https://towardsdatascience.com/3-basic-approaches-in-bag-of-words-which-are-better-than-word-embeddings-c2cbc7398016
-
-%\cite{Turney2010} (sec 4.2): The most popular way to formalize this idea for term–document matrices is the tf-idf (term frequency × inverse document frequency) family of weighting functions (Sp¨arck Jones, 1972). An element gets a high weight when the corresponding term is frequent in the corresponding document (i.e., tf is high), but the term is rare in other documents in the corpus (i.e., df is low, and thus idf is high). Salton and Buckley (1988) defined a large family of tf-idf weighting functions and evaluated them on information re- trieval tasks, demonstrating that tf-idf weighting can yield significant improvements over raw frequency
-
-#### PPMI
-
-\paragraph{PPMI}
-
-% * See also: https://stackoverflow.com/a/58725695/5122790
-
-It was suggested by \cite{Turney2010} to use the \gls{ppmi} measure instead of tf-idf to weight the counts in \glspl{doctermmat}, relying on \cite{Bullinaria2007}'s work taking into account psychological models to extract information about lexical semantics from co-occurence statistics. According to \cite{Turney2010,Bullinaria2007}, \gls{ppmi} performs most plausible to measure semantic similarity in word-context matrices compared to human evaluation. %(sec 4.2) of \cite{Turney2010}: Bullinaria and Levy (2007) demonstrated that PPMI performs better than a wide variety of other weighting approaches when measuring semantic similarity with word-context matrices.
-
-
-
-The Paper uses the following \gls{ppmi} definition:\\ 
-
-\noindent $e \in E$ is an entity, $D_e$ a document (bag of words) where that entity occurs.\\
-We want to quantify for each term occuring in the corpus $\{D_e | e \in E\}$ how strongly it is associated with $e$.\\
-$c(e,t)$ is the number of times term $t$ occurs in document $D_e$. \\
-The weight $ppmi(e,t)$ for term $t$ in the vector representing $e$ is then:
-\begin{align*}
-ppmi(e,t) &= max\left(0, log\left( \frac{p_{et}}{p_{e*}*p_{*t}} \right) \right) \\
-          &= max\left(0, pmi(e,t) \right) \\
- pmi(e,t) &= log\left( \frac{p_{et}}{p_{e*}*p_{*t}} \right) \\          
-   p_{et} &= \frac{c(e,t)}{\sum_{e'}\sum_{t'} c(e',t')} \\
-   p_{e*} &= \sum_{t'}p_{et'} \\
-   p_{*t} &= \sum_{e'}p_{e't} \\
-\end{align*}
-
-\noindent log of the probability of the $e$-$t$-combination (count of this vs count of all), normalized by the probability of this $e$ with any $t$ times this $t$ with any $e$.\\
-To quote the paper: "PPMI will favor terms which are frequently associated with the entity $e$ while being relatively infrequent in the corpus overall"
-
-\vspace{30px}
-
-I found this definition:
-\begin{align*}
-ppmi(X,i,j) &= max(0, pmi(X,i,j)) \\
-pmi(X,i,j)  &= log\left( \frac{X_{ij}}{expected(X,i,j)} \right) \\
-            &= log\left( \frac{P(X_{ij})}{P(X_{i*}) * P(X_{*j})} \right)
-\end{align*}
 
 
 ### Dimensionality reduction & Latent Dimension detection ( & Topic Modeling )
 
-\subsection{Dimensionality Reduction}
-
-
-* We said before that we want to find latent topics (hidden/potential dimensions) from the texts. LSI/LSA & LDA are cool bc they rely on some form of the distrib hypothesis and put everything into a matrix and then find latent stuff using maths by compressing the matrix, assuming that if there is hidden information that will be what it's compressed onto (think autoencoders)
-* Kinda "clustering" the terms \cite{Derrac2015, VISR12}: if eg. "love story" and "hilarious" are applied to an item, it is likely that "romantic comedy" is also relevant
-* Two techniques: LSA (mainly dimension reduction & noise reduction) and LDA (mainly topic modeling) -> LDA does the same thing as the entire algorithm considered here 
-
-
-
-
-\cite{Derrac2015}: some form of dimensionality reduction is typically used to obtain vectors whose components correspond to concepts. One of the most popular techniques, called latent semantic analysis (LSA [39]), uses singular value decomposition (SVD) to this end. Multi-dimensional scaling (MDS [40]) is another popular method for dimen- sionality reduction, which builds a vector-space representation from pairwise similarity judgements.
-
-
-DESC15: "In information retrieval, it is common to represent documents as vectors with one component for every term occurring in the corpus. In many other applications (and sometimes in information retrieval) some form of dimensionality reduction is typically used to obtain vectors whose components correspond to concepts. One of the most popular techniques, called latent semantic analysis (LSA [39]), uses singular value decomposition (SVD) to this end. Multi-dimensional scaling (MDS [40]) is another popular method for dimen- sionality reduction, which builds a vector-space representation from pairwise similarity judgements."
-
 
 #### Latent Semantic Analysis (LSA) / Latent Semantic Indexing (LSI)
 
-[...]
+LSA VERY LONG (you can delete everything here)
+
+* Invented for information retrieval \cite{Deerwester}. LSI is alternative name for LSA in linguistics (specifially information retrieval). (Truncated SVD applied to document similarity is called Latent Semantic Indexing (LSI), but it is called Latent Semantic Analysis (LSA) when applied to word similarity.)
+
+* The only information that can be taken into account when comparing two texts, or a text and a query, are the words it is made up from 
+
+However what you really want to compare is their conceptual/semantic content, and that unfortunately doesn't have a 1:1 correspondance to words - language is highly redundant, and the problems with that approach are synonymy (multiple words with one meaning) and polysemy (one word with multiple meanings), so equal words don't necessarily entail same concepts, and same concepts doesn't automatically mean same words (different people use different words in description & search - doc and query are only a sample description which could have used completely different words) Automatically adding synonyms worsens the polysemy problem.
+
+if there is a great deal of structure, i.e. the occurrence ofsome patterns of words gives us a strong clue as to the likely occurrence of others, then data from one part (or all) of the table can be used to correct other portions
+
+assume there is some underlying latent semantic structure in the data that is partially obscured by the randomness of word choice with respect to retrieval. With statistical techniques, this latent structure can be uncovered (LSI). This takes both terms and documents and projects them into a "semantic" space wherein terms and documents that are closely associated are placed near one another. terms that did not actually appear in a document may still end up close to the document, if that is consistent with the major patterns of association in the data. 
+    * Distributional Hypothesis! Because if eg. "love story" and "hilarious" are applied to an item, it is likely that "romantic comedy" is also relevant, which may apply \cite{Derrac2015, VISR12}.
+    * useful if something "may just as well have been in there"
+
+Position in the space then serves as the new kind of semantic indexing, and retrieval proceeds by using the terms in a query to identify a point in the space, and documents in its neighborhood are returned to the user
+
+So LSA uses truncated singular value decomposition (SVD). SVD represents both terms and documents as vectors in a space of choosable dimensionality, and the dot product or cosine between points in the space gives their similarity
+
+* designed to solve aforementioned fundamental information retrieval problem \cite{Deerwester} - the unreliability of term-document-association (synonmy - term in query != term in doc, and also term in query == term in wrong doc) Treats it as statistical problem: assume there is an underlying latent semantic structure in the data that is partially obscured by the randomness of word choice with respect to retrieval - use statistical techniques to reduce noise!!
+    * The terms used to describe or index a document typically contain only a fraction of the terms that users as a group will try to look it up under. Automatically adding synonyms worsens the polysemy problem. words in query and document are both only one sample description of the intended documents (-> latent info!) -> find some way to predict what terms "really" are implied by a query or apply to a document on the basis of the fallible sample actually found there.
+    * Queries against a set of documents that have undergone LSI will return results that are conceptually similar in meaning to the search criteria even if the results don’t share specific word(s) with the search criteria.
+
+* Analyses relationships between a set of documents and the terms they contain 
+    * if there is a great deal of structure, i.e. the occurrence ofsome patterns of words gives us a strong clue as to the likely occurrence of others, then data from one part (or all) of the table can be used to correct other portions.
+        *  We want to use the matrix of observed occurrences of terms applied to documents to estimate parameters of that underlying model
+        * want: high-dim representation that caputres relation, done mathematically where docs & terms are explicitly represented in the same space, and retrieve documents from query terms directly, without rotation or interpretation of the underlying axes
+        * => SVD represents both terms and documents as vectors in a space of choosable dimensionality, and the dot product or cosine between points in the space gives their similarity
+    * by using maths, specifially matrix factorization (think principal components - express the original doc-term-matrix as multiplication of three other matrices, one being the "hidden information" and than ensure to only take the important one for that), more specifically singular-value decomposition which produces  a "semantic" space wherein terms and documents that are closely associated are placed near one another. terms that did not actually appear in a document may still end up close to the document, if that is consistent with the major patterns of association in the data.
+        * create DTM and on that run SVD reduce #rows, which identifies patterns in the relationships between the terms and concepts contained in an unstructured collection of text. Distributaitnal Hypothesis.
+        * important is the rank-reduced part - it finds a low-rank approximation! makes it less noisy and less sparse!
+            * The consequence of the rank lowering is that some dimensions are combined and depend on more than one term: {(car), (truck), (flower)} --> {(1.3452 * car + 0.2828 * truck), (flower)} This mitigates the problem of identifying synonymy, as the rank lowering is expected to merge the dimensions associated with terms that have similar meanings. It also partially mitigates the problem with polysemy, since components of polysemous words that point in the "right" direction are added to the components of words that share a similar meaning. 
+        * specific algo: 
+            * matrix decomposition on the document-term matrix using Singular value decomposition to learn latent topics 
+                -> m = #terms; n = #topics | Term-Document-Matrix (m*m) = words-per-topic (m*n) * topic-importance (n*n diagonal) * topics-distribution-across-docs (n*n singular)
+            * SVD is a matrix factorization method that represents a matrix in the product of two matrices.
+                -> M (m*m) = U (m*n left singular) * E (n*n diagonal with pos real vals) * V* (n*m; transpose of m*n right singular)
+                    (diagonal: values not on main diag = 0; singular: singular if determinant=0 or a square matrix that does not
+        * These special matrices show a breakdown of the original data into linearly independent components or "factors". In general many of these components are very small, and may be ignored, leading to an approximate model that contains many fewer factors. Each of the original documents’ similarity behavior is now approximated by its values on this smaller number of factors. The result can be represented geometrically by a spatial configuration in which the dot product or cosine between vectors representing two documents corresponds to their estimated similarity
+        * \q{This rectangular matrix is again decomposed into three other matrices of a very special form} - The resulting matrices contain "singular vectors" and "singular values" - \q{breakdown of the original relationships into linearly independent components or factors. Again, many of these components are very small, and may be ignored, leading to an approximate model that contains many fewer dimensions} - In this reduced model all the term-term, document-document and term-document similarity is now approximated by values on this smaller number of dimensions
+
+* Idea: reduce dimensions for classification - distributional hypothesis says similar words are then close 
+    * How: construct term-document-matrix (using count-occurence, TF/IDF; (VISR12 take binary). Because that is generally very high-dimensional and sparse (and either noisy or includes many low-frequency words), we want to reduce dimensions - for that we use truncated/rank-reduced SVD. Based on this Matrix Factorization, the doc-vectors+the pseudocods are transfomred into a lower-dimensional spaces, and tag-lsi-sim(t,i) is then tha cosine similiarity of a document and the term making up the pseudodoc
+    * \gls{doctermmat}, then dimensionality reduction to get vectors that correspond to concepts. This one \q{applies rank-reduced singular value decomposition to a term-document matrix in order to express the documents and terms in a lower dimensional concept space} \cite{VISR12}
+
+* \textcite{VISR12} use it to find relationships between tags and documents by the cosine similiarity in this concept space: the closeness of a document to a tag is the cosine similarity of the LSI-embedded document and an LSI-embedded pseudo-document that consists of only that tag -- So this packs documents and terms into the same space and expresses their closeness - and thus may be a good alternative to the entire svm-stuff: why not find relevance of keywords/tags per document by this instead of our algorithm (\todoparagraph{come back to this in discussion}) (from \cite{Deerwester}: retrieval proceeds by using the terms in a query to identify a point in the space, and documents in its neighborhood are returned to the user. )
+
+* could use LSA even to find the name of the semantic direction (if the vector of a document is closest to the vectors of the respective entities) 
+(-> DISCUSSION)
+
+* SVD: Matrix Decomposition algorithm (factorizes a matric into a product of matrices).  find the most valuable information and use a lower dimension to represent the same thing. 
+
+* Why not used here? \cite{Derrac2015}: \q{SVD produces a representation in which entities correspond to vectors, which should be compared in terms of cosine similarity rather than Euclidean distance} -> spatial relations such as betweeness and parallism wouldn't make sense
+
+
+
+
+
+
+
+
+
+
+
+
+For an intuitive understanding, go for 
+https://towardsdatascience.com/2-latent-methods-for-dimension-reduction-and-topic-modeling-20ff6d7d547 
+or 
+https://www.datacamp.com/community/tutorials/discovering-hidden-topics-python
+or 
+https://en.wikipedia.org/wiki/Latent_semantic_analysis#Rank-reduced_singular_value_decomposition
+
+
 
 #### MDS
 \subsubsection*{Multi-dimensional Scaling}
 
+Multi-dimensional scaling (MDS [40]) is another popular method for dimen- sionality reduction, which builds a vector-space representation from pairwise similarity judgements."
 
 % Wir müssen some sort of dimensionality reduction machen, und MDS , das versucht distances zu erhalten, ist da natürlich nen guter kandidat (siehe Kurs, Slides 2, von Nico)
 
@@ -205,6 +138,7 @@ occur in its corresponding text-corpus is highly relevant. To do that, WordNet \
 \subsection{Word Embeddings}
 \label{sec:embeddings}
 
+The only information that can be taken into account when comparing two texts, or a text and a query, are the words it is made up from (...and their constellation, which is why \gls{word2vec} works better than \gls{bow}-approaches). 
 
 
 werde ich vielleicht noch benutzen zum representative-terms-fürs-cluster-finden. BERT is the best one, blablabla. 
@@ -222,3 +156,4 @@ TODO: Ist word2vec schon nen euclidian space? Why/Why not?
 
 So how do we project the point onto the plane?
 * [https://stackoverflow.com/a/17661431] all you have to do is find the perpendicular (abbr here |_) distance from the point P to the plane, then translate P back by the perpendicular distance in the direction of the plane normal. The result is the translated P sits in the plane.
+<!-- \includeMD{pandoc_generated_latex/2_7_seperatrixdistance} -->

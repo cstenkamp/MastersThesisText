@@ -18,9 +18,12 @@
 %   openright,
   hidelinks,
   bibliography=totocnumbered,
-	captions=tableheading,
-	BCOR=10mm
+  captions=tableheading,
+  BCOR=5mm,
 ]{scrreprt}
+
+\usepackage{geometry}
+\geometry{a4paper, bottom=20mm}
 
 % ====================== /parts from MastersDoctoralThesis.cls ======================
 %	HEADERS AND FOOTERS
@@ -144,8 +147,6 @@
 \newcommand{\tabitem}{\textbullet~~}
 
 
-\usepackage{geometry}
-\geometry{a4paper, bottom=20mm}
 
 %\usepackage[text={7in,10in},centering]{geometry}  %such that appendices etc can define new margins etc
 \usepackage{caption}  % https://tex.stackexchange.com/a/176175/108199
@@ -858,7 +859,7 @@
 
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
-\renewcommand{\baselinestretch}{1.2}
+\renewcommand{\baselinestretch}{1.15}
 
 \makeatletter
 
@@ -919,6 +920,7 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 
 
 
+\newgeometry{bottom=15mm, top=30mm, inner=28mm, outer=24mm}
 
 \tableofcontents
 \listoffigures
