@@ -1,4 +1,4 @@
-Thesis goals: We want to automatically generate conceptual spaces for the domain of educational resources to generate explainable recommendation. So far, we established  that Conceptual Spaces are a good framework for that. The part that's missing is the automatic generation. 
+So far, we established  that Conceptual Spaces are a good framework for that. The part that's missing is the automatic generation. 
 
 ### Mehr vorgeplänkel
 
@@ -13,12 +13,7 @@ So far, the area of application for CS has been small. \cite{Alshaikh2020} say \
 
 Standard problem is that they would have to be manually generated, which of courses is a lot of work, which is where the work of \textcite{Derrac2015} comes in - to generate them in a data-driven fashion.
 
-While the theory is often critizised as provoding no benefit because instead of knowledge bases you'd now have to create CS, Gärdenfors hatte actually pretty specific instructions on how to create them computationally:
 
-\cite{Gardenfors2000a} also said stuff like "Dimensionality Reduction from the high-dimensional input (neurons) eg using MDS into a euclidian space, and then geometric reasoning on that" including some examples of kinds of reasoning, so actually the exact algorithm \cite{Derrac2015} did was extremely naheliegend (put some obvious NLP modelling to that like \cite{Turney2010} explained and you're pretty much exactly at their algorithm) 
-
-He even has a chapter "conceptual aspects", where he suggests vector space models, dimensionality reduction algorithms, ANN architectures, ... (for all of the 3 levels): 
-The information received by the receptors is too unstructured, so a way of transforming the input into a more \textit{economic} form of representation with a reduced number of dimensions that can be handled on the conceptual or semoblic level is needed \cite[221]{Gardenfors2000a}. Gärdenfors suggests MDS (especially good when dealing with a \textit{phenonemal} CS with pairwise distance judgements from a subject's perception), Shephard's algorithm which reduces number of dimensions sucessively until the rank order would change sustantially, or even ANNs, concretely Kohonen's Self-organizing maps \cite{Kohonen1997}, which automatically reduce the representational complexity of the input while preserving similarities (of beliebiger distance function) among the different input vectors by mapping input vectors with common featurs to \textit{neighboring} neurons in the output map, thus preserving topological relations while making it lower-dimensional.
 
 In any case, we often map regions in the high-dimensional space to point-embeddings, however according to \cite[222]{Gardenfors2000a} that's a feature not a bug because that is GENERALIZATION.
 
@@ -27,7 +22,7 @@ In any case, we often map regions in the high-dimensional space to point-embeddi
 
 Like we said, \cite{Gardenfors2000a} said "Dimensionality Reduction from the high-dimensional input (neurons) eg using MDS into a euclidian space, and then geometric reasoning on that" 
 
-The work of \cite{Derrac2015} is great because it basically does what Gärdenfors suggested using classical AI algorithms, and \cite{Ager2018} and \cite{Alshaikh2019} provided some useful additions for it without changing the main logic. So, we'll work with their algorithm, also only making small improvemenents. So the two main areas of work are implementing the original algorithm, and changing small details of it where most appropriate such that it works well for the domain we're interested in.
+The work of \cite{Derrac2015} is great because it basically does what Gärdenfors suggested using classical AI algorithms, and \cite{Ager2018} and \cite{Alshaikh2020} provided some useful additions for it without changing the main logic. So, we'll work with their algorithm, also only making small improvemenents. So the two main areas of work are implementing the original algorithm, and changing small details of it where most appropriate such that it works well for the domain we're interested in.
 
 * Important Features: 
     * Unsupervised, data-driven (in contrast to \cite{VISR12})
@@ -53,7 +48,7 @@ Core assumption then is that 1) words/phrases describing semantically meaningful
 Linear classifiers have the advantage that their orthogonal can then directly serve as feature axis. 
 Thus, if those are given, feature directions can be identified by running such a linear classifier for every single word/phrase that predicts from the embedding whether the word occurs in the descriptions. The performance of the classifier is the extend to which the word describes a simantically meaningful feature, our basic directions.
 
-So, the movies are grouped into those that contain the words from the cluster often enough vs those that don't. A support-vector-machine subsquently finds a hyperplane that best divides the two groups (eg. scary and non-scary), and its quality is assessed. 
+So, the movies are grouped into those that contain the word often enough vs those that don't. A support-vector-machine subsquently finds a hyperplane that best divides the two groups (eg. scary and non-scary), and its quality is assessed. 
 
 Concretely, \cite{Derrac2015} use Cohen's kappa score to assess the performance, comparing not the bare performance but rather if the ranking by distance to decision hyperplane corresponds to ranking of number of occurences of that word.
 <!-- (Why is this reasonable? [Wie war das mit stopwords undso..? War das nicht in \cite{Lowe}]) -->
@@ -132,32 +127,3 @@ TALK ABOUT that actually, in CS concepts (=types) are regions, BUT we have only 
         * ..however we use cosine distance instead of euclidian
 
 
-
-#### From CS course
-
-* Larger context: VSMs \cite{Turney2010}:
-    * Term-Document Model for similarity of documents
-        * dimensions = terms in the docs (doc-term-matrix)
-        * bag-of-word hypothesis: documents with similar words have similar meaning
-    * Word-Context-model: simiarity of words    
-        * dimensions somehow encodde context word can occur in (explicitly through neural models))
-        * distributional hypothesis: words that occur in similar context have similar meanings 
-    * pair-pattern model: similarity of relations
-        * dimensions = word-pairs that can occur in relation
-        * extended distributional hypothesis: releations that occur with similar word paris have similar meaning
-
-* Distance = inverse similarity
-    * euclidian, manhattan
-    * cosine similarity for vectors
-
-* regions and betweeness
-    * convex hull as the set of all convex combinations of a point
-    * can be done by linear programming with polynomial cost
-
-* properties we want beyond VSMs  
-    * metric space, general distance
-    * topological space (neighborhood relation)
-
-* Algorithms: 
-    * MDS
-    * SVD

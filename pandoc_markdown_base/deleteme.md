@@ -14,6 +14,17 @@ Note that those that are not defined here are likely to be found in the Glossary
 
 ### Dimensionality reduction & Latent Dimension detection ( & Topic Modeling )
 
+* Larger context: VSMs \cite{Turney2010}:
+    * Term-Document Model for similarity of documents
+        * dimensions = terms in the docs (doc-term-matrix)
+        * bag-of-word hypothesis: documents with similar words have similar meaning
+    * Word-Context-model: simiarity of words    
+        * dimensions somehow encodde context word can occur in (explicitly through neural models))
+        * distributional hypothesis: words that occur in similar context have similar meanings 
+    * pair-pattern model: similarity of relations
+        * dimensions = word-pairs that can occur in relation
+        * extended distributional hypothesis: releations that occur with similar word paris have similar meaning
+
 
 #### Latent Semantic Analysis (LSA) / Latent Semantic Indexing (LSI)
 

@@ -127,7 +127,7 @@ In conceptual spaces, concepts are represented as convex regions in domain-speci
 
 
 
-\fbox{\begin{minipage}{50em}
+\fbox{\begin{minipage}{40em}
     \newtheorem*{theorem*}{Conceptual Space}
     \begin{theorem*}
         A conceptual space is a geometric structure used to encode the meaning of natural language terms, properties and concepts. The metric space is spanned by \emph{quality dimensions} denoting basic domain-specific properties based on perception or sub-symbolic processing. Natural language categories (\emph{concepts}) correspond to convex regions, whereas points denote individual objects (instances/\emph{entities}, allowing for geometric solutions to commonsense reasoning tasks such as \emph{betweeness} or \emph{induction}.
@@ -153,7 +153,6 @@ Some corollaries:
 \begin{itemize}
     \item Each conceptual space contains only items for which the space's dimensions make sense, so you wouldn't find kings in a conceptual space of cabbages.
     \item Concepts roughly correspond to (non-proper) nouns, adjectives to properties and proper nouns (the name of a particular person, place, organization, or thing to points.)
-    \item Concept combination depends on the compatibility of the respective domain: For fully compatible domains, this narrows the new concept down (a \textit{green banana} is both green and bitter). If the modifier is incompatible with the original vaue, it replaces that information (\eg a \textit{pink elephant}), furhter replacing other incompatible domains (\eg to a \textit{stone lion}, the concepts of \textit{habitat} and \textit{life span} don't apply).
     \item From the criterion of convexity for natural properties and the definition of betweenness, it follows that if an object Y is between X and Z, and both X and Z have a property, Y must also have this property.
     \item Relative properties can be defined as regions on a relative scale - the property "\textit{tall}" acccordingly can be defined to be true iff the entity is in the top 33\% \wrt the size-property of all relevant objects.
 \end{itemize}
@@ -213,13 +212,18 @@ In formal logic/ontologies/lexical databases, semantic relations of concepts are
     Meronymy / Holonymy & {\scriptsize \textit{part-whole realationship} }& \textit{Product spaces} (see \cite{Fiorini2013}        & Trees \& Leaves
 \end{tabularx}
 
+regions and betweeness:
+* convex hull as the set of all convex combinations of a point
+* can be done by linear programming with polynomial cost
+
+
 \vspace{4ex}
 
 % Also: characteristics of properties (transitivity, symmetry) (from intrinsic features of dimensions (time is linear because the dimension is linear))
 
 So for example the validity of "a robin is a bird" is encoded by it being a subregion. So, no reason for a symbolic inference when using the richer structure of CS instead of ontologies.
 
-So except Meronymy, a CS can model all semantic relations of classical ontologies/formal logic/symbolistic approaches/knowledge bases. However as it encodes more than just a taxonomy of concepts, it for higher/more forms of inference and (common-sense) reasoning, among others by enabling for interpolation and extrapolation of knowledge. These are:
+So a CS can model all semantic relations of classical ontologies/formal logic/symbolistic approaches/knowledge bases. However as it encodes more than just a taxonomy of concepts, it for higher/more forms of inference and (common-sense) reasoning, among others by enabling for interpolation and extrapolation of knowledge. These are:
 
 \subsubsection*{Similarity-based reasoning}
 
