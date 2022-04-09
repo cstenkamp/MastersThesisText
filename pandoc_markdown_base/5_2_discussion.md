@@ -141,7 +141,7 @@ We remember, we also wanted to build a good architecture and set goals for that,
 ## Opinion to / Evaluation of Derrac2015 etc:
 
 
-\includeMD{pandoc_generated_latex/algo_problems.md}
+\includeMD{pandoc_generated_latex/algo_problems}
 
 In der Discussion kann ich dann auch wieder bezug auf die orig-paper ziehen , und nochmal kritisch reflektieren wie gut meine bewertung ist ("shortcomings"-section)
 
