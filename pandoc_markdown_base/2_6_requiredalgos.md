@@ -1,6 +1,70 @@
+TODO: Bert in required algorithms als "bestes Neural language Model" vorstellen!
+
+
+### LSA
+
+* Explain the logic of LSA as written in the main LSA paper paper
+    * that it's useful if something "may just as well have been in there"
+    * Ager/Alshaikh also compare with LSA, explain why it is comparable in what it does
+    * that you could use LSA even to find the name of the semantic direction (if the vector of a document is closest to the vectors of the respective entities)
+    * dass LSA das bag-of-words problem beheben würde
+    * Can use this to, once the corresponding clusters are found, select a good one of that as representative: add pseudodocs with only one term and that term as name, and then let all DOCUMENTNAMES be candidates
+
+
+Note that those that are not defined here are likely to be found in the Glossary \nameref{glo:defs}.
+
+\subsubsection*{Multidimensional Scaling}1
+
+From a set of pairwise distances, induce a finite space with fixed dimensions. Formally:
+
+given distances $d(p_i, p_j) \forall 1 \leq i, i \leq j$ and dimension k, compute points $v_1, ..., v_n \in \mathds{R}^k$ that maintains distances as well as possible by minimizing 
+
+$$ \sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(d(p_i, p_j) - \lVert v_i - v_j \rVert)^2 $$
+
+Can be used for dimensionality reduction
+
+
+\subsubsection*{Semantic Knowledge Bases}
+
+Lexical databases of semantic relations between words, the most famous of which being WordNet,\footnote{\url{https://wordnet.princeton.edu/}} link words in a graph that encodes explicit semantic relations like synonyms and hyponyms (subtypes/ \emph{is-a}-relationships). While neural %TODO: nicht neural, aber halt data-driven? naja das was word2vec undso sind... by-context-created/trained...?! similarity-based? -> DISTRIBUTIONAL MODELS (ones trained from the co-occurrence patterns of temrs)
+embeddings may encode similar information implicitly, when relying on dictionary-based word encodings they are an important tool when using classical linguistic techniques. For the developed algorithm, the information how many hyponyms of a candidate word for a semantic direction %TODO: did I explain the algorithm well enough before this to throw this much information at the reader?!
+occur in its corresponding text-corpus is highly relevant. To do that, WordNet \cite{Miller1995} and it's German equivalent, GermaNet \cite{hamp-feldweg-1997-germanet,Henrich},\footnote{\url{(https://uni-tuebingen.de/fakultaeten/philosophische-fakultaet/fachbereiche/neuphilologie/seminar-fuer-sprachwissenschaft/arbeitsbereiche/allg-sprachwissenschaft-computerlinguistik/ressourcen/lexica/germanet-1/)}} are required in the respective step.
+
+
+\subsubsection*{Word-weighting techniques}
+\label{sec:word_count_techniques}
+
+So, making 100\% sure:
+
+\begin{itemize}
+    \item term-frequency tf(term, doc): How often term occurs in doc
+    \item doc-frequency df(term):  the number of documents in the corpus that contain the word
+    \item summed term-frequncy sdf(term): How often term occurs in ANY DOC = tf(term, doc) forall doc
+\end{itemize}
+
+When comparing the \gls{bow}-representations of texts, it is reasonable to give more weight to \emph{surprising} words and less weight to expected ones. \q{The hypothesis is that surprising events, if shared by two vectors, are more discriminative of the similarity between the vectors than less surprising events.} \cite[156]{Turney2010} 
+Another crucial reason is, that the entities's are of drastically varying length, so longer entities would naturally dominate shorter ones when only comparing the raw counts - considering relative frequencies instead of absolute ones alleviates such problems.
+
+Because of these reasons, in the algorithm it will often be talked about \glspl{quant}. The algorithms explained below transforms the raw frequency-counts of a document and an \gls{ngram} into some \emph{score}, dependent on the number of occurences of this term in this document as well as the counts of other \glspl{ngram} and other documents. This score is henceforth called a \gls{quant}.
+%TODO: term? phrase? n-gram?
+
+
+\label{sec:embeddings}
+
+\includeMD{pandoc_generated_latex/2_6_requiredalgos}
+
+
 TODO: Ist word2vec schon nen euclidian space? Why/Why not?
 
+
+% \cite{Derrac2015}: some form of dimensionality reduction is typically used to obtain vectors whose components correspond to concepts. One of the most popular techniques, called latent semantic analysis (LSA [39]), uses singular value decomposition (SVD) to this end. Multi-dimensional scaling (MDS [40]) is another popular method for dimen- sionality reduction, which builds a vector-space representation from pairwise similarity judgements.
+
+main idea is to learn a representation in terms of salient features, where each of these features is described using a cluster of natural language terms. "This is somewhat similar to Latent Dirichlet Allocation (LDA) which learns a representation of text documents as multinomial distributions over latent topics, where each of these topics corresponds to a multinomial distribution over words (Blei et al., 2003). Topics tend to correspond to salient features, and are typically labelled with the most probable words according to the corre- sponding distribution" [quote: AGKS18]
+
+
 ## MDS
+
+\cite{Alshaikh2021}:  MDS has quadratic space complexity 
 
 As described by Gärdenfors himself \cite[Sec.~1.7]{Gardenfors2000a}:
 

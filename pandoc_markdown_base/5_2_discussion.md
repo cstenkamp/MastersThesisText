@@ -146,6 +146,8 @@ In der Discussion kann ich dann auch wieder bezug auf die orig-paper ziehen , un
 * Der Kappa-Score der rankigns vergleicht ist für mich ne kack metric weil ich ebennicht reviews nehme und more-occurences better-candidate heißen -> gucken wie ich stattdessen gute dimensionen und cluster finde (klingt doch so als sei accuracy/f1/... doch wichtig)
 
 
+Von Software Engineering oder best practices haben die alle ncoh nichts gehört, ich arbeite mit dem guten der Paper und das hier ist die main-function...https://github.com/cstenkamp/Autoencoder-Explanations/blob/master/src/_archive/pipeline.py#L1504-L1516
+
 
 * Small community, unfortunately
     * I assume \mainalgos shared data, at least the didn't  n-gram problem I mentioned.

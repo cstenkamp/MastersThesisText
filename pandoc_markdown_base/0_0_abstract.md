@@ -6,9 +6,13 @@ Creating these concpetual spaces is a very cumbersome task, which is why an auto
 The method of [DESC15] uses MDS, blablabla, then a Support-Vector-Machine separating concepts, and the orthogonal of the separating hyperplane is then an axis
 -->
 
+<!-- 
+
 * SIDDATA wants to provide several ways of course recommendation
 * Being able to recommand "Like this course, but with less math" would be great
 * That is fulfilled by Conceptual Spaces. 
 * automatic data-driven generation of CS would be nice
 * Method of \cite{Derrarc2015} is good, so we'll apply that to our domain
 * And while doing that, implement a scalable open-source architecture for stuff like this bc it doesn't exist yet.
+
+-->

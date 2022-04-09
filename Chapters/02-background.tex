@@ -244,51 +244,23 @@ To model the stuff in \autocite{fig:graphic_reasoning}, we need a good metric, a
 \subsection{Other Related Work}
 \label{sec:otherwork}
 
+This thesis will focus on the aforementioned algorithm, primarily considering \cite{Derrac2015} and on top of that only two follow-up works: \cite{Ager2018, Alshaikh2020}, which have shown to provide useful extensions for it without changing its core logic. This shall by no means mean that these are the only ones that could be considered.
+
+By far the closest to what we do is the algorithm of \textcite{VISR12}, who generate a so-called \textit{tag genome} for the domain of movies supervisedly based on keywords that users have assigned manually. Their algorithm takes these binary assignments and creates a dense representation that encodes a degree of relevance for each combination of movie and tag. Furthermore, they create a dedicated movie recommendation system on basis of this (interface reprinted in \autoref{fig:movietuner}). This system provides explainable recommendation based on these tags, allowing users to request recommendations for movies such as \textit{\q{I‘d like something less violent than Reservoir Dogs}} \cite[3]{VISR12}. Not only is their application exactly what is being demanded here, but the algorithm itself also performed significantly better than the one of \textcite{Derrac2015} in a human study of the latter, in which they directly compared the techniques by asking subjects which of the respectively extracted keywords better describes the difference between two movies \cite[44]{Derrac2015}. Considering however that \gencite{VISR12} algorithm is supervised and requires data which does not exist for our domain, it cannot be applied in our case. On the contrary, the final results of their algorithm are preferred by users over the ones generated with the algorithm considered in this work, but structurally exactly equal. This provides clear evidence that the desired application of this work is possible, albeit of lower quality than what their work achieved.
+
+Generally, what is being done here corresponds to \textbf{Representation Learning}, whose aim is to discover the inherent semantic structure of a representation unsupervisedly \cite{Dayan1995}. More specifically \textbf{Disentangled Representation Learning}, where only salient attributes relevant to the task at hand should be extracted, which means finding latent embeddings whose dimensions are meaningful interpretable features. Generative Adversarial Networks \cite{Goodfellow2014} or Variational Autoencoders \cite{Kingma2013} are modern techniques that are good at finding latent information in images. Especially InfoGAN \cite{Chen2016} should be named, which can extract interpretable features such as pose, hairstyle, prensence of glasses and emotions from images unsupervisedly. In the realm of \gls{nlp}, this also relates to \textbf{Topic Modeling}, which aims to extract multiple hidden themes (\textit{topics}) from a given text corpus by discovering groups of co-occuring words unsupervisedly.
+
+\paragraph{Academic Interests Recommender}
+
+Regarding the domain, there is already a system incorporated into the Siddata-\gls{dsa} that aids students by finding and recommending educational resources. SidBERT \cite{Schrumpf2021DELPHI} extracts implicit information from courses and other learning material by their title by categorizing them into one of 905 classes derived from the third or fourth level of the \gls{ddc} \cite{Dewey1876}, a hierachical tree stucture system commonly used to categorize library books. SidBERT uses the same dataset as this work and classifies with a custom classification head ontop of a \gls{bert}-encoder \gls{ann} which is trained on 1.3 million book titles collected from three universities as well as the German National Library, currently achieving 45.2\% test accuracy (62.2\% recall) among 905 classes.
+
 \includeMD{pandoc_generated_latex/2_5_relatedwork}
 
 
-\section{Required Algorithms and Techniques}
-
-Note that those that are not defined here are likely to be found in the Glossary \nameref{glo:defs}.
-
-\subsubsection*{Multidimensional Scaling}
-
-From a set of pairwise distances, induce a finite space with fixed dimensions. Formally:
-
-given distances $d(p_i, p_j) \forall 1 \leq i, i \leq j$ and dimension k, compute points $v_1, ..., v_n \in \mathds{R}^k$ that maintains distances as well as possible by minimizing 
-
-$$ \sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(d(p_i, p_j) - \lVert v_i - v_j \rVert)^2 $$
-
-Can be used for dimensionality reduction
+\section{Relevant Algorithms and Techniques}
+\label{sec:required_algos}
 
 
-\subsubsection*{Semantic Knowledge Bases}
 
-Lexical databases of semantic relations between words, the most famous of which being WordNet,\footnote{\url{https://wordnet.princeton.edu/}} link words in a graph that encodes explicit semantic relations like synonyms and hyponyms (subtypes/ \emph{is-a}-relationships). While neural %TODO: nicht neural, aber halt data-driven? naja das was word2vec undso sind... by-context-created/trained...?! similarity-based? -> DISTRIBUTIONAL MODELS (ones trained from the co-occurrence patterns of temrs)
-embeddings may encode similar information implicitly, when relying on dictionary-based word encodings they are an important tool when using classical linguistic techniques. For the developed algorithm, the information how many hyponyms of a candidate word for a semantic direction %TODO: did I explain the algorithm well enough before this to throw this much information at the reader?!
-occur in its corresponding text-corpus is highly relevant. To do that, WordNet \cite{Miller1995} and it's German equivalent, GermaNet \cite{hamp-feldweg-1997-germanet,Henrich},\footnote{\url{(https://uni-tuebingen.de/fakultaeten/philosophische-fakultaet/fachbereiche/neuphilologie/seminar-fuer-sprachwissenschaft/arbeitsbereiche/allg-sprachwissenschaft-computerlinguistik/ressourcen/lexica/germanet-1/)}} are required in the respective step.
-
-
-\subsubsection*{Word-weighting techniques}
-\label{sec:word_count_techniques}
-
-So, making 100\% sure:
-
-\begin{itemize}
-    \item term-frequency tf(term, doc): How often term occurs in doc
-    \item doc-frequency df(term):  the number of documents in the corpus that contain the word
-    \item summed term-frequncy sdf(term): How often term occurs in ANY DOC = tf(term, doc) forall doc
-\end{itemize}
-
-When comparing the \gls{bow}-representations of texts, it is reasonable to give more weight to \emph{surprising} words and less weight to expected ones. \q{The hypothesis is that surprising events, if shared by two vectors, are more discriminative of the similarity between the vectors than less surprising events.} \cite[156]{Turney2010} 
-Another crucial reason is, that the entities's are of drastically varying length, so longer entities would naturally dominate shorter ones when only comparing the raw counts - considering relative frequencies instead of absolute ones alleviates such problems.
-
-Because of these reasons, in the algorithm it will often be talked about \glspl{quant}. The algorithms explained below transforms the raw frequency-counts of a document and an \gls{ngram} into some \emph{score}, dependent on the number of occurences of this term in this document as well as the counts of other \glspl{ngram} and other documents. This score is henceforth called a \gls{quant}.
-%TODO: term? phrase? n-gram?
-
-
-\label{sec:embeddings}
-
-\includeMD{pandoc_generated_latex/2_6_requiredalgos}
 
 \includeMD{pandoc_generated_latex/2_7_seperatrixdistance}
