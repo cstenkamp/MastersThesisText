@@ -140,7 +140,13 @@ We remember, we also wanted to build a good architecture and set goals for that,
 
 ## Opinion to / Evaluation of Derrac2015 etc:
 
+
+\includeMD{pandoc_generated_latex/algo_problems.md}
+
 In der Discussion kann ich dann auch wieder bezug auf die orig-paper ziehen , und nochmal kritisch reflektieren wie gut meine bewertung ist ("shortcomings"-section)
+
+
+
 
 * dass deren merge-candidate-directions-schritt (alle nehmen und die zum closestem herclustern und dann die richtung des T^0.5 übernehmen) ziemlich whack ist, ich schon einige wege hab damit umzugehen but many better ones are imaginable
 * Der Kappa-Score der rankigns vergleicht ist für mich ne kack metric weil ich ebennicht reviews nehme und more-occurences better-candidate heißen -> gucken wie ich stattdessen gute dimensionen und cluster finde (klingt doch so als sei accuracy/f1/... doch wichtig)
@@ -194,6 +200,10 @@ Von Software Engineering oder best practices haben die alle ncoh nichts gehört,
     * dass mich wundert dass deren distance measure zu funktionieren scheint, wo sie doch ebendoch vectors considert und nicht punkte!
         * ...WO merkt man denn überhaupt dass sie punkte haben und nicht vektoren? Bei der SVM (siehe meine Stackoverflow frage!) ists ja relevant.... und da nutzen sie punkte... riiight? Am I doing it like they did? Are we all doing it correct?
         * (see also "The fact that I don't use intercepts of the decision_planes" in shortcomings )
+
+
+\cite{Derrac2015}: \q{SVD produces a representation in which entities correspond to vectors, which should be compared in terms of cosine similarity rather than Euclidean distance} (-> spatial relations such as betweeness and parallism wouldn't make sense) - and then proceeds to use cosine-distance?! wtf!! (acutally that may be a problem of ager & alshaikh)
+
 
 
 * in Derrac2015 it is pretty unclear what the final result is - their last step is to induce the rankings for the respective semantic directions, but everything else the do on the intermediate embeddings, bc these are a metric space. 

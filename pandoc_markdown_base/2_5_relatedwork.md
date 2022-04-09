@@ -1,9 +1,6 @@
 * \cite{Alshaikh2019, Alshaikh2021} use this algorithm as one of their steps or create a similar algorithm to find disentangled features better following the definition CS which implies several low-dimensional domain-specific subspaces.
 * Gärdenfors himself suggested that one may use self-organizing maps instead of classical AI/NLP algorithms
-* As mentioned before, the whole concepts of vector-space models for words \cite{Mikolov2013} and texts \cite{Le2014,Devlin2019} is related in that represents the meaing of terms, phrases or documents by embedding them in a vector space. However these have arbitrary non-interpretable dimensions and are no metric spaces, thus having no relation of geometry and meaning for \eg betweeness or analogical reasoning.
-* \todoparagraph{LSA, elaborated later} 
-* \todoparagraph{LDA, elaborated later} [AGKS18] says what they do is similar to LDA -> explain/understand LDA
-
+* As mentioned before, the whole concepts of vector-space models for words \cite{Mikolov2013} and texts \cite{Le2014,Devlin2019} is related in that represents the meaing of terms, phrases or documents by embedding them in a vector space. However these have arbitrary non-interpretable dimensions and are no metric spaces, thus having no relation of geometry and meaning for \eg betweeness or analogical reasoning. \todoparagraph{next section}
 
 
 

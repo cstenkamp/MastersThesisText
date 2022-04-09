@@ -1,3 +1,6 @@
+\todoparagraph{auf LSI und LDA zuruckkommen und sagen dass halt viele von deren premises halt nice waeren}
+* Can use LSA to, once the corresponding clusters are found, select a good one of that as representative: add pseudodocs with only one term and that term as name, and then let all DOCUMENTNAMES be candidates
+
 <!--
 FUTURE WORK / SHORTCOMINGS / OUTLOOK
 
