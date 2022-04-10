@@ -351,6 +351,9 @@
 
 \ifdefined\ForPrinting
 	\newcommand{\arrowref}[1]{\ignorespaces}	
+	\newcommand{\backref}[1]{\ignorespaces}	
+	\newcommand{\hideref}[2]{\ignorespaces}	
+	\newcommand{\arrowback}{\ignorespaces}	
 \else
 	\renewbibmacro*{pageref}{%
 	%   \printtext[parens]{%
@@ -358,6 +361,9 @@
 	%   }%
 	}
 	\newcommand{\arrowref}[1]{\texorpdfstring{\hyperref[#1]{\textsuperscript{\textuparrow}}}{}}
+	\newcommand{\backref}[1]{\texorpdfstring{\hyperref[#1]{{\scriptsize\xspace back}}}{}}
+	\newcommand{\hideref}[2]{\texorpdfstring{\hyperref[#1]{{\scriptsize\xspace #2}}}{}}
+	\newcommand{\arrowback}{\Acrobatmenu{GoBack}{\textsuperscript{\textuparrow}}}
 \fi
 
 % ================== END biblatex stuff ==================
@@ -853,7 +859,15 @@
 
 \renewcommand{\date}[3]{\DTMdisplaydate{#1}{#2}{#3}{-1}}
 
-\makeatother
+\ifdefined\ForPrinting
+	\let\oldcaption\caption
+\else
+	\addto\captionsenglish{\renewcommand{\figurename}{Figure{\tiny \Acrobatmenu{GoBack}{\textsuperscript{\textuparrow}}}\hspace{-0.8ex}}}
+	\addto\captionsbritish{\renewcommand{\figurename}{Figure{\tiny \Acrobatmenu{GoBack}{\textsuperscript{\textuparrow}}}\hspace{-0.8ex}}}
+	\addto\captionsenglish{\renewcommand{\tablename}{Table{\tiny \Acrobatmenu{GoBack}{\textsuperscript{\textuparrow}}}\hspace{-0.8ex}}}
+	\addto\captionsbritish{\renewcommand{\tablename}{Table{\tiny \Acrobatmenu{GoBack}{\textsuperscript{\textuparrow}}}\hspace{-0.8ex}}}
+\fi
+
 
 % ====================================================================
 
@@ -861,7 +875,6 @@
 
 \renewcommand{\baselinestretch}{1.15}
 
-\makeatletter
 
 \begin{document}
 

@@ -5,9 +5,11 @@
 
 \chapter{Results}
 
+\todoparagraph{Explicitly say that it may be confusing that sometimes different results are reported, but keep in mind they come from 165 different paramcombis, and importantly every one has the corresponding plot proving that they are not faked or something. It would have been easy to edit the plots here manually such that they all match up, but that would just not correspond ot the truth. Making random seeds did not help because new configs were added as they came in}
+
 This section summarizes the results that the described algorithm achieved on the described datasets according to the described metrics. Before going into detail about the performance on the Siddata-dataset, a brief summary of the results on the placetypes-dataset serves to demonstrate if the specific implementation can achieve comparable results to \mainalgos, thus putting the other results into perspective in terms of what the algorithm can realistically achieve on dedicated high-quality datasets.
 
-Due to the implemented algorithm being an \gls{unsupervised} algorithm, there is no explicit target value for each of the considered samples, making it impossible to straight-forwardly apply well-known \gls{ml} metrics such as \Gls{acc} or \gls{f1}. What this algorithm tries to achieve is a lot \textit{fuzzier} than in the realm of classification: The end-goal of it is to embed the given \glspl{entity} into a vector-space that consists of semantically meaniningful directions, so the only actual metric would be a comparison checking if the respective categorization here corresponds closely to human judgement. To do that, the best evaluation is likely a study that asks for feedback of users that see the results of a developed system.\footnote{An example for such a system is the \textit{Movie Tuner} interface from \textcite{VISR12}, reprinted as \autoref{fig:movetuner}.} \textcite{Derrac2015} performed crowdsourcing experiments on CrowdFlower,\footnote{\url{http://www.crowdflower.com}} asking users among other tasks which of several candidates could best describe the difference between two movies. They also compared their results with those of running the supervised algorithm of \cite{VISR12} on a subset of their data. Furthermore they tested if the explainable classifiers generated from this algorithm (see \autoref{sec:reasoning}) \q{help users spot incorrect classifications} \cite[48]{Derrac2015}, as well as if their algorithmic classification corresponds to human judgement.\footnote{The task was set only for classification into OpenCYC and Foursquare Taxonomies of the placetypes-dataset (see column `\textbf{classification classes}' in \autoref{tab:all_datasets}).} 
+Due to the implemented algorithm being an \gls{unsupervised} algorithm, there is no explicit target value for each of the considered samples, making it impossible to straight-forwardly apply well-known \gls{ml} metrics such as \Gls{acc} or \gls{f1}. What this algorithm tries to achieve is a lot \textit{fuzzier} than in the realm of classification: The end-goal of it is to embed the given \glspl{entity} into a vector-space that consists of semantically meaniningful directions, so the only actual metric would be a comparison checking if the respective categorization here corresponds closely to human judgement. To do that, the best evaluation is likely a study that asks for feedback of users that see the results of a developed system.\footnote{An example for such a system is the \textit{Movie Tuner} interface from \textcite{VISR12}, reprinted as \autoref{fig:movietuner}.} \textcite{Derrac2015} performed crowdsourcing experiments on CrowdFlower,\footnote{\url{http://www.crowdflower.com}} asking users among other tasks which of several candidates could best describe the difference between two movies. They also compared their results with those of running the supervised algorithm of \cite{VISR12} on a subset of their data. Furthermore they tested if the explainable classifiers generated from this algorithm (see \autoref{sec:reasoning}) \q{help users spot incorrect classifications} \cite[48]{Derrac2015}, as well as if their algorithmic classification corresponds to human judgement.\footnote{The task was set only for classification into OpenCYC and Foursquare Taxonomies of the placetypes-dataset (see column `\textbf{classification classes}' in \autoref{tab:all_datasets}).} 
 % \todoparagraph{TODO: Should I also quickly mention their results?}
 While similar studies could be done in the Siddata-\gls{dsa} \cite{Schurz2021} without additional costs, carrying these out is outside the scope of this thesis.
 
@@ -172,32 +174,88 @@ Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, 
 Having established that the implementation works correctly for the domain of placetypes, we will now check if the quantity of some key characteristics produced as interim results of the algorithm differ across domains. As discussed in \autoref{sec:datasets}, our dataset differs in some properties from those of the literature. Because interim resuls may already indicate the performance of the algorithm, looking at them provides useful information that can be considered in the performance evalaution. \autoref{tab:generated_stuff} contrasts the number of feature vectors, candidate terms and cluster elements for the movies-, placetypes- and Siddata-dataset.
 
 \todoparagraph{With that, we want to figure out if anything is possible and if so, the correct parameters like the candidate-min-term-count}
-
-\begingroup
-\begin{table}[H]
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[]
+	\centering
 	\resizebox{\textwidth}{!}{%
-		\centering
-		\begin{tabular}{r|ccc|cc}
-		& \multicolumn{3}{c}{\textbf{Feature vectors}}           & \textbf{Candidates} & \textbf{Cluster Elements}   \\
-		& \textbf{Mean L.} & \textbf{Vectors} & \textbf{Clusters} &                     & \textbf{($\kappa\geq0.1$}) \\
-		\midrule
-		\textbf{movies \cite{Derrac2015}}     & 12\,083 & 589\,727 & 3\,864 & 22\,903 & 9\,389 \\
-		\textbf{placetypes \cite{Derrac2015}} &         &          &        & 21\,833 &        \\
-		\textbf{Siddata}                      &         &          &        & 10\,060 &        
-		\end{tabular}
-		\caption{Statistics on generated features of the algorithm}
-		\label{tab:generated_stuff}
+	\begin{tabular}{r|cc|ccc|ccc|cc|cc}
+	 &
+	  \textbf{} &
+	   &
+	  \multicolumn{6}{c|}{\textbf{Kappa-Scores}} &
+	  \multicolumn{4}{c}{\textbf{Cluster sizes}} \\
+	  &
+	  \textbf{} &
+	  \textbf{} &
+	  \multicolumn{3}{c|}{$\mathbf{\kappa\geq 0.1}$} &
+	  \multicolumn{3}{c|}{$\mathbf{\kappa\geq 0.5}$} &
+	  \multicolumn{2}{c|}{\textbf{10\textsuperscript{th}}} &
+	  \multicolumn{2}{c}{\textbf{90\textsuperscript{th}}} \\ 
+	 &
+	  \textbf{Terms} &
+	  \textbf{Cands} &
+	  \textbf{50D} &
+	  \textbf{200D} &
+	  \textbf{Sum} &
+	  \textbf{50D} &
+	  \textbf{200D} &
+	  \textbf{Sum} &
+	  \textbf{50D} &
+	  \textbf{200D} &
+	  \textbf{50D} &
+	  \textbf{200D} \\ \midrule
+	\textbf{movies \cite{Derrac2015}} &
+	  589\,727 &
+	  22\,903 &
+	  9\,429 &
+	  13\,916 &
+	  13\,918 &
+	  - &
+	  - &
+	  444 &
+	  46 &
+	  10 &
+	  467 &
+	  61 \\
+	\textbf{placetypes \cite{Derrac2015}} &
+	  746\,180 &
+	  21\,833 &
+	  20\,246 &
+	  21\,819 &
+	  21\,832 &
+	  - &
+	  - &
+	  697 &
+	  30 &
+	  9 &
+	  1\,616 &
+	  115 \\
+	\textbf{Siddata } &
+	  163\,285 &
+	  10\,060 &
+	  3\,010 &
+	  5\,016 &
+	  - &
+	  334 &
+	  1\,008 &
+	  - &
+	  7 &
+	  2 &
+	  30* &
+	  16
+	\end{tabular}%
 	}
+	\caption{}
+	\label{tab:generated_stats}
 \end{table}
-\endgroup
-% movies:
-% feature vecs: 38649 keys with 0-33k terms each (sum: 589727 terms) 
-% candidate-terms: 22903 (unclustered)
-% clusters: ndims*2 -> for 20D: 9389 (-> 9429 words in $T^{0.1}$)}		
-% movies: 15.000
-% ppmi-weighted feature vectors: 38649 keys with bag-of-words between 0 words and 33k words (but mostly couple 1000s), all in all 589727 unique terms
-% candidate-terms: 22903 (unclustered)
-% clusters: ndims*2 clusters with all in all (for 20d) 9389 values (->9429 words have kappa>=0.5)
+% Note that movies and placetypes are from derracs data, not mine!
+% get_all()
+% Terms = len(all_terms)  (=old Feature vectors/vectors)
+% Kappa >= 0.1 = len(canditerms) == len(set(clusters.keys()) | set(flatten(clusters.values())))
+% Cluster-Elems % = np.percentile((clslen := np.array([len(i) for i in clusters.values()])), 10), np.percentile(clslen,90)
+% Greats overall = flattened cluster-keys per-dimension (the robustness thingy). Max 740 for derrac
+% * in my row means was 50D not 20D
 
 The Siddata-dataset consists of more but shorter texts associated with an entity (visualized in \autoref{tab:corpussizes}), which is why there are much less words in the respective texts that exceed a given \gls{df} for the Siddata when compared to the originally used ones (visualized in \autoref{tab:summed_unique_words}). The algorithm uses a \gls{svm} to split entities that contain a phrase from those that do not, which performs bad for heavily imbalanced class sizes. \autoref{fig:candidate_histogram} shows the distribution of texts per candidate as histogram. It shows that 90\% of the 10\,060 candidates occur in 26 to 375 of the 11\,601 documents. The median number of documents is 49, meaning that for half of the keyphrases only 0.42\% of the samples are in the positive class.
 
@@ -209,7 +267,7 @@ The Siddata-dataset consists of more but shorter texts associated with an entity
 	\label{fig:candidate_histogram}
 \end{figure}
 
-These results show that the algorithm produces a much less candidates for our dataset compared with the originally considered ones. Because of that, the subsequent steps of the algorithm have a less rich representation to choose from, decreasing the chance to achieve good performances downstream.
+These results show that the algorithm produces much less candidates for our dataset compared with the originally considered ones. Because of that, the subsequent steps of the algorithm have a less rich representation to choose from, decreasing the chance to achieve good performances downstream.
 
 \todoparagraph{This doesnt look good but lets look at the results!}
 
@@ -251,7 +309,7 @@ From this distance matrix, the algorithm subsequently creates an embedding using
 	\end{center}
 \end{figure}
 
-Now that we have established upper and lower boundary for what can reasonably be expected from the algorithm, let us finally look at the performance of its decision-trees, to gain evidence if human concepts are encoded in its extracted features. \autoref{tab:robustresults_perfb} lists average accuracies per faculty for decision trees created on the basis of a single hyperparameter-configuration that was selected to achive high performance on average. The respective values are the average and standard-deviation of runs with 5-fold crossvalidation each for trees of various depths.
+Now that we have established upper and lower boundary for what can reasonably be expected from the algorithm, let us finally look at the performance of its decision-trees, to gain evidence if human concepts are encoded in its extracted features. \autoref{tab:robustresults_perfb} lists average accuracies per faculty for decision trees created on the basis of a single hyperparameter-configuration that was selected to achive high performance on average. The respective values are the average and standard-deviation of runs with 5-fold crossvalidation each for trees of various depths. The results show high accuracies across al faculties even for low-depth trees, but the faculty \textit{Humanwissenschaften} displays a high standard deviation for that condition.
 
 \begin{table}[H]
 	\resizebox{\textwidth}{!}{%
@@ -274,16 +332,16 @@ Now that we have established upper and lower boundary for what can reasonably be
 		\bottomrule
 		\end{tabular}
 	}
-	\slcaption{Robust Accuracies per Faculty of a well-performing configuration. The reported results are mean and standard deviation from the result of ten runs with 5-fold crossvalidation each.}
+	\slcaption{Robust Accuracies per Faculty of a well-performing configuration. The reported results are mean and standard deviation from the result of ten runs with 5-fold crossvalidation each.\hideref{tab:robustresults_perfb_f1}{F1-Table}}
 	\label{tab:robustresults_perfb}
 \end{table}
 
-Keep in mind that accuracies often makes the situation look better than it is. The weighted average F1-scores are between 0.505 (depth 1) and 0.710 (unbounded depth). For the full table of F1-scores it is referred to the appendix, specifically \autoref{tab:robustresults_perfb_f1}. 
+Keep in mind that accuracies often makes the situation look better than it is. The weighted average F1-scores are between 0.505 (depth 1) and 0.710 (unbounded). For the full table of F1-scores it is referred to the appendix, specifically \autoref{tab:robustresults_perfb_f1}. 
 
-Compared with the results of the \gls{bert}-based classifier (85.19\%), the achieved results are suprisingly competative, with the weighted mean of trees of depth 1 and two only slighly below that and that of deeper trees achieving even higher accuracies. 
+Compared with the results of the \gls{bert}-based classifier (85.19\%), the achieved results are suprisingly competative, with the weighted mean of trees of depth one and two only slighly below that, and deeper trees achieving even higher accuracies. 
 % "suprisingly competative" ersetzen mit "soundso ist der przentsatz, soundso ist unserer, wir observen soundsoeinen unterschied"
 \todoparagraph{We said in the previous section that there are less candidates, making it harder. These quantifiable results show that it appears to work anyway}  % "wie in 4.2 gibts weniger candidates, was es downstream schwieriger macht, aber wie in 4.3 klappts ja trotzdem." => Das geht selbst in results, da es eine quantifizierbare darstellung von verhältnismäßigkeiten ist und keine bewertung
-Importantly however, the results reported here are those of a sepearate classifier per faculty (1-vs-rest), differentiating only between the respective faculty as positive class and all other faculties as negative class. As will be further elaborated in the discussion, this is however the only realistic way of doing it: A binary tree of depth 1 can distinct between maximally two classes and thus maximally achieve a classification by perfectly classifying the most frequent class and labelling all samples as the second most frequent class, which in the case of faculties is $(2011+1665)/7081=51.9\%$. Results for such trees are reported in \autoref{tab:robustresults_allatonce}.
+Importantly however, the results reported here are those of a sepearate classifier per faculty (1-vs-rest), differentiating only between the respective faculty as positive class and all other faculties as negative class. As will be further elaborated in the discussion, this is the only realistic way of doing it: A binary tree of depth one can differentiate between maximally two classes and thus maximally achieve a classification by perfectly classifying the most frequent class and labelling all samples as the second most frequent class, which in the case of faculties is $(2011+1665)/7081=51.9\%$. Results for such trees are reported in \autoref{tab:robustresults_allatonce}.
 
 \begin{table}[H]
 	\begin{tabular}{rccccc}
@@ -315,7 +373,7 @@ The main goal of the algorithm is not to optimally classify the respective facul
 	\end{center}
 \end{figure}
 
-For trees deeper than one level, the selected features from the second level on are not necessarily the most important ones. Instead it is possible to extract the most important features for a classification by looking at the respective information gain achieved by splitting it. \autoref{tab:courses_top3} displays three most important directions for each of the respective faculties. While the details of this result will be eloborated upon in the discussion, most of the detected features appear convincing. \todoparagraph{remove sentence} Regarding an acutal classification using these features, \autoref{fig:boxes_rechtswis} in the Appendix displays the result of a sample classification of a decision tree with three features.
+For trees deeper than one level, the selected features from the second level on are not necessarily the most important ones.\footnote{A \gls{dt} has separate conditions for every subtree, which means on level two there are two different features that depend on the result of the first split} Instead it is possible to extract the most important features for a classification by looking at the respective information gain achieved by splitting it. \autoref{tab:courses_top3} displays the resulting three most important directions for each of the respective faculties. While the details of this result will be eloborated upon in the discussion, most of the detected features appear convincing. \todoparagraph{remove sentence} Regarding an acutal classification using these features, \autoref{fig:boxes_rechtswis} in the Appendix displays the result of a sample classification of a decision tree with three features.
 
 
 \begin{table}[H]
@@ -374,7 +432,8 @@ For trees deeper than one level, the selected features from the second level on 
 	}
 \end{figure}
 
-\autoref{fig:3dplot_mathe_infoab} displays a 3D-Embedding for courses, splitting courses which contain the term "\textit{mathematik}" from those that don't, also hightlighting the courses \textit{Informatik A} and \textit{Informatik B}. Both courses appear comparably close (\todoparagraph{their distance, mean distance}) to each other. Further, even though neither course description contains the word \textit{mathematik}, both courses are would receive high values for this feature, indicated by the distance to the decision plane.\footnote{Both statements are better visible in the interactive version of the plot, which can be found at \todoparagraph{link!!}}
+\autoref{fig:3dplot_mathe_infoab} displays a 3D-Embedding for courses, splitting courses which contain the term "\textit{mathematik}" from those that don't, also hightlighting the courses \textit{Informatik A} and \textit{Informatik B}. Both courses are close to each other for both \gls{normangdist} and also euclidean distance.\footnote{Normalized Angular Distance: Average 1.00, Info A and Info B: 0.37 (Percentile 8.2), Euclidean Distance: Average 0.88, Info A and Info B: 0.39 (Percentile: 8.9)}
+Further, even though neither course description contains the word \textit{mathematik}, both courses are would receive high values for this feature, indicated by the distance to the decision plane.\footnote{Both statements are better visible in the interactive version of the plot, which can be found at \todoparagraph{link!!}}
 
 \subsubsection{Extended analysis}
 
@@ -617,3 +676,24 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}.\f
 	\label{tab:text_per_dim}
 \end{table}
 
+
+\todoparagraph{Just print a few fucking clusters here}
+
+
+				 opnv: befragungen, bewohner, urbanen, 00 uhr
+	   bertolt brecht: brecht, exil, bertolt, weiss, weimarer republik, auschwitz, weimarer, ...
+religionswissenschaft: religionsunterrichts, spirituelle, religions, teil veranstaltung, religion, studienbeginn, auml ischen, ...
+         erkrankungen: klinischen, gesundheitlichen, krankheit, rehabilitation, pravention, aufrechterhaltung, exemplarische inhalte, ...
+	  		  lineare: integrierte, berechnung, variablen, skript, ubungsaufgaben, losung, vorliegen
+	 		 parteien: verfassung, demokratischen, zivilgesellschaft, semester sowie, einander, folgendem link, sozialwiss uni osnabrueck, ...
+	 		 kleidung: textilien, mode, textile, parallelen
+			    kreuz: heilige, christentum, 1957, fuhrungen
+ 		 offentliches: offentlichkeitsarbeit, verwaltungsrecht, offentlichen recht, offentliches recht, europarecht, staatsrecht, teilnahmevoraussetzungen veranstaltung, ...
+	    masterstudium: fortgeschrittene, schlusselkompetenzen, betriebswirtschaftslehre, untereinander
+	unterrichtspraxis: fachlichen, unterrichtsplanung, schulalltag, lehrerinnen, schulische, daz, bildung nachhaltige, ...
+  		  aristoteles: asthetik, semantik, dialoge, menschheit, sucht, benutzt, philosophische, ...
+   		   mythologie: athen, mythos, mann, griechen, ubersetzung, figur, griechischen, ...
+ 		 flexibilitat: weiterbildung, schlusselqualifikation, erfolgreiches, fordert, vorlagen, strukturierte, berufsleben, ...
+   aktive beteiligung: teilnahme ersten, wochentliche, zweit, festlegung, ubergreifende, auml ndige, ndige, ...
+ 		 unsicherheit: covid 19 pandemie, korperlich, wendet studierende, webinar, risiko, einbringen, fachlich, ...
+	 wirtschaftlicher: industrialisierung, wachstum, republik, wirtschaftspolitik, konkurrenz, positive, russland, ...

@@ -49,7 +49,7 @@ A very distinctive difference of the datasets is their size: the movies-dataset 
 	\textbf{Siddata (all)}    		   & 26\,346 & 19     & 60     & 169   & 22    & 71      & 239         \\
 	\textbf{Siddata} ($\geq 80$ words) & 11\,601 & 63     & 99     & 211   & 83    & 124     & 323         
 	\end{tabular}
-	\slcaption{Sizes of the text-corpora of the Siddata-dataset and those of \cite{Derrac2015}. The columns \textit{Words per Entity} list the 5\textsuperscript{th}, 50\textsuperscript{th}, and 95\textsuperscript{th} percentile respectively.}
+	\slcaption{Sizes of the text-corpora of the Siddata-dataset and those of \cite{Derrac2015}. The columns \textit{Words per Entity} list thresholds for the 5\textsuperscript{th}, 50\textsuperscript{th}, and 95\textsuperscript{th} percentile respectively.}
 	\label{tab:corpussizes}
 \end{table}
 
@@ -60,13 +60,13 @@ A very distinctive difference of the datasets is their size: the movies-dataset 
 	\multicolumn{1}{l}{} &
 	  \textbf{1} & \textbf{2} & \textbf{5} &  \textbf{25} &
 	  \textbf{50} & \textbf{100} & \textbf{500} & \textbf{1000} &
-	  \textbf{\acrshort{df}/10} & \textbf{\acrshort{df}/4} \\ \midrule
+	  \textbf{$|C|$/10} & \textbf{$|C|$/4} \\ \midrule
 	\textbf{Siddata} & 163\,285 & 80\,802  & 35\,697  & 9702     & 5535     & 3059     & 570     & 210     & 23     & 2    \\
 	\textbf{Places}  & 746\,180 & 428\,810 & 182\,906 & 41\,320  & 21\,833  & 11\,166  & 1452    & 183     & 8047   & 2669 \\
 	\textbf{Movies}  & 589\,727 & 279\,429 & 128\,850 & 55\,429  & 39\,976  & 28\,768  & 11\,431 & 6931  & 1786   & 332 
 	\end{tabular}
 	}
-	\slcaption{Words that exceed various \gls{df} thresholds for the Siddata, Places and Movies datasets. In \cite{Derrac2015}, the candidate-threshold for placetypes was 50, and the threshold for movies 100. Note that the last two columns are relative and depend on the dataset-size.}
+	\slcaption{Words that exceed various \gls{df} thresholds for the Siddata, Places and Movies datasets. In \cite{Derrac2015}, the candidate-threshold for placetypes was 50, and the threshold for movies 100. The last columns are relative to the dataset-size ($|C|$ = number of entities).}
 	\label{tab:summed_unique_words}
 	% SUMMED-TERM-FREQUENCIES:
 	% \textbf{Siddata} & 163285 & 87840  & 40998  & 11619  & 6649   & 3722   & 765   & 317   & 60     & 8     \\

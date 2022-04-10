@@ -15,15 +15,102 @@ Let's go over and interpret the results in order.
 3) Hyperparameters
 4) Architecture 
 
+\subsection{Results for Placetypes}
 
-\includeMD{pandoc_generated_latex/5_2_discussion}
+Let us first discuss the results for placetypes. 
 
+When doing classification with decision-trees it is a design-decision to either decision-tree per class that just classifies if a sample is that class or not, or instead just one tree that must predict the exact class membership for all classes.
+
+In \autoref{tab:f1_geonames_foursquare_all}, we reported the results both for the case of 1-vs-rest and all-at-once. Let us discuss them:
+
+Performances for depth-limited trees are not consistently worse than unbounded trees. Surprising on first glance, but decision trees are known to be prone to overfitting, which can only really happen for unbounded trees.
+
+The best results are achieved for 1vsRest and balancing or not 1vsRest and no balancing. Generally, especially for depth-limited trees it holds that If AllAtOnce, balancing is bad for performanc, and If 1vsRest, balancing is good for performance. That makes sense because as stated above, the depth-limited ones can only predict very few classes, explaining why these are bad at AllAtOnce. For the same reason however they benefit from unbalanced datasets, in which case they just assign the two most common class labels - this happens without balanced sample-weighting: the trees simply assign the respectively most common Geonames/Foursquare class. Generally however, especially for depth-limited trees, 1vsRest improves performance - reason for this explained below.
+
+
+\subsubsection*{Explanations for good results}
+
+
+As shown in \autoref{tab:f1_mainalgos_me_short}, the achieved results outperform those of the literature for the placetypes-dataset, often with a significant margin. Considering that this implementation replicates \cite{Derrac2015} without major algorithmic improvements and does not contain some of the improvements of \cite{Ager2018, Alshaikh2020}, this is initially surprising, so here we will discuss some possible explanations for that.
+
+\paragraph{Errors} 
+Naturally, the first thing to check in this situation is to check for errors in the implementation. Following that route it is however important to keep in mind that errors in the actual algorithm are an unlikely candidate for an erroneously high performance. As elaborated before, the performance of the decision-tree is only a surrogate metric to evaluate the resulting semantic directions. Among others this implies that the classification target for the task is disregarded in all algorithm steps except the final evaluation with the decision trees. As long as that is given,  the only realistic source of error that leads to higher-than-expected accuracies reliably is thus in this step. This does not mean that there are certainly no errors in the implementation of the rest, but as long as the classification target is not used, all these errors would only coincidentally lead to better classification results. In contrast to that, there are many sources of errors in the decision tree classification that will likely lead to unrealistically high performances such as mixing up the training- and testing set. In any case, both the algorithm itself and the decision-tree classification was triple-checked for errors and many sanity-checks were performed that all lead to the same conclusion, so from now on we will assume that the results are correct and discuss possible reasons for that\footnote{The code is open-source and available at \url{github.com/cstenkamp/derive_conceptualspaces}, and \me is thankful for any issues.}
+
+
+\paragraph{One-Vs-Rest-Classification}
+
+\cite{Ager2018, Alshaikh2020} are both unclear if they did the former or the latter. Generally, All-At-Once would be the harder task and comparing accuracies of 1vsRest to AllAtOnce an unfair comparison. However, there are a few things that can be assumed:
+
+Both of them report to have used the sklearn-implementation of decision-trees, just like this work. This specific implementation reportedly uses the CART algorithm \cite{breiman1984classification}, which only allows binary trees, where every node has exactly two children\footnote{\url{https://scikit-learn.org/stable/modules/tree.html\#tree-algorithms-id3-c4-5-c5-0-and-cart}}. Consequently, a decision tree of depth one can only classify $2^1 = 2$ classes, whereas a tree of depth two can classify up to $2^2=4$ classes. 
+%TODO: actually for depth 2 it's 2^2 + 2^1 + 2^0 = 7 and thus for depth 1 = 3 
+Due to that, the best achievable accuracy of a perfect depth-1-tree is $\frac{\text{||samples in two most common classes||}}{\text{||samples in all classes||}}$, which is $\frac{176+74}{403} = 0.62$ in the case of Geonames and $\frac{88+82}{391} = 0.43$ for Foursquare \todoparagraph{(on average! still random assignment to train and test sets!)} the latter is lower than what \cite{Alshaikh2020} report. This would be even a lot more pronounced when classifying the movie genre, which has 100 classes. 
+
+Also semantically it is reasonable to assume to do 1vsRest: they state extensively that they are looking for a direction for \textit{scarieness} in movies, where the genre corresponding to that \textit{(Horror)} is only one of the genres. This kind of mapping Genre-FeatureDirectionPredictingGenre can only be found with separate trees per genre - and thus generally per class. Both of these reasons lead us to the assumption that they likely also did a separate tree for each of the features.
+
+\paragraph{Dataset size}
+Only a small subset of samples even \textit{have} a class assignment (403 of 1383 in 7 classes in the case of Geonames (see \autoref{fig:scatter_mds_placetypes}), 391 in 9 classes for Foursquare), and the classes are heavily imbalanced (Geonames between 176 and 14 samples per class, Foursquare between 88 and 6). I used the classes as uploaded to \url{https://www.cs.cf.ac.uk/semanticspaces/} by \cite{Derrac2015}, of course there is the chance that they did not make all of their data publicly available, whereas \cite{Ager2018, Alshaikh2020} had access. Furthermore, that is generally a tiny dataset so the statistical power of any result here is really low - maybe it is just coincidendence
+
+\paragraph{Not having some improvements of \cite{Ager2018}}
+The contributions from \cite{Ager2018} were primarily the Fine-Tuning and the condition where averaged word-embeddings are used instead of \gls{mds} (denoted \textbf{AWV}). As can be seen in \autoref{tab:f1_placetypes_long}, these contributions don't seem to affect the classification performance much, being in the same region as those for their MDS-condition which is implemented here as well: There are no really significant improvements that are not given here, giving no reasong to assume that their performance should be superior.  
+
+\paragraph{Not having some improvements of \cite{Alshaikh2020}}
+
+The \textbf{Ortho} condition of \cite{Alshaikh2020} actually does significantly outperform the base algorithm for many configurations. For Foursquare, their performance comes very close to mine, whereas their Geonames-performances are a lot worse than mine.
+
+With the utmost respect, if the code uploaded by \cite{Alshaikh2020} is really the basis for their implementation, I have reasons to doubt what they say they do and what they do really matches. A quick inspection of their uploaded source code\footnote{\url{https://github.com/rana-alshaikh/Hierarchical_Linear_Disentanglement/blob/master/Hierarchical_Linear_D4.py\#L485-L486}} revelaed for example they take the kappa-score from on the raw predictions, not on the rank like \cite{Derrac2015} described and like we do (see \autoref{tab:kappa_measures}) and they also don't weight their kappas. Apart from observations like this, it is hard to say more about their code, because the two files uploaded by them are not the whole algorithm and they load quite a few files that are not in the repository, and also none of the evaluation on basis of decision tree performance is in the repository.
+
+\paragraph{Using the best configuration}
+
+One difference is as far as I can tell, that we looked for the best configuration \textit{for this particular task}, which is a different one for each combination of dataset $\times$ \gls{dt}-depth $\times$ classification-target. I interpret \mainalgos such that they did hyperparameter-tuning before, using another possibly subjective metric \todoparagraph{test this claim}, and then decided on one (or rather four, see \autoref{tab:f1_placetypes_long}) configuration that was not optimized for the dataset $\times$ \gls{dt}-depth $\times$ classification-target. It should be noted that in this work, the algorithm is also not optimized for that task, but only the best of the 80 different parameter-combinations that were executed is used respectively. At the same time however, some \todoparagraph{which} way to find a hyperparameter-configuration has to be used, and it is unlikely that \mainalgos chose the worst configuration. \autoref{tab:f1_geonames_foursquare_all} displays robust results of a parameter-configuration that proved good on average. As these results, however, also outperform those of \mainalgos significantly, choosing the best configuration seems to play only a minor role for the performance.
+
+\paragraph{Weighted Average of the individual classifiers}
+
+The considered scores for the 1vsRest-condition of this work are calculated from the scores of the individual per-class classifiers both with uniform weighting per class (bottom two rows of \autoref{tab:f1_geonames_foursquare_all}) and also with class weights inversely proportional to class size (middle two rows). Clearly, the condition that weights the indiviudal scores leads to better results. Weighting the score is a reasonable assumption, given that the individual class frequencies are very imbalanced (see \autoref{fig:scatter_mds_placetypes}). Unfortunately, \mainalgos do not explicitly share if they calculated weighted class scores as well. If we assume for now that \mainalgos did report unweighted scores and thus disregard the condition where class-scores are weighted (see bold scores in \autoref{tab:f1_geonames_foursquare_all} or last column of \autoref{tab:f1_placetypes_long})), our results are still comparable with those of \mainalgos and especially in the case of GeoNames-labels a lot closer to those reported in the literature. So while I hereby argue that weighting the scores makes sense, even if that is not the case our results are still acceptable. Again I want to stress that there are only really few and imbalanced labels for this dataset in general, making the statistical power of these results very small.
+
+\paragraph{Improvements that we do have}
+
+We do not have many differences in hyperparameters or algorithm-components than \mainalgos do, but there some. For example using tf-idf as \gls{quant} instead of PPMI: Close inspection of \autoref{tab:best_params} shows that often, the tf-idf results are superior to the PPMI-results, and sometimes the combination of using tf-idf as quantification and tf-idf as dtm-quantification is good. This may lead to two conclusions: Either tf-idf is just better than PPMI under certain conditions, or just that the fact that more different results generated here just increased the statistical chance that good results were among the generated ones.
+
+\subsubsection*{Conclusion} 
+
+Even though this work did not do much beyond \mainalgos, maybe there were some small things that were done here that gave an edge, such as trying out different or just more hyperparameter-combinations. Maybe the scores here were calculated differently than in \mainalgos, but even if that were the case the results generated here are still comparable. Maybe I had errors, maybe \mainalgos did, but in any case as the dataset is so small exact results do not seem incredibly informative anyway. Most importantly the comparison was performed to check if this implementation is working correctly, and the evidence for that appears very strong.
+
+\subsection{Results for educational resources}
+
+One of our two research questions was to figure out if the methodology works for our domain. So now that we have established that the implementation seems to work, let us finally look how the algorithm copes with the Siddata-dataset and answer this question.
+
+\subsubsection{Fear of dataset differences}
+\label{sec:discuss_datasetdiffs}
+
+When describing the datasets in \autoref{sec:datasets}, we noticed that they are quite different. An important difference is that in contrast to the originally used datasets, in our dataset the relationship between how relevant a concept is for an entity and how often its words occur in the respective \gls{bow} is not given. Furthermore, the Siddata-dataset contains far less words per entity: the median number of unique words per description is three orders of magnitude smaller compared to the placetypes-dataset (see \autoref{tab:summed_unique_words}). Even though the number of entities in the dataset is higher, it contains substantially less unique words, especially in relation to the dataset-size (see \autoref{tab:summed_unique_words}). The difference is very prominent in relation to the dataset size (indicated by the last two columns). This leads to the fact that for most of the \glspl{ngram} that can serve as candidate-terms, the number class with entities that contain the phrase is far smaller than the negative class. 
+
+\textcite{Derrac2015} extracted roughly 20\,000 candidates for the movies- and placetypes-datasets. If the same number of candidates were to be extracted in our case, more than half of them would occur in less than 25 descriptions, such that the positive class for the corresponding classification problem contains only $\frac{24}{26346}=0.09\%$ of the samples. It seems unlikely that even class weighting can make up for that, yielding a bad classification. The distribution of interim results seem to support this hypothesis: In a sample run, 10\,060 candidates were extracted (\autoref{tab:generated_stats}) As displayed in \autoref{fig:candidate_histogram}, the number of candidates is exponentially decreasing. 
+
+Despite this, a sample run with 200 dimensions still had 5016 phrases with $\kappa \geq 0.1$ and 1008 with $kappa \geq 0.5$, which is enough for the algorithm (for 200D only 400 ones with $kappa \geq 0.5$ would be necessary). However there are far less ones in $\kappa_{0.1}$, meaning the clusters are considerably smaller. On the other hand, consider that for the placetypes-dataset in the 200D-case 21819 out of 21833 candidates had such a kappa score, which actually does not seem helpful at all.
+
+If we had bad results we could have only used the 1500 with the longest descriptions, bringing us closer to the distribution of the placetypes-dataset, but still not changing the properties. In sum, despite the dataset differences the algorithm does seem to extract enough \todoparagraph{and is robust bla bla}. Schlägt sich nicht aus dass wir weniger candidates haben. 
+
+
+
+
+
+\includeMD{pandoc_generated_latex/5_2_siddata}
+
+\section{General Algorithm}
+
+\includeMD{pandoc_generated_latex/5_3_algorithm}
+
+\includeMD{pandoc_generated_latex/5_3_evalderrac}
+
+\section{Architecture}
+
+\includeMD{pandoc_generated_latex/5_4_architecture}
 
 \section{Future Work}
 
 \includeMD{pandoc_generated_latex/5_0_futurework}
 
-\section{Shortcomings}
-
 
 \section{Conclusion}
+
+\includeMD{pandoc_generated_latex/5_6_conclusion}

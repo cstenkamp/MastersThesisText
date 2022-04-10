@@ -1,5 +1,7 @@
 ## "Workflow", also wie ich mich voran gearbeitet habe
 
+\todoparagraph{The calculation how to find the best threshold for candidates}
+
 PLOTS HERE:
 * why kappa_weights=None is bad 
 * Plots/Tables mit set-overlaps von meinen placetypes zu deren (und auch die big_21222.yml ergebnisse danach auswerten)
