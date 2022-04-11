@@ -79,6 +79,10 @@ Here we bring together the embedding of the individual entities and the extracte
 	* Die Richtung (wie Alshaikh2020) eben mit ner neuen SVM-Hyperplane bestimmen
 
 
+### Post-processing
+
+* TODO: Basiert der fine-tuning step von \cite{Ager2018} auf Supervised learning?
+
 
 ### Embed with Semantic Directions (includes find cluster names)
 * Das mit dem Koordinatensystem drehen passiert gar nicht so wie ich dachte dass es passiert...?!
@@ -87,10 +91,6 @@ Here we bring together the embedding of the individual entities and the extracte
     * keybert (thresholded close bert embeddings)
     * TODO: Mention Camel2009 one!!
 * In the end we re-embed the entities into a space where each of the vector components is a semantic directions and the value are the respective \gls{rank}ings. That's what we then finally call its \textbf{feature-based representation} 
-
-### Post-processing
-
-* TODO: Basiert der fine-tuning step von \cite{Ager2018} auf Supervised learning?
 
 
 

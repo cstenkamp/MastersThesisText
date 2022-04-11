@@ -128,6 +128,7 @@ A common prerequisit for NLP algorithms is to pre-process the text corpus. The p
 
 As the main considered dataset of university-courses is highly multilingual (see \autoref{fig:sid_statistics}), one of the first questions that needs to be addressed is how entities of different langauges are handled. The algorithm consists of classical language processing algorithms such as comparing \gls{bow} representation of the entities, which means that the same text in two different languages may result in maximally different representations\footnote{\todoparagraph{another reason that makes checking out word2vec worth it!}}. Because of this, before any other processing, the languages of the entities is checked, such that entities of languages other than the demanded may be either translated, left out or used anyway.\footnote{For details about the translation-step, it is referred to Appendix \ref{ap:translating}. It should be noted that professional automatic translation is costly and thus not all texts are available in all languages.}
 
+\todoparagraph{LEMMATIZATION LINK:} % https://textmining.wp.hs-hannover.de/Preprocessing.html#Lemmatisierung
 
 The following components are developed for the preprocessing, every one of which can be individually enabled or disabled:
 \begin{itemize}
@@ -249,12 +250,16 @@ An analysis of \cite{Carmel2009} showed that a statistical method to extract fea
 from Alshaikh2020: "The learned vectors will be referred to as feature directions to emphasize the fact that only the ordering induced by the dot product d_i · e matters"
 
 
+\subsection{Concluding stuff for algo}
+
 \includeMD{pandoc_generated_latex/3_1_algorithm}
 
-\section{Features and differences to original algorithm}
+\subsection{Features and differences to original algorithm}
 
 \includeMD{pandoc_generated_latex/3_features_differences}
 
-\section{Reasonable params}
+\subsection{Reasonable params}
 
 \includeMD{pandoc_generated_latex/3_reasonableparams}
+
+\subsection{Algorithm Complexity}
