@@ -1,3 +1,6 @@
+According to \cite{Turney2010}, vector-space models fall into different categories depending on if the similarity of documents (Term-Document-Model) or of words (Word-Context-Model) is in question.  The former relies on the \textbf{bag-of-word hypothesis}, stating that documents with similar words have similar meaning. The Word-Context-Model relies on the \textit{distributional hypothesis}, stating words that occur in similar context have similar meanings.
+
+
 
 https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction: \q{This specific strategy (tokenization, counting and normalization) is called the Bag of Words or “Bag of n-grams” representation. Documents are described by word occurrences while completely ignoring the relative position information of the words in the document.")}
 

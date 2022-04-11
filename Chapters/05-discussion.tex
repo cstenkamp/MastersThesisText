@@ -107,6 +107,8 @@ As established, a very important difference is that more relevant words do not o
 
 \subsubsection{Classification results}
 
+\cite{Ager2018}: \todoparagraph{"Interestingly, depth-1 trees achieved the best overall performance, with depth-3 trees and es- pecially unbounded trees overfitting"}
+
 Keep in mind that we're only looking at the Faculty! We know that this by far does not test everything the algorithm does or how it performs for other things-to-compare, so the best analysis would just be human studies.
 
 We compared to BERT (85.19\% accuracy), and to 3D-embedding (64.3\% weighted accuracy), and we robustly achieved 81.4\% accuracy with depth one trees! Really surprised me. The one that uses only three dimensions is already better than BERT, and the unbounded one has 94.3\% classification accuracy. Interestingly, classifying all faculties at once is a lot worse, so maybe a fairer comparison to BERT would have been if there we also would have followed the 1vsRest way, but that is future work.
@@ -186,7 +188,26 @@ Now that we seen the algorithm in action and painstaking implemented it we are e
 
 \subsection{General algorithm idea}
 
-When first confronted with the algorithm of \textcite{Derrac2015}, it appears oddly specific 
+When first confronted with the algorithm of \textcite{Derrac2015}, it appears oddly specific. However after having read the Gärdenfors' book \textcite{Gardenfors2000a}, the idea for their algorithm was acutally pretty pretty self-evident: In his book \cite{Gardenfors2000}, Gärdenfors suggests that conceptual spaces can be generated from high-dimensional sensory input by using \gls{mds} to project the original data into a Euclidian space to do geometric reasoning in that space. The book has an entire chapter on computational aspects, in which the author discusses vector space models, dimensionality reduction techniques an \gls{ann} architectures for different levels of human conceptualization. According to that, MDS is especially good at dealing with pairwise distances judgements from a subject's perception, to create a more \textit{economic} representation for \textit{phenonemal} \glspl{cs} \cite[221]{Gardenfors2000a}. Considering that \textcite{Derrac2015} did not create the space from sensory data but from text corpora, their algorithm combines this with the steps for a classical \gls{nlp} pipeline as described by \cite{Turney2010} (\autoref{sec:vsm_construction}) where the distance of two texts is measured by the words they share. With that, the core contribution of \cite{Derrac2015} mainly lies in the idea that the \textit{faithfulness} of a potential direction for the resulting semantic space can be assessed by the performance of the corresponding decision problem.
+
+\paragraph{Measuring the Faithfulness of directions}
+
+It seems reasonable that this assumption holds for the datasets originally considered by \textcite{Derrac2015}. As extensively discussed, when concatenating reviews of movies or tags describing pictures of places it is natural that words that describe a salient feature of the respective entity occur more often. The Siddata-dataset consists of short description without this property, where most words have a relative document-frequncy of less than a percent. However, the technique of comparing the ranking induced by the classification with the score of the words still yielded enough results, and the directions seem to consist of interpretable property. The robustness of the algorithm in that regard is surprising. 
+
+% Under the assumption of the \gls{distribhyp}, the assumption that this is possible seems reasonable. \todoparagraph{Naher drauf eingehen warum? Ich kann nicht einfach distributional hypothesis sagen und fertig}
+
+\subsubsection{Requiring MDS}
+\label{sec:discuss_mds}
+
+\textcite{Derrac2015} explicitly state that MDS is best dimensionality reduction technique for their algorithm, as it is one of the only ones that results in a metric space. In their paper, they describe SVD (the mathematical algorithm behind \gls{lsa}) as popular technique to for dimensionality reduction, but further state that \q{SVD produces a representation in which entities correspond to vectors, which should be compared in terms of cosine similarity rather than Euclidean distance. [...] However, we can expect that spatial relations such as betweenness and parallelism [...] are not meaningful in the representations derived from SVD} \cite[14]{Derrac2015}. These relationships are required for semantic classifiers which mimic as analogical reasoning and betweeness-based reasoning, which they demonstrate to work for all of their domains. However.
+
+
+\paragraph{Using classical techniques}
+
+The algorithm relied on a classical linguistic pipeline where a frequency matrix is generated from the \gls{bow}-representation of each entity. As discussed earlier, this comes with problems such as destroying the information about word order and conceptual similarity of words. Interestingly, for both follow-ups \cite{Ager2018,Alshaikh2020} using modern neural embeddings instead did not yield substantial improvements (see \autoref{tab:f1_placetypes_long}) (even though however \cite{Alshaikh2020} state in their paper that relying on modern embeddings such as \gls{bert} \cite{Devlin2019} may lead to better results). However, what the authors did was to just replace the \gls{vsm} generated classically in the first steps of the algorithm with a neural embedding, such as averaged GloVe embeddings \cite{pennington2014glove} of the words in the text. On that they ran the exact original algorithm of creating a frequency matrix from the \gls{bow} and using a linear classifier to get the direction. \todoparagraph{Wenn man schon embeddings nutzt dann soll man auch die eigenschaft dass die sinnvolle richtungen haben nutzen. Und wenn man dann shcon mit vektoren arbeitet dann kann man auch lsa undso nutzen. Und dann hat man auch nicht mehr das problem mit too-small-positive-class}
+
+
+
 
 
 \includeMD{pandoc_generated_latex/5_3_evalderrac}
@@ -199,8 +220,9 @@ When first confronted with the algorithm of \textcite{Derrac2015}, it appears od
 \includeMD{pandoc_generated_latex/5_4_architecture}
 
 \section{Future Work}
+\label{sec:futurework}
 
-\includeMD{pandoc_generated_latex/5_0_futurework}
+% \includeMD{pandoc_generated_latex/5_0_futurework}
 
 
 \section{Conclusion}

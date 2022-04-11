@@ -6,7 +6,7 @@ This chapter explains the methods that were used to achieve the two goals of rep
 
 To do that, we will firstly look at the datasets used by \mainalgos, as well as our own one and compare key statistics. The subsequent section then explains the used algorithm broadly before looking at each of its steps in detail. Based on that, the specific architecture that was created as well as the workflow used to generate meaningful results will be introduced to demonstrate its process. The final section explains what kind of methods and metrics were used to generate and interpret the results that will follow in the next chapter.
 
-Given that there were two research questions, one asking if the replicating algorithm can be applied to another domain and the other asking for a reliable application, it makes sense to both look at datasets and general algorithm on the one side, but also at the worflow and architecture. Writing about the latter while also open-sourcing the code-base is especially useful to ensure ease and speed of future replication, such that all claims can be independently tested with the exact same implementation without having to rely on ambiguous and incomplete verbal explanations. \footnote{To o achieve reproducibility. Just like this thesis could have been a lot less effort if \mainalgos did that instead of ambiguous incomplete descriptions.}
+Given that there were two research questions, one asking if the replicating algorithm can be applied to another domain and the other asking for a reliable application, it makes sense to both look at datasets and general algorithm on the one side, but also at the worflow and architecture. Writing about the latter while also open-sourcing the code-base is especially useful to ensure ease and speed of future replication, such that all claims can be independently tested with the exact same implementation without having to rely on ambiguous and incomplete verbal explanations.\footnote{To o achieve reproducibility. Just like this thesis could have been a lot less effort if \mainalgos did that instead of ambiguous incomplete descriptions.}
 
 
 %JOHANNES' KOMMENTARE TO WHAT I SENT HIM
@@ -233,11 +233,6 @@ There are two datasets used by all three authors: place-types and movie-reviews 
 
 \section{Algorithm}
 
-\todoparagraph{ARGUE:}
-* doc2vec nicht implementiert weil schlechter bei ager.
-* Finetuning nicht drin weil nur marginal besser bei ager (ref tabelle im anhang)
-* ...ähnliche gründe für alshaikh finden
-
 
 \input{Chapters/sections/methods_algorithms}
 
@@ -341,7 +336,7 @@ It was originally unexpected, but implementing an appropriate architecture for t
 	% mit 2 Zeilen code kannst du dir in nem Jupyternotebook nen 3D-Plot anzeigen mit ner SVM die "Mathematik" von nicht-mathe trennt, mit gehighlighted ob "Informatik A" und "Informatik B" beeinander sind
 \end{description}
 
-\includeMD{pandoc_generated_latex/3_3_architecture}
+% \includeMD{pandoc_generated_latex/3_3_architecture}
 
 
 \subsection*{Faculty-Classifier}

@@ -142,6 +142,8 @@ In conceptual spaces, concepts are represented as convex regions in domain-speci
         % \cite{Derrac2015}: "Conceptual spaces \cite{Gardenfors2000a} are metric spaces which are used to encode the meaning of natural language concepts and properties."
     \end{theorem*}
 \end{minipage}}
+\label{sec:csdefinition}
+
 
 Formally defined, a conceputal spaces needs the following definitions:
 \begin{description}
@@ -167,17 +169,33 @@ Some corollaries:
 
 % \includeMD{pandoc_generated_latex/2_2_conceptualspaces}
 \todoparagraph{look if I want to take a paragraph from 22conceptualspacesMD}
-\todoparagraph{Rudiger had a formal definition in the CS course}
 
 \subsection{Data-Driven Generation of Conceptual Spaces}
 
+So far, the area of application for Conceptual Spaces has been small. Most of the current works that rely on conceptual spaces create custom \textit{phenonemal} spaces for semantic domains, where quality dimensions are chosen by the researchers (eg \cite{Schockaert2011}). 
+
+The previous section has shown that \glspl{cs} can serve as a framework allowing to allow for interpretable classifiers that allow for explainable recommendation based on geometric reasoning, replacing the need to manually create knowledge bases. If however now one needs to manually create these spaces, not much was gained. The work of \cite{Derrac2015} is a technique that alllows to automatically generate spaces from pairwise dissimilarites of a corpus of texts in a data-driven fashion. In his book, Gärdenfors provided several suggestions how one could build spaces from high-dimensional input neurons. One of these was to use the \gls{mds} algorithm for that creates a euclidian space from pairwise distance matrices, such as an individual's assessement of similarities. The work of \cite{Derrac2015} basically follows this suggestion using classical AI algorithms. % and \cite{Ager2018} and \cite{Alshaikh2020} provided some useful additions for it without changing the main logic. So, we'll work with their algorithm, also only making small improvemenents. So the two main areas of work are implementing the original algorithm, and changing small details of it where most appropriate such that it works well for the domain we're interested in.
+
+To create the space, the authors unsupervisedly extract words of the text descriptions of corpus of \glspl{entity} of a specified domain. These words serve as candidates for semantic feature directions of a conceptual space. To find out which candidates are useful as features, they first embed all entities in a vector space. To identify which of the candidates constitute meaningful features, they create create a linear classifier for each of the candidates that splits embeddings of descriptions that contain the word from those that do not. Those words for which the classification performance performs well enough are considered meaningful features.  
+
+In their paper, the authors create domain-specific conceptual spaces for three domains that allowed easy collection of text corpora, which were movies and their \gls{imdb}-reviews, place-types and tags of photos at these places and wines and their reviews on a respective platform. Each movie, place-type or wine will henceforth be termed \gls{entity}. A representation of a movie is then generated from the \gls{bow} of the descriptions of the individual movies, leading to a very high-dimensional and sparse representation for all movies. To make the representations less sparse and more meaningful, the words in the \gls{bow} are subsequently \gls{ppmi}-weighted, which (similar to \gls{tf-idf}) weights words that appear often in the description of a particular movie while being infrequent in the corpus overall high, ensuring that discriminative words are more relevant in the embedding.This weighted \gls{bow} is however no Euclidian space, which is why the authors subsequently use \gls{mds}, a dimensionality reduction technique that creates a Euclidian space while ensuring that original distances are preserved as well as possible. This space already allows for interpretable geometric reasoning such as betweeness, but its directions are not interpretable human concepts. To find these, the authors assume that words that describe relevant features of the respective entites appear among their descriptions and that words describing meaningful features correlate with good classifier performance in separating entities based on them. To classify, the authors then use linear classifiers such as \glspl{svm}. 
+
+Consider the domain of movies, and the word "scary" as candidate feature direction. The movie-embeddings are grouped into those that contain the words and those that do no, and finds a hyperplane that divides both groups. The advantage of linear classifiers is that they create a linear hyperplane that best separates positive from negative entities. The orthogonal of that hyperplane is a vector, which can serve as feature axis: The distance of orthogonally projecting an entity onto this vector induces a ranking of entities. The further away an entities' embedding is from the decision surface on the positive side, the more this feature entity. To assess the performance, \cite{Derrac2015} use Cohen's kappa measure to compare the ranking induced by the plane with the number of occurences of the word for the entity. The better these rankings match, the higher the likelyhood that a good feature direction was found. To reduce the number of resulting features, they are subsequently clustered based on the similarity of their orthogonals before the mean direction of this feature-cluster is calculated. 
+
+The final \textbf{feature-based representation} is generated by representing each entity as vector whose individual components corespond to the ranking of this entity compared to all others for each of the most salient feature directions. Thus, in the final feature-based representation only the relation of each entity in relation to all others with respect to the salient directions is relevant. Given that respective directions are not necessarily orthogonal and that rankings are no Euclidean metric, the final embedding loses some geometric properties but gains interpretable directions.
+
+The algorithm is optimized to \textit{look good to humans}, meaning there are no staright-forward metrics or obvious evaluations. To evaluate its performance quantitatively, we will test if it is possible to use the detected semantic directions to classify human concepts among the data, such as the genre assigned to a movie.
+
 \includeMD{pandoc_generated_latex/2_3_datadrivengeneration}
 
-\todoparagraph{Mit einem Satz (EINEM SATZ!!) erklaren dass wir den mit evaluaten werden indem wir gucken wie gut er dinge klassifizieren kann.}
 
 \subsection{Explainable Reasoning with Conceptual Spaces}
 % was "computational reasoning"
 \label{sec:reasoning}
+
+
+
+\todoparagraph{Ager bringt viele gute Punkte regarding warum der bums sinnvoll fur explainable recommenders ist}
 
 \todoparagraph{important for us is that we} don't have ONE SINGLE SIMILARTIY; BUT THAT IT's context-dependent!!!!
 
@@ -314,11 +332,12 @@ I wrote down the syllogisms here, however that's not the only way to apply it, I
 \textbf{Metaphors / Metonymy} (saying "the Pentagon" when referring to the US military) follow from a fortiori/analogical reasoning
 
 
+\todoparagraph{I am referring to this figure in the discussion!}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{graphics/stolenfigures/reasoning_samples.png}
 	\slcaption{
-		Different forms of reasoning represented graphically. Holy shit remove me
+		Different forms of reasoning represented graphically. \todoparagraph{Holy shit remove me}
 	}
     \label{fig:graphic_reasoning}
 \end{figure}
@@ -364,6 +383,19 @@ There are also techniques that extend the algorithm of \textcite{Derrac2015}: \t
 \todoparagraph{BERT as best language model}
 
 
+
+\todoparagraph{For more related work read the intros and corresponding sections of Ager and Alshaikh!}
+
+
+
+
+
+
+
+
+
+
+
 \section{Relevant Algorithms and Techniques}
 \label{sec:required_algos}
 
@@ -372,6 +404,17 @@ There are also techniques that extend the algorithm of \textcite{Derrac2015}: \t
 Thus far, we have described the base algorithm which this thesis replicates. Before describing each of its step in detail, it is useful to get a grasp of some general concepts relevant for it and its components. Furthermore, we will to put it into the context of the field of computational \gls{nlp} and elucidate some of the required theoretical foundation, and finally quickly look at what other techniques can be used for some of its components. \todoparagraph{Also, we need some general linear algebra bc after all these are vector spaces, so let's look quickly at projecting and playing around with coordinates}
 
 \subsection{Classical Vector Space Construction}
+\label{sec:vsm_construction}
+
+
+\textcite{Lowe} conceived a general framework to construct vector spaces from texts, splitting the process into the steps of first counting the token frequencies, then transforming the raw counts into more useful \gls{quant} measures (see \ref{sec:word_count_techniques}) %adjust the weights of the elements in the matrix, because common words will have high frequencies yet are less informative than rare words.
+ %TODO: talk about a fucking DOC-TERM-MATRIX, A MATRIX OF FREQUENCIES!!!
+and smoothing the space using dimensionality reduction, before calculating the similarities on the resulting embedding. While the considered algorithm requires more steps before calculating the similarities to allow for domain-specific and more complex forms of reasoning, it also adheres to this structure, as will be shown in section~\nameparanref{sec:generate_vectorspaces}.
+
+\todoparagraph{zu 90 prozent raus hiermit, und falls doch drin dann kleiner}
+\begin{quote}
+	After the text has been tokenized and (optionally) normalized and annotated, the first step is to generate a matrix of frequencies. Second, we may want to adjust the weights of the elements in the matrix, because common words will have high frequencies, yet they are less informative than rare words. Third, we may want to smooth the matrix, to reduce the amount of random noise and to fill in some of the zero elements in a sparse matrix. Fourth, there are many different ways to measure the similarity of two vectors. \hfill \textcite{Turney2010}
+\end{quote}
 
 \todoparagraph{Mention Distributional Hypothesis}
 
@@ -411,7 +454,7 @@ document-frequency $\text{df}_t$: How many documents $\in C$ contain $t$\\
 summed term-frequency $\text{df}_{t,*} = \sum_{d' \in C} \text{tf}_{t,d'}$: How often $t$ occurs in any document $\in C$
 
 \paragraph{Tf-Idf} The most well-known technique formalizing this concept is the \gls{tf-idf}, which gives a term-document pair a higher weight if the term is generally rare in the corpus (low \textit{df}) and frequent in the respective document (high \textit{tf}):
-\vspace{-3ex}
+\vspace{-2.5ex}
 $$ w_{t,d} = \text{\textit{tf}}_{t,d} * log(\frac{|C|}{df_t}) $$
 
 %see also: https://towardsdatascience.com/3-basic-approaches-in-bag-of-words-which-are-better-than-word-embeddings-c2cbc7398016
@@ -422,7 +465,7 @@ $$ w_{t,d} = \text{\textit{tf}}_{t,d} * log(\frac{|C|}{df_t}) $$
 
 \textcite{Turney2010} suggested to use the \gls{ppmi} measure instead of \gls{tf-idf} to weight the counts in \glspl{doctermmat}, relying on \cite{Bullinaria2007}'s work taking into account psychological models to extract information about lexical semantics from co-occurence statistics. According to \cite{Turney2010,Bullinaria2007}, \gls{ppmi} performs most plausible to measure semantic similarity in word-context matrices compared to human evaluation. For that reason, \textcite{Derrac2015} and its follow-up works \cite{Ager2018,Alshaikh2020} rely solely on this technique. %(sec 4.2) of \cite{Turney2010}: Bullinaria and Levy (2007) demonstrated that PPMI performs better than a wide variety of other weighting approaches when measuring semantic similarity with word-context matrices.
 Like tf-idf, it weights terms that are strongly associated with a document highly by favoring terms frequently associated with document $d$ while infrequent in the corpus overall. For that, it uses the \textit{log} of the probability of the term-document-combination, normalized by the probability of this $d$ with any $t$ and this $t$ with any $d$:
-\vspace{-3ex}
+\vspace{-2.5ex}
 \begin{align*}
    w_{t,d} &= max\left(0, log\left( \frac{p_{d,t}}{\sum_{t'}p_{d,t'}*\sum_{d'}p_{d',t}} \right) \right) \\
    p_{d,t} &= \frac{\text{tf}_{t,d}}{\sum_{d'}\sum_{t'} \text{tf}_{t',d'}}
@@ -439,7 +482,7 @@ Next step is to smooth the frequency matrix. Goal is to keep comparison performa
 We start with sparse vectors, and then \q{some form of dimensionality reduction is typically used to obtain vectors whose components correspond to concepts.} \cite{Derrac2015}
 
 
-\paragraph*{LSA/LSA}
+\paragraph*{LSI/LSA}
 
 \textcite{Deerwester}
 
@@ -447,14 +490,12 @@ In fact, when using the right algorithms this has the additional effect to also 
 
 LSI relies on the \gls{distribhyp} in that it decomposes the matrix into the product of three matrices and then compresses them. Similar to AutoEncoders, if there is hidden information in the text than that will be used for this compression! 
 
+\paragraph*{MDS}
+\label{sec:mds}
+
+
 \subsection{Other important Techniques}
 
-includeMD{pandoc_generated_latex/2_othertechniques}
 
-
-
-
-
-
-
+\includeMD{pandoc_generated_latex/2_othertechniques}
 

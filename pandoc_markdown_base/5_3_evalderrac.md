@@ -1,55 +1,28 @@
 <!-- "Bezug auf die orig-paper ziehen und kritisch reflektieren" -->
-## Regarding their algorithm
-
 
 ### Where I spotted differences
 
 wenn meine ergebnisse anders sind als die von dem paper kann ich halt erst dann sagen "das widerspricht demunddem hier, die proposen dass und ich kann es (nicht) confirmen"
 
-### Evaluation of \mainalgos (from moved from algorihm)
-    
-* TABELLE which parameter-combis were USED, with optimal ones MARKED for \mainalgos (-> also into yaml!)
-
-* Stuff that was ambiguous:
-    * "that the better Ht separates entities to which t applies from the others in S,the better \vec{v_t} models the term t."
-        * allein von der aussage muss man das mit den induzierten rankings echt nicht machen, sondern halt nur auf classification quality (-> metrics like accuracy) gucken, bzw kappa anhand der binären klasse berechnen 
-        * With a candidate-threshold-tf of 100, that means 19.900 values (99.33%) have a rank of zero, how do you deal with that?!
-        *  the ranking induced by count, or the baremetal count?
-    * Regarding Kappa-Weighting-Algorithm:
-        * Yet another point where \cite{Derrac2015} are really low on information what parameters they used. Sklearn allows different weighting types\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.cohen_kappa_score.html\#sklearn.metrics.cohen_kappa_score}} - TODO: explain what that changes respectively!!}, and as this plot: ![kappa_weighting_funcs](graphics/figures/which_weigthing_algo.png){#fig:which_weighting_algo} TODO: also generally write about if Kappa is a good choice (see eg \url{https://en.wikipedia.org/wiki/Cohen%27s_kappa})
-    * DESC15 write they select Kappa "due to its tolerance to class imbalance", but don't menation any parameters -> Class imbalance weighting? Also [see plot] which other weighting value?
-
-* in [DESC15] machen die wirklich immer ne SVM für genau einen Term, und gucken sich anschließend an was für terms dann ähnlich clustern. [VISR12] hingegen (und viele andere!) versuchen erst latent kram zu finden, wodurch das das clustering imo viel besser funktionieren wird weil es viel weniger sparse ist (->und die "contains one-of-the-terms" klasse nicht so verschwindend gering ist compared mit der "doesn't-contain-the-one-term") Laut [DESC15] gibt's da keine Methoden die den metric space erhalten, die frage ist halt wie wichtig das ist für das was man erreichen will!
-
-* Der letzte Schritt mit dem Clustern der good-kappa-ones ist wirklich very basic und hat very much room for improvement
-* \cite{Alshaikh2020} do Kappa on binary, I can't believe that's good
-
 
 
 ### General algorithm Idea
 
-* Initially I wondered how they got the idea, but having read \cite{Gardenfors2000a}, the idea for their algorithm stood too reason
-    * Gärdenfors suggested to use MDS for dimensionality-reduction from high-dimensional input, projecting it into a euclidian space to then do gemetric reasoning, most of which was just implemented by \cite{Derrac2015}. 
-    * \cite{Derrac2015} just combined this with the classical NLP pipeline as analyzed by \cite{Turney2010}
-    * Their main contribution is to use the performance of the classifier in terms of ranking-scores to measure the faithfulness. And this does seem like a reasonable assumption assuming the distributional hypothesis and the theory mentioned in the lsa-chapter
-    * In his chapter "Computational Aspects" where he suggests vector space models, dimensionality reduction algorithms, ANN architectures for the three levels (see cs-chapter), he says:
-        The information received by the receptors is too unstructured, so a way of transforming the input into a more \textit{economic} form of representation with a reduced number of dimensions that can be handled on the conceptual or semoblic level is needed \cite[221]{Gardenfors2000a}. Gärdenfors suggests MDS (especially good when dealing with a \textit{phenonemal} CS with pairwise distance judgements from a subject's perception), Shephard's algorithm which reduces number of dimensions sucessively until the rank order would change sustantially, or even ANNs, concretely Kohonen's Self-organizing maps \cite{Kohonen1997}, which automatically reduce the representational complexity of the input while preserving similarities (of beliebiger distance function) among the different input vectors by mapping input vectors with common featurs to \textit{neighboring} neurons in the output map, thus preserving topological relations while making it lower-dimensional.
-* What would have been nice tho
-    * incorporating modern stuff like neural embeddings to get rid of the bow-problems (see chapter) (see my suggestion)
-    * better ways of getting rid of irrelevant clusters (see my suggestion and also problems with stopwords)
-    * This is not really a conceptual space - for example only points, for example its too highdimensional (which is what \cite{Alshaikh2019, Alshaikh2020, Alshaikh2021} noticed and worked on)
+* in [DESC15] machen die wirklich immer ne SVM für genau einen Term, und gucken sich anschließend an was für terms dann ähnlich clustern. [VISR12] hingegen (und viele andere!) versuchen erst latent kram zu finden, wodurch das das clustering imo viel besser funktionieren wird weil es viel weniger sparse ist (->und die "contains one-of-the-terms" klasse nicht so verschwindend gering ist compared mit der "doesn't-contain-the-one-term") Laut [DESC15] gibt's da keine Methoden die den metric space erhalten, die frage ist halt wie wichtig das ist für das was man erreichen will!
 
-### Regarding their main contribution of measuring faithfulness with kappa
+### Other things
 
-* The fact that their kappa-metric worked for me really suprised me, considering the different nature of the dataset
-    * their merge-candidate-directions-schritt (alle nehmen und die zum closestem herclustern und dann die richtung des T^0.5 übernehmen) ziemlich whack ist, ich schon einige wege hab damit umzugehen but many better ones are imaginable
+* Der letzte Schritt mit dem Clustern der good-kappa-ones ist wirklich very basic und hat very much room for improvement
+
+* better ways of getting rid of irrelevant clusters (see my suggestion and also problems with stopwords)
+* their merge-candidate-directions-schritt (alle nehmen und die zum closestem herclustern und dann die richtung des T^0.5 übernehmen) ziemlich whack ist, ich schon einige wege hab damit umzugehen but many better ones are imaginable
 
 * They do one SVM per term and then cluster similar ones. Ther terms sometimes occur only in like 50/15000 entities, so the validity of the kappa is should be doubted. \cite{VISR12} and many others first try to find latent stuff, which would improve that by a lot because its a lot less sparse. ("contains-one-of-the-terms" is a lot more than "contains-this-term"). According to \cite{Derrac2015} there are no methods that keep a metric space, however I doubt that is too important (see \ref{sec:discuss_mds})
     * WHY do they always calculate with cosine-distances (eg in my `select_salient_terms`) - I thought the important thing is that we are talking about POINTS, NOT VECTORS  (also - param-combi for closeness by euclidian distance isntead of that) -> FUTURE WORK
     * Why do their distance measures even work? Where does one even notice if they have points and no vectors? Bei der SVM (siehe meine Stackoverflow frage!) ists ja relevant.... und da nutzen sie punkte
 
 ### MDS
-\label{sec:discuss_mds}
+
 
 * Another important thing is the relevance of MDS. As stated in \autoref{sec:dim_red}, LSA would be the better choice, and the reason that \textcite{Derrac2015} use MDS is, to get a metric space that keeps distances to allow for geometric solutions for commonsense reasoning (see \autoref{sec:reasoning}) where betweeness and parallelism makes sense. I get that, but:
     * \textcite{Derrac2015} do the explainable classifiers where the that's important on this space, however this space does not have interpretable dimensions! Is THIS their endresult? 
@@ -60,6 +33,11 @@ wenn meine ergebnisse anders sind als die von dem paper kann ich halt erst dann 
     * speaking of which, what do we know about that space? What properties can we assume there? I'd definitely say dimensions are still correlated... but is this a metric space? a topological space?
     * shouldn't we follow this by something like PCA to decorrelate dimensions?
     * Is the space filled enough or are all datapoints very close?
+
+
+Given that respective directions are not necessarily orthogonal and that rankings are no Euclidean metric, the final embedding loses some geometric property but gains interpretable directions.
+
+!!!!
 
 ### Points as coordinates
 
@@ -76,6 +54,8 @@ Das problem was ich mit derrac hatte ist ja dass die so unglaublich unrobust war
 
 
 ## So are that now conceptual spaces?
+
+* This is not really a conceptual space - for example only points, for example its too highdimensional (which is what \cite{Alshaikh2019, Alshaikh2020, Alshaikh2021} noticed and worked on)
 
 * sehr viele vereinfachende sachen, like no convex regions but simply dots, however that's general reasonable 
 * still high-dimensional, that's not good
@@ -106,6 +86,17 @@ backref \autoref{sec:howtoreplicate}:
 * Wenn man sich in dem Paper mal die Movie-Cluster anschaut (einfach das textfile) sieht man dass das echt... bescheuert ist, die Cluster sucken hart
 
 
+
+* Stuff that was ambiguous:
+    * "that the better Ht separates entities to which t applies from the others in S,the better \vec{v_t} models the term t."
+        * allein von der aussage muss man das mit den induzierten rankings echt nicht machen, sondern halt nur auf classification quality (-> metrics like accuracy) gucken, bzw kappa anhand der binären klasse berechnen 
+        * With a candidate-threshold-tf of 100, that means 19.900 values (99.33%) have a rank of zero, how do you deal with that?!
+        *  the ranking induced by count, or the baremetal count?
+    * Regarding Kappa-Weighting-Algorithm:
+        * Yet another point where \cite{Derrac2015} are really low on information what parameters they used. Sklearn allows different weighting types\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.cohen_kappa_score.html\#sklearn.metrics.cohen_kappa_score}} - TODO: explain what that changes respectively!!}, and as this plot: ![kappa_weighting_funcs](graphics/figures/which_weigthing_algo.png){#fig:which_weighting_algo} TODO: also generally write about if Kappa is a good choice (see eg \url{https://en.wikipedia.org/wiki/Cohen%27s_kappa})
+    * DESC15 write they select Kappa "due to its tolerance to class imbalance", but don't menation any parameters -> Class imbalance weighting? Also [see plot] which other weighting value?
+
+
 ## So what do I think about all this
 
 How good do I think does the algorithm capture CS? How useful do I think CS are in general (two perspective, as model of human concept formation AND algorithm-that-allows-certain-things-like-reasoning), and how good do I think the algorithm does it? Is the algorithm practical?
@@ -118,3 +109,53 @@ How good do I think does the algorithm capture CS? How useful do I think CS are 
 There are also techniques that extend the algorithm of \textcite{Derrac2015}: \textcite{Alshaikh2019} take a vector space embedding and decompose it to several low-dimensional spaces, such that it more closely corresponds to the definition of a \gls{cs} which are split into multiple domain-specific spaces of low dimension. For that, they take the spaces from \cite{Derrac2015} to then cluster their features by domain and iteratively remove these groups to create multiple subspaces, while ensuring that \gls{word2vec} embeddings close to those of the removed ones are disregarded for future features.
 
 \cite{Alshaikh2021} want to get rid of MDS with it's quadratic space complexity and also write a completely new, unsupervised ANN algorithm based on GloVe embeddings (and suggest that doing that on BERT may be the shit). In it, they learn domain-specific embeddings from the BoW and like \cite{Derrac2015} use classification of candidate-from-text-occurs vs not-occurs for the ANN training while punishing close embeddings like \cite{Alshaikh2019}.
+
+
+
+
+
+
+
+
+
+
+
+
+### What assumptions are we dropping
+
+* we are only dealing with one domain (movies, placetypes, courses, ..) at a time (like CS, but what's missing is a sort of categorization at first.. however that one is never talked about anyway)
+* EITHER we have euclidean metric OR we have interpretable direcitons, NOT BOTH
+* The Gropuing into several low-dimensional subspaces per domain is a lot weaker: actually we'd have to embed entities into small spaces of only one domain! This is only kinda picked up again later by \cite{Alshaikh2020}
+    * \cite{Alshaikh2020}: "When representing a particular entity in a conceptual space, we need to specify which domains it belongs to, and for each of these domains we need to provide a corresponding vector." 
+
+
+
+#### On types and tokens
+
+* supposed to be regions, but we use vectors.  [TYPES are, which are MADE UP FROM TOKENS]
+    * MUCH more computationally efficient
+    * the domain is different than the theoretical idea of Gärdenfors - especially stuff like movies and courses, what ARE they? are they type or token? Rather both at once - the region of the course XYZ is composed of only one token, at least until we take into account a much bigger dataset that would allow us to do reasoning on "the set of all introductory computer science courses" or something. (For placetypes however we ARE dealing with types!) 
+
+Unlike many ther NLP approaches that rely on embedding (see \autoref{sec:embeddings}), in a Conceptual Space, natural language terms are not modelled as points or vectors, but as convex regions. A point in such a region is one specific instance of such a concept - you could say that regions denote \textbf{types}, with the individual points corresponding to their \textbf{tokens}. 
+
+According to \cite{Derrac2015}, using regions instead of points has some clear advantages:
+* It allows \q{to distinguish borderline instances of a concept from more prototypical instances, by taking the view that instances which are closer to the center of a region are more typical} \cite{Derrac2015} (they cite \cite{Gardenfors2000a})
+* Concept Subsumption ("every pizzeria is a restaurant"), mutual exclusiveness (no restaurant can also be a beach), overlapping concepts (some bars serve wine but not all, some establishments which serve wine are bars but not all) 
+* (their [41] says that "Region based models have been shown to outperform point based models in some natural language processing tasks")
+
+
+In their algorithm, \cite{Derrac2015} drop this assumption and work with vectors instead of regions.
+<!-- \q{In this paper, we essentially view point based representations as coarse-grained approximations of conceptual spaces, where points correspond to fine-grained categories instead of specific instances, while convex regions are used to model higher-level categories} -->
+While this may seem to stand in strong contrast to an important component of the theory, 
+* Computational Complexity on regions is vastly higher than for poitns or vectors
+* "learning accurate region boundaries for a given concept would require a prohibitive amount of data" \cite{Derrac2015}
+* Gärdenfors himself said when discussing if self-orgazinizing maps are useful that that is a GOOD THING, because that IS GENERALIZATION
+* If you'd want regions, a good approach would be to just generate the type from its token. In the case of educational resources, every instance of a course is a token and thus a point/vector, and you can build your region "Introductory classes to Computer Science" by the minimal complex region that encompasses all tokens of "Informatik A" and "Introduction to Algorithmen" etc
+
+TALK ABOUT that actually, in CS concepts (=types) are regions, BUT we have only one-instance-per, so TOKENS, so it's kiiinda reasonable that we have points! IF we would have the collection of "ALL Computer Science 1 Courses" it would be different
+
+% Zum Thema points vs regions: [CS] where properties and concepts are represented using convex regions, while specific instances of a concept are represented as points. This has a num- ber of important advantages. First, it allows us to distinguish borderline instances of a concept from more prototypical instances, by taking the view that instances which are closer to the center of a region are more typical [9]. A second advantage is that using regions makes it clear whether one concept subsumes another (e.g. every pizzeria is a restaurant), whether two concepts are mutually exclusive (e.g. no restaurant can also be a beach), or whether they are overlapping (e.g. some bars serve wine but not all, some establishments which serve wine are bars but not all). Region based models have been shown to outperform point based models in some natural language processing tasks [41] On the other hand, using regions is computationally more demanding, and learning accurate region boundaries for a given concept would require a prohibitive amount of data. In this paper, we essentially view point based representations as coarse-grained approximations of conceptual spaces, where points correspond to fine-grained categories instead of specific instances, while convex regions are used to model higher-level categories
+
+In any case, we often map regions in the high-dimensional space to point-embeddings, however according to \cite[222]{Gardenfors2000a} that's a feature not a bug because that is GENERALIZATION.
+
+* We say we're dealing with POINTS but we're constantly doing cosine similarity, isn't the important difference between points and vectors that cosine would be relevant for vectors, but euclidian(/..) distance for points?! I mean warum ist unser space metric?!

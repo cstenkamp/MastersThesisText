@@ -1,106 +1,64 @@
-% * Dataset + Algo Section "teilweise unveständlich"
-% * Verhältnis von Datensatz und Algorithmus wird nicht klar
+Let us finally go into detail about the main algorithm. The implementation of this thesis replicates and extends the algorithm proposed by \textcite{Derrac2015} with some novel contributions to deal with the given dataset. Further, some improvements from the works of \textcite{Ager2018} and \textcite{Alshaikh2020} are incorporated, who also replicated and improved the original algorithm and share Prof. Steven Schokaert as last author. According to our evaluation of the field, these two papers provide some useful improvements in several aspects, as they apply the algorithm to different datasets, suggest more straight-forward ways of evaluating their performance, and help in understanding important concepts. That we are focusing on only those three papers should by no means imply that they are the only ones that were considered and influcenced this implementation\footnote{See \autoref{sec:otherwork}}, however in contrast to the other pertinent literature these two works do not substantially divert from the algorithms core principles.
+% see \autoref{sec:otherwork} - \cite{VISR12} and their tag genome, the fact that the algorithm detailed here is basically only one step in \cite{Alshaikh2019}, Gärdenfors himself suggested that one may use self-organizing maps instead of classical AI/NLP algorithms.
 
-\todoparagraph{If not explicitly stated otherwise, hyperparameter also refers to exchangeable algorithm components such as which quantification is used}
+It is important to keep in mind that the algorithm is no rigid monolith but modularly consists of several components, such as \textit{dimensionality reduction}. Many of these components do not require specific algorithms, and \mainalgos also experiment with different components. The exact system for these components may be exchanged, and in the following these exchangeable algorithms are also referred to as hyperparameters. Note further that while this thesis mostly replicates the work of \textcite{Derrac2015}, the following will describe the algorthm as implemented here, which differs in some details from the original work. For the sake of overview, very specific implementation details will be left out in the following description, as however reproducibility is an important aim for us, implementation details are available in Appendix~\ref{AppendixB} and linked where relevant. \todoparagraph{Further, there is a table that compares the implementations here and in mainalgos, as well as another table what-configs-are-available where, the config-yamls and a section on what-other-things-could-one-have-done-hereandthere.}
 
-\todoparagraph{SHORTLY mention if my results cannot confirm stuff from derrac and refert to discussion}
+\subsection*{Core Algorithm}
 
-This section will go into detail about this main algorithm, plus the two other papers that according to my research are good additions to it (in terms of helping to understand it as well as improving on some stuff in it). That we are focusing on only those three papers should by no means imply that they are the only ones in that regard.\footnote{see \autoref{sec:otherwork} - \cite{VISR12} and their tag genome, the fact that the algorithm detailed here is basically only one step in \cite{Alshaikh2019}, Gärdenfors himself suggested that one may use self-organizing maps instead of classical AI/NLP algorithms.}
+\todoparagraph{The following explanation assumes that we accept some things as given. For now we'll do that, but we will later revisit and critically question many of these assumptions!}
+
+% The core idea of the algorithm is to unsupervisedly find a a set of features which can be modelled as directions for a vector-space representation of the respetive entities.
+The main goal of the algorithm is to unsupervisedly use text-corpora associated with the considered from a certain domain\glspl{entity}\footnote{From now on, the term \textit{\glspl{entity}} refers to the sample described by one text from the corpus (description, concatenated reviews, ...). The corpus accordingly defines the domain: educational resources, movies, ...} to embed these into a vector-space where the axes correspond to human concepts/Properties.\footnote{\textit{Concepts} and \textit{Properties} explicitly refer to what is defined in Criterions C and P, see \ref{sec:csdefinition}} This is referred to as \textit{feature-based} representation: A high-dimensional vector that numerically encodes the degree (\textit{protoypicality}) to which the entity corresponds to a number of appropriate dimensions. This is generally referred to as Conceptual Space and can be used as basis for explainable reasoning.\\
+
+The general idea to achieve that is as follows: First, the entities are embedded as fixed-dimensional vectors. To allow for the types of reasoning mentioned in Section \ref{sec:cs_reasoning}, it is embedded into metric spaces where the concepts of direction and distance are well-defined \gencite{Derrac2015} original algorithm uses MDS (see \ref{sec:mds}) for this matter, which enforces metric distances. \cite{Ager2018,Alshaikh2020} both soften this requirement and also use document embedding techniques such as doc2vec and averaged GloVe \todoparagraph{REFERENCE!} embeddings.
+
+Additionally, words or phrases from the text are extracted as candidates for the names of the semantic dimensions. The underlying assumption is that \q{words describing semantically meaningful features can be identified by learning for each candidate word $w$ a linear classifier which separates the embeddings of entities that have $w$ in their description from the others} \cite[3574]{Alshaikh2020}. The better the performance of that classifier according to a chosen metric, the more evidence there is that $w$ describes a semantically meaningful feature. 
+% * from Alshaikh2020: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candi- date word w a linear classifier which separates the embeddings of entities that have w in their description from the others. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
+In a final step, the candidate-words are clustered according to their similarity to find a fixed set of \emph{semantic directions}. A representative term for the directions is selected as dimension name, and the entities are re-embedded into a new space comprised of these dimensions, where the individual vector-components correspond to the ranking of an entity with respect to these dimensions.
+
+The rest of this section goes into further detail for each of the individual components of the algorithm. An overview of which of the considered literature supports each components is given in \autoref{tab:compared_algos}. Further, configuration files to enable exactly the respective components of the papers \mainalgos for the codebase of this thesis are listed in \aref{ap:yamls_for_origalgos}.
+
+\todoparagraph{but before that, ager and alshaikh}
 
 \subsection{Regarding ager and alshaikh}
 
 \todoparagraph{describe shortly what the improvements from [2,3] were}
 
-The implementation of this thesis replicates and extends the algorithm proposed by \textcite{Derrac2015} with some novel contributions to deal with the given dataset. Further, some improvements from the works of \textcite{Ager2018} and \textcite{Alshaikh2020} are incorporated, who also replicated and improved the original algorithm.\footnote{All three of these works share Prof Steven Schokaert as last author.}
+\todoparagraph{Dass die den Zwischenschritt mit dem ganzen geeometric reasoning auf dem interim space nicht machen und DESWEGEN die requirement mit MDS soften konnen}
 
-In principle Derrac2015, but with some components from Ager2018 and Alshaikh2020 as well as some own stuff. I'll be testing some claims or nonclaims of \mainalgos, bspw nutzen sie immer PPMI ohne je tf-idf zu testen. Also of course different nature of the dataset - their "how does this dimension correspond to the count in the reviews" doesn't make sense (their success-metric for the SVM is tailored to the one property, so I expect that one to be worse). I'll elaorate on different ways to deal with that later.
-
-
+In principle Derrac2015, but with some components from Ager2018 and Alshaikh2020 as well as some own stuff. I'll be testing some claims or nonclaims of \mainalgos, bspw nutzen sie immer PPMI ohne je tf-idf zu testen. Also of course different nature of the dataset - their "how does this dimension correspond to the count in the reviews" doesn't make sense (their success-metric for the SVM is tailored to the one property, so I expect that one to be worse). I'll elaborate on different ways to deal with that later.
 
 
-\subsection{Core Idea}
-
-% The core idea of the algorithm is to unsupervisedly find a a set of features which can be modelled as directions for a vector-space representation of the respetive entities.
-The main goal of the algorithm is to unsupervisedly use the considered text-corpora associated with the respective entities from a certain domain % descriptions, reviews, ...
-to embed the entities into a vector-space where the axes correspond to human concepts, % "concepts" meaning attributes and what-was-the-other-again, according to CS lingo corresponding to nouns and adjectives, TODO: see above where I described that already.
-allowing a \textit{feature-based} representation of them - a high-dimensional vector that numerically encodes the degree % protypicality
-to which the entity corresponds to a number of appropriate dimensions. % Das haupt-ziel der algorithmen ist es, am ende die entities "feature-based" darstellen zu können, also als high-dim-vector mit floats per human-interpretable dimension. 
-% Alshaikh2020 hat dafür wegen den subfeatures noch kleine specials
-%TODO: Johannes said "Consider breaking this sentence into multiple sentences to enhance readability."
-\newline
-
-The general idea to achieve that is as follows: First, the entities %TODO: at this point already defined that entities = texts = descriptions/concatenatedreviews/... 
-are embedded as fixed-dimensional vectors.\footnote{This already softens the definition of a conceptual space, as the considered entities are modelled as vectors instead of regions.} % entities were supposed to be regions, however here we assume vectors because it's computationally a lot easier (TODO: are the reasons mentioned elsewhere? also the distiction between types and tokens?)
-To allow for the types of reasoning mentioned in Section \ref{sec:cs_reasoning}, %TODO: section where the entire mapping from logic-reasoning to CS-reasoning is explained, mostly from DESC15 and Gärdenfors himself
-it is embedded into metric spaces where the concepts of direction and distance are well-defined. \gencite{Derrac2015} original algorithm uses MDS (see \ref{MDS}) for this matter, which enforces equal distances.\footnote{however as shown by \textcite{Mikolov:Regularities}, such things are also possible with neural word-embedding techniques such as word2vec \cite{Mikolov2013}.}%TODO: link the distance-matrix-notepad FROM MY REPO in nbviewer+binder
-Additionally, words or phrases from the text are extracted as candidates for the names of the semantic dimensions. The underlying assumption is that \q{words describing semantically meaningful features can be identified by learning for each candidate word $w$ a linear classifier which separates the embeddings of entities that have $w$ in their description from the others} \cite[3574]{Alshaikh2020}. The better the performance of that classifier according to a chosen metric, the more evidence there is that $w$ describes a semantically meaningful feature. 
-% * from Alshaikh2020: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candi- date word w a linear classifier which separates the embeddings of entities that have w in their description from the others. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
-% TODO: make the direct quote shorter, such things should only be done "to support an argument", which I don't here.
-In a final step, the candidate-words are clustered according to their similarity to find a fixed set of \emph{semantic directions}. A representative term for the directions is selected, and the entities are re-embedded into a new space comprised of these dimensions, where the individual vector-components correspond to the ranking of an entity with respect to these dimensions.
-% * from Alshaikh2020: "The learned vectors will be referred to as feature directions to emphasize the fact that only the ordering induced by the dot product d_i · e matters"
-\newline
-
-
-Many of the mentioned components don't refer to a specific algorithms, and the existing implementations \mainalgos differ in many of these implementations. The rest of this section goes into further detail for each of these components, and an overview of the components supported in the respective implementations is given in \tref{tab:compared_algos}. Further, configuration files to enable exactly the respective components of the papers \mainalgos for the codebase of this thesis are listed in \aref{ap:yamls_for_origalgos}.
-
-
-% #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
-
-\subsection{Steps of the algorithm}
+\subsection{Algorithm Steps}
 \label{sec:algorithm_steps}
 
-\todoparagraph{Say that more details are in the appendix}
-\todoparagraph{Keep in mind that the architecture is very modular and there are alternatives one could do at every step, but hyperparams and also which components to use is a cominbatiorical explosion}
+% The core idea of the algorithm is to (unsupervised, data-driven) find a a set of features which can be modelled as directions for a vector-space representation of the respective entities. For that, the steps are:
 
-% TODO: THIS from \cite{Turney2010} is a very fucking good explanation!!!
-
-% After the text has been tokenized and (optionally) normalized and annotated, the first step is to generate a matrix of frequencies. Second, we may want to adjust the weights of the elements in the matrix, because common words will have high frequencies, yet they are less informative than rare words. Third, we may want to smooth the matrix, to reduce the amount of random noise and to fill in some of the zero elements in a sparse matrix. Fourth, there are many different ways to measure the similarity of two vectors. Lowe (2001) gives a good summary of mathematical processing for word–context VSMs.
-% He decomposes VSM construction into a similar four-step process: calculate the frequencies, transform the raw frequency counts, smooth the space (dimensionality reduction), then calculate the similarities.
-
-\todoparagraph{CONSIDER JOHANNES' NOTES}
-% TODO: Johannes' Notes:
-% Consider restructuring the first two paragraphs: You first introduce the first two steps but then do not follow up with the next steps (Unless they are combined under the mentioned Lowe framework in which case you need to make this explicit).
-% I like the structured step listing later on, maybe you could build this section around that.
-
-\todoparagraph{In contrast to the previous explanations here I am directly talking about parameter (choice)s at each step etc}
-\todoparagraph{In contrast the the previous explanations here I am talking about how III did it}
-\todoparagraph{Also we will come back to this in future work were we list other stuff that one could do for every step}
-
-The considered algorithm first embeds the collection of texts into a vector space, to afterwards extract important features from this space using linear classifiers. The second step is an original idea of \cite{Derrac2015}, however creating vector space embeddings from texts is a very popular technique, used for many tasks in computational linguistics \cite{Mikolov:Regularities,Mikolov2013a,Guo,Lowe,Turney2010}. %TODO: irgendwo bin ich ja noch auf word2vec und den ganzen bums eingegangen blabla, nochmal schreiben dass es hier um classical AI geht und ebennicht die sahcen wie word2vec und glove
-%TODO: glove und fasttext cite?!
-
- \textcite{Lowe} conceived a general framework to construct vector spaces from texts, splitting the process into the steps of first counting the token frequencies, then transforming the raw counts into more useful \gls{quant} measures (see \ref{sec:word_count_techniques}) %adjust the weights of the elements in the matrix, because common words will have high frequencies yet are less informative than rare words.
- %TODO: talk about a fucking DOC-TERM-MATRIX, A MATRIX OF FREQUENCIES!!!
-  and smoothing the space using dimensionality reduction, before calculating the similarities on the resulting embedding. While the considered algorithm requires more steps before calculating the similarities to allow for domain-specific and more complex forms of reasoning, it also adheres to this structure, as will be shown in section~\nameparanref{sec:generate_vectorspaces}.
-
-The core idea of the algorithm is to (unsupervised, data-driven) find a a set of features which can be modelled as directions for a vector-space representation of the respective entities. For that, the steps are:
-
-\todoparagraph{Schon hier dass alshaikh kein mds nutzen oder dass man ja nicht fur jeden classifier einzeln die svm machen muss}
+Let us finally describe the steps how to create an interpretable vector-space from the text corpus in detail. For that, we will explicitly elaborate on the parameter choices that branch up at every one. Note that that absolutely is a combinatorical explosion it is impossible to try out all. Further, this is about how this specific implementation does it, which may differ in some details from \mainalgos.
 
 \label{sec:algorithmsteps}
 \begin{enumerate}
-	\item[\saveref{sec:algo_preproc}{1.}] preprocess the descriptions using default techniques and create a bag-of-words representation for the texts
-	\item[\saveref{sec:extract_cands}{2.}] extract candidate features from these texts (easist variant is to just consider each sufficiently frequent word as candidate)
-	\item[\saveref{sec:generate_vectorspaces}{3.}] create a fixed-dimensional embedding for the texts (optimally a metric space, optimally based on their dissimilarity)
-	\item[\saveref{sec:svm_filter_cands}{4.}] for each candidate term, train a linear classifier to seperate the vector representations of the entities that contain the term vs those that don't. If some metric for this classifier is sufficiently high, assume that the candidate term captures a salient feature - it's direction is then characterized by the normal vector for that hyperplane (for an intuition see \ref{fig:3d_hyperplane_ortho})
-	\item[\saveref{sec:generate_vectorspaces}{5.}] Cluster the candidates and re-calculate the directions
-	\item[\saveref{sec:generate_vectorspaces}{6.}] (optionally) Post-process the clusters 
-	\item[\saveref{sec:generate_vectorspaces}{7.}] Calculate the direction of the cluster from the directions of it's contents to create a new space to embed the entities into
+	\item[\saveref{sec:algo_preproc}{1.}] \textbf{Preprocess} the corpus with default techniques and create a \textit{Bag-of-ngrams representation} (\ref{sec:techniques:bow}) of the texts.
+	\item[\saveref{sec:extract_cands}{2.}] \textbf{Extract Candidate Feature} names from words/\glspl{ngram} of the corpus.
+	\item[\saveref{sec:generate_vectorspaces}{3.}] \textbf{Embed all Entities} into a fixed-dimensional vector space with demanded properties that captures the respective semantics.
+	\item[\saveref{sec:svm_filter_cands}{4.}] \textbf{Filter Candiate Features} by training a linear classifier for each candidate that seperates the vector representations of the entities that contain the term from those that do not. If a specified metric for this classifier is sufficiently high, assume that the candidate term captures a \textit{salient} feature - its direction is then characterized by the orthogonal of the classifier's separatrix.
+	\item[\saveref{sec:generate_vectorspaces}{5.}] \textbf{Cluster the candidates} and calculate the feature direction for each cluster from its components.
+	\item[\saveref{sec:generate_vectorspaces}{6.}] (optionally) \textbf{Post-process} the candidate-clusters.
+	\item[\saveref{sec:generate_vectorspaces}{7.}] \textbf{Re-embed the entities} into a space of semantic directions by calculating their distance to each of the feature direction separatrices.	
 \end{enumerate}
 
-The algorithm is also given as pseudocode in \autoref{ap:algorithm_pseudo}.
+\todoparagraph{The first part of the algo is to "create semantic spaces". This can be completely exchanged, as done by Ager}
 
-% MENTION IN STEPS
-%   3) fixed-dimensional embedding: 
-%		* RaZb20 tried Doc2Vec instead of MDS and it performed worse!
-%   5) if metric, assume salient:
-%  		* [AGKS18] haben den candidate-filter-teil konfigurierbar (und sagen bei denen ist accuracy even better than kappa)
+This techniques first embeds the collection of texts into a  vector space, to afterwards extract important features from this space using linear classifiers. The second step is an original idea of \cite{Derrac2015}, however creating vector space embeddings from texts is a very popular technique, used for many tasks in \gls{nlp} \cite{Mikolov:Regularities,Mikolov2013a,Guo,Lowe,Turney2010}. This implementation relies on classical creation of the \gls{vsm}, for which the general creation process was explained in \autoref{sec:vsm_construction}. The steps \textit{Build the Frequency Matrix}, \textit{Transform Raw Frequency Counts} and \textit{Smooth the Frequency Matrix} are squashed into the preprocessing and embedding of entities (steps 1 and 3).
 
-\autoref{fig:dependency_graph} shows an automatically exported dependency-graph, displaying the individual steps of the algorithm as done in the codebase of this thesis, also showing where selected important parameters are first used. As explained in \autoref{sec:architecture}, the modularity of the provided architecture allows individual components to be exchanged as needed.
-% \todoparagraph{I should also refer to} \autoref{tab:compared_algos} here!
+ An explicit and simple implementation compliant with each step could be a simple word tokenization and count to generate a bag-of-words (step 1) where each sufficiently frequent word is used as candidate (step 2). A \gls{dissimmat} of the individual \gls{bow}-vectors is compressed using MDS (step 3). A \gls{svm} calculates the accuracy for each candidate (step 4), and k-means-clustering on the 500 top-scoring terms subsequently creates 100 clusters and averages their directions (step 5). The distance to each of the hyperplanes is calculate (step 6), yielding new space for the entities. The sequence of steps is also given as pseudocode in \autoref{ap:algorithm_pseudo}. 
+ 
+ Again it should be stressed that many different components can be considered for each step and the distinction of steps is not rigid: Instead of creating a dissimilarity-matrix followed by dimensionality reduction, \cite{Ager2018,Alshaikh2020} use neural word or document embeddings.\footnote{see \autoref{tab:compared_algos}} Instead of extracing candidates from corpus tokens and training a linear classifier for each of them and use their orthogonal as direction, techniques such as LSA or LDA can be employed to find topic vectors directly. We will come back to these ideas when discussing future research opportunities (\autoref{sec:futurework}) by listing what other ways of fulfilling each respective step could have been considered.
+
+\autoref{fig:dependency_graph} shows an automatically exported dependency-graph, displaying the individual steps of the algorithm as done in the accompaning code, also showing where selected important parameters are first used. As explained in \autoref{sec:architecture}, the modularity of the provided architecture allows individual components to be exchanged as needed and run in parallel.
 
 
-\begin{figure}[htp]
+\begin{figure}[H]
 	\begin{center}
 	  \includegraphics[width=0.9\textwidth]{dependency_graph.pdf}
 	  \caption[Dependency-Graph of the Algorithm]{Dependency-Graph of the Algorithm, displaying the individual steps of the algorithm as well as their dependencies and where selected important parameters are first used. \todoparagraph{Generated using command XYZ}}
@@ -109,10 +67,8 @@ The algorithm is also given as pseudocode in \autoref{ap:algorithm_pseudo}.
 \end{figure}
 
 
-\input{include/algorithm_compare_table}
-
-Before looking at the steps in turn, it should be noted that even the preprocessing does not work on completely raw data, but on curated and processed corpora. This processing is however not considered part of the algorithm, as it is very specific to the respective datasets and manual dataset exploration, tweaking settings such that they are best for the respective corpora.\footnote{Because of this, it was done in sepearate Jupyter Notebooks, such as \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/create_datasets/Preprocess_Siddata2022.ipynb} } %TODO: instead link to nbviewer/binder!!
-\todoparagraph{Mep, the fact that mainalgos explicitly did it per-dataset, ref table}
+Before looking at the steps in turn, it should be noted that even the preprocessing does not work on completely raw data, but on curated and processed corpora. This processing is however not considered part of the algorithm, as it is very specific to the respective datasets and manual dataset exploration, tweaking settings such that they are best for each corpus separately. The preprocessing for the Siddata-dataset is described in \autoref{sec:dataset_siddata} and its implementation is done in separate Jupyter Notebooks.\footnote{Such as \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/create_datasets/Preprocess_Siddata2022.ipynb}}. In the considered literature, the preprocessing is not considered part of the algorithm at all. Their implementations start from already fully processed datasets available as bag-of-words, each separately processed. Details of their individual processing per dataset is listed in \autoref{tab:all_datasets}. By incorporating the preprocessing into the pipeline, this work aims to increase adaptability and reproducibility, and also allows to experiment with different techniques such as translation or lemmatization or how duplicate entities with different associated texts are merged.
+% In course-descriptions, I want some parts of the pre-preprocessing be part of the pipeline, like how we merge descriptions of different iterations of the same course that overlap to a high degree (sentwise-merge vs relative-term-frequencies)
 
 \subsubsection{Preprocessing\arrowref{sec:algorithmsteps}}
 
@@ -120,17 +76,12 @@ Before looking at the steps in turn, it should be noted that even the preprocess
 
 \todoparagraph{Filter out all descriptions that don't have a minimal number of words}
 
-A common prerequisit for NLP algorithms is to pre-process the text corpus. The preprocessing itself consists of multiple independent components chained after each other. Which components are necessary also depends on the processed dataset - as for example the \emph{placetypes-dataset} consists of a collection of tags instead of full sentences, tokenizing sentences or removing \glspl{stopword} becomes irrelevant. Other datasets may require additional cleaning or are already available in preprocessed form.
-% * some parts of this depend on the dataset 
-%     * Some may just require additional cleaning (remove HTML-Tags and such things)
-%     * Some are already mostly preprocessed (placetypes is already a bag-of-words so there's not much to do there, and we skip almost all preprocessing-steps)
-%     * In course-descriptions, I want some parts of the pre-preprocessing be part of the pipeline, like how we merge descriptions of different iterations of the same course that overlap to a high degree (sentwise-merge vs relative-term-frequencies)
+A common prerequisit for NLP algorithms is to pre-process the text corpus. The preprocessing itself consists of multiple independent components chained after each other. Which components are necessary also depends on the processed dataset - as for example the \emph{placetypes}-dataset consists of a collection of \textit{tags} instead of full sentences, tokenizing sentences or removing \glspl{stopword} becomes irrelevant. Other datasets may require additional cleaning or are already available in preprocessed form.
 
-As the main considered dataset of university-courses is highly multilingual (see \autoref{fig:sid_statistics}), one of the first questions that needs to be addressed is how entities of different langauges are handled. The algorithm consists of classical language processing algorithms such as comparing \gls{bow} representation of the entities, which means that the same text in two different languages may result in maximally different representations\footnote{\todoparagraph{another reason that makes checking out word2vec worth it!}}. Because of this, before any other processing, the languages of the entities is checked, such that entities of languages other than the demanded may be either translated, left out or used anyway.\footnote{For details about the translation-step, it is referred to Appendix \ref{ap:translating}. It should be noted that professional automatic translation is costly and thus not all texts are available in all languages.}
+\paragraph{Translation} As the main considered dataset of university-courses is highly multilingual (see \autoref{fig:sid_statistics}), one of the first questions that needs to be addressed is how entities of different langauges are handled. The algorithm consists of classical language processing algorithms such as comparing \gls{bow} representation of the entities, which means that the same text in two different languages may result in maximally different representations.\footnote{\todoparagraph{Ref the BoW-representation again!}} Because of this, before any other processing, the languages of each entity is checked, such that those of languages other than the demanded may be either translated, left out or used anyway. For details about the translation, it is referred to Appendix \ref{ap:translating}.\footnote{It should be noted that professional automatic translation is costly and thus not all texts are available in all languages.}
 
-\todoparagraph{LEMMATIZATION LINK:} % https://textmining.wp.hs-hannover.de/Preprocessing.html#Lemmatisierung
+\paragraph{Components} The following components are developed for the preprocessing, every one of which can be individually enabled or disabled:
 
-The following components are developed for the preprocessing, every one of which can be individually enabled or disabled:
 \begin{itemize}
 	\item Prepend title and/or subtitle to the entities' associated text \itemtext{useful for the Siddata-Dataset, as the titles are often quite long and more descriptive than their descriptions}
 	\item Remove HTML-Tags from texts 
@@ -139,103 +90,135 @@ The following components are developed for the preprocessing, every one of which
 	\itemtext{such that \glspl{ngram} across sentences are not considered}
 	\item Lower-case all words
 	\itemtext{reduces the amount of individual words and ensures that words at the beginning of sentences are mapped correctly}
-	\item Remove stop-words
-	\itemtext{\todoparagraph{grains of salt for stopwords! Alshaikh2019 just removed too-high-termfreq!}}
+	\item Remove stop-words / frequent phrases
 	\item Tokenize words
+	\itemtext{means splitting at the word-boundary, resulting in a list of words. Order must be kept in case n-grams are to be extracted.}
 	\item \Gls{lemma}tize words
-	\itemtext{\todoparagraph{TODO: Write about details  and HanTa for German etc!}}
-	\item Remove diacritics\footnote{\emph{Diacritics} are glyphs added to basic letters, such as accents or German \emph{Umlaute}. Removing them converts for example the letter \emph{ä} to an \emph{a}}
+	\item Remove diacritics
+	\itemtext{\emph{Diacritics} are glyphs added to basic letters, such as accents or German \emph{Umlaute}. Removing them converts for example the letter \emph{ä} to an \emph{a}}
 	\item Remove punctuation 
 \end{itemize}
 
-The above can be done either be done with proprietary code for all of these steps,\footnote{Mostly relying on the python package \emph{nltk} \cite{bird2009natural}} or using \codeother{sklearn}\footnote{\url{https://scikit-learn.org/stable/}}s \codeother{CountVectorizer} (which is faster, but less configurable), as did \cite{Ager2018}.
+The above can be done either be done with proprietary code for all of these steps,\footnote{Mostly relying on the python package \emph{nltk} \cite{bird2009natural}} or using \codeother{sklearn}\footnote{\url{https://scikit-learn.org/stable/}}s \codeother{CountVectorizer} (which is faster, but less configurable), as \cite{Ager2018} claim to have done.
+
+\paragraph{On Stop-Words}
+Removing stop-words from the texts is useful because it makes the resulting frequency more compact and thus less computationally intensive, and stop-words generally have very discriminative power, meaning their occurence among the entities is arbitrary, just making hte emeddings more noisy (cf. \autoref{sec:word_count_techniques}). There are however reasons to not remove them: Two words that are considered stop-words may posess relevant semantic content (such as a \textsc{Fällt aus} in a course title), and also stopwordslists are often incomplete and of low quality \cite{nothman-etal-2018-stop}. For these reasons it is also possible to instead remove \glspl{ngram} that succeeded a certain frequency (\gls{df}).
+
+\paragraph{On Lemmatization}
+The languages most prevalent in the considered datasets are considered \textit{agglomerative}, which means word stems are changed by the addition of affixes and suffixes. Consequently, the same word may be present in multiple different forms, which modelled as completely dissimilar vectors in the present \glspl{bow}-approach. Lemmatization is the process of mapping different forms of these words onto the same stem. Considering that the Siddata-dataset consists of far fewer words than the others, this has important implications. For the german descriptions, this implementation relies on the \textit{HanTa} lemmatizer. \todoparagraph{Correct citation for hanta!!} %https://textmining.wp.hs-hannover.de/Preprocessing.html#Lemmatisierung
+
+\todoparagraph{The result of this step is a bag-of-ngrams representation for each entity.} \autoref{sec:techniques:bow}
 
 
-% TODO: Regarding Stop-words:
-
-% There are issues with using stop-word lists, see \cite{nothman-etal-2018-stop} ( SkLearn references this paper why their own/stopwordslists in general suck)
-
-% from \cite{Turney2010}: Computing the similarity between all pairs of vectors, described in Section 4.4, is a computationally intensive task. However, only vectors that share a non-zero coordinate must be compared (i.e., two vectors that do not share a coordinate are dissimilar). Very frequent context words, such as the word the, unfortunately result in most vectors matching a non-zero coordinate. Such words are precisely the contexts that have little semantic discrimination power
-
-... The preprocessing of the algorithms of \mainalgos is dependent on the dataset - \autoref{tab:all_datasets} lists the respectively used preprocessing per dataset and author.
-
-
-\subsubsection{Extract Candidate Terms\arrowref{sec:algorithmsteps}}
+\subsubsection{Extract Candidates\arrowref{sec:algorithmsteps}}
 \label{sec:extract_cands}
 % Section 4.2.1 of Derrac2015
 
-The final result of the algorithm is a metric space in which the individual dimensions (\emph{\glspl{feature}}) correspond to natural-language concepts and attributes (\q{Interpretable directions} \cite{Derrac2015}). The candidates for these features are verbatim phrases extracted from the text-corpus of the \glspl{entity}, which will subsequently be filtered and merged.
+The final result of the algorithm is a metric space in which the individual dimensions (\emph{\glspl{feature}}/\emph{Interpretable direcitons}) correspond to natural-language concepts and attributes. The candidates for these features are verbatim phrases extracted from the text-corpus of the \glspl{entity}, which are subsequently filtered and merged as necessary.
 
-In \gencite{Derrac2015} original paper, the selection of phrases to be extracted depends on the dataset: For placetypes-dataset, all sufficiently frequent\footnote{\label{fnote:cand_thresholds}The respective thresholds are listed in \autoref{tab:all_datasets} as ``candidate word threshold''.} 1-grams\footnote{Note that in the case of the place-types dataset, a 1-gram corresponds to all merged words of a tag.} were considered. For the other two datasets, they applied a \gls{pos}-tagger that extracted all sufficiently frequent\footnoteref{fnote:cand_thresholds} \textbf{adjectives, nouns, adjective phrases} and \textbf{noun phrases}, assuming that adjectives would correspond to gradual properties (\eg \textit{violent, funny}) and nouns to topics (\eg the \textit{genre}) \cite[Sec. 4.2.1]{Derrac2015}.
+In \gencite{Derrac2015} work, the selection of phrases to be extracted depends on the dataset: For placetypes-dataset, all sufficiently frequent\footnote{\label{fnote:cand_thresholds}The respective thresholds are listed in \autoref{tab:all_datasets} as ``candidate word threshold''.} 1-grams\footnote{Note that in the case of the place-types dataset, a 1-gram corresponds to all merged words of a tag.} were considered. For the other two datasets, they applied a \gls{pos}-tagger that extracted all sufficiently frequent\footnoteref{fnote:cand_thresholds} \textbf{adjectives, nouns, adjective phrases} and \textbf{noun phrases}, assuming that adjectives would correspond to gradual properties (\eg \textit{violent, funny}) and nouns to topics (\eg the \textit{genre}) \cite[Sec. 4.2.1]{Derrac2015}. Also, the authors ensured that the number of extracted candidates for both datasets is roughly equal, getting around 20\,000 candidates for movies and placetypes.
 
 % Their method depended on the dataset - as their placetypes-dataset was just a collection of tags and the number of tags with term-freq >= XYZ (docfreq>2?! hä?) corresponded to their desired number of candidates anyway (around 22k), they just took all of these as candidates. For their movie-reviews-dataset, they considered all nouns, adjectives, nounphrases 	and adjective-phrases as detected by a POS-tagger. Doing something similar in the scope of this thesis led to suboptimal results, which is why alternative methods were developed
-For this step, the implementation of this thesis differs from the original algorithm, as both taking all words as candidate and running a \gls{pos}-tagger led to suboptimal results in previous experiments of me\footnote{To ensure comparability, in the case of the placetypes-dataset the original method of taking all words with a term-frequency of at least 50 was used.}. 
+For this step, the implementation of this thesis differs from the original algorithm, as both taking all words as candidate and running a \gls{pos}-tagger led to suboptimal results in previous experiments, which indicated that the robustness of the algorithm is increased if less candidates are considered in earlier steps. This will be further argued and elaborated in the discussion. To ensure comparability to these works however, in the case of the placetypes-dataset the original method of taking all words with a term-frequency of at least 50 was used. Similar techniques for the Siddata-dataset were also considered, but in constrast to the placetypes-dataset it is also important to consider various-length n-grams. While \textcite{Derrac2015} claim to have considered \glspl{ngram} for the movies-dataset, the published version of this dataset contains a \glspl{bow}-representation for each entity where the original word-order is lost, making it impossible to recover \glspl{ngram}, making comparisons with their results impossible for that dataset.\footnote{\url{https://www.cs.cf.ac.uk/semanticspaces/}}
 
-\todoparagraph{Ensure this is consistent with later parts where I say the number of candidates: thing is I have less words but the algorithm seems to profit from less words as that makes it more robust}
+% \todoparagraph{thing is I have less words but the algorithm seems to profit from less words as that makes it more robust}
+% I would however argue that the difference here doesn't make a relevant difference 
 
-\todoparagraph{Come back to this in optimal parameters section }
-
-\todoparagraph{Just using all words would have been a possibility as well, but than we would not have ngrams.}
-
-% I would however argue that the difference here doesn't make a relevant difference (TODO: argue that lol)
-% Also, while in the paper they claim to use n-grams as candidates, the dataset they publicly published does not contain n-grams (which is why I didn't use that one).
-
-In our implementation the candidate-extraction is split into four subsequently excecuted substeps, because depending on the algorithm used to extract the candidates the runtime of the individual components is comparably long and some settings are only relevant in later substeps. The substeps are:
+In our implementation the candidate-extraction is split into four subsequently excecuted substeps, because depending on the algorithm used to extract the candidates the runtime of the individual components is comparably long and some settings are only relevant in later substeps. The steps are:
 \begin{itemize}
 	\item Extracting Candidate Terms
 	\item Postprocessing the Candidates
-	\item Creating the \gls{doctermmat} for the candidates
-	\item Filtering the \gls{doctermmat}
+	\item Creating the \gls{doctermmat} for the candidates and applying a \gls{quant}
 \end{itemize}
 
 As visualized in \autoref{fig:dependency_graph}, these substeps only depend on the preprocessed descriptions, which means they can be run in parallel to the creation of the embedding.\footnote{\todoparagraph{Another good reason for cluster exceution!}}
 
 % This can be done either based on the frequency (meaning all terms with a minimal term-frequency), based on some notion of *importance* (based on scores like tf-idf or ppmi), or by more complex means of figuring out *important* keywords and keyphrases. An example of the latter would be KeyBERT
-Three main techniques are implemented to extract candidates from the text-corpus: 
+Three main techniques are implemented to extract candidates from the text-corpus. Irrespective of the algorithm, only words with a sufficiently high \gls{df} are extracted, which is important to ensure that the classifier that determines its meaningfulness has enough samples in both clases. This means that the minimal freqeuncy can be calculated from the dataset size: In \cite{Derrac2015}, the minimal frequency for the movies-dataset with 15\,000 entities was only 100, meaning that the algorithm even works if only 0.6\% of samples are in the positive class. 
+
+\todoparagraph{We will come back to this later}
+\todoparagraph{HAB ICH DF UND TF RICHTIG??}
+
 \begin{description}
-	\item[By frequency:] consider all phrases that exceed a specified term-frequency (like \cite{Derrac2015}).
-	\item[By a \gls{quant}:] consider all phrases that exceed a specified score (\gls{ppmi} or \gls{tf-idf}).
-	\item[Using \emph{KeyBERT}\cite{grootendorst2020keybert}:] consider phrases whose BERT-embedding \cite{Devlin2019} is most similar to the text they are in. More details on KeyBERT and how it is incorporated are given in the implementation details in Appendix~\ref{ap:details_keybert}
+	\item[By frequency:] consider all phrases that exceed a specified document-frequency (like \cite{Derrac2015}).
+	\item[By a \gls{quant}:] consider all phrases that are prominent by some notion of \textit{importance} , such as the \gls{ppmi} or \gls{tf-idf}-score. Note that the respective scores depend on the combination of document and term, such that candidates may be extracted for some documents. Of course, all their occurences are considered in the creation of the frequncy matrix.
+	\item[Using \emph{KeyBERT}\cite{grootendorst2020keybert}:] consider phrases whose BERT-embedding \cite{Devlin2019} is most similar to the text they are in. 
 \end{description}
 
-\todoparagraph{The shitton of work that keybert was argh}
+Using KeyBERT results in candidate terms that are most appealing in qualitative inspection, however it is also most computational demanding, techniques and requires substantial amounts of post-processing for the resulting phrases. More details on KeyBERT and how it is incorporated into the algorithm are given in the implementation are given in Appendix~\ref{ap:details_keybert}
+
+\todoparagraph{Possible step after this is to bootstrap more candidates using LSI }
+
+Finally, a \gls{doctermmat} is created from the postprocessed candidates, containing the frequency for each candidate-phrase in each entity. The creation of this frequency matrix mirrors the process described in \autoref{sec:vsm_construction}, however only for the extracted words. After filtering this matrix to ensure that only candidates with a minimal \gls{df} or \textit{stf} are considered, a quantification is applied as described in \autoref{sec:word_count_techniques}. Available Quantifications include raw count, binarization\footnote{meaning all counts are either one or zero. According to \cite{Alshaikh2020} this improves performance \todoparagraph{Aber ich hab logische Probleme damit}}, tf-idf or PPMI.
+
+\cite{Derrac2015} \todoparagraph{always only use PPMI without ever testing tf-idf or giving a reason, I'll try both}
+
+\todoparagraph{so the relation of term to document may be expressed by something else than count - so if we later compare the ranking induced by the svm to this maybe something else thatn the count stands there - I'm expecting that for my dataset tf-idf is much more valuable than the count bc no concatenated reviews or tags}
 
 
 \subsubsection{Generating Vector Space Embeddings\arrowref{sec:algorithmsteps}}
 \label{sec:generate_vectorspaces}
-%TODO: in \cite{Turney2010}, this is "Building the frequency matrix", 
 
-(also: create dissim-mat and quantify)
+\todoparagraph{This is Turney2020s "Building the frequency matrix", BUT SO IS THE STEP ABOVE}
+
+In this step, the individual \glspl{entity} are embedded into a fixed-dimensional vector space, making up a \emph{frequency matrix}. Importantly, while this matrix is a \gls{doctermmat}, it is only an interim result in the algorithm and the calculation of distances and directions will be done on another matrix from a later step - This is where our pipeline starts to diverge from what the pipeline specified in \nameparanref{sec:vsm_construction}. So we created a frequency matrix that encodes the relevance of a candidate-phrase for each entity in the previous step, and in this step we create another one that encodes each document as a vector. Neither of these matrices will be used to finally calculate similarities on, but both are important to get the dimensions necessary for for these similarities.
+
+Embedding words, \glspl{ngram}/phrases or other tokens, as depicted by \cite{Turney2010,Lowe}, generally involves counting the token frequencies, transforming them to get relative frequencies, and performing dimensionality reduction on the resulting matrix.
+So far (step 1), we have counted the token frequencies. 
+\todoparagraph{yes we are talking about all tokens}
+\textcite{Derrac2015} argued that this space must be a Euclidean \todoparagraph{which is invariant to affine transformations}, such that geometric/algebraic solutions correspond to commonsense commonsense reasoning tasks (see \autoref{sec:reasoning}). \todoparagraph{We will later look into this in more detail}. 
+Another requirement is that the number of dimensions is can be chosen as hyperparameter to the algorithm to be able to find a compromise between \todoparagraph{powerfulness and compression... nee argh was fur worter suche ich hier... drauf zuruckkommen wenn ich den teil uber vsms fertig hab. ausserdem, reicht das schon als beschreibung dann?}. Because of these two requirements, \todoparagraph{and also because gardenfors said so} they selected \gls{mds} for dimensionality reduction.
+
+As stated in \autoref{sec:mds}, \gls{mds} calculcates a Euclidean \gls{vsm} from a set of pairwise distances. This means that the algorithm first creates a \textit{Dissimilarity Matrix} that encodes the distance between all pairs of entities (represented as Bag-of-ngrams representation), from which subsequently the final embedding is generated.  
+\todoparagraph{This technique of bag-of-ngrams-representation then dissimmat and quantication is not the only way to do it, ager and alshaikh both did it differently}
+
+\todoparagraph{Note that we can use another quantification than in the step above! In my algo this sometimes performed best.}
+\todoparagraph{do all this again argh}
+
+In their algorithm, the dissimilarity-matrix is created using distance metrics for the bags-of-words of the respective entities. 
+
+\paragraph{Document embeddings}
+If the strict requirement for a metric space is dropped however, many different algorithms may instead be used at this point - not only different dimensionality reduction methods for the embedding, but also ones that do not rely on the distance matrix or even the \gls{bow} at all, like document-embedding-techniques such as \gls{doc2vec} \cite{Le2014} (as \eg used by \cite{Alshaikh2020}). This would change only these steps and the rest of the algo not too much.
+However when \cite{Alshaikh2020} used doc2vec instead of dissimmat-mds, it performed worse (see tables in results), which is why it is not in this thesis 
 
 
+\paragraph{Create Dissimilarity Matrix and Quantify}
 
-In this step, the individual \glspl{entity} are embedded into a fixed-dimensional vector space, making up a \emph{frequency matrix}. It should be noted that while this matrix is a \gls{doctermmat}, it is only an interim result in the algorithm and the calculation of distances and directions will be done on another matrix from a later step (\todoparagraph{this is where we differ from the pipeline specified in the background}).
+The default way of doing it is to create a \gls{doctermmat} that counts the occurences for all words\footnote{Not just the candidates in step 2, but words that occur in any description} for all entities.
 
-Embedding words, \glspl{ngram}/phrases or other tokens, as depicted by \cite{Turney2010,Lowe}, generally involves counting the token frequencies, transforming them to get relative frequencies, and performing dimensionality reduction on the resulting matrix. As elaborated upon in \autoref{sec:reasoning}, for \gencite{Derrac2015} algorithm it was a requirement that the space is Euclidian. Another requirement is that the number of dimensions is decidable as hyperparameter to the algorithm. Because of these two requirements, they selected \gls{mds} for dimensionality reduction.
+In their algorithm, the \gls{dissimmat} is created using the \emph{normalized angular distances} of the \glspl{bow} of the respective entities.  
 
-In their algorithm, the \gls{dissimmat} is created using the \emph{normalized angular distances} of the \glspl{bow} of the respective entities. If the strict requirement for a metric space is dropped however, many different algorithms may instead be used at this point - not only different dimensionality reduction methods for the embedding, but also embeddings that do not rely on the distance matrix or even the \gls{bow} at all, like document-embedding-techniques such as \gls{doc2vec} \cite{Le2014} (as \eg used by \cite{Alshaikh2020}).
-
-% TODO: komplettes 4 von \cite{Turney2010}, außerdem der ganze bums von Deerwester!
-
-normalized angular distances according to \cite{Derrac2015}:
+From this quantified Doc-Term-Matrix, a dissimilarity-matrix is generated. This requires a measure for the dissimlarity - in the original paper, this is what they call "normalized angular difference" - according to \cite{Derrac2015}:
 
 \begin{align}
 	ang(e_i, e_j) &= \frac{2}{\pi} * \arccos \left( \frac{\vec[m]{v_{e_i}} * \vec[m]{v_{e_j}}} { \lVert \vec[m]{v_{e_i}} \rVert * \lVert \vec[m]{v_{e_j}} \rVert }  \right)  \label{eq:norm_ang_dist} \\
 	&= \frac{2}{\pi} * \arccos(1-\cos(\vec[m]{v_{e_i}},\vec[m]{v_{e_j}})) \text{, where $\cos$ is the default cosine-distance} \nonumber
 \end{align}
 
-\todoparagraph{grains of salt with vectors vs points}
+in \cite{Schockaert2011}, they define similarity through a variation of the Jaccard-distance (IoU, Overlap-Area divided by Union-Area)
 
-In their algorithm, the dissimilarity-matrix is created using distance metrics for the bags-of-words of the respective entities. If the strict requirement for a metric space is dropped however, many different algorithms may instead be used at this point - not only different dimensionality reduction methods for the embedding, but also ones that don't rely on the distance matrix or even the bag-of-words at all, like document-embedding-techniques such as Doc2Vec (eg. used by \cite{which_one??}). Thats why we explained these before!! This would change only these steps and the rest of the algo not too much.
+\paragraph{Embed}
 
+Because this dissimilarity-Matrix is far too high-dimensional and sparse, a dimensionality-reduction is applied - we discussed other raeasons why that is smart before.
 
+Multidimensional scaling but also isomap yadda yadda
 
 
 \subsubsection{Filter Candidates by Classifier Performance\arrowref{sec:algorithmsteps}}
-
 \label{sec:svm_filter_cands}
 
+\todoparagraph{Also known as: Creating Candidate SVMs and Filter Candidates}
+
+\todoparagraph{Linear Classifier! No Kernel Trick!}
+
+
+Here we bring together the embedding of the individual entities and the extracted keyphrases. For that, we split those samples where a keyphrase occurs from those where it doesn't, using a linear classifier. The orthogonal to the resulting decision-hyperplane is then used as axis, onto which the entities are mapped - the further away from the plane the mapping of a point onto the orthogonal, the more the entity is said to have the attribute encoded by the phrase responsible for the hyperplane. A score function compares the ranking induced by this to the ranking induced by number of occurences (or quantification-value) of the respective keyphrase of all documents, such that only those terms where the correspondance of these rankings exceeds a certain threshold are considered as candidate directions henceforth.
+
 \todoparagraph{In methods muss eindeutig stehen} "wir measuren ja die faithfulness der representation by how good the kappa is. Derrac2015 schreibt dass die kappa nutzen, geben aber keine details, allwoing for a shitton of different ways how to implement that. As that's highly relevant, we try many diffeent values and report them in the results. Details what means what in the ipmlementation details" -> und da steht dann kurze erklärung in ner tabelle
+
+
+
+
 
 
 \subsubsection{Clustering the extracted candidates}
