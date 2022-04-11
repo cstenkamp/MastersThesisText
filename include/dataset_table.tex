@@ -13,7 +13,7 @@
 
 \begin{landscape}
 	\begin{table}[]
-		\resizebox{.98\textwidth}{!}{%
+		\resizebox{.95\textwidth}{!}{%
         \begin{tabular}{@{}llllll@{}} 
         	\toprule
         		\textbf{dataset} &
@@ -28,7 +28,7 @@
 				\specialcell[l]{grouped-by-movie-concatenated\\reviews for movies} & 
         		\specialcell[l]{\tabitem removed stop-words\tablefootnote{\label{fnote:stopwordlist}\url{http://snowball.tartarus.org/algorithms/english/stop.txt}} \\ \tabitem lower-cased text \\ \tabitem removed diacritics  \\ \tabitem removed punctuation} &
         		\specialcell[l]{\cite{Derrac2015}: 15000 movies \\ \cite{Ager2018,Alshaikh2020}: 13978 movies } & %Ager2018 says 15.000 - 1022 duplicates, that's the number of Alshaikh2020
-        		\specialcell[l]{ \tabitem genre (23 classes)\\ \tabitem plot keywords (eg. \textit{suicide, beach}) (100 classes) \\ \tabitem age-rating certificates (6 classes)} & \specialcell[l]{\acrshort{df} $\geq 100$ \\ \textrightarrow 22 903 candidates \\ variable-length \textbf{n-grams} considered}
+        		\specialcell[l]{ \tabitem genre (23 classes)\\ \tabitem plot keywords (eg. \textit{suicide, beach}) (100 cls) \\ \tabitem age-rating certificates (6 classes)} & \specialcell[l]{\acrshort{df} $\geq 100$ \\ \textrightarrow 22 903 candidates \\ variable-length \textbf{n-grams} considered}
         		
         		\\ \midrule
         	\textbf{place types\footref{origdsets} \cite{Derrac2015,Ager2018,Alshaikh2020} } &
@@ -37,7 +37,7 @@
         		& 
         		None &
         		1383 place-types & %both in DESC15 and the follow-up paper
-        		\specialcell[l]{ \tabitem category from Geonames (7 classes)\\ \tabitem category from Foursquare (9 classes)\\ \tabitem category from OpenCYC (93\cite{Derrac2015}/20\cite{Ager2018,Alshaikh2020} classes) } &
+        		\specialcell[l]{ \tabitem category from Geonames (7 classes)\\ \tabitem category from Foursquare (9 classes)\\ \tabitem category from OpenCYC (93\cite{Derrac2015}/20\cite{Ager2018,Alshaikh2020} cls) } &
         		\specialcell[l]{\acrshort{df} $\geq 50$ \\ \textrightarrow 21\,833 candidates \\ (all words from the BoW) \\ \textbf{n-grams}: squashed all words of a tag} 
         		% & candidate-terms: 6385
         		\\ \midrule
@@ -50,10 +50,10 @@
 				\specialcell[l]{posts partitioned roughly even\\across 20 different newsgroups} &
         		\specialcell[l]{ \tabitem Headers, footers and quote metadata removed\tablefootnote{Using the scikit-learn python package, see \url{https://scikit-learn.org/0.19/datasets/twenty_newsgroups.html}} \\ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem lowercased text\\ \tabitem candidate terms: all textual and numerical tokens} &
         		18446 posts &
-        		\tabitem newgroup post was submitted to (20 classes) &
+        		\tabitem newsgroup post belongs to (20 cls) &
         		$\geq$ 30 occurences 
         		\\ \midrule
-        	\textbf{imdb sentiment\tablefootnote{\url{http://ai.stanford.edu/~amaas/data/sentiment/} \cite{maas-EtAl:2011:ACL-HLT2011}} \cite{Ager2018}} &
+        	\textbf{imdb sentiment\tablefootnote{\url{http://ai.stanford.edu/~amaas/data/sentiment/} \cite{Maas2011}} \cite{Ager2018}} &
 				\specialcell[l]{highly polar movie reviews\\for binary sentiment classification}  &
         		\specialcell[l]{ \tabitem removed stopwords (using NLTK's corpus \cite{loper-bird-2002-nltk})\\ \tabitem lowercased text\\ \tabitem candidate terms: all textual and numerical tokens} &
         		50000 reviews &

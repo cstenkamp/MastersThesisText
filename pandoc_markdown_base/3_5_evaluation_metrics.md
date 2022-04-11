@@ -15,6 +15,12 @@
 
 ## What do we expect in Terms of Parameters?
 
+
+* Candidate-Word-Threshold: movies has samples-to-threshold value of 100, placetypes has 35, 20newsgrups has 614, so for 8000 courses any threshold from 2 to 25 seems reasonable => \cite{Derrac2015} say they intentionally kept the number of candidateterms approximate equal (at around 22.000), so to do the same I'd need a threshold of [TODO: optimal value]
+* REGARDING ORIGINAL DATASET: Dass auch die Descriptions echt kurz sind! Ich hab rund 8k samples, um das selbe samples-to-threshold verhältnis zu haben wie DESC15 wäre rechnerisch ein wert von 2 bis 25 sinnvoll (wobei man beachten muss das 2 schon richtig kacke ist weil dann die SVM 2 vs 8000 klassifizieren muss and that will never work -> 25 ist minimum), ABER wenn ich dann 25 nehme hab ich nur 2.4k candidates statt the 22k DESC15 aimed at, which also sucks!! --> CONCLUSION: Datensatz scheint zu klein.
+* Candidate-Word-Threshold: movies has samples-to-threshold value of 100, placetypes has 35, 20newsgrups has 614, so for 8000 courses any threshold from 2 to 25 seems reasonable => \cite{Derrac2015} say they intentionally kept the number of candidateterms approximate equal (at around 22.000), so to do the same I'd need a threshold of [TODO: optimal value]
+* REGARDING ORIGINAL DATASET: Dass auch die Descriptions echt kurz sind! Ich hab rund 8k samples, um das selbe samples-to-threshold verhältnis zu haben wie DESC15 wäre rechnerisch ein wert von 2 bis 25 sinnvoll (wobei man beachten muss das 2 schon richtig kacke ist weil dann die SVM 2 vs 8000 klassifizieren muss and that will never work -> 25 ist minimum), ABER wenn ich dann 25 nehme hab ich nur 2.4k candidates statt the 22k DESC15 aimed at, which also sucks!! --> CONCLUSION: Datensatz scheint zu klein.
+
 * Mein Datensatz ist anders als deren, so: Der Kappa-Score der rankigns vergleicht ist für mich ne kack metric weil ich ebennicht reviews nehme und more-occurences better-candidate heißen -> gucken wie ich stattdessen gute dimensionen und cluster finde (klingt doch so als sei accuracy/f1/... doch wichtig) => WE EXPECT dass accuracy/f1/... zu besseren ergebnissen führt!
 * What parameter-combinations and algorithm-components are the best 
 	* What are optimal parameters for Siddta-dataset

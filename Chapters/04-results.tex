@@ -5,6 +5,8 @@
 
 \chapter{Results}
 
+\todoparagraph{Bei allen plots and tables dabeischreiben ob sie aus ner speziellen oder best-on-avarage kamen}
+
 \todoparagraph{Explicitly say that it may be confusing that sometimes different results are reported, but keep in mind they come from 165 different paramcombis, and importantly every one has the corresponding plot proving that they are not faked or something. It would have been easy to edit the plots here manually such that they all match up, but that would just not correspond ot the truth. Making random seeds did not help because new configs were added as they came in}
 
 This section summarizes the results that the described algorithm achieved on the described datasets according to the described metrics. Before going into detail about the performance on the Siddata-dataset, a brief summary of the results on the placetypes-dataset serves to demonstrate if the specific implementation can achieve comparable results to \mainalgos, thus putting the other results into perspective in terms of what the algorithm can realistically achieve on dedicated high-quality datasets.
@@ -236,17 +238,17 @@ Having established that the implementation works correctly for the domain of pla
 	  10\,060 &
 	  3\,010 &
 	  5\,016 &
-	  - &
+	  5\,937 &
 	  334 &
 	  1\,008 &
-	  - &
+	  481 &
 	  7 &
 	  2 &
 	  30* &
 	  16
 	\end{tabular}%
 	}
-	\caption{}
+	\caption{\todoparagraph{Caption in comments below!} The fact that sum is a measure of robustness and should be LOW!}
 	\label{tab:generated_stats}
 \end{table}
 % Note that movies and placetypes are from derracs data, not mine!
@@ -254,8 +256,8 @@ Having established that the implementation works correctly for the domain of pla
 % Terms = len(all_terms)  (=old Feature vectors/vectors)
 % Kappa >= 0.1 = len(canditerms) == len(set(clusters.keys()) | set(flatten(clusters.values())))
 % Cluster-Elems % = np.percentile((clslen := np.array([len(i) for i in clusters.values()])), 10), np.percentile(clslen,90)
-% Greats overall = flattened cluster-keys per-dimension (the robustness thingy). Max 740 for derrac
-% * in my row means was 50D not 20D
+% Greats overall = flattened cluster-keys per-dimension (the robustness thingy). Max 740 for derrac, max 706 for me cause no 20D but 3D
+% my stuff is in dataset_info_table.ipynb
 
 The Siddata-dataset consists of more but shorter texts associated with an entity (visualized in \autoref{tab:corpussizes}), which is why there are much less words in the respective texts that exceed a given \gls{df} for the Siddata when compared to the originally used ones (visualized in \autoref{tab:summed_unique_words}). The algorithm uses a \gls{svm} to split entities that contain a phrase from those that do not, which performs bad for heavily imbalanced class sizes. \autoref{fig:candidate_histogram} shows the distribution of texts per candidate as histogram. It shows that 90\% of the 10\,060 candidates occur in 26 to 375 of the 11\,601 documents. The median number of documents is 49, meaning that for half of the keyphrases only 0.42\% of the samples are in the positive class.
 
@@ -356,7 +358,35 @@ Importantly however, the results reported here are those of a sepearate classifi
 	\label{tab:robustresults_allatonce}
 \end{table}
 
-\todoparagraph{We also wanted to check if the produced embedding is still adequate, but we will do that later}
+
+\subsubsection{Recovering Entities from Salient directions}
+
+\todoparagraph{We also wanted to check if the produced embedding is still adequate}
+
+To do something else than only looking at the Faculties, here we will also check if we can recover entites from the salient directions, to ensure that no important relevant information was lost. So to get a general understanding, let us consider under what circumstances mutliple different entitiees will fall towards the exact same coordinates: \autoref{tab:duplicates_per_comb}. \todoparagraph{God damn it warum hab ich denn jetzt nicht mehr das ding wie viel der space gefullt ist}
+
+\begin{table}
+	\caption{Duplicates per Combination of n-dims and n-categories-per-dim}
+	\begin{tabular}{lrrrrrr}
+	\toprule
+	 & \textbf{2} & \textbf{11} & \textbf{23} & \textbf{116} & \textbf{232} & \textbf{1160} \\
+	\#dims &  &  &  &  &  &  \\
+	\midrule
+	3 & 100\% & 99.85\% & 68.98\% & 6.85\% & 5.25\% & 3.97\% \\
+	5 & 100\% & 24.91\% & 9.79\% & 5.25\% & 4.72\% & 3.42\% \\
+	10 & 100\% & 10.18\% & 6.90\% & 4.67\% & 4.23\% & 2.11\% \\
+	20 & 100\% & 7.41\% & 5.58\% & 4.23\% & 3.52\% & 0.79\% \\
+	50 & 99.97\% & 5.46\% & 4.72\% & 3.19\% & 1.89\% & 0.05\% \\
+	100 & 99.88\% & 4.80\% & 4.18\% & 1.94\% & 0.65\% & 0\% \\
+	200 & 99.55\% & 4.36\% & 3.44\% & 0.67\% & 0.09\% & 0\% \\
+	\bottomrule
+	\end{tabular}
+	\label{tab:duplicates_per_comb}
+\end{table}
+
+
+Depth-N-Trees are basically again an answer of the question if it can recover courses from the dimensions, not how important the dimensions are. But that seems to be good as well so we seem to capture a lot of what's revelant..
+
 
 \subsection{Qualitative Analysis}
 
@@ -599,23 +629,6 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}.\f
 
 
 
-\begin{table}
-	\caption{Duplicates per Combination of n-dims and n-categories-per-dim}
-	\begin{tabular}{lrrrrrr}
-	\toprule
-	 & \textbf{2} & \textbf{11} & \textbf{23} & \textbf{116} & \textbf{232} & \textbf{1160} \\
-	\#dims &  &  &  &  &  &  \\
-	\midrule
-	3 & 100\% & 99.85\% & 68.98\% & 6.85\% & 5.25\% & 3.97\% \\
-	5 & 100\% & 24.91\% & 9.79\% & 5.25\% & 4.72\% & 3.42\% \\
-	10 & 100\% & 10.18\% & 6.90\% & 4.67\% & 4.23\% & 2.11\% \\
-	20 & 100\% & 7.41\% & 5.58\% & 4.23\% & 3.52\% & 0.79\% \\
-	50 & 99.97\% & 5.46\% & 4.72\% & 3.19\% & 1.89\% & 0.05\% \\
-	100 & 99.88\% & 4.80\% & 4.18\% & 1.94\% & 0.65\% & 0\% \\
-	200 & 99.55\% & 4.36\% & 3.44\% & 0.67\% & 0.09\% & 0\% \\
-	\bottomrule
-	\end{tabular}
-\end{table}
 
 \todoparagraph{By the way, I also wanted to test if any important information gets lost when using only the extracted semantic directions} - the results for unbounded decision trees (\autoref{tab:robustresults_perfb}) which achieve 94.3\% weighted accuracies indicate that at least regarding inforomation about the faculty seems to not get lost, and keep in mind that we didn't train for the faculty at all, that is just a side effect.
 

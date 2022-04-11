@@ -1,8 +1,6 @@
 <!-- "Bezug auf die orig-paper ziehen und kritisch reflektieren" -->
 ## Regarding their algorithm
 
-* See greats overall \& goods overall in \autoref{tab:generated_stats}: bei placetypes sind einfach 21832 von 21833 at some point in kappa >= 0.1
-
 
 ### General algorithm Idea
 
@@ -45,6 +43,14 @@
 * Yes points instead of regions, but I agree that that's a bug and not a feature, and also (critizising CS als solche), computation with regions is computationally incredibly demanding. 
 * \cite{Derrac2015}: \q{SVD produces a representation in which entities correspond to vectors, which should be compared in terms of cosine similarity rather than Euclidean distance} (-> spatial relations such as betweeness and parallism wouldn't make sense) - and then proceeds to use cosine-distance?! wtf!! (acutally that may be a problem of ager & alshaikh)
 
+### Robustness 
+
+Das problem was ich mit derrac hatte ist ja dass die so unglaublich unrobust waren und fast maximal viele verschiedene rauskamen
+    * Bei den placetypes-results noch den punkt dabei schreiben dass die so verschieden sind
+    * See greats overall & goods overall in \autoref{tab:generated_stats}: bei    placetypes sind einfach 21832 von 21833 at some point in kappa >= 0.1
+
+
+
 ## So are that now conceptual spaces?
 
 * sehr viele vereinfachende sachen, like no convex regions but simply dots, however that's general reasonable 
@@ -80,3 +86,11 @@ backref \autoref{sec:howtoreplicate}:
 
 How good do I think does the algorithm capture CS? How useful do I think CS are in general (two perspective, as model of human concept formation AND algorithm-that-allows-certain-things-like-reasoning), and how good do I think the algorithm does it? Is the algorithm practical?
 * So now we have to answer the question if we achieved do what motivated us in the first place: easily and automatically create structured knowledge bases .My opinion is that the need to create such knowledge bases is absolutely there, but I am more than unsure if this is the best imaginable algorithm. Of course, I see the reasoning for the distancematrix->MDS to ensure the resulting place is actually metric (an assumption more and more dropped by the two followup-papers)... but maybe before and after we can use neural techniques? Like idk doc2vec für die distance matrix, dann gerne MDS, und candidate terms sind dann word embeddings we threshold their closeness to the document embedding? Or also use LSI/LDA? (see my suggestion for an algorithm)
+
+
+
+## Outlook 
+
+There are also techniques that extend the algorithm of \textcite{Derrac2015}: \textcite{Alshaikh2019} take a vector space embedding and decompose it to several low-dimensional spaces, such that it more closely corresponds to the definition of a \gls{cs} which are split into multiple domain-specific spaces of low dimension. For that, they take the spaces from \cite{Derrac2015} to then cluster their features by domain and iteratively remove these groups to create multiple subspaces, while ensuring that \gls{word2vec} embeddings close to those of the removed ones are disregarded for future features.
+
+\cite{Alshaikh2021} want to get rid of MDS with it's quadratic space complexity and also write a completely new, unsupervised ANN algorithm based on GloVe embeddings (and suggest that doing that on BERT may be the shit). In it, they learn domain-specific embeddings from the BoW and like \cite{Derrac2015} use classification of candidate-from-text-occurs vs not-occurs for the ANN training while punishing close embeddings like \cite{Alshaikh2019}.

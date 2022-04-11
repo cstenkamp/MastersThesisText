@@ -211,6 +211,9 @@ Here we bring together the embedding of the individual entities and the extracte
 
 ## Differences to \mainalgos / Contributions of this thesis
 
+* Because of the nature of the dataset I need to do some things differently 
+    * I'm not working with reviews or collections-of-tags, that means their "how does this dimension correspond to the count in the reviews" doesn't make sense
+        * their algorithm is tailored to this. Take their success-metric for the SVMs splitting the embedding. The more often the word "scary" comes in the concatenated reviews, the more scary the movie is. Sounds legit. The more often the people that took pictures at a particular place mentioned the "nature" of that, the more relevant "nature" is to that place. Also legit. But in the descriptions for courses that involve a lot of mathematics, it is not necessarily the case that the term "mathematics" occurs often. So due to the different nature of my dataset I have to go beyond their algorithm at some points - in this case it is probably the case that different kinds of mathematical terms actually do occur more often, so I'd need calculate these kinds of kappas not based oon a single term but ALREADY on a cluster of terms (... and I can bootstrap my way there, because after I do this I get more words to add to my cluster, rinse and repeat!)
 * Differences bc of different dataset 
     * Because less words
         * Many candidates occur only in some 25 entities, which makes the ranking rather useless (99.999% of values are zero) -> [WHAT]

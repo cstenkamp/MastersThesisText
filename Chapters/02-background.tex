@@ -70,6 +70,14 @@ Some important aspects to conduct proper computer science and data analysis that
 
 
 \section{SIDDATA and Educational Resources}
+\label{sec:siddata}
+
+\todoparagraph{Educational resources has no definition, aber siddata ist ein beispiel projekt was darum revolviert}
+
+"Frage war ja, Lässt sich der Algo auf die Domäne von Ed.Res. beziehen, und dafür muss ich sie erklären"
+
+\todoparagraph{auf die kategorien in} \ref{tab:siddata_metadata} hinaus: in principle könnnen educaitonal resources können auch transkribierte videos sein, PDFs als vorlesungsmaterial, ganze paper oder bücher, oder multimedia-data such as in a mooc). \todoparagraph{Hier ider in dataset-section}
+
 
 % \includeMD{pandoc_generated_latex/2_0_siddata}
 
@@ -164,6 +172,8 @@ Some corollaries:
 \subsection{Data-Driven Generation of Conceptual Spaces}
 
 \includeMD{pandoc_generated_latex/2_3_datadrivengeneration}
+
+\todoparagraph{Mit einem Satz (EINEM SATZ!!) erklaren dass wir den mit evaluaten werden indem wir gucken wie gut er dinge klassifizieren kann.}
 
 \subsection{Explainable Reasoning with Conceptual Spaces}
 % was "computational reasoning"
@@ -335,7 +345,6 @@ By far the closest to what we do is the algorithm of \textcite{VISR12}, who gene
 
 Generally, what is being done here corresponds to \textbf{Representation Learning}, whose aim is to discover the inherent semantic structure of a representation unsupervisedly \cite{Dayan1995}. More specifically \textbf{Disentangled Representation Learning}, where only salient attributes relevant to the task at hand should be extracted, which means finding latent embeddings whose dimensions are meaningful interpretable features. Generative Adversarial Networks \cite{Goodfellow2014} or Variational Autoencoders \cite{Kingma2013} are modern techniques that are good at finding latent information in images. Especially InfoGAN \cite{Chen2016} should be named, which can extract interpretable features such as pose, hairstyle, prensence of glasses and emotions from images unsupervisedly. 
 
-
 \paragraph{LDA} 
 \label{sec:lda}
 
@@ -348,7 +357,11 @@ In the realm of \gls{nlp}, this also relates to \textbf{Topic Modeling}, which a
 \label{sec:sidbert}
 Regarding the used domain, there is already a system incorporated into the Siddata-\gls{dsa} that aids students by finding and recommending educational resources. SidBERT \cite{Schrumpf2021DELPHI} extracts implicit information from courses and other learning material by their title by categorizing them into one of 905 classes derived from the third or fourth level of the \gls{ddc} \cite{Dewey1876}, a hierachical tree stucture system commonly used to categorize library books. SidBERT uses the same dataset as this work and classifies with a custom classification head ontop of a \gls{bert}-encoder \gls{ann} which is trained on 1.3 million book titles collected from three universities as well as the German National Library, currently achieving 45.2\% test accuracy (62.2\% recall) among 905 classes.
 
-\includeMD{pandoc_generated_latex/2_5_relatedwork}
+\paragraph{Variations of this Algorithm}
+
+There are also techniques that extend the algorithm of \textcite{Derrac2015}: \textit{Alshaikh et al.} \cite{Alshaikh2019, Alshaikh2021} use this algorithm as one of their steps and create a similar algorithm to find disentangled features, to be more in line with the original definition of Conceptual Spaces,which requires low-dimensional domain-specific subspaces. Regarding other unsupervised ways to create Conceptual Spaces, Peter Gärdenfors himself suggested in his book \cite{Gardenfors2000a} to use self-organizing maps (Kohonen-Networks \cite{Kohonen1997}) instead of classical \gls{nlp} algorithms and \gls{mds} to unsupervisedly create concpetual spaces. And finally, the whole concepts of vector-space models for words \cite{Mikolov2013} and texts \cite{Le2014,Devlin2019} is related in that represents the meaing of terms, phrases or documents by embedding them in a vector space. However these have arbitrary non-interpretable dimensions and are no metric spaces, thus having no relation of geometry and meaning for \eg betweeness or analogical reasoning, which will be eloborated in the next section.
+
+\todoparagraph{BERT as best language model}
 
 
 \section{Relevant Algorithms and Techniques}

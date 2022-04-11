@@ -3,11 +3,11 @@
 
 \todoparagraph{If not explicitly stated otherwise, hyperparameter also refers to exchangeable algorithm components such as which quantification is used}
 
-This section will go into detail about this main algorithm, plus the two other papers that according to my research are good additions to it (in terms of helping to understand it as well as improving on some stuff in it). That we are focusing on only those three papers should by no means imply that they are the only ones in that regard\footnote{see \autoref{sec:otherwork} - \cite{VISR12} and their tag genome, the fact that the algorithm detailed here is basically only one step in \cite{Alshaikh2019}, Gärdenfors himself suggested that one may use self-organizing maps instead of classical AI/NLP algorithms.}.
+This section will go into detail about this main algorithm, plus the two other papers that according to my research are good additions to it (in terms of helping to understand it as well as improving on some stuff in it). That we are focusing on only those three papers should by no means imply that they are the only ones in that regard.\footnote{see \autoref{sec:otherwork} - \cite{VISR12} and their tag genome, the fact that the algorithm detailed here is basically only one step in \cite{Alshaikh2019}, Gärdenfors himself suggested that one may use self-organizing maps instead of classical AI/NLP algorithms.}
 
 \todoparagraph{Regarding ager and alshaikh:}
 
-The implementation of this thesis replicates and extends the algorithm proposed by \textcite{Derrac2015} with some novel contributions to deal with the given dataset. Further, some improvements from the works of \textcite{Ager2018} and \textcite{Alshaikh2020} are incorporated, who also replicated and improved the original algorithm\footnote{All three of these works share Prof Steven Schokaert as last author.}.
+The implementation of this thesis replicates and extends the algorithm proposed by \textcite{Derrac2015} with some novel contributions to deal with the given dataset. Further, some improvements from the works of \textcite{Ager2018} and \textcite{Alshaikh2020} are incorporated, who also replicated and improved the original algorithm.\footnote{All three of these works share Prof Steven Schokaert as last author.}
 
 \subsection{Core Idea}
 
@@ -21,10 +21,10 @@ to which the entity corresponds to a number of appropriate dimensions. % Das hau
 \newline
 
 The general idea to achieve that is as follows: First, the entities %TODO: at this point already defined that entities = texts = descriptions/concatenatedreviews/... 
-are embedded as fixed-dimensional vectors\footnote{This already softens the definition of a conceptual space, as the considered entities are modelled as vectors instead of regions.}. % entities were supposed to be regions, however here we assume vectors because it's computationally a lot easier (TODO: are the reasons mentioned elsewhere? also the distiction between types and tokens?)
+are embedded as fixed-dimensional vectors.\footnote{This already softens the definition of a conceptual space, as the considered entities are modelled as vectors instead of regions.} % entities were supposed to be regions, however here we assume vectors because it's computationally a lot easier (TODO: are the reasons mentioned elsewhere? also the distiction between types and tokens?)
 To allow for the types of reasoning mentioned in Section \ref{sec:cs_reasoning}, %TODO: section where the entire mapping from logic-reasoning to CS-reasoning is explained, mostly from DESC15 and Gärdenfors himself
-it is embedded into metric spaces where the concepts of direction and distance are well-defined. \gencite{Derrac2015} original algorithm uses MDS (see \ref{MDS}) for this matter, which enforces equal distances\footnote{however as shown by \textcite{Mikolov:Regularities}, such things are also possible with neural word-embedding techniques such as word2vec \cite{Mikolov2013}.}%TODO: link the distance-matrix-notepad FROM MY REPO in nbviewer+binder
-. Additionally, words or phrases from the text are extracted as candidates for the names of the semantic dimensions. The underlying assumption is that \q{words describing semantically meaningful features can be identified by learning for each candidate word $w$ a linear classifier which separates the embeddings of entities that have $w$ in their description from the others} \cite[3574]{Alshaikh2020}. The better the performance of that classifier according to a chosen metric, the more evidence there is that $w$ describes a semantically meaningful feature. 
+it is embedded into metric spaces where the concepts of direction and distance are well-defined. \gencite{Derrac2015} original algorithm uses MDS (see \ref{MDS}) for this matter, which enforces equal distances.\footnote{however as shown by \textcite{Mikolov:Regularities}, such things are also possible with neural word-embedding techniques such as word2vec \cite{Mikolov2013}.}%TODO: link the distance-matrix-notepad FROM MY REPO in nbviewer+binder
+Additionally, words or phrases from the text are extracted as candidates for the names of the semantic dimensions. The underlying assumption is that \q{words describing semantically meaningful features can be identified by learning for each candidate word $w$ a linear classifier which separates the embeddings of entities that have $w$ in their description from the others} \cite[3574]{Alshaikh2020}. The better the performance of that classifier according to a chosen metric, the more evidence there is that $w$ describes a semantically meaningful feature. 
 % * from Alshaikh2020: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candi- date word w a linear classifier which separates the embeddings of entities that have w in their description from the others. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
 % TODO: make the direct quote shorter, such things should only be done "to support an argument", which I don't here.
 In a final step, the candidate-words are clustered according to their similarity to find a fixed set of \emph{semantic directions}. A representative term for the directions is selected, and the entities are re-embedded into a new space comprised of these dimensions, where the individual vector-components correspond to the ranking of an entity with respect to these dimensions.
@@ -51,6 +51,9 @@ Many of the mentioned components don't refer to a specific algorithms, and the e
 % Consider restructuring the first two paragraphs: You first introduce the first two steps but then do not follow up with the next steps (Unless they are combined under the mentioned Lowe framework in which case you need to make this explicit).
 % I like the structured step listing later on, maybe you could build this section around that.
 
+\todoparagraph{In contrast to the previous explanations here I am directly talking about parameter (choice)s at each step etc}
+\todoparagraph{In contrast the the previous explanations here I am talking about how III did it}
+
 The considered algorithm first embeds the collection of texts into a vector space, to afterwards extract important features from this space using linear classifiers. The second step is an original idea of \cite{Derrac2015}, however creating vector space embeddings from texts is a very popular technique, used for many tasks in computational linguistics \cite{Mikolov:Regularities,Mikolov2013a,Guo,Lowe,Turney2010}. %TODO: irgendwo bin ich ja noch auf word2vec und den ganzen bums eingegangen blabla, nochmal schreiben dass es hier um classical AI geht und ebennicht die sahcen wie word2vec und glove
 %TODO: glove und fasttext cite?!
 
@@ -59,6 +62,8 @@ The considered algorithm first embeds the collection of texts into a vector spac
   and smoothing the space using dimensionality reduction, before calculating the similarities on the resulting embedding. While the considered algorithm requires more steps before calculating the similarities to allow for domain-specific and more complex forms of reasoning, it also adheres to this structure, as will be shown in section~\nameparanref{sec:generate_vectorspaces}.
 
 The core idea of the algorithm is to (unsupervised, data-driven) find a a set of features which can be modelled as directions for a vector-space representation of the respective entities. For that, the steps are:
+
+\todoparagraph{Schon hier dass alshaikh kein mds nutzen oder dass man ja nicht fur jeden classifier einzeln die svm machen muss}
 
 \label{sec:algorithmsteps}
 \begin{enumerate}
@@ -94,8 +99,8 @@ The algorithm is also given as pseudocode in \autoref{ap:algorithm_pseudo}.
 
 \input{include/algorithm_compare_table}
 
-Before looking at the steps in turn, it should be noted that even the preprocessing does not work on completely raw data, but on curated and processed corpora. This processing is however not considered part of the algorithm, as it is very specific to the respective datasets and manual dataset exploration, tweaking settings such that they are best for the respective corpora\footnote{Because of this, it was done in sepearate Jupyter Notebooks, such as \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/create_datasets/Preprocess_Siddata2022.ipynb} }. %TODO: instead link to nbviewer/binder!!
-
+Before looking at the steps in turn, it should be noted that even the preprocessing does not work on completely raw data, but on curated and processed corpora. This processing is however not considered part of the algorithm, as it is very specific to the respective datasets and manual dataset exploration, tweaking settings such that they are best for the respective corpora.\footnote{Because of this, it was done in sepearate Jupyter Notebooks, such as \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/create_datasets/Preprocess_Siddata2022.ipynb} } %TODO: instead link to nbviewer/binder!!
+\todoparagraph{Mep, the fact that mainalgos explicitly did it per-dataset, ref table}
 
 \subsubsection{Preprocessing\arrowref{sec:algorithmsteps}}
 
@@ -107,17 +112,18 @@ A common prerequisit for NLP algorithms is to pre-process the text corpus. The p
 %     * Some are already mostly preprocessed (placetypes is already a bag-of-words so there's not much to do there, and we skip almost all preprocessing-steps)
 %     * In course-descriptions, I want some parts of the pre-preprocessing be part of the pipeline, like how we merge descriptions of different iterations of the same course that overlap to a high degree (sentwise-merge vs relative-term-frequencies)
 
-As the main considered dataset of university-courses is highly multilingual (see \autoref{fig:sid_statistics}), one of the first questions that needs to be addressed is how entities of different langauges are handled. The algorithm consists of classical language processing algorithms such as comparing \gls{bow} representation of the entities, which means that the same text in two different languages may result in maximally different representations\footnote{\todoparagraph{another reason that makes checking out word2vec worth it!}}. Because of this, before any other processing, the languages of the entities is checked, such that entities of languages other than the demanded may be either translated, left out or used anyway\footnote{For details about the translation-step, it is referred to Appendix \ref{ap:translating}. It should be noted that professional automatic translation is costly and thus not all texts are available in all languages.}.
+As the main considered dataset of university-courses is highly multilingual (see \autoref{fig:sid_statistics}), one of the first questions that needs to be addressed is how entities of different langauges are handled. The algorithm consists of classical language processing algorithms such as comparing \gls{bow} representation of the entities, which means that the same text in two different languages may result in maximally different representations\footnote{\todoparagraph{another reason that makes checking out word2vec worth it!}}. Because of this, before any other processing, the languages of the entities is checked, such that entities of languages other than the demanded may be either translated, left out or used anyway.\footnote{For details about the translation-step, it is referred to Appendix \ref{ap:translating}. It should be noted that professional automatic translation is costly and thus not all texts are available in all languages.}
 
 
 The following components are developed for the preprocessing, every one of which can be individually enabled or disabled:
 \begin{itemize}
-	\item Prepend title and/or subtitle to the entities' associated text \itemtext{useful for the SIDDATA-Dataset, as the titles are often quite long and more descriptive than their descriptions}
+	\item Prepend title and/or subtitle to the entities' associated text \itemtext{useful for the Siddata-Dataset, as the titles are often quite long and more descriptive than their descriptions}
 	\item Remove HTML-Tags from texts 
-	\itemtext{useful for the SIDDATA-Dataset, as it includes descriptions for \glspl{mooc}, which may contain such}
+	\itemtext{useful for the Siddata-dataset, as it includes descriptions for \glspl{mooc} which are crawled from websites and often contain such}
 	\item Tokenize sentences 
 	\itemtext{such that \glspl{ngram} across sentences are not considered}
 	\item Lower-case all words
+	\itemtext{reduces the amount of individual words and ensures that words at the beginning of sentences are mapped correctly}
 	\item Remove stop-words
 	\itemtext{\todoparagraph{grains of salt for stopwords! Alshaikh2019 just removed too-high-termfreq!}}
 	\item Tokenize words
@@ -127,7 +133,7 @@ The following components are developed for the preprocessing, every one of which
 	\item Remove punctuation 
 \end{itemize}
 
-The above can be done either be done with proprietary code for all of these steps\footnote{Mostly relying on the python package \emph{nltk} \cite{bird2009natural}}, or using \codeother{sklearn}\footnote{\url{https://scikit-learn.org/stable/}}s \codeother{CountVectorizer} (which is faster, but less configurable), as did \cite{Ager2018}.
+The above can be done either be done with proprietary code for all of these steps,\footnote{Mostly relying on the python package \emph{nltk} \cite{bird2009natural}} or using \codeother{sklearn}\footnote{\url{https://scikit-learn.org/stable/}}s \codeother{CountVectorizer} (which is faster, but less configurable), as did \cite{Ager2018}.
 
 
 % TODO: Regarding Stop-words:
@@ -147,8 +153,14 @@ The final result of the algorithm is a metric space in which the individual dime
 
 In \gencite{Derrac2015} original paper, the selection of phrases to be extracted depends on the dataset: For placetypes-dataset, all sufficiently frequent\footnote{\label{fnote:cand_thresholds}The respective thresholds are listed in \autoref{tab:all_datasets} as ``candidate word threshold''.} 1-grams\footnote{Note that in the case of the place-types dataset, a 1-gram corresponds to all merged words of a tag.} were considered. For the other two datasets, they applied a \gls{pos}-tagger that extracted all sufficiently frequent\footnoteref{fnote:cand_thresholds} \textbf{adjectives, nouns, adjective phrases} and \textbf{noun phrases}, assuming that adjectives would correspond to gradual properties (\eg \textit{violent, funny}) and nouns to topics (\eg the \textit{genre}) \cite[Sec. 4.2.1]{Derrac2015}.
 
-% Their method depended on the dataset - as their placetypes-dataset was just a collection of tags and the number of tags with term-freq >= XYZ (docfreq>2?! hä?) corresponded to their desired number of candidates anyway (around 22k), they just took all of these as candidates. For their movie-reviews-dataset, they considered all nouns, adjectives, nounphrases and adjective-phrases as detected by a POS-tagger. Doing something similar in the scope of this thesis led to suboptimal results, which is why alternative methods were developed
+% Their method depended on the dataset - as their placetypes-dataset was just a collection of tags and the number of tags with term-freq >= XYZ (docfreq>2?! hä?) corresponded to their desired number of candidates anyway (around 22k), they just took all of these as candidates. For their movie-reviews-dataset, they considered all nouns, adjectives, nounphrases 	and adjective-phrases as detected by a POS-tagger. Doing something similar in the scope of this thesis led to suboptimal results, which is why alternative methods were developed
 For this step, the implementation of this thesis differs from the original algorithm, as both taking all words as candidate and running a \gls{pos}-tagger led to suboptimal results in previous experiments of me\footnote{To ensure comparability, in the case of the placetypes-dataset the original method of taking all words with a term-frequency of at least 50 was used.}. 
+
+\todoparagraph{Ensure this is consistent with later parts where I say the number of candidates: thing is I have less words but the algorithm seems to profit from less words as that makes it more robust}
+
+\todoparagraph{Come back to this in optimal parameters section }
+
+
 % I would however argue that the difference here doesn't make a relevant difference (TODO: argue that lol)
 % Also, while in the paper they claim to use n-grams as candidates, the dataset they publicly published does not contain n-grams (which is why I didn't use that one).
 
@@ -160,14 +172,14 @@ In the codebase the candidate-extraction is split into four consequently excecut
 	\item Filtering the \gls{doctermmat}
 \end{itemize}
 
-As visualized in \autoref{fig:dependency_graph}, these substeps only depend on the preprocessed descriptions, which means they can be run in parallel to the creation of the embedding\footnote{\todoparagraph{Another good reason for cluster exceution!}}.
+As visualized in \autoref{fig:dependency_graph}, these substeps only depend on the preprocessed descriptions, which means they can be run in parallel to the creation of the embedding.\footnote{\todoparagraph{Another good reason for cluster exceution!}}
 
 % This can be done either based on the frequency (meaning all terms with a minimal term-frequency), based on some notion of *importance* (based on scores like tf-idf or ppmi), or by more complex means of figuring out *important* keywords and keyphrases. An example of the latter would be KeyBERT
 Three main techniques are implemented to extract candidates from the text-corpus: 
 \begin{description}
 	\item[By frequency:] consider all phrases that exceed a specified term-frequency (like \cite{Derrac2015}).
 	\item[By a \gls{quant}:] consider all phrases that exceed a specified score (\gls{ppmi}, \gls{tf-idf} or pure term-frequency).
-	\item[Using \emph{KeyBERT}\cite{grootendorst2020keybert}:] consider phrases whose BERT-embedding \cite{Devlin2019} is most similar to the text they are in\footnote{For more details on KeyBERT, see Appendix~\ref{ap:details_keybert}}.
+	\item[Using \emph{KeyBERT}\cite{grootendorst2020keybert}:] consider phrases whose BERT-embedding \cite{Devlin2019} is most similar to the text they are in.\footnote{For more details on KeyBERT, see Appendix~\ref{ap:details_keybert}}
 \end{description}
 
 

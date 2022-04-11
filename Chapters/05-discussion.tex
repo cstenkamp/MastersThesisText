@@ -77,30 +77,122 @@ Even though this work did not do much beyond \mainalgos, maybe there were some s
 
 \subsection{Results for educational resources}
 
-One of our two research questions was to figure out if the methodology works for our domain. So now that we have established that the implementation seems to work, let us finally look how the algorithm copes with the Siddata-dataset and answer this question.
+One of our two research questions was to figure out if the methodology works for our domain. So now that we have established that the implementation seems to work and the dataset works on other datasets, let us finally look how the algorithm copes with the Siddata-dataset and answer this question.
 
 \subsubsection{Fear of dataset differences}
 \label{sec:discuss_datasetdiffs}
 
 When describing the datasets in \autoref{sec:datasets}, we noticed that they are quite different. An important difference is that in contrast to the originally used datasets, in our dataset the relationship between how relevant a concept is for an entity and how often its words occur in the respective \gls{bow} is not given. Furthermore, the Siddata-dataset contains far less words per entity: the median number of unique words per description is three orders of magnitude smaller compared to the placetypes-dataset (see \autoref{tab:summed_unique_words}). Even though the number of entities in the dataset is higher, it contains substantially less unique words, especially in relation to the dataset-size (see \autoref{tab:summed_unique_words}). The difference is very prominent in relation to the dataset size (indicated by the last two columns). This leads to the fact that for most of the \glspl{ngram} that can serve as candidate-terms, the number class with entities that contain the phrase is far smaller than the negative class. 
+% As established, a very important difference is that more relevant words do not occur more often. We assumed  because of that, the kappas that compare rankings are not so good
 
-\textcite{Derrac2015} extracted roughly 20\,000 candidates for the movies- and placetypes-datasets. If the same number of candidates were to be extracted in our case, more than half of them would occur in less than 25 descriptions, such that the positive class for the corresponding classification problem contains only $\frac{24}{26346}=0.09\%$ of the samples. It seems unlikely that even class weighting can make up for that, yielding a bad classification. The distribution of interim results seem to support this hypothesis: In a sample run, 10\,060 candidates were extracted (\autoref{tab:generated_stats}) As displayed in \autoref{fig:candidate_histogram}, the number of candidates is exponentially decreasing. 
+\textcite{Derrac2015} extracted roughly 20\,000 candidates for the movies- and placetypes-datasets. If the same number of candidates were to be extracted in our case, more than half of them would occur in less than 25 descriptions, such that the positive class for the corresponding classification problem contains only $\frac{24}{26346}=0.09\%$ of the samples. It seems unlikely that even class weighting can make up for that, yielding a bad classification. 
+
+\todoparagraph{Well actually, see} \autoref{tab:corpussizes} \todoparagraph{used only more-than-80 words, leading to only 11601 entities in our dataset}
+
+\todoparagraph{Come back to} \autoref{tab:generated_stats} and the Sum-columns indicating robustness or not!
+
+In \autoref{sec:results_datasetdiffs}, and parts of the distribution of interim results seem to support this hypothesis: In a sample run, 10\,060 candidates were extracted (\autoref{tab:generated_stats}) As displayed in \autoref{fig:candidate_histogram}, the number of candidates is exponentially decreasing. 
+% less candidates produced
 
 Despite this, a sample run with 200 dimensions still had 5016 phrases with $\kappa \geq 0.1$ and 1008 with $kappa \geq 0.5$, which is enough for the algorithm (for 200D only 400 ones with $kappa \geq 0.5$ would be necessary). However there are far less ones in $\kappa_{0.1}$, meaning the clusters are considerably smaller. On the other hand, consider that for the placetypes-dataset in the 200D-case 21819 out of 21833 candidates had such a kappa score, which actually does not seem helpful at all.
+% The #Texts containing a candidate are exponentially decreasing, which means that for many of the candidates that ARE produced the classification to measure the faithfulness has a really hard time
 
-If we had bad results we could have only used the 1500 with the longest descriptions, bringing us closer to the distribution of the placetypes-dataset, but still not changing the properties. In sum, despite the dataset differences the algorithm does seem to extract enough \todoparagraph{and is robust bla bla}. Schlägt sich nicht aus dass wir weniger candidates haben. 
+When discussing the dataset, we already theorized that only keeping those entites for which a classifier can successfully predict its faculty may help to increase dataset quality. That turned out to be not necessary but would still be a good future research opportunity.
+
+If we had bad results we could have only used the 1500 with the longest descriptions, bringing us closer to the distribution of the placetypes-dataset, but still not changing the properties. In sum, despite the dataset differences the algorithm does seem to extract enough \todoparagraph{and is robust bla bla}. But even though the dataset seems to be quite different and some intermediate results also show significant differences which makes downstream tasks harder, the final performance is suprisingly robust, indicating that the methodology is robust and does not only work for datasets with the aforementioned properties. \todoparagraph{If it hadnt we had some Ideas like using wordnet for hyponyms etc but that does not seem necessary.}
+
+In terms of the obviousness of the faculty from the samples, the dataset actually seems to look better than placetypes. The scatterplot (\autoref{fig:scatter_mds_siddata}) clusters good enough to be optimistic, and both BERT and even a random 3D-embedding can reach okayish classifications.
+
+As established, a very important difference is that more relevant words do not occur more often. we assumed before that because of that, the kappas that compare rankings are not so good. WELL IS THAT THE CASE
+
+\subsubsection{Classification results}
+
+Keep in mind that we're only looking at the Faculty! We know that this by far does not test everything the algorithm does or how it performs for other things-to-compare, so the best analysis would just be human studies.
+
+We compared to BERT (85.19\% accuracy), and to 3D-embedding (64.3\% weighted accuracy), and we robustly achieved 81.4\% accuracy with depth one trees! Really surprised me. The one that uses only three dimensions is already better than BERT, and the unbounded one has 94.3\% classification accuracy. Interestingly, classifying all faculties at once is a lot worse, so maybe a fairer comparison to BERT would have been if there we also would have followed the 1vsRest way, but that is future work.
+%Really good results for faculty in general
+
+When lookign at the individual faculties, we see that \textit{Humanwissenschaften} is for depth-1-trees by far the worse, but also has a big standard deviation. \autoref{fig:faculty_boxplots} shows this even better. This indicates that the classification performance for this faculty strongly depends on what ends up in the train set, so maybe the Faculty is just too different in their descriptions. This is a bit surprising, I would have rather expected Erziehungs-/Kulturwissenschaften is more diverse with Lehramt in it.  Interestingly, preliminary analysis of Johannes and SidBERT (unpublished) showed that Mathe/Informatik (top-1 25.7\%, top-5 42.1\%) and Sozialwissenschaften (top-1 32.7\%, top-5 65.5\%) are most problematic (in the sense that their neirest neighbor embedding is not from the same faculty), followed then by Humanwissenschaften. Also the class frequency for that class is not the culprit, its one of the larger ones.
+
+\paragraph{Qualitative analysis}
+
+When looking at the examples per faculty, we observe mixed results. ON the one hand, erziehungswissenschaft is perfect, on the other hand physik and bio/chemie suck. Acutally, physik and bio/chemie always suck, for most of the runs we did. When looking at the class frequencies for these we see that well yes, these two are among the smaller classes, but so are Mathemaik/Informatik and Wirtschaftswissenschaften, both of which are generally classified really well.
+
+Interestingly even though for Humanwissenschaften the performance is generally not too good, the dimensions we extracted from it are plausible.
+
+Would you want to take the words from the top 3 direcitons as names from the dimension? Some of them definitely: erziehungswissenschaft, programmiersprache, "deutsch literaturwissenschaft", "psychologie", "arbeitsmarkt"... but some of them meh.
+
+
+\paragraph{Post-Hoc-Qualitative Analysis}
+\label{sec:duplicate_maps}
+
+\todoparagraph{Darauf referenzier ich mich in der datasets-section, das muss rein welp}
+
+We talked a lot about the dataset differences in terms of \textbf{the property}, but lets now also look if we can say something about the dataset \textbf{Quality}.
+
+I have the feeling a lot of bad performance can be explained by the dataset suckities, such as courses of different years being modelled as completely different things in studip
+
+noticed things are:
+
+Das wie gerade auch in der duplicate-per-combi-of-ndims-and-ncats sichtbar wird dass letztlich halt "kurs 123" und "!!FÄLLT AUS!! kurs 123" auf den selben fallen, was zwar quantiativ scheiße ist aber ACTUALLY GOOD! Also dass 2 EIGENTLICH gleiche kurse auf das selbe mappen, that's a feature not a bug
+
+wenn man sich anschaut WAS denn falsch klassifiziert wurde sieht man halt dass die Kurse die offensichtlich nicht Mathe sind eben falsch klassifiziert wurden, oder dann eben "logic" in mathe landet, well it's not wrong, it's the dataset 
+
+There is really a lot of crap in the data, like the  "Tutoren sind: Susi Sorglos Willi Wacker" ones. If the performance is not enough, one may also check if taking only the 1000 with the longest decription would help
+
+or only those ones where BERT can sucessfully classify the faculty. Again, faculty is not everything, BUT if the faculty CAN be extracted, cases that only list names or places are out (...except FROM the name of place follows the faculty but lets ignore that)
+
+
+\todoparagraph{Are short descriptions worse?}
+
+\paragraph{concluding remarks}
+
+In general we must say that we have really good accuracies and this really seems to indicate that it works.  We could to the shallow-decisiontrees-thingy for other attributes of the dataset than I currently have (see future work)
+
+\subsection{Hyperparameters results}
+
+I considere the results of 165 different param-combis in the final run, but so many previous runs were there as well were I looked at previous stuff (see the image that I originally had in workflow)
+
+\includeMD{pandoc_generated_latex/5_hyperparamresults}
+
+\subsection{Robustness}
+
+Robust meaning here that multiple runs yield similar results. We said before that in word2vec the actual directions of the vectors are completely incomprehensibly dependent on the random initial conditions, and we also said that that is an absolute no-go in conceptual spaces.
+
+Already here go into detail how unrobust the implementation of derrac and the others is. 
+
+Show and interpret results for how robust my implementation is and if close words are close
+
+..then again elaborate that explicit word choices are not too relevant and also not tested here and that I already experimented with different techniques (see appendix for keybert vs the others) but that there is no formal way to test them.
+
+I hypothesize (see \autoref{sec:extract_cands}) that the reason I am having more robust results than \cite{Derrac2015} is among others because I have less candidates.
+
+Results of multiple runs: 
+
+from all the 165 different param-kombis I did, the following had enough (ndims*2) kappas-over-0.5:
+\{3: 40, 50: 38, 200: 15\}
 
 
 
 
+
+\subsection{Did we achieve the thesis goal?}
 
 \includeMD{pandoc_generated_latex/5_2_siddata}
 
 \section{General Algorithm}
 
-\includeMD{pandoc_generated_latex/5_3_algorithm}
+Now that we seen the algorithm in action and painstaking implemented it we are experts on the algorithm of \textcite{Derrac2015}, so let us critically reflect on the algorithm as such.
+
+\subsection{General algorithm idea}
+
+When first confronted with the algorithm of \textcite{Derrac2015}, it appears oddly specific 
+
 
 \includeMD{pandoc_generated_latex/5_3_evalderrac}
+
+
+
 
 \section{Architecture}
 

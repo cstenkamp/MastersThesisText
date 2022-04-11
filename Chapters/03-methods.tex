@@ -4,9 +4,9 @@
 
 This chapter explains the methods that were used to achieve the two goals of replicating the algorithm of \textcite{Derrac2015} with the improvements of \cite{Ager2018,Alshaikh2020} with a sustainable architecture and applying it to the domain of educational resources.  
 
-To do that, we will firstly look at the datasets \mainalgos used as well as our own one and compare key statistics. The subsequent section then explains the used algorithm broadly before looking at each of its steps in detail. Based on that, the specific architecture that was created as well as the workflow used to generate meaningful results will be introduced to demonstrate its process. The final section explains what kind of methods and metrics were used to generate and interpret the results that will follow in the next chapter.
+To do that, we will firstly look at the datasets used by \mainalgos, as well as our own one and compare key statistics. The subsequent section then explains the used algorithm broadly before looking at each of its steps in detail. Based on that, the specific architecture that was created as well as the workflow used to generate meaningful results will be introduced to demonstrate its process. The final section explains what kind of methods and metrics were used to generate and interpret the results that will follow in the next chapter.
 
-Given that there were two research questions, one asking if the replicating algorithm can be applied to another domain and the other asking for a reliable application, it makes sense to both look at datasets and general algorithm on the one side, but also at the worflow and architecture. Writing about the latter while also open-sourcing the code-base is especially useful to ensure ease and speed of future replication, such that all claims can be independently tested with the exact same implementation without having to rely on ambiguous and incomplete verbal explanations\footnote{Just like this thesis could have been a lot less effort if \mainalgos did that instead of ambiguous incomplete descriptions. \todoparagraph{Scable, reproducible, open science! I wished it had been there, so I will do it.}}. 
+Given that there were two research questions, one asking if the replicating algorithm can be applied to another domain and the other asking for a reliable application, it makes sense to both look at datasets and general algorithm on the one side, but also at the worflow and architecture. Writing about the latter while also open-sourcing the code-base is especially useful to ensure ease and speed of future replication, such that all claims can be independently tested with the exact same implementation without having to rely on ambiguous and incomplete verbal explanations. \footnote{To o achieve reproducibility. Just like this thesis could have been a lot less effort if \mainalgos did that instead of ambiguous incomplete descriptions.}
 
 
 %JOHANNES' KOMMENTARE TO WHAT I SENT HIM
@@ -26,9 +26,9 @@ Given that there were two research questions, one asking if the replicating algo
 % * Warum ich die einzelnen Datensätze erwähne wird nicht klar
 
 
-Let us first elaborate on the datasets used both in the works that are being replicated as well as the dataset used in the scope of this thesis. Doing both is important because (as explained in \autoref{sec:howtoreplicate}), to really know if an algorithm is a good choice for a task, it must be ensured that it does not only work on a special kind of dataset due to a special property that this kind of data happens to have. So, we will now compare all datasets, to see if there are important differences between them, as for example in its structure, size or just general \emph{logic}.
+Let us first elaborate on the datasets used both in the works that are being replicated as well as the dataset used in the scope of this thesis. Doing both is important because (as explained in \autoref{sec:howtoreplicate}), to really know if an algorithm is a good choice for a task, it must be ensured that it does not only work on a special kind of dataset due to a special property that it happens to have. So, we will first compare all datasets to see if there are important differences between them, as for example in its structure, size or just general \emph{logic}.
 
-\textcite{Derrac2015} used their algorithm to create conceptual spaces for three domains: \textit{movies}, \textit{placetypes} and \textit{wines}. Accordingly, they created corpora for these three domains. The two considered follow-up works both re-used the datasets for movies and placetypes and also created additional datasets respectively. An overview of all the corpora used in \mainalgos is provided in \autoref{tab:all_datasets}.
+\textcite{Derrac2015} used their algorithm to create conceptual spaces for three domains: \textit{movies}, \textit{placetypes} and \textit{wines}. Accordingly, they created corpora for these three domains. The two considered follow-up works both re-used the datasets for movies and placetypes and also created additional datasets respectively. \autoref{tab:all_datasets} shows a complete comparison of all datasets used in any of \mainalgos, including their origin, properties as well as associated pre-processing steps.
 
 % NOW at first the ones from \mainalgos I am using
 
@@ -36,7 +36,7 @@ Let us first elaborate on the datasets used both in the works that are being rep
 
 This work applies the replicated algorithm to a new dataset, so it is important to check if the new dataset differs from the originally used ones. To ensure comparability in algorithm details, this implementation is also run on the \emph{placetypes}-dataset, and some of its statistics as well as that of the other two datasets made public by \cite{Derrac2015}.\footnote{\url{https://www.cs.cf.ac.uk/semanticspaces/}} Let us first compare some key statistics of them, before looking into two of them individually in the next section.
 
-A very distinctive difference of the datasets is their size: the movies-dataset consists of 15.000 entities, place-types of 1383, and wines of only 330. Just as important as the number of entities is however also the length of their associated text-corpus. Figures \ref{fig:sid_wordsperdesc} and \ref{fig:placetypes_dist_unique} show a histogram of the distribution of text lengths for the Siddata-dataset and placetypes-dataset respectively, and \autoref{tab:corpussizes} summarize corpus size and distribution of text lengths per entity for all handled datasets. Note that the Siddata-dataset is listed twice, once including all available entities and once after filtering out those whose description was shorter than 80 words.
+A very distinctive difference of the datasets is their size: the movies-dataset consists of 15.000 entities, place-types of 1383, and wines of only 330. Just as important as the number of entities is however also the length of their associated text-corpora. Figures \ref{fig:sid_wordsperdesc} and \ref{fig:placetypes_dist_unique} show a histogram of the distribution of text lengths for the Siddata-dataset and placetypes-dataset respectively, and \autoref{tab:corpussizes} summarize corpus size and distribution of text lengths per entity for all handled datasets. Note that the Siddata-dataset is listed twice, once including all available entities and once after filtering out those whose description was shorter than 80 words.
 
 \begin{table}[H]
 	\centering
@@ -74,25 +74,50 @@ A very distinctive difference of the datasets is their size: the movies-dataset 
 	% \textbf{Movies}  & 589727 & 392885 & 200470 & 83354  & 60952  & 44809  & 20314 & 13558 & 5317   & 2484 
 \end{table}
 
-It is obvious that even though the number of Siddata-entities is comparable to the bigger of \cite{Derrac2015}'s datasets, the number of unique words in the individual texts associated with the entities are two orders of magnitude shorter than both. As the algorithm does not rely on deep learning, this does not mean that the dataset is unsuited for it, but let us explore how the distance in their lengths can be explained and what consequences this has.
+It is obvious that even though the number of Siddata-\glspl{entity} is comparable to the bigger of \cite{Derrac2015}'s datasets, the number of unique words in the individual texts associated with the entities are two orders of magnitude shorter than both. As the algorithm does not rely on deep learning, this does not mean that the dataset is unsuited for it, but let us explore how the distance in their lengths can be explained and what consequences this has.
 
 The works considered in this replication \mainalgos all use the movies- and the  placetypes-dataset to evaluate their methods. The former consists of the concatenation of all available reviews for 15.000 movies from IMDB,\footnote{\url{https://www.imdb.com/}} grouped by the movie the reviews are for. The placetypes-dataset is created from a collection of tags that belong to photos uploaded to the photo sharing platform Flickr\footnote{\url{https://www.flickr.com}} that co-occur with other tags that denote one of several placetypes. Other datasets considered in the works of \mainalgos include wine reviews, posts to certain newsgroups, and another dataset created from IMDB-reviews (see \tref{tab:all_datasets}). 
 % "their algorithm is tailored to concatenated-reviews or concatenated-bags-of-tags"
 
-All of these datasets have in common that they are made up from a collection of independent texts or tags, created by different people. This means, that the more obvious or distinct a property of the respective entity is, the more often words describing that property will be used as tag or as part of the review. For example, a movie that is \emph{scary} to a lot of people will lead to many reviews mentioning that, which means that the word scary (or other words commonly co-occuring with it) will have a high count in the concatenation of all these reviews. The algorithm from \cite{Derrac2015} heavily leans on this property by using the (relative) frequency of certain words as signal for the importance of the concept they may refer to. 
-
-The Siddata-dataset unfortunately does not share this property, as the texts that belong to an entity are not collected from different independent texts, but solely from the description of that entity. It may of course be roughly the case that the more \emph{mathematical} a course is, the more often the word \emph{math} occurs in its description, but the correlation is likely not as prominent as in the aforementioned datasets. It should however be noted that \cite{Alshaikh2020} also used the algorithm on three datasets where the description for an entity was collected from its Wikipedia\footnote{\url{https://en.wikipedia.org/}}-article, which also does not contain the described duplication of words. \autoref{tab:all_datasets} shows a complete comparison of all datasets used in any of \mainalgos, including their origin, properties as well as associated pre-processing steps.
-
 \input{include/dataset_table}
 
-\subsection{Siddata-courses}
+All of these datasets have in common that they are made up from a collection of independent texts or tags, created by different people. This means, that the more obvious or distinct a property of the respective entity is, the more often words describing that property will be used as tag or as part of the review. For example, a movie that is \emph{scary} to a lot of people will lead to many reviews mentioning that, which means that the word scary (or other words commonly co-occuring with it) will have a high count in the concatenation of all these reviews. The algorithm from \cite{Derrac2015} heavily leans on this property by using the (relative) frequency of certain words as signal for the importance of the concept they may refer to. 
 
+The Siddata-dataset unfortunately does not share this property, as the texts that belong to an entity are not collected from different independent texts, but solely from the description of that entity. It may of course be roughly the case that the more \emph{mathematical} a course is, the more often the word \emph{math} occurs in its description, but the correlation is likely not as prominent as in the aforementioned datasets. It should however be noted that \cite{Alshaikh2020} also used the algorithm on three datasets where the description for an entity was collected from its Wikipedia\footnote{\url{https://en.wikipedia.org/}}-article, which also does not contain the described duplication of words.
+
+
+\paragraph{Other considered datasets}
+
+One of the goals was to build an adaptable architecture, so we also want to check if it can quickly and easily be applied to other datasets. For that, a dataset of 1002 short stories from project guttenberg\footnote{\url{https://www.kaggle.com/datasets/shubchat/1002-short-stories-from-project-guttenberg?select=db_books.csv}} and one of 100\,000 coursera course reviews\footnote{Source: \url{https://www.kaggle.com/septa97/100k-courseras-course-reviews-dataset}, Exploratory Analysis: url{https://www.kaggle.com/roshansharma/coursera-course-reviews}} were created. The former is similar to our dataset because it is also not made up as concatenation of multiple invididual texts. The latter is made up from reviews like the aformentioned ones, but from the educational domain. These were created primarily to test the architecture, and no results will reported or analysed for these datasets, as that would go far beyond its scope and intended length.
+%TODO: I could try to merge it with this one https://www.kaggle.com/siddharthm1698/coursera-course-dataset or another one (see https://www.kaggle.com/mihirs16/coursera-course-data which links names to links, https://www.kaggle.com/search?q=coursera+in%3Adatasets for other places)
+
+
+\subsection{Siddata-courses}
 \label{sec:dataset_siddata}
 
-% Generelle Analyse Datensatz mit Plots (Längenverteilung der Descriptions, ...)
-% ich würde SIDDATA immer in caps schreiben wenn du das Projekt meinst, wenn du die software meinst kannst du die ja auch klein introducen bzw die auch mit digital study assistant (DSA) abkürzen
+\todoparagraph{auf die kategorien in} \ref{tab:siddata_metadata} hinaus: in principle könnnen educaitonal resources können auch transkribierte videos sein, PDFs als vorlesungsmaterial, ganze paper oder bücher, oder multimedia-data such as in a mooc). \todoparagraph{Hier ider in Siddata-section}
 
-\begin{table}[H]
+% Generelle Analyse Datensatz mit Plots (Längenverteilung der Descriptions, ...)
+
+\todoparagraph{Wege damit umzugehen dass es nicht so ist dass relevantere worter haufiger vorkommen sind elaboriert in section xyz!!}
+
+The main goal of this thesis was to create a conceptual space of courses, automatically generated by course descriptions. For that, a dataset of courses and their descriptions was obtained as export from the Stud.IP system as used at the universities of Osnabrück, Hannover and Bremen.
+
+\subsubsection*{Resource Type and Origin}
+
+As explained in \autoref{sec:siddata}, the dataset itself is collected collected from all courses that are present in the Stud.IP systems of the universities of Osnabrück, Hannover and Bremen and is crawled by the Siddata-\gls{dsa}. Additionally, it contains a small amount of \glspl{mooc} and other \glspl{oer} and resources collected by web crawers. The distribution of types (if an entity is collected from the \gls{lms}, an \gls{oer} or another web source) is depicted in \autoref{fig:sid_statistics} among the distribution of other metadata. Almost all educational resources in the dataset are \textit{Courses}, which refers to regular events at the respective university. As the figure shows, there are also PDF-documents in the dataset, but again the amount is neglibile. Roughly 75\% of all resources in this dump are courses from \gls{uos}, another 23\% courses from the universities Bremen and Hannover, the rest split among other formats. 
+
+The data used here is collected from three separate dumps, created at different protype stages of the \gls{dsa}. The dumps had a high overlap in resources, however had different metadata attached to them, requiring careful merging for the creation of the individual raw datasets. So far, neither the datasets nor any of its underlying dumps have been published.\footnote{But the raw data is available for members of the SIDDATA-project at \url{https://git.siddata.de/jschrumpf/study_behavior_analysis} (requires authentification), and the dataset-creation notebooks for this dataset can be found at \todoparagraph{ADD JUPYTER LINK}}
+
+
+\begin{figure}[h]
+	\includegraphics[width=1.15\textwidth,center]{graphics/dataset_new/statistics_bars.pdf}
+	\caption{Distribution of metadata in the raw Siddata-dataset. Languages are reported as detected (see \ref{ap:translating}), other metadata as it was available in the dumps.}
+	\label{fig:sid_statistics}
+\end{figure}
+
+
+\begin{table}[h]
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{lllllrrrr}
 	\toprule
@@ -140,26 +165,43 @@ The Siddata-dataset unfortunately does not share this property, as the texts tha
 	}
 \end{table}
 
-\begin{figure}[H]
-	\includegraphics[width=1.15\textwidth,center]{graphics/dataset_new/statistics_bars.pdf}
-	\caption{Distribution of metadata in the raw Siddata-dataset. Languages are reported as detected (see \ref{ap:translating}), other metadata as it was available in the dumps.}
-	\label{fig:sid_statistics}
-\end{figure}
+\subsubsection*{Resource Content}
 
+Considering that most of the data are Stud.IP courses, in the following only this format will be described.\footnote{As the final dataset will only consider resoures with a text-length of at least 80 words, the proportionality of courses is even more pronounced (see \autoref{tab:siddata_metadata})} The most relevant properties for the cause in this thesis are a courses' title, possibly its event number, and its description. The description consists of whatever the creator of the course wrote to describe it to aspiring participants. These descriptions differ a lot in their informativeness, and importantly they are no concatenation of reviews or similar from multiple persons but a continous text description. The distribution of the number of words per description is depicted in \autoref{fig:sid_wordsperdesc}, showing that 98\% of descriptions consist of maximally 339 words.
 
-\begin{figure}[H]
+\todoparagraph{Sample descriptions into the appendix!}
+
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=\textwidth]{graphics/dataset_new/words_per_desc.pdf}
 	\caption{Distribution of description-lengths of the Siddata-dataset. The rightmost bar represents the longest 2\% of descriptions.}
 	\label{fig:sid_wordsperdesc}
 \end{figure}
 
-\begin{figure}[H]
+\paragraph{Duplicates}
+
+There are duplicates in the dataset: Often, the same course is offered over multiple years, which is mapped on to separate resources in the raw dataset. Unfortunately, there is no bijective mapping of course titles or event numbers, meaning that the same event number sometimes refers to the same course over the span of multiple years.\footnote{see \autoref{tab:sample_duplicates}} The name of courses also may change throughout the years it is offered. A very prominent characteristic is for example that courses cancelled due to the COVID-19-Pandemic prepended an information such as \textsc{!!Fällt aus!!} to its title, or that a few sentences explaining that the new iteration will be performed digitally. Some techniques have been used to merge possible duplicates based on their title, number and description, however not all duplicates could be eliminated. \footnote{Many such duplicates were mapped towards similar embeddings by the algorithm, see \autoref{sec:duplicate_maps}.} If the same title was connected to different descriptions in the dataset, the sentences of all duplicating samples were tokenized, concatenated and duplicates removed, such that the resulting description contained every sentence of the original description exactly once. This means that in cases where sentences were only slightly changed, both variants will be present. This is possible because the algorithm only relies on the Bag-of-n-grams representation for these texts (\autoref{sec:techniques:bow}), which is weighted and ignores word order.
+
+
+\paragraph{Possible Classification Targets}
+
+To evaluate the usefulness of our algorithm to recommend resources from this dataset, we will test how good the extracted semantic directions predict human classes extracted from the data. For that we need classification targets that can be extracted from the data. As stated above, those resources that are courses from the university of Osnabrück also have their course number given. The first digit of that encodes the faculty a course belongs to, making the faculty an easily obtainable classification target for 75\% of the entities.\footnote{Which is a lot more than there are for the placetypes-dataset, see \autoref{fig:scatter_mds_placetypes}} The distribution of the faculties is depicted in \ref{fig:courses_per_faculty}. If the dataset quality should turn out to be very low, it would also be possible to use a classifier that predicts the faculty from its description, and only use those ones that were correctly classified by it, which theoretically would ensure that only courses whose description is meaningful would be obtained. 
+
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.95\textwidth]{graphics/dataset_new/courses_per_faculty.pdf}
 	\caption{Distribution of Faculty per Course for those Courses at University of Osnabrück.}
 	\label{fig:courses_per_faculty}
 \end{figure}
+
+\paragraph{Other Metadata}
+
+Apart from \textit{title}, \textit{description} and \textit{course number}, the individual resources may have some additional properties. Among these are \textit{format}, \textit{type} and \textit{source} as meta-information encoding their origin and type. As most of the resources come from an older dump, these are not given for all. A small fraction of rerources additionally lists \textit{subjects}, which is a list of keywords describing the course. This is very relevant information for the algorithm, however as only a tiny fraction of entities lists it, the information is just appended to the respective description, just as the \textit{subtitle} of a course. Next to some other information only given for resources that are not of the format \textit{Course}, the only abundantly available metadata is the DDC-Code that was assigned to it by SidBERT (see \autoref{sec:sidbert}), which may be used as additional classification-target.\footnote{For that, however, one has to keep in mind that these were also only produced by a \gls{ml}-algorithm which has no perfect accuracy.} Besides this, there are unfortunately no further obvious candidates to generate prediction-targets from. This problem was discussed with \my supevisors, however the process was complicated due to privacy concerns, anonymization and inappropriate data formats.\footnote{One plan was to get the semester of a courses' enrolled students, but this data is stored timeless, and the mapping of the participation year is obfuscated through k-anonymization.}
+
+
+\paragraph{Implications} There are quite a few duplicates in the dataset, the descriptions are shorter and different than the original ones, and many descriptions seem to be short and uninformative. The low dataset quality is a reason to later look at our results with a grain of salt: If for examply quantitatively examining if different courses are mapped onto the same embedding, it must also be qualitatively looked at these samples, as it may be the case that they are in fact multiple entries of the same course and thus correctly detected duplicates.
+
+
 
 
 \includeMD{pandoc_generated_latex/3_0_1_datasets_siddata}
@@ -188,18 +230,16 @@ There are two datasets used by all three authors: place-types and movie-reviews 
 
 \includeMD{pandoc_generated_latex/3_0_2_datasets_placetypes}
 
-\subsection{Other Datasets}
-
-
-\includeMD{pandoc_generated_latex/3_0_3_datasets_other}
 
 \section{Algorithm}
 
-
-\input{Chapters/sections/methods_algorithms}
+\todoparagraph{ARGUE:}
 * doc2vec nicht implementiert weil schlechter bei ager.
 * Finetuning nicht drin weil nur marginal besser bei ager (ref tabelle im anhang)
 * ...ähnliche gründe für alshaikh finden
+
+
+\input{Chapters/sections/methods_algorithms}
 
 \section{Architecture}
 \label{sec:architecture}
@@ -310,6 +350,11 @@ It was originally unexpected, but implementing an appropriate architecture for t
 As one of the evaluations is to compare the results of classifiers based on the algorithm here with a powerful classification algorithm, a neural network that classifies the Faculty of a course in the Siddata-Dataset was also implemented. The implementation for that will not be elaborated upon except that it is available at \todoparagraph{Link to the repo}, it relies on sacred,\footnote{\todoparagraph{link to sacred, note that to get the results like I did you'll need a MongoDB in a docker container, see this link}} and that it uses Google's `universal-sentence-encoder-multilingual` in Version 3 (linear in textlength, thus managable time and space requirements) plus a few classification layers ontop. The encoder is trained \q{on a number of natural language prediction tasks that require modeling the meaning of word sequences rather than just individual words},\footnote{Quote from their description at \url{https://tfhub.dev/google/collections/universal-sentence-encoder/1} (accessed \date{2022}{03}{25})} aimed being the base for architectures for many NLP tasks through the usage of sentence embeddings \cite{Cer2018}. It was trained on with a train-test-split of 90/10 (the results being consitent through sampled cross-validation)
 
 
+\todoparagraph{Another purpose of the classifier} is to check if it is anyhow possible to extract meaningful information from the descriptions: If it is possible to train a classifier on the data that can reasonably predict a qualitative feature, there is enough structure in the data such that the algorithm I'm about to produce can work. 
+
+Also, we have a lower bound for useful data: we can just throw away data that cannot be classified!!
+
+
 
 \section{Workflow}
 \label{sec:workflow}
@@ -346,18 +391,18 @@ The first question is easily answered by applying the same evaluation that \main
 The goal of the algorithm is to find semantic directions in the data and re-embed the entities into a vector space spun up by these interpretable human concepts as its axes. Thus, to evaluate if the emerged features are semantically meaningful, it can be measured if any known \textit{natural categories} are among the detected semantic directions or similar to them. More specifically (as the algorithm works with \glspl{bow} which lose any information about synonymity and similarity of tokens) %TODO: irgendwo das quote von \cite{Le2014} über BoW einbringen und darauf hier linken!
 it is enough to answer if \emph{terms accurately predicting} such are among the detected semantic directions. This method requires that the dataset is annotated with the respective concept, as that will be the respective classification target. The only easily obtainable target for the Siddata-dataset is a course's faculty, the targets for the datasets of \mainalgos are listed in \autoref{tab:all_datasets}.
 
-\paragraph{Semantic Classifiers} This evaluation method is used extensively in \cite{Derrac2015}, who evaluated the practical usefulness of the created semantic directions by creating many different classifiers which only receive the entity's \gls{rank} \wrt the detected semantic direction as input. In line with the analogy of reasoning in conceptual spaces (see \ref{sec:TODO:reasoning_in_cs_etc}), all their created classifiers correspond to commonsense reasoning patterns and are accordingly linked to intuitive explanations, such as a 1-nearest-neighbor classifier linked to the explanation \textit{\q{Y is in the same class as X because Y is closest to Y}}. Using these, they evaluate if their derived relations are sufficiently accurate to allow for classification that is comparable to standard classification approaches while also allowing to give intuitive explanations that are compatible with high-level human reasoning such as interpolation and a fortiori inference.
+\paragraph{Semantic Classifiers} This evaluation method is used extensively in \cite{Derrac2015}, who evaluated the practical usefulness of the created semantic directions by creating many different classifiers which only receive the entity's \gls{rank} \wrt the detected semantic direction as input. In line with the analogy of reasoning in conceptual spaces (see \ref{sec:reasoning}), all their created classifiers correspond to commonsense reasoning patterns and are accordingly linked to intuitive explanations, such as a 1-nearest-neighbor classifier linked to the explanation \textit{\q{Y is in the same class as X because Y is closest to Y}}. Using these, they evaluate if their derived relations are sufficiently accurate to allow for classification that is comparable to standard classification approaches while also allowing to give intuitive explanations that are compatible with high-level human reasoning such as interpolation and a fortiori inference.
 
 \paragraph{Shallow Decision Trees} Instead of a full suite of commonsense reasoning based classifiers, \cite{Ager2018} and \cite{Alshaikh2020} train depth-limited \glspl{dt} \cite{breiman1984classification} on the entities' \glspl{fbr}. \Glspl{dt} are supervised learning models that predict the target value by inferring binary \textit{if-then-else} decision rules from the feature vector in a tree-like structure. The trees are constructed using the CART algorithm, which at every level finds the combination of attribute and threshold value that maximizes the prediction accuracy for the subset that falls into the respective tree's branch and partitions the attribute accordingly, to do the same on resulting subtrees (thus maximizing \emph{information gain}). %https://scikit-learn.org/stable/modules/tree.html#tree-algorithms-id3-c4-5-c5-0-and-cart 
 Restricting the tree's depth ensures that only the features that are most important for the decision are selected. The tree then classifies by finding the most important features for the decision, thus finding the terms that most accurately predict the demanded concept in an intuitive and interpretable way.\footnote{Sample depth-1 decision trees are visualized in \autoref{fig:3dplot_mathe_infoab} The decision-rule of a depth-3 decision tree corresponds to checking if a 3D-vector falls into one of $2^3/2=4$ boxes, as visualized in \autoref{fig:boxes_rechtswis}.}. Accordingly, if a depth-restricted tree that can accurately predict the demanded property reasonably well can be found would provide evidence that the semantic directions correspond to actual human concepts. The performance is measured by checking their classification on a held-out test dataset seperately for each of the target's classes in a one-vs-rest fashion. To get an estimate for the maximally possible classification performance only on basis of the text corpus, it can be compared to state-of-the-art text classification techniques such as the one described in \autoref{sec:faculty_classifier}.
 
-Unfortunately, this does not test if the names of the discovered semantic features are meaningful. It should further be noted that regardless of the classifier, only those features that predict the existing classificiation targets can be tested with this method, which in the case of the Siddata-dataset means that even if 10 features perfectly correspond to the respective faculties, all other features are still unaccounted for. In order to get additional targets, we will also compare the classification into the \gls{ddc}-categories as deteced by SidBERT (see \autoref{sec:TODO}).
+Unfortunately, this does not test if the names of the discovered semantic features are meaningful. It should further be noted that regardless of the classifier, only those features that predict the existing classificiation targets can be tested with this method, which in the case of the Siddata-dataset means that even if 10 features perfectly correspond to the respective faculties, all other features are still unaccounted for. In order to get additional targets, we will also compare the classification into the \gls{ddc}-categories as deteced by SidBERT (see \autoref{sec:sidbert}).
 
 \paragraph{Recovering entities from salient directions} Re-embedding the entities into a conceptual space involves dimensionality reduction and thus necessarily goes along with a loss of information. Apart from testing the meaningfulness of the directions, it can be tested if any relevant information was lost. To account for that, we will test if it is possible to recover the original entities using only a subset of the most salient generated features. For that, we will also analyze under which conditions separate entities fall onto the same position in the semantic space. This also provides evidence about how far the samples are distributed in the vector-space. The linear classifiers used to create semantic directions profit from data that is split far apart instead of being on a compact hypersphere which due to the \textit{curse of dimensionality} fills only a neglibile volume of the according vector-space.\footnote{cf. \url{https://en.wikipedia.org/wiki/Curse_of_dimensionality\#Distance_function}}
 
 \subsection{Scientific Qualitative Analysis}
 
-Regardless of the performance of proxy metrics, the most important measure the algorithm's quality is its subjective appeal, which can only be assessed by a qualitative analysis. Unfortunately, subjectively evaluating at a subset of the resulting features and samples is, even with the best intentions, also prone to  \textit{cherry-picking}, as the selected samples may not be representative. Despite of that, a qualitative analysis provides important insight into the algorithm. To alleviate these problems, it is reasonable to use the scientific method and ask the question \textbf{``Before looking at the data, seeing what kind of results would make us think the algorithm correctly does what we hope it does?''}
+Regardless of the performance of proxy metrics, the most important measure the algorithm's quality is its subjective appeal, which can only be assessed by a qualitative analysis. Unfortunately, subjectively evaluating at a subset of the resulting features and samples is, even with the best intentions, also prone to  \textit{cherry-picking}, as the selected samples may not be representative. Despite of that, a qualitative analysis provides important insight into the algorithm. To alleviate these problems, it is reasonable to use the scientific method and ask the question \textit{``Before looking at the data, seeing what kind of results would make us think the algorithm correctly does what we hope it does?''}
 
 Specifically, we will try to find evidence for the following questions:
 

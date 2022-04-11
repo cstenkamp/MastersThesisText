@@ -1,43 +1,15 @@
-## Big Picture
+### Big Picture (did we achieve our aims)
+What were our original aims and did we achieve them
 
-Having evidence that the implementation does what it should and the algorithm itself works on other datasets, let us finally discuss the question if the methodology works for the domain of educational resources.
-* Only Faculty! We know that this by far does not test everything the algorithm does or how it performs for other things-to-compare, so the best analysis would just be human studies.
-    * We could to the shallow-decisiontrees-thingy for other attributes of the dataset than I currently have (see future work)
-* In general we must say that we have really good accuracies and this really seems to indicate that it works.
-    
-## Fear of dataset differences
+* ich hätte gerne sowas wie könig - mann + frau = königin \cite{Mikolov:Regularities}, nur halt mit mann und frau als einer achse, macht das sinn, ist das rausgekommen?
+* There is certainly more work to do to increase robustness of the results in the sense that an unambiguous name for the resulting semantic direction comes - that is what we are aiming for. But again, testing the best name is only really possible in human studies.
+* Testing only faculty is a big drawback, human studies would help
+* Wie aussagekräftig sind überhaupt die Decisiontree-ergebnisse? -> OB das sinnvoll ist (Tiefer und tiefer drauf eingehen im hinblick darauf wie meaningful die results sind) ("was bedeutet das für mich")
 
-* Already when describing the datasets, we noticed that they are quite different. 
-* In \autoref{sec:results_datasetdiffs} we looked at how the interim results differed and noticed that 
-    * less candidates were produced
-    * The #Texts containing a candidate are exponentially decreasing, which means that for many of the candidates that ARE produced the classification to measure the faithfulness has a really hard time
-* BUT even with such vastly different look-of-the-dataset from the start AND different intermediate results making the downstream tasks less likely to succeed, the final performance is suprisingly good, indicating that the methodology is robust!
-* As established, a very important difference is that more relevant words do not occur more often. \todoparagraph{we assumed before that} because of that, the kappas that compare rankings are not so good. WELL IS THAT THE CASE
-* \todoparagraph{MOOORE}
-* Auch wenn die Performance schlecht ist, liegt das oft am Dataset
-    * IntroAI für dieses Jahr ist in Stud.IP nen komplett anderer Kurs als für letztes jahr 
-    * wenn man sich anschaut WAS denn falsch klassifiziert wurde sieht man halt dass die Kurse die offensichtlich nicht Mathe sind eben falsch klassifiziert wurden
-    * ...oder wenn dann "logic" in mathe landet, well it's not wrong, it's the dataset
-    * Oder eben auch dass die Sachen mit dem dass 2 EIGENTLICH gleiche kurse auf das selbe mappen
-    * There is really a lot of crap in the data, like the  "Tutoren sind: Susi Sorglos Willi Wacker" ones. If the performance is not enough, one may also check if taking only the 1000 with the longest decription would help
-        * or only those ones where BERT can sucessfully classify the faculty. Again, faculty is not everything, BUT if the faculty CAN be extracted, cases that only list names or places are out (...except FROM the name of place follows the faculty but lets ignore that)
+### Soo lets look at our success conditions
 
-
-
-
-
-
-## Actual classification
-* So we compared to BERT (85.19% accuracy), and to 3D-embedding (64.3% weighted accuracy), and we robustly achieved 81.4% accuracy \textbf{even when using only a single direction}! We seem to be really good on that regard
-* Which Faculties did I classify well and which ones bad?
-    * compare with prelimiary results in Johannes sidBERT vergleichen, see slack 29.3. 10:00
-    * When looking at the examples per faculty, we observe mixed results. ON the one hand, erziehungswissenschaft is perfect, on the other hand physics and bio/chemie suckt. 
-        * when looking at the class frequencies for these well yes, these two are among the smaller classes, but so are [2 others], so whyever them work but bio & pyhsik dont
-
-
-## Qualitative Analysis
-
-## Post-Hoc-Qualitative Analysis
-
-* Das wie gerade auch in der duplicate-per-combi-of-ndims-and-ncats sichtbar wird dass letztlich halt "kurs 123" und "!!FÄLLT AUS!! kurs 123" auf den selben fallen, was zwar quantiativ scheiße ist aber ACTUALLY GOOD
-
+* The difference from the given dataset to the originally used ones is elaborated and regarded for. CHECK.
+* Proper scientific methodology will be conducted for the evaluation of the results. 
+* The resulting semantic directions are \textit{convincing} in a sense that they fulfill demanded criteria that were specified before looking at results.
+* The resuling semantic directions can be used as basis for explainable recommenders.
+* These recommenders achieve similar performances to modern \gls{ml} techniques when applied to find human categories such as a course's faculty from the data. CHECK

@@ -1,18 +1,7 @@
-* Introduction ist soweit fertig. Volltext daraus: 3 Stunden.
-* Datasets & Algorithm Table: Jeweils 6 Stunden.
-
 !!!!!!!!!!!!!!!!!!!!!!!!
 * Stringent und Explizit nach Fragestellungen ("Klappt Methodik auf Domäne ER?" & "Good Architecture?") vorgehen! 1.) Hypothese, 2.) methods, 3.) results, 4.) conclusion! 
 !!!!!!!!!!!!!!!!!!!!!!!!
 
-* BACKGROUND SECTION: 
-    * ROTER FADEN!! Alles was nicht meine 2 research questiosn beantwortet ist irrelevant!!
-    * Computational Reasoning wird subsection von conceptual spaces
-    * Related work auch keine eigene section mehr
-    * "Educational Resources" section ist BS, das gehört zusammen mit Siddata ("Educational resources has no definition, aber siddata ist ein beispiel projekt was darum revolviert")
-        * In dem Kontext halt kann ich direkt auf die kategorien in \ref{tab:siddata_metadata} hinaus (können auch transkribierte videos sein, PDFs als vorlesungsmaterial, ganze paper oder bücher, oder multimedia-data such as in a mooc)
-        * "Frage war ja, Lässt sich der Algo auf die Domäne von Ed.Res. beziehen, und dafür muss ich sie erklären" AS KURZ AS POSSIBLW
-    ==> BACKGROUND NUR 3 SECTIONS
 
 * METHODS SECTION
     * Johannes' Kommentare: 
