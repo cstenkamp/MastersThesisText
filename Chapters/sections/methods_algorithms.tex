@@ -3,11 +3,20 @@
 
 \todoparagraph{If not explicitly stated otherwise, hyperparameter also refers to exchangeable algorithm components such as which quantification is used}
 
+\todoparagraph{SHORTLY mention if my results cannot confirm stuff from derrac and refert to discussion}
+
 This section will go into detail about this main algorithm, plus the two other papers that according to my research are good additions to it (in terms of helping to understand it as well as improving on some stuff in it). That we are focusing on only those three papers should by no means imply that they are the only ones in that regard.\footnote{see \autoref{sec:otherwork} - \cite{VISR12} and their tag genome, the fact that the algorithm detailed here is basically only one step in \cite{Alshaikh2019}, Gärdenfors himself suggested that one may use self-organizing maps instead of classical AI/NLP algorithms.}
 
-\todoparagraph{Regarding ager and alshaikh:}
+\subsection{Regarding ager and alshaikh}
+
+\todoparagraph{describe shortly what the improvements from [2,3] were}
 
 The implementation of this thesis replicates and extends the algorithm proposed by \textcite{Derrac2015} with some novel contributions to deal with the given dataset. Further, some improvements from the works of \textcite{Ager2018} and \textcite{Alshaikh2020} are incorporated, who also replicated and improved the original algorithm.\footnote{All three of these works share Prof Steven Schokaert as last author.}
+
+In principle Derrac2015, but with some components from Ager2018 and Alshaikh2020 as well as some own stuff. I'll be testing some claims or nonclaims of \mainalgos, bspw nutzen sie immer PPMI ohne je tf-idf zu testen. Also of course different nature of the dataset - their "how does this dimension correspond to the count in the reviews" doesn't make sense (their success-metric for the SVM is tailored to the one property, so I expect that one to be worse). I'll elaorate on different ways to deal with that later.
+
+
+
 
 \subsection{Core Idea}
 
@@ -38,8 +47,10 @@ Many of the mentioned components don't refer to a specific algorithms, and the e
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
 \subsection{Steps of the algorithm}
-
 \label{sec:algorithm_steps}
+
+\todoparagraph{Say that more details are in the appendix}
+\todoparagraph{Keep in mind that the architecture is very modular and there are alternatives one could do at every step, but hyperparams and also which components to use is a cominbatiorical explosion}
 
 % TODO: THIS from \cite{Turney2010} is a very fucking good explanation!!!
 
@@ -53,6 +64,7 @@ Many of the mentioned components don't refer to a specific algorithms, and the e
 
 \todoparagraph{In contrast to the previous explanations here I am directly talking about parameter (choice)s at each step etc}
 \todoparagraph{In contrast the the previous explanations here I am talking about how III did it}
+\todoparagraph{Also we will come back to this in future work were we list other stuff that one could do for every step}
 
 The considered algorithm first embeds the collection of texts into a vector space, to afterwards extract important features from this space using linear classifiers. The second step is an original idea of \cite{Derrac2015}, however creating vector space embeddings from texts is a very popular technique, used for many tasks in computational linguistics \cite{Mikolov:Regularities,Mikolov2013a,Guo,Lowe,Turney2010}. %TODO: irgendwo bin ich ja noch auf word2vec und den ganzen bums eingegangen blabla, nochmal schreiben dass es hier um classical AI geht und ebennicht die sahcen wie word2vec und glove
 %TODO: glove und fasttext cite?!
@@ -105,6 +117,8 @@ Before looking at the steps in turn, it should be noted that even the preprocess
 \subsubsection{Preprocessing\arrowref{sec:algorithmsteps}}
 
 \label{sec:algo_preproc}
+
+\todoparagraph{Filter out all descriptions that don't have a minimal number of words}
 
 A common prerequisit for NLP algorithms is to pre-process the text corpus. The preprocessing itself consists of multiple independent components chained after each other. Which components are necessary also depends on the processed dataset - as for example the \emph{placetypes-dataset} consists of a collection of tags instead of full sentences, tokenizing sentences or removing \glspl{stopword} becomes irrelevant. Other datasets may require additional cleaning or are already available in preprocessed form.
 % * some parts of this depend on the dataset 
@@ -160,11 +174,12 @@ For this step, the implementation of this thesis differs from the original algor
 
 \todoparagraph{Come back to this in optimal parameters section }
 
+\todoparagraph{Just using all words would have been a possibility as well, but than we would not have ngrams.}
 
 % I would however argue that the difference here doesn't make a relevant difference (TODO: argue that lol)
 % Also, while in the paper they claim to use n-grams as candidates, the dataset they publicly published does not contain n-grams (which is why I didn't use that one).
 
-In the codebase the candidate-extraction is split into four consequently excecuted substeps, because depending on the algorithm used to extract the candidates the runtime of the individual components is comparably long and some settings are only relevant in later substeps. The substeps are:
+In our implementation the candidate-extraction is split into four subsequently excecuted substeps, because depending on the algorithm used to extract the candidates the runtime of the individual components is comparably long and some settings are only relevant in later substeps. The substeps are:
 \begin{itemize}
 	\item Extracting Candidate Terms
 	\item Postprocessing the Candidates
@@ -178,18 +193,22 @@ As visualized in \autoref{fig:dependency_graph}, these substeps only depend on t
 Three main techniques are implemented to extract candidates from the text-corpus: 
 \begin{description}
 	\item[By frequency:] consider all phrases that exceed a specified term-frequency (like \cite{Derrac2015}).
-	\item[By a \gls{quant}:] consider all phrases that exceed a specified score (\gls{ppmi}, \gls{tf-idf} or pure term-frequency).
-	\item[Using \emph{KeyBERT}\cite{grootendorst2020keybert}:] consider phrases whose BERT-embedding \cite{Devlin2019} is most similar to the text they are in.\footnote{For more details on KeyBERT, see Appendix~\ref{ap:details_keybert}}
+	\item[By a \gls{quant}:] consider all phrases that exceed a specified score (\gls{ppmi} or \gls{tf-idf}).
+	\item[Using \emph{KeyBERT}\cite{grootendorst2020keybert}:] consider phrases whose BERT-embedding \cite{Devlin2019} is most similar to the text they are in. More details on KeyBERT and how it is incorporated are given in the implementation details in Appendix~\ref{ap:details_keybert}
 \end{description}
 
+\todoparagraph{The shitton of work that keybert was argh}
 
 
 \subsubsection{Generating Vector Space Embeddings\arrowref{sec:algorithmsteps}}
-
 \label{sec:generate_vectorspaces}
 %TODO: in \cite{Turney2010}, this is "Building the frequency matrix", 
 
-In this step, the individual \glspl{entity} are embedded into a fixed-dimensional vector space, making up a \emph{frequency matrix}. It should be noted that while this matrix is a \gls{doctermmat}, it is only an interim result in the algorithm and the calculation of distances and directions will be done on another matrix from a later step.
+(also: create dissim-mat and quantify)
+
+
+
+In this step, the individual \glspl{entity} are embedded into a fixed-dimensional vector space, making up a \emph{frequency matrix}. It should be noted that while this matrix is a \gls{doctermmat}, it is only an interim result in the algorithm and the calculation of distances and directions will be done on another matrix from a later step (\todoparagraph{this is where we differ from the pipeline specified in the background}).
 
 Embedding words, \glspl{ngram}/phrases or other tokens, as depicted by \cite{Turney2010,Lowe}, generally involves counting the token frequencies, transforming them to get relative frequencies, and performing dimensionality reduction on the resulting matrix. As elaborated upon in \autoref{sec:reasoning}, for \gencite{Derrac2015} algorithm it was a requirement that the space is Euclidian. Another requirement is that the number of dimensions is decidable as hyperparameter to the algorithm. Because of these two requirements, they selected \gls{mds} for dimensionality reduction.
 
@@ -203,6 +222,11 @@ normalized angular distances according to \cite{Derrac2015}:
 	ang(e_i, e_j) &= \frac{2}{\pi} * \arccos \left( \frac{\vec[m]{v_{e_i}} * \vec[m]{v_{e_j}}} { \lVert \vec[m]{v_{e_i}} \rVert * \lVert \vec[m]{v_{e_j}} \rVert }  \right)  \label{eq:norm_ang_dist} \\
 	&= \frac{2}{\pi} * \arccos(1-\cos(\vec[m]{v_{e_i}},\vec[m]{v_{e_j}})) \text{, where $\cos$ is the default cosine-distance} \nonumber
 \end{align}
+
+\todoparagraph{grains of salt with vectors vs points}
+
+In their algorithm, the dissimilarity-matrix is created using distance metrics for the bags-of-words of the respective entities. If the strict requirement for a metric space is dropped however, many different algorithms may instead be used at this point - not only different dimensionality reduction methods for the embedding, but also ones that don't rely on the distance matrix or even the bag-of-words at all, like document-embedding-techniques such as Doc2Vec (eg. used by \cite{which_one??}). Thats why we explained these before!! This would change only these steps and the rest of the algo not too much.
+
 
 
 
@@ -220,7 +244,17 @@ An analysis of \cite{Carmel2009} showed that a statistical method to extract fea
 %(the JSD method for feature selection identifies human labels as “significant” (appearing in the top five most important terms) for only 15% of the categories. This result implies that human labels are not necessarily significant from a statistical perspective.z)
 
 
+\subsubsection{Re-Embedding the entities into the new space}
 
+from Alshaikh2020: "The learned vectors will be referred to as feature directions to emphasize the fact that only the ordering induced by the dot product d_i · e matters"
 
 
 \includeMD{pandoc_generated_latex/3_1_algorithm}
+
+\section{Features and differences to original algorithm}
+
+\includeMD{pandoc_generated_latex/3_features_differences}
+
+\section{Reasonable params}
+
+\includeMD{pandoc_generated_latex/3_reasonableparams}

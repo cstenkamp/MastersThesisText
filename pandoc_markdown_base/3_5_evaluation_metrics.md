@@ -36,3 +36,9 @@
 ## Sort-Me
 
 * Explain why we care for the number-of-goodkappas in the next section argh
+
+
+## What do I expect?
+
+* Different nature of the dataset -> I expect their Rank-Compare-Cluster as Faithfulness-of-embedding-measrue to be worse than f1 or smth
+* \cite{Alshaikh2020} do Kappa on binary, I can't believe that's good

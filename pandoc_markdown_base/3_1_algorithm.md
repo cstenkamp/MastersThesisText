@@ -1,69 +1,8 @@
-## General 
+## STEPS
 
-PLOTS HERE:
-* Snakemake-Graph mit Configs wie für DESC15
-* Beispiel für "faithful" induced ranking vs "not faithful" one
-
-
-* take stuff from \cite{Turney2010} (->sublime), but not too long
-
-* TODO: Mention where future work could be incorporatted already here
-
-
-* \cite{Alshaikh2020}: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candi- date word w a linear classifier which separates the embed- dings of entities that have w in their description from the oth- ers. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
-
-* architecture is so modular that one can easily exchange some components in some step to do something else
-    * however combinatorical explosion of hyperparams (not only numerical, but also "which algo")
-
-* In principle Derrac2015, but with some components from Ager2018 and Alshaikh2020 as well as some own stuff
-    * I'll be testing some claims or nonclaims of \mainalgos, bspw nutzen sie immer PPMI ohne je tf-idf zu testen
-    * Some stuff different bc aforementioned different nature of the dataset
-        * their "how does this dimension correspond to the count in the reviews" doesn't make sense (their success-metric for the SVM is tailored to the one property, so I expect that one to be worse)
-        * Ways to deal with that: 
-            * it is probably the case that different kinds of mathematical terms actually do occur more often, so I'd need calculate these kinds of kappas not based oon a single term but ALREADY on a cluster of terms (... and I can bootstrap my way there, because after I do this I get more words to add to my cluster, rinse and repeat!)
-    * Would it have made sense for me to also use all terms as candidates?  
-        * that would mean no ngrams!
-
-* Temporal & Spatial Complexity
-    * MDS hat quadratic complexity
-    * Didn't find a way to have PPMI without quadratic space req, so we're talking >24GB RAM
-
-* describe shortly what the improvements from  [2,3] were
-    * Who said that binary occurence was the best metric? I can't believe that
-    * Who said kappa is a bad value?
-    * \textcite{Ager2018} 
-        * 
-    * \textcite{Alshaikh2020}
-        * Well, do the stuff iterative cluster stuff
-            * "When representing a particular entity in a conceptual space, we need to specify which domains it belongs to, and for each of these domains we need to provide a corresponding vector." 
-            * then they show their example of something that is not seperable with a hyperplane unless we specify subdomains, maybe just steal their plot that explains their one contribution to 99%
-        * Cluster with affinity propagation
-        * Do Kappa on Binary (-> see later)
-            * for them, the binary "does the word occur in the description" is the only sensible signal, no ppmi or anything! (page 2, footnote 1 of RaZb20)
-
-* dass das hier auf bag-of-words basiert und dass es daher wie alle bag-of-words sachen das problem hat das einunddasselbe sehr verschieden ausgedrückt werden kann, und LSA wäre einer der wege das zu beheben (another one: word embeddings)
-
-
-* that I'm using BOW and that I dislike it \cite{Le2014}: "Despite their popularity, bag-of-words features have two major weaknesses: they lose the order- ing of the words and they also ignore semantics of the words. For example, “powerful,” “strong” and “Paris” are equally distant" Bag-of-n-grams would alleviate this, but even though it "considers the word order in short context, it suffers from data sparsity and high dimensionality" (bag of n-grams model would create a very high-dimensional representation that tends to generalize poorly)
-
-* was >15 seithen theoretisch ist lieber als "Munition für Discussion" (wenn meine ergebnisse anders sind als die von dem paper kann ich halt erst dann sagen "das widerspricht demunddem hier, die proposen dass und ich kann es (nicht) confirmen".)
-
-
-<!-- ##############################################################
-     ##############################################################
-     ##############################################################  -->
-
-## Steps
-* how to split (see other textdoc)
-
-### Preprocess
-
-* Filter out all descriptions that don't have a minimal number of words
 
 ### Create Dissimilarity Matrix & Quantify
 
-* In their algorithm, the dissimilarity-matrix is created using distance metrics for the bags-of-words of the respective entities. If the strict requirement for a metric space is dropped however, many different algorithms may instead be used at this point - not only different dimensionality reduction methods for the embedding, but also ones that don't rely on the distance matrix or even the bag-of-words at all, like document-embedding-techniques such as Doc2Vec (eg. used by \cite{which_one??}).
-    * How would the algorithm differ then?
 
 * First, we create a Doc-Term-Matrix counting the occurences of every word that occurs in any description and every description.    
     * distinction df und stf!!
@@ -168,92 +107,10 @@ Here we bring together the embedding of the individual entities and the extracte
     * depth of the tree (1, 3, unbound)
     * train-test-split (2:1) or cross-validation
 
-
-<!-- ##############################################################
-     ##############################################################
-     ########################################################### -->
-
-## Reasonable Params:
-
-* Translate-policy: Obviously the translation won't be perfect, so we lose quality from translating, but on the other hand if it's in english you can use wordnet, which is a lot better than GermaNet, and also embedding-wise it's better
-    * "Da, based on [source die die accuracy von dem gtranslate algorithm mit denen von menschen vergleicht], a gtranslate translation is as good as the average lecturer, it is assumed that translating the texts to english before using an english model can lead to better results
-* Candidate word threshold: movies has samples-to-threshold value of 100, placetypes has 35, 20newsgrups has 614 so for 8000 courses any threshold from 2 to 25 seems reasonable? \cite{Derrac2015} say they intentionally kept the number of candidateterms approximate equal (at around 22.000), so to do the same I'd need a threshold of [TODO: optimal value]
-* PPMI has high complexity, hence I use tf-idf
-
-
 <!-- ##############################################################
      ##############################################################
      ##############################################################  -->
 
-## Features
-
-* Be able to enable/disable or select between all components
-	Like...
-	- [ ]  the contribution of [AGKS18] or [ALBS20]
-	- [ ]  which classifier to use to split positives and negatives in step 1 (SVM, logistic regression)
-	- [ ]  Cohen's Kappa vs Accuracy vs NDCG
-	- [ ]  Kmeans vs [DESC15]'s clustering-algorithm
-	- [ ]  how to create semantic space(step 0) (MDS, PCI, Doc2Vec, Average GloVe ([https://nlp.stanford.edu/projects/glove/](https://nlp.stanford.edu/projects/glove/))
-* Hyperparameters
-	- [x]  #dims of the vector-space (50,100,200)
-	- [ ]  #dims as input to the clustering algorithm (500,1000,2000)
-	- [ ]  number of clusters (1*inputdimsforclusalgorithm, 2*inputdimsforclusalgorithm)
-* Extracting Candiate Terms
-	- The way of DESC15
-	- The way I'm doing it right now
-	- The Tag-LSI-Sim as [VISR12] do it (page 13:15)
-	    [[VISR12] have the Tag-LSI-SIM, die brauch ich](https://www.notion.so/VISR12-have-the-Tag-LSI-SIM-die-brauch-ich-0868f6c7a20147f582029163f39c225e)
 
 
-<!-- ##############################################################
-     ##############################################################
-     ##############################################################  -->
-
-## Differences to \mainalgos / Contributions of this thesis
-
-* Because of the nature of the dataset I need to do some things differently 
-    * I'm not working with reviews or collections-of-tags, that means their "how does this dimension correspond to the count in the reviews" doesn't make sense
-        * their algorithm is tailored to this. Take their success-metric for the SVMs splitting the embedding. The more often the word "scary" comes in the concatenated reviews, the more scary the movie is. Sounds legit. The more often the people that took pictures at a particular place mentioned the "nature" of that, the more relevant "nature" is to that place. Also legit. But in the descriptions for courses that involve a lot of mathematics, it is not necessarily the case that the term "mathematics" occurs often. So due to the different nature of my dataset I have to go beyond their algorithm at some points - in this case it is probably the case that different kinds of mathematical terms actually do occur more often, so I'd need calculate these kinds of kappas not based oon a single term but ALREADY on a cluster of terms (... and I can bootstrap my way there, because after I do this I get more words to add to my cluster, rinse and repeat!)
-* Differences bc of different dataset 
-    * Because less words
-        * Many candidates occur only in some 25 entities, which makes the ranking rather useless (99.999% of values are zero) -> [WHAT]
-    * Because nicht je-öfter-desto-scarier
-        * Not compare Rankings, but [WHAT]
-        * Using WordNet or smth
-        * "reclassify" as possible technique to get cluster direction
-        * hoher overlap in wörtern von 2 dokumenten -> alle wörter des einen might as well have been in there
-    * cluster-to-reclassify with Die-besten-30%-beim-clustern
-    * My ways of finding the name of the cluster
-    * Ich nehme schon (wie \cite{Ager2018}) andere dinge als measure of faithfulness (precision, recall)
-
-<!-- ##############################################################
-     ##############################################################
-     ##############################################################  -->
-
-## Evaluation of \mainalgos
-    
-* TABELLE which parameter-combis were USED, with optimal ones MARKED for \mainalgos (-> also into yaml!)
-
-* Stuff that was ambiguous:
-    * "that the better Ht separates entities to which t applies from the others in S,the better \vec{v_t} models the term t."
-        * allein von der aussage muss man das mit den induzierten rankings echt nicht machen, sondern halt nur auf classification quality (-> metrics like accuracy) gucken, bzw kappa anhand der binären klasse berechnen 
-        * With a candidate-threshold-tf of 100, that means 19.900 values (99.33%) have a rank of zero, how do you deal with that?!
-        *  the ranking induced by count, or the baremetal count?
-    * Regarding Kappa-Weighting-Algorithm:
-        * Yet another point where \cite{Derrac2015} are really low on information what parameters they used. Sklearn allows different weighting types\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.cohen_kappa_score.html\#sklearn.metrics.cohen_kappa_score}} - TODO: explain what that changes respectively!!}, and as this plot: ![kappa_weighting_funcs](graphics/figures/which_weigthing_algo.png){#fig:which_weighting_algo} TODO: also generally write about if Kappa is a good choice (see eg \url{https://en.wikipedia.org/wiki/Cohen%27s_kappa})
-    * DESC15 write they select Kappa "due to its tolerance to class imbalance", but don't menation any parameters -> Class imbalance weighting? Also [see plot] which other weighting value?
-
-* in [DESC15] machen die wirklich immer ne SVM für genau einen Term, und gucken sich anschließend an was für terms dann ähnlich clustern. [VISR12] hingegen (und viele andere!) versuchen erst latent kram zu finden, wodurch das das clustering imo viel besser funktionieren wird weil es viel weniger sparse ist (->und die "contains one-of-the-terms" klasse nicht so verschwindend gering ist compared mit der "doesn't-contain-the-one-term") Laut [DESC15] gibt's da keine Methoden die den metric space erhalten, die frage ist halt wie wichtig das ist für das was man erreichen will!
-
-* Der letzte Schritt mit dem Clustern der good-kappa-ones ist wirklich very basic und hat very much room for improvement
-* \cite{Alshaikh2020} do Kappa on binary, I can't believe that's good
-
-
-<!-- ##############################################################
-     ##############################################################
-     ##############################################################  -->
-
-## What results do I expect? 
-
-* Different nature of the dataset -> I expect their Rank-Compare-Cluster as Faithfulness-of-embedding-measrue to be worse than f1 or smth
-* \cite{Alshaikh2020} do Kappa on binary, I can't believe that's good
+ACTUALLY 2_7_separatrixidstance should be hERE!!!

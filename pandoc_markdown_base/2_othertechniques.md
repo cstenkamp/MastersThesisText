@@ -161,10 +161,30 @@ TODO: Ist word2vec schon nen euclidian space? Why/Why not?
 
 
 
+* word2vec:
+	How neural word-embedding-techniques are trained: (\cite{Le2014}): "each word is represented by a vector which is concatenated or averaged with other word vectors in a context, and the resulting vector is used to pre- dict other words in the context. For example, the neural network language model proposed in (Bengio et al., 2006) uses the concatenation of several previous word vectors to form the input of a neural network, and tries to predict the next word. The outcome is that after the model is trained, the word vectors are mapped into a vector space such that semantically similar words have similar vector representations (e.g., “strong” is close to “powerful”)."
+
+	Task is mostly to predict a word given the other words in a context (maximize the average log probability of this word given the context words)
+
+	"This type of models is commonly known as neural language models"! I am allowed to call them!
+
+	After the training converges, words with similar meaning are mapped to a similar position in the vector space
+
+	The dif- ference between word vectors also carry meaning. For ex- ample, the word vectors can be used to answer analogy questions using simple vector algebra: “King” - “man” + “woman” = “Queen” (Mikolov et al., 2013d).
+
+* doc2vec: 
+	"On a text classification task, our method convincingly beats bag-of-words models, giving a relative improvement of about 30%"
+
+
+	Doc2vec also used for Information Retrieval!!
+	Dataset from 1mio search queries and paragraphs of the first 10 results. Goal is to identify which of three paragraphs are results of the same query (two are equal, one is random). Goal is small distance for the equals and bigger one for the random. 
+
+
+
 ### Linear algebra stuff
 
 #### Projecting and playing around with coordinate system
 
 So how do we project the point onto the plane?
 * [https://stackoverflow.com/a/17661431] all you have to do is find the perpendicular (abbr here |_) distance from the point P to the plane, then translate P back by the perpendicular distance in the direction of the plane normal. The result is the translated P sits in the plane.
-<!-- \includeMD{pandoc_generated_latex/2_7_seperatrixdistance} -->
+\includeMD{pandoc_generated_latex/2_7_separatrixdistance}

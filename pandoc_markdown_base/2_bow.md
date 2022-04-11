@@ -1,6 +1,10 @@
 
 https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction: \q{This specific strategy (tokenization, counting and normalization) is called the Bag of Words or “Bag of n-grams” representation. Documents are described by word occurrences while completely ignoring the relative position information of the words in the document.")}
 
+that I'm using BOW and that I dislike it \cite{Le2014}: "Despite their popularity, bag-of-words features have two major weaknesses: they lose the order- ing of the words and they also ignore semantics of the words. For example, “powerful,” “strong” and “Paris” are equally distant" Bag-of-n-grams would alleviate this, but even though it "considers the word order in short context, it suffers from data sparsity and high dimensionality" (bag of n-grams model would create a very high-dimensional representation that tends to generalize poorly)
+
+dass das hier auf bag-of-words basiert und dass es daher wie alle bag-of-words sachen das problem hat das einunddasselbe sehr verschieden ausgedrückt werden kann, und LSA wäre einer der wege das zu beheben (another one: word embeddings)
+
 -> we will go into some details on these steps, LSI is a good candidate to smooth the frqeuncy matrix but bc as we said we need a metric space we (like \cite{Derrac2015}) do MDS
 
 

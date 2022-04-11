@@ -2,6 +2,30 @@
 ## Regarding their algorithm
 
 
+### Where I spotted differences
+
+wenn meine ergebnisse anders sind als die von dem paper kann ich halt erst dann sagen "das widerspricht demunddem hier, die proposen dass und ich kann es (nicht) confirmen"
+
+### Evaluation of \mainalgos (from moved from algorihm)
+    
+* TABELLE which parameter-combis were USED, with optimal ones MARKED for \mainalgos (-> also into yaml!)
+
+* Stuff that was ambiguous:
+    * "that the better Ht separates entities to which t applies from the others in S,the better \vec{v_t} models the term t."
+        * allein von der aussage muss man das mit den induzierten rankings echt nicht machen, sondern halt nur auf classification quality (-> metrics like accuracy) gucken, bzw kappa anhand der binären klasse berechnen 
+        * With a candidate-threshold-tf of 100, that means 19.900 values (99.33%) have a rank of zero, how do you deal with that?!
+        *  the ranking induced by count, or the baremetal count?
+    * Regarding Kappa-Weighting-Algorithm:
+        * Yet another point where \cite{Derrac2015} are really low on information what parameters they used. Sklearn allows different weighting types\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.cohen_kappa_score.html\#sklearn.metrics.cohen_kappa_score}} - TODO: explain what that changes respectively!!}, and as this plot: ![kappa_weighting_funcs](graphics/figures/which_weigthing_algo.png){#fig:which_weighting_algo} TODO: also generally write about if Kappa is a good choice (see eg \url{https://en.wikipedia.org/wiki/Cohen%27s_kappa})
+    * DESC15 write they select Kappa "due to its tolerance to class imbalance", but don't menation any parameters -> Class imbalance weighting? Also [see plot] which other weighting value?
+
+* in [DESC15] machen die wirklich immer ne SVM für genau einen Term, und gucken sich anschließend an was für terms dann ähnlich clustern. [VISR12] hingegen (und viele andere!) versuchen erst latent kram zu finden, wodurch das das clustering imo viel besser funktionieren wird weil es viel weniger sparse ist (->und die "contains one-of-the-terms" klasse nicht so verschwindend gering ist compared mit der "doesn't-contain-the-one-term") Laut [DESC15] gibt's da keine Methoden die den metric space erhalten, die frage ist halt wie wichtig das ist für das was man erreichen will!
+
+* Der letzte Schritt mit dem Clustern der good-kappa-ones ist wirklich very basic und hat very much room for improvement
+* \cite{Alshaikh2020} do Kappa on binary, I can't believe that's good
+
+
+
 ### General algorithm Idea
 
 * Initially I wondered how they got the idea, but having read \cite{Gardenfors2000a}, the idea for their algorithm stood too reason

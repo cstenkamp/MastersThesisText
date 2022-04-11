@@ -32,6 +32,8 @@ The work of \cite{Derrac2015} is great because it basically does what Gärdenfor
 
 #### The algorithm
 
+\cite{Alshaikh2020}: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candi- date word w a linear classifier which separates the embed- dings of entities that have w in their description from the oth- ers. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
+
 Base idea: unsupervisedly use the text descriptions belonging to the respective entities to identify semantic features from than that may serve as feature direction.
 
 The authors look at three different domains: movies, wines and places. For each of these domains, they collected many samples (like movies) together with descriptions from places where people can leave them (like reviews from IMDB). A representation of a movie is then generated from the bag-of-words of the descriptions of the individual movies, leading to a very high-dimensional, very sparse representation for all movies. 

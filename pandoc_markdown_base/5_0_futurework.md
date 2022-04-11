@@ -119,6 +119,8 @@ There were some Hyperparameters (also Algorithmen/Komponenten) von \cite{Ager201
 	* Mit Wordnet hypernyms/hyponyns und synonyms zu finden damit ebenfalls zu arbeiten (kann man wit wordnet angeben welches abstraktionsniveau ich haben will?)
 	    * Abstraktionsniveau gibt's nicht in wordnet, das heißt das richtige layer zu finden ist schwer. Was man auf jeden Fall machen kann ist die Terme zu den bases ihrer synsets umzuwandeln (dadurch wird aus "math" und "mathematics" das gleiche), aber in anderen Fällen ist es halt so dass ich die Candidate-Terms schon vorher brauche und nur sagen kann "diese entity enhält X wörter die halt hyponyms von dem Term sind"
     * After you figure out which candidate term appears in which texts, figure out which other terms are frequent in these texts while infrequent in texts of the other class and then add these to the candidate-term-set (other way may even be to classify the texts according to if the candidateterm appears in them, and then take the misclassified one also as positive samples)
+    * it is probably the case that different kinds of mathematical terms actually do occur more often, so I'd need calculate these kinds of kappas not based oon a single term but ALREADY on a cluster of terms (... and I can bootstrap my way there, because after I do this I get more words to add to my cluster, rinse and repeat!)
+
 
 * BOOTSTRAP MORE CANDIDATES (AFTER EXTRACT CANDIDATES)
     * [VISR12]: LSI
