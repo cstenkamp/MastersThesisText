@@ -1,6 +1,9 @@
 ## STEPS
 
 
+\todoparagraph{In practical terms}, efficient calculation of the PPMI-score for high-dimensional \glspl{doctermmat} requires excessives amounts of RAM, as it does not appear to be implemented in any major Python-library and its calculating requires multiplication of huge matrices.
+
+
 ### Create Dissimilarity Matrix & Quantify
 
 

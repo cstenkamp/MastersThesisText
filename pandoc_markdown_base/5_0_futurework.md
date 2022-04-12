@@ -1,6 +1,11 @@
 \todoparagraph{auf LSI und LDA zuruckkommen und sagen dass halt viele von deren premises halt nice waeren}
 * Can use LSA to, once the corresponding clusters are found, select a good one of that as representative: add pseudodocs with only one term and that term as name, and then let all DOCUMENTNAMES be candidates
 
+LSI can even be used if a document is the better name for a semantic direction \todoparagraph{come back to bot points in discussion}
+
+
+
+
 <!--
 FUTURE WORK / SHORTCOMINGS / OUTLOOK
 

@@ -54,7 +54,7 @@ For more than twenty years, the default approach for recommendation has been tha
 
 As will be explained in more detail in \autoref{sec:similaritybasedreasoning}, both in terms of classification algorithms and classic logical reasoning, the technique to classify a sample with the class of its most similar neighbors (\emph{k-Nearest-Neighbors}) is considered one of the most basic techniques.
 
-On a different note, \textit{feature directions} are not unknown in the field of Computational Linguistics. As famously demonstrated by \textcite{Mikolov:Regularities} in their 2013 paper \citetitle{Mikolov:Regularities}, modern neural language models that represent words as high-dimensional continuous-space vectors exhibit astonishing semantic regularities. Not only does the usage of such embeddings boost the performance of many classical \gls{nlp} tasks \cite{Mikolov2013a,Le2014, Devlin2019}, but there is also strong evidence that \glspl{vsm} capture the meaning of words on the basis of the \gls{distribhyp}. This best shows in the famous example that links simple vector arithmetic to word semantics:\footnote{The latter two examples are adapted from \url{https://devmount.github.io/GermanWordEmbeddings/}}
+On a different note, \textit{feature directions} are not unknown in the field of Computational Linguistics. As famously demonstrated by \textcite{Mikolov:Regularities} in their 2013 paper \citetitle{Mikolov:Regularities}, modern neural language models that represent words as high-dimensional continuous-space vectors exhibit astonishing semantic regularities. Not only does the usage of such embeddings boost the performance of many classical \gls{nlp} tasks \cite{Mikolov2013a,Le2014, Devlin2019}, but there is also strong evidence that \glspl{vsm} capture the meaning of words on the basis of the \hyperref[distributional hypothesis]{sec:bow_hypothesis}. This best shows in the famous example that links simple vector arithmetic to word semantics:\footnote{The latter two examples are adapted from \url{https://devmount.github.io/GermanWordEmbeddings/}}
 
 \setlength{\belowdisplayskip}{3pt}
 \vspace{-6.5ex}
@@ -78,8 +78,8 @@ In our search of literature with related goals, the approach of \cite{VISR12} st
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{graphics/stolenfigures/movietuner.png}
-    \slcaption{
-        The Movie-Tuner Interface from \cite{VISR12} %TODO: cite exact figure (" … as seen in [8, Fig. 33]")
+    \caption[The Movie Tuner Interface from \cite{VISR12}]{
+        The Movie Tuner Interface from \textcite{VISR12}. Figure reprinted from \cite{Vig2010} (permission for non-commercial use granted). 
         \label{fig:movietuner}}
 \end{figure}
 

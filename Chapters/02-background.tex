@@ -391,106 +391,81 @@ Regarding the used domain, there is already a system incorporated into the Sidda
 \paragraph{Variations of this Algorithm}
 \label{sec:algo_variants}
 
-There are also techniques that extend the algorithm of \textcite{Derrac2015}: \textit{Alshaikh et al.} \cite{Alshaikh2019, Alshaikh2021} use this algorithm as one of their steps and create a similar algorithm to find disentangled features, to be more in line with the original definition of Conceptual Spaces,which requires low-dimensional domain-specific subspaces. Regarding other unsupervised ways to create Conceptual Spaces, Peter Gärdenfors himself suggested in his book \cite{Gardenfors2000a} to use self-organizing maps (Kohonen-Networks \cite{Kohonen1997}) instead of classical \gls{nlp} algorithms and \gls{mds} to unsupervisedly create concpetual spaces. And finally, the whole concepts of vector-space models for words \cite{Mikolov2013} and texts \cite{Le2014,Devlin2019} is related in that represents the meaing of terms, phrases or documents by embedding them in a vector space. However these have arbitrary non-interpretable dimensions and are no metric spaces, thus having no relation of geometry and meaning for \eg betweeness or analogical reasoning, which will be eloborated in the next section.
-
-\todoparagraph{Keep Kohonen nets, Im mentioning that in discussion}
-\todoparagraph{BERT as best language model}
-
-
-
-\todoparagraph{For more related work read the intros and corresponding sections of Ager and Alshaikh!}
-
-
-
-
-
-
-
-
-
+There are also techniques that extend the algorithm of \textcite{Derrac2015}: \textit{Alshaikh et al.} \cite{Alshaikh2019, Alshaikh2021} use this algorithm as one of their steps and create a similar algorithm to find disentangled features that is in line with the requirement of Conceptual Spaces to consist of low-dimensional domain-specific subspaces. Regarding other unsupervised ways to create Conceptual Spaces, Gärdenfors himself suggested in his book \cite{Gardenfors2000a} to use self-organizing maps (Kohonen-Networks \cite{Kohonen1997}) instead of classical \gls{nlp} algorithms and \gls{mds} to unsupervisedly create concpetual spaces. Finally, the whole concepts of vector-space models for words \cite{Mikolov2013} and texts \cite{Le2014,Devlin2019} is related in that represents the meaing of terms, phrases or documents by embedding them in a vector space. However these have arbitrary non-interpretable dimensions and are no metric spaces, thus having no relation of geometry and meaning for \eg betweeness or analogical reasoning, which will be eloborated in the next section. For more related work it is also referred to the respective sections of \mainalgos.
 
 
 \section{Relevant Algorithms and Techniques}
 \label{sec:required_algos}
 
-\todoparagraph{dont forget the links for lsa und lda - are in lsa-long-md }
+\todoparagraph{TODO: term? phrase? n-gram? - check where I mean what}
 
-Thus far, we have described the base algorithm which this thesis replicates. Before describing each of its step in detail, it is useful to get a grasp of some general concepts relevant for it and its components. Furthermore, we will to put it into the context of the field of computational \gls{nlp} and elucidate some of the required theoretical foundation, and finally quickly look at what other techniques can be used for some of its components. \todoparagraph{Also, we need some general linear algebra bc after all these are vector spaces, so let's look quickly at projecting and playing around with coordinates}
+% \todoparagraph{dont forget the links for lsa und lda - are in lsa-long-md }
+
+Thus far, we have described the base algorithm which this thesis replicates. Before describing each of its step in detail, it is useful to get a grasp of the theoretical foundation that form the basis of the creation of linguistical \glspl{vsm} in general. This also helps to place the algorithm in the context of the field of computational \gls{nlp}. Note that this section primarily serves to understand the key concepts required for the methodology of \textcite{Derrac2015}. To do that, we will sometimes put emphasis on other algorithms of the same type than those actually used in the implementation if they express the model more explicitly. The the methodology is modular and \eg only requires \textit{some} algorithm for dimensionality reduction.
+
+%  also quickly look at what other techniques can be used for some of its components.
 
 \subsection{Classical Vector Space Construction}
 \label{sec:vsm_construction}
 
-\todoparagraph{Important that it becomes clear that the distribution of unimportant (stop-) words is arbitrary whereas important words have an influence on the position in the space}
+The methodology in question consists of several components, each of it being an algorithm in itself. The first steps are basically classical linguistic tools: A text corpus is preprocessed and the words of its entites are counted and raw counts transformed. From these values a frequency matrix is generated and its dimensionality is reduced, before directions for domain-specific similarity measures are extracted.
 
-
-\textcite{Lowe} conceived a general framework to construct vector spaces from texts, splitting the process into the steps of first counting the token frequencies, then transforming the raw counts into more useful \gls{quant} measures (see \ref{sec:word_count_techniques}) %adjust the weights of the elements in the matrix, because common words will have high frequencies yet are less informative than rare words.
+\textcite{Lowe} conceived a general framework to construct vector spaces from texts, splitting the process into the steps of first counting the token frequencies, then transforming the raw counts into more useful \gls{quant} measures %adjust the weights of the elements in the matrix, because common words will have high frequencies yet are less informative than rare words.
  %TODO: talk about a fucking DOC-TERM-MATRIX, A MATRIX OF FREQUENCIES!!!
-and smoothing the space using dimensionality reduction, before calculating the similarities on the resulting embedding. While the considered algorithm requires more steps before calculating the similarities to allow for domain-specific and more complex forms of reasoning, it also adheres to this structure, as will be shown in section~\nameparanref{sec:generate_vectorspaces}.
+and smoothing the space using dimensionality reduction, before calculating the similarities on the resulting embedding. While the considered algorithm requires more steps before calculating the similarities to allow for domain-specific and other more complex forms of reasoning, it also adheres to this structure.%, as will be shown in section~\nameparanref{sec:generate_vectorspaces}.
 
-\paragraph{Bag-of-Words Hypothesis and Distributional Hypothesis}
+\paragraph{Distributional Semantics}
 \label{sec:bow_hypothesis}
 
 \begin{quote}
-    \q{you shall know a word by the company it keeps} \hfill \textcite{firth57synopsis}
+    \textit{\q{you shall know a word by the company it keeps}} \textcite{firth57synopsis}
 \end{quote}
 
-\todoparagraph{Grundlage fur vector-space models} - similar words occur in similar contexts.  % \url{https://en.wikipedia.org/wiki/Distributional_semantics#Distributional_hypothesis}
-% Eg. LSA assumes that words that are close in meaning will occur in similar pieces of text
+The core principle behind any kind of embedding of linguistics units such as words or documents is the distributional hypothesis, which states that linguistic items with similar distributions have similar meanings. If this is the case, the meaning of words correlate with their distribution: Words that occur in similar surroundings have similar meanings.
 
-Idea: Words that occur in similar surroundings (pieces of text) have similar meanings (distributional hypothesis), and texts that contain similar distributions of words are similear (bag-of-words hypothesis).
+More precisely, vector-space models fall into different categories depending on if the similarity of documents (\textit{Term-Document-Model}) or of words (\textit{Word-Context-Model}) is in question. Because the algorithm considered here describes the relation of entites through their descriptions it falls unser the latter category. According to \textcite{Turney2010}, the assumption underneath the Term-Document model is more precisely called the \textbf{bag-of-word hypothesis}, which states that documents with similar distributions of words have similar meaning. Accordingly, when embedding documents into a vector space, it must be ensured that the similarity relations of the embeddings closely resemble the similarity of the original documents.
 
-% "Hunde sind süß" und "katzen sind süß" -> in some context, the  "hunde" and "katzen" are similar.
+Many \gls{nlp} tasks rely on documents being represented as vectors, such as Information Retrieval, Recommendation, Text Classification, Translation, Sentiment Analysis and many more \cite{Smith2017,bird2009natural,Devlin2019,Le2014,Mikolov2013a,Turney2010,Guo,Chen2018,Maas2011}. The process of turning a collection of texts document into numerical feature vectors is referred to as \textit{vectorization}. According to \textcite{Turney2010} (who base their work on \textcite{Lowe}), the construction of a \gls{vsm} from texts can be decomposed into a four steps:\footnote{When considering neural embeddings such as \gls{word2vec}, the separation of these steps is hidden in the algorithm and not as distinct, but the principles hold also in these techniques.}
 
-According to \cite{Turney2010}, vector-space models fall into different categories depending on if the similarity of documents (Term-Document-Model) or of words (Word-Context-Model) is in question.  The former relies on the \textbf{bag-of-word hypothesis}, stating that documents with similar words have similar meaning. The Word-Context-Model relies on the \textbf{distributional hypothesis}, stating words that occur in similar context have similar meanings.
-
-
-
-\todoparagraph{zu 90 prozent raus hiermit, und falls doch drin dann kleiner}
-\begin{quote}
-	\q{After the text has been tokenized and (optionally) normalized and annotated, the first step is to generate a matrix of frequencies. Second, we may want to adjust the weights of the elements in the matrix, because common words will have high frequencies, yet they are less informative than rare words. Third, we may want to smooth the matrix, to reduce the amount of random noise and to fill in some of the zero elements in a sparse matrix. Fourth, there are many different ways to measure the similarity of two vectors.} \hfill \textcite{Turney2010}
-\end{quote}
-
-\todoparagraph{Mention Distributional Hypothesis}
-
-The algorithm consists of several steps/components, each of it of course is an algorithm in itself. The first steps are basically classical linguistic tools: Preprocessing \textrightarrow ~Bag-of-NGrams \textrightarrow ~Quantification \textrightarrow ~Frequency Matrix \textrightarrow ~Dimensionality Reduction (MDS) - followed by SVM-Classification\&Scoring \textrightarrow ~Clustering \textrightarrow ~Re-Embedding.
-
-Many \gls{nlp} tasks rely on documents being represented as vectors, such as such as Information Retrieval, Recommendation, Text Classification, Translation, Sentiment Analysis among others \cite{Smith2017,bird2009natural,Devlin2019,Le2014,Mikolov2013a,Turney2010,Guo,Chen2018,Maas2011}. The process of turning a collection of texts document into numerical feature vectors is referred to as \textit{vectorization}. Let us explore some theoretical basis for that.
-
-According to \textcite{Turney2010} (who in turn base their work on \textcite{Lowe}), the construction of a \gls{vsm} from texts can be decomposed into a four steps:\footnote{When considering neural embeddings such as \gls{word2vec}, the separation of these steps is hidden in the algorithm and not as distinct, but the principles hold also in these techniques.}
+% \todoparagraph{zu 90 prozent raus hiermit, und falls doch drin dann kleiner}
+% \begin{quote}
+% 	\q{After the text has been tokenized and (optionally) normalized and annotated, the first step is to generate a matrix of frequencies. Second, we may want to adjust the weights of the elements in the matrix, because common words will have high frequencies, yet they are less informative than rare words. Third, we may want to smooth the matrix, to reduce the amount of random noise and to fill in some of the zero elements in a sparse matrix. Fourth, there are many different ways to measure the similarity of two vectors.} \hfill \textcite{Turney2010}
+% \end{quote}
 
 \begin{description}
     \item[1) Building the Frequency Matrix] which starts with preprocessing such as tokenization followed by normalizing and possibly \gls{lemma}tizing the tokens amongst many other possible techniques, before counting frequencies of either words or \glspl{ngram}, yielding a matrix of \glspl{bow}.
-    \item[2) Transforming Raw Frequency Counts] \q{[B]ecause common words will have high frequencies, yet they are less informative than rare words} \cite{Turney2010}, it may make sense to adjust the weights of the elements of the frequency matrix.
-    \item[3) Smoothing the Frequency Matrix] So far, the matrix is noisy, extremely sparse and extremely high-dimensional. Dimensionality Reduction helps to counter all three issues.
-    \item[4) Calculating Similarities] of individual vectors as final step and aim of most algorithms. This can be done in various ways, a classical technique is to use the \gls{cos}.
+    \item[2) Transforming Raw Frequency Counts] \q{[B]ecause common words will have high frequencies, yet they are less informative than rare words} \cite{Turney2010}, it may make sense to adjust the weights of the elements of the frequency matrix such that the distances are not distorted by them.
+    \item[3) Smoothing the Frequency Matrix] A matrix that counts the frequency of any word in the corpus is generally noisy, sparse and extremely high-dimensional. Dimensionality Reduction helps to counter all three issues, yielding vectors closer resembling the document's \textit{latent information}.
+    \item[4) Calculating Similarities] of individual vectors is the final step and aim of most embedding algorithms. This can be done in various ways, a classical technique is to use their \gls{cos}.
 \end{description}
 
-Importantly, our algorithm differs from this four-step-process by injecting several additional steps before calculating similarities. This is because we hold the notion that similarity is necessarily context-dependent and there is no overall similarity (see \autoref{sec:reasoning}), which requires additional dissection of the final step.
-
-Lets look at what all this means.
+Importantly, our algorithm differs from this four-step-process by injecting several additional steps before calculating similarities. This is because we hold the notion that similarity is necessarily context-dependent and there is no overall similarity (see \autoref{sec:reasoning}), which requires additional dissection of this step. In the following, we will describe three steps relevant for us.
 
 
-
-\subsubsection{Bag-of-ngrams representation}
+\subsubsection{1. Bag-of-ngrams representation}
 \label{sec:techniques:bow}
 
-\includeMD{pandoc_generated_latex/2_bow}
+The most relevant information that can be taken into account when comparing two texts are the words they consist of. Accordingly, an obvious choice to vectorize a collection of documents is to describe each document the counts of its word occurences, which is called \gls{bow}-representation. 
 
+This approach is simple but has important drawbacks: Firstly, a document is not fully described only by the words it contains but also specifies their constellation. The information about ordering and relative position is lost in this representation (consider not knowing the position of negations). To alleviate this issue, texts can instead be represented as glspl{n-grams}, where the tokens are not single words but all sequences of words of length $n$. The drawback is that this vastly increases sparseness and dimensionality.
 
-\subsubsection{Word-weighting techniques}
+Further, by representing each word as separate \textit{one-hot-vector} ignores word semantics: as every vector is equally distant from any other, synonyms (cases where the same meaning is expressed with different words) are just as far apart as antonyms (opposites). This unreliability of term-document-association is what \textcite{Deerwester} calls the \textit{fundamental information retrival problem}: The mapping between words and their meanings is not bijective, but ambiguous. Different words can be used to express the same concept, and sometimes the same word refers to different concepts. This issue is partially alleviated by the dimensionality reduction performed subsequently, which may provide a way to determine what concepts are implied and obfuscated by fallible word choice.
+
+To address both issues, modern algorithms exist that train a document embedding directly based on constellation (alleviating lost ordering) of word-embeddings that are pre-trained based on their usual context (alleviating distance relation problems)
+. \todoparagraph{But later.}
+
+\subsubsection{2. Word-weighting techniques}
 \label{sec:word_count_techniques}
 
-\todoparagraph{TODO: term? phrase? n-gram?}
-
-When comparing the \gls{bow}-representations of texts, it is reasonable to give more weight to \emph{surprising} words than to expected ones. \q{The hypothesis is that surprising events, if shared by two vectors, are more discriminative of the similarity between the vectors than less surprising events.} \cite[156]{Turney2010} Another crucial reason is, that individual texts in the corpus are of drastically varying length, so longer entities would naturally dominate shorter ones when only comparing the raw counts - considering relative frequencies instead of absolute ones alleviates such problems. Because of these reasons, in the algorithm it will often be talked about \glspl{quant}. The algorithms explained below transforms the raw frequency-counts of a document and an \gls{ngram} into some \emph{score}, dependent on the number of occurences of this term in this document as well as the counts of other \glspl{ngram} and other documents. This score is henceforth called a \gls{quant}.
+When comparing the \gls{bow}-representations of texts, it is reasonable to give more weight to \emph{surprising} words than to expected ones. The idea behind that is, that \q{surprising events, if shared by two vectors, are more discriminative of the similarity between the vectors than less surprising events.} \cite[156]{Turney2010} Another crucial reason is, that individual texts in the corpus are of drastically varying length, so longer entities would naturally dominate shorter ones when only comparing the raw counts - considering relative frequencies instead of absolute ones alleviates such problems. The algorithms explained below transform the raw frequency-counts of a document and an \gls{ngram} into some \emph{score}, dependent on the number of occurences of this term in this document as well as the counts of other \glspl{ngram} and other documents. This score is henceforth called a \gls{quant}.
 
 Let us consider term $t$, corpus $C$, document $d \in C$ (represented as \gls{bow}). Then:\\
 term-frequency $\text{tf}_{t,d}$: How often $t$ occurs in $d$\\
 document-frequency $\text{df}_t$: How many documents $\in C$ contain $t$\\
 summed term-frequency $\text{df}_{t,*} = \sum_{d' \in C} \text{tf}_{t,d'}$: How often $t$ occurs in any document $\in C$
 
-\paragraph{Tf-Idf} The most well-known technique formalizing this concept is the \gls{tf-idf}, which gives a term-document pair a higher weight if the term is generally rare in the corpus (low \textit{df}) and frequent in the respective document (high \textit{tf}):
-\vspace{-2.5ex}
+\paragraph{Tf-Idf} The most well-known technique formalizing this concept is \gls{tf-idf}, which gives a term-document pair a higher weight if the term is generally rare in the corpus (low \textit{df}) and frequent in the respective document (high \textit{tf}):
+\vspace{-2.3ex}
 $$ w_{t,d} = \text{\textit{tf}}_{t,d} * log(\frac{|C|}{df_t}) $$
 
 %see also: https://towardsdatascience.com/3-basic-approaches-in-bag-of-words-which-are-better-than-word-embeddings-c2cbc7398016
@@ -499,39 +474,71 @@ $$ w_{t,d} = \text{\textit{tf}}_{t,d} * log(\frac{|C|}{df_t}) $$
 \paragraph{PPMI}
 % See also: https://stackoverflow.com/a/58725695/5122790
 
-\textcite{Turney2010} suggested to use the \gls{ppmi} measure instead of \gls{tf-idf} to weight the counts in \glspl{doctermmat}, relying on \cite{Bullinaria2007}'s work taking into account psychological models to extract information about lexical semantics from co-occurence statistics. According to \cite{Turney2010,Bullinaria2007}, \gls{ppmi} performs most plausible to measure semantic similarity in word-context matrices compared to human evaluation. For that reason, \textcite{Derrac2015} and its follow-up works \cite{Ager2018,Alshaikh2020} rely solely on this technique. %(sec 4.2) of \cite{Turney2010}: Bullinaria and Levy (2007) demonstrated that PPMI performs better than a wide variety of other weighting approaches when measuring semantic similarity with word-context matrices.
-Like tf-idf, it weights terms that are strongly associated with a document highly by favoring terms frequently associated with document $d$ while infrequent in the corpus overall. For that, it uses the \textit{log} of the probability of the term-document-combination, normalized by the probability of this $d$ with any $t$ and this $t$ with any $d$:
-\vspace{-2.5ex}
+\textcite{Turney2010} suggested to use the \gls{ppmi} measure instead of \gls{tf-idf} to weight the counts in \glspl{doctermmat}, relying on \cite{Bullinaria2007}'s work taking into account psychological models to extract information about lexical semantics from co-occurence statistics. According to these works, \gls{ppmi} performs most plausible to measure semantic similarity in word-context matrices compared to human evaluation. For that reason, \textcite{Derrac2015} and its follow-up works \cite{Ager2018,Alshaikh2020} rely solely on this technique. %(sec 4.2) of \cite{Turney2010}: Bullinaria and Levy (2007) demonstrated that PPMI performs better than a wide variety of other weighting approaches when measuring semantic similarity with word-context matrices.
+Like tf-idf, it weights terms that are strongly associated with a document highly by favoring terms frequently associated with document $d$ while infrequent in the corpus overall. For that, it uses the logarithm of the probability of the considered term-document-combination $d,t$, normalized by the probability of this document co-occuring with any term ($d,*$) and this term co-occuring with any document ($t,*$)
+\vspace{-2.2ex}
 \begin{align*}
    w_{t,d} &= max\left(0, log\left( \frac{p_{d,t}}{\sum_{t'}p_{d,t'}*\sum_{d'}p_{d',t}} \right) \right) \\
    p_{d,t} &= \frac{\text{tf}_{t,d}}{\sum_{d'}\sum_{t'} \text{tf}_{t',d'}}
 \end{align*}
 
-\todoparagraph{In practical terms}, efficient calculation of the PPMI-score for high-dimensional \glspl{doctermmat} requires excessives amounts of RAM, as it does not appear to be implemented in any major Python-library and its calculating requires multiplication of huge matrices.
 
-
-\subsubsection{Dimensionality Reduction and Latent Space Embedding}
+\subsubsection{3. Dimensionality Reduction and Latent Space Embedding}
 \label{sec:dim_red}
 
-Next step is to smooth the frequency matrix. Goal is to keep comparison performance high, but make the  process faster and also ignore irrelevant noise \cite{Turney2010}.
+At this step, we have a sparse and high-diensional matrix quantifying the importants of all corpus-terms for all documents. The next step is to smooth this frequency matrix. Reducing the dimensionality of this matrix reduces computational processing load and helps in alleviating the prevalence of irrelevant noise in the original matrix \cite{Turney2010}. Additionally, the right algorithms may also make use of the principles of distributional semantics to alleviate the aforementioned problems of word distance and synonymy. The result is that the document vectors depend less on their exact phrasing and instead more closely resemble the concepts that these words expressed, also called its \textit{latent} (hidden) \textit{topics}. This may even improve subsequent similarity measurements, as it is less distorted by noise and word choice irregularities.
 
-We start with sparse vectors, and then \q{some form of dimensionality reduction is typically used to obtain vectors whose components correspond to concepts.} \cite{Derrac2015}
+%TODO: we said in bow-representation that LSA helps with the fact that the same thing can be expressed in different ways
+% We start with sparse vectors, and then \q{some form of dimensionality reduction is typically used to obtain vectors whose components correspond to concepts.} \cite{Derrac2015}
 
+The technique that most explicitly models a document's latent topics is \gls{lsi} \cite{Deerwester}, which relies on the fact that words that are close in meaning will occur in similar pieces of text to yield embeddings where words and documents of similar meaning are similar. 
 
-\paragraph*{LSI/LSA}
+\paragraph*{LSI/LSA\footnote{Both terms refer to the same algorithm, which is generally called \gls{lsi} when applied to document similarity and information retrieval, and \gls{lsa} when applied to word similarity.}}
 
-\textcite{Deerwester}
+While language is used to express the world, it is also highly ambiguous and redundant, such that the relationship of model and reality is only a statistical one. The same thing can be expressed with different words (synonymy), and sometimes a word has different meaning depending on context (polysemy). The underyling latent semantic structure in texts is obscured by the randomness of word choce, such that individual words provide only unreliable evidence about the conceptual topic or meaning of a document.
+% When comparing two texts (text and query, ...) what we have are the words which are only a sample descrption of the underlying conceptual/semantic context.
 
-In fact, when using the right algorithms this has the additional effect to also find latent topics from tehse texts, which IMPOROVES similarity measurements bc now it's as if the latent stuff is in there
+However, language has a lot of structure, which allows to treat this as statistical problem: The occurrence of some patterns of words gives a strong clue as to the likely occurrence of others. According to the distributional hypothesis, the matrix of observed occurrences of terms applied to documents can be used to estimate parameters of the underlying true model. This is explicitly done using linear algebra operations on the frequency matrix in \gls{lsi} \cite{Deerwester}. 
 
-LSI relies on the \gls{distribhyp} in that it decomposes the matrix into the product of three matrices and then compresses them. Similar to AutoEncoders, if there is hidden information in the text than that will be used for this compression! 
+This algorithm decomposes the \gls{doctermmat} into a product of three linearly independent factors: \textit{words-per-topic} \texttimes \textit{topic-importance} \texttimes \textit{corpus-topic-distribution}. Then it runs \textit{Truncated Singular Value Decomposition} (SVD), which finds a lower-rank approximation of the matrix containing the \textit{hidden information} while identifying and keeping relationship patterns. In other words, by taking only the important components from this matrix (\textit{rank-reduction}), the new representation becomes lower-dimensional, less noisy and less sparse, but still approximates the original similarity behaviours.
 
-\paragraph*{MDS}
+LSI explicitly represents both documents and terms in the same semantic space, such that they are treated equally when the SVD analyses their similarity behaviour. It yields a representation of arbitrary dimensionality that captures the relation of term-term, term-document and document-document similarity by ensuring that similar items will end up close in the space. Importantly, this yields a representation in wich both documents and terms correspond to vectors. The similarity of each of these is assessed via the cosine-distance. To analyze the similarity of a document and a query term, the term is embedded by generating \textit{pseudo-document} (a document that contains only this term), and close vectors are returned, which may include results that conceptually similar but do not share any words. 
+
+As consequence of the compression, some dimensions are combined and depend on more than one term - generally this merges embeddings of similar terms, mitigating synonymy. Also Polysemy is reduced, as only the components of polysemous words that have encode a similar meaning than the cluster are relevant for the combined direction of the vector. Another consequence is that terms that did not actually appear in a document may still end up close to the document, if that is consistent with the major patterns of association in the data: Terms that \textit{could} have been used as well.\q{if the tags \textit{love story} and \textit{hilarious} have been applied to an item, it is likely that the tag \textit{romantic comedy} is highly relevant\cite{VISR12}.}
+
+The algorith to create the Tag Genome in \cite{VISR12} bases to a high degree on this algorithm: It creates a binary frequency matrix for all considered documents and a set of \textit{tags}, embeds documents and pseudo-documents generated from the tags and compresses it with LSI. The relevance of a tag for a documents \codefunc{tag-lsi-sim(t,i)} is then calculated by their embeddings' cosine similiarity. Also, the algorithm appears to be a good method to find clusters of similar terms for semantic direction, given that it considers these terms as directional vectors already. 
+
+\textcite{Derrac2015}, however, additionally require that spatial relations such as betweeness and parallelism hold in the vector space embedding. For that, they require a space of Euclidean metric which is not given in LSA, which generates a space based on the similarity-centred objective to reduce \glspl{cos} of similar entites. Instead they follow \textcite{Gardenfors2000} suggestion and rely on \gls{mds}. While the algorithm bases on Euclidean distance, the principle that items of similar meaning will end up in similar positions still holds. In fact, it should hold most kind of compression, bearing in mind the distributional hypothesis and the fact that if there is some inherent \textit{structure} (obfuscated by wording) that explains the dissimilarity of any text corpus sufficiently well, it will remain after the compression.
+
+\paragraph*{Multi-dimensional Scaling}
 \label{sec:mds}
+
+\Gls{mds} \cite{Mead1992} is a dimensionality reduction technique that induces a finite vector-space representation from pairwise similarities. It takes a \gls{dissimmat} as input and returns a fixed-dimensional embedding in which original distances are kept as close to the ones of the \gls{dissimmat} as possible. Gärdenfors considered using this technique it to find an underlying \textit{phenonemal} conceptual space from human similarity judgements, given that it yield q{as high a correlation as possible between the similarity judgements of the subjects and the corresponding distances in the estimated dimensional space} \cite[22]{Gardenfors2000a}. The algorithm has quadratic space complexity \cite{Alshaikh2021}
+
+Especially relevant is the \textit{metric MDS} algorithm, which requires metric distances as input and models their similarity as distances in a space finite space of lower dimensionality with a Euclidean metric. A distance measure is a metric if the following axioms hold:
+\vspace{-2ex}
+\begin{align}
+    d(x,y) = 0 &\Leftrightarrow x = y \\
+    d(x,y) &= d(y,x) \\
+    d(x,t) &\leq d(x,y) + d(y,z) \text{ (triangle inequality)}
+\end{align}
+
+Given metric distances $d(p_i, p_j) \forall 1 \leq i, i \leq j$ and the demanded number of dimensions k, the algorithm starts with a random initial distribution and progressively adjusts the coordinates by re-computing the embeddings $v_1, ..., v_n \in \mathds{R}^k$ such that distances are maintained as well as possible by minimizing 
+\vspace{-2ex}
+$$ \sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(d(p_i, p_j) - \lVert v_i - v_j \rVert)^2 $$
 
 
 \subsection{Other important Techniques}
 
 
 \includeMD{pandoc_generated_latex/2_othertechniques}
+
+\subsubsection*{Semantic Knowledge Bases}
+
+Lexical databases of semantic relations between words, the most famous of which being WordNet,\footnote{\url{https://wordnet.princeton.edu/}} link words in a graph that encodes explicit semantic relations like synonyms and hyponyms (subtypes/ \emph{is-a}-relationships). While neural %TODO: nicht neural, aber halt data-driven? naja das was word2vec undso sind... by-context-created/trained...?! similarity-based? -> DISTRIBUTIONAL MODELS (ones trained from the co-occurrence patterns of temrs)
+embeddings may encode similar information implicitly, when relying on dictionary-based word encodings they are an important tool when using classical linguistic techniques. For the developed algorithm, the information how many hyponyms of a candidate word for a semantic direction %TODO: did I explain the algorithm well enough before this to throw this much information at the reader?!
+occur in its corresponding text-corpus can be highly relevant. To do that, WordNet \cite{Miller1995} and it's German equivalent, GermaNet \cite{hamp-feldweg-1997-germanet,Henrich},\footnote{\url{(https://uni-tuebingen.de/fakultaeten/philosophische-fakultaet/fachbereiche/neuphilologie/seminar-fuer-sprachwissenschaft/arbeitsbereiche/allg-sprachwissenschaft-computerlinguistik/ressourcen/lexica/germanet-1/)}} are used in the respective step.
+
+
+
 
