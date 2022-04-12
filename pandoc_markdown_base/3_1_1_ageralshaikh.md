@@ -25,6 +25,11 @@ Regarding Ager and Alshaikh:
     * Do Kappa on Binary (-> see later)
         * for them, the binary "does the word occur in the description" is the only sensible signal, no ppmi or anything! (page 2, footnote 1 of RaZb20)
 
+## \textcite{Alshaikh2020}
+
+Important to mention that they iteratively find "disentangled" features and thus embed the stuff in several uncorrelated low-dimensional subspaces
+
+
 ## \textcite{Ager2018}
 
 The main contribution of \textcite{Ager2018} is a postprocessing step that changes the final space such the ranking of entities \wrt each feature direction more closely mimics the ranking of frequencies of that direction's cluster words. The reasoning is that the original embeddings from which the feature directions are created are based on global similarity. This makes it very vulnerable to outliers which often take up extreme positions. If one now creates the feature directions from the space, these outliers are assumed to have certain properties. So the space is optimized for that, which limits the quality of feature directions in the space. Problem again is global similarity: If one entity ranks high for a feature, it is very likely that another entity that is close to that will also rank high for this feature, even though it may be something completely different. So to get better feature directions one has to distort the space. 

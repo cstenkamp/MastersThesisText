@@ -25,64 +25,35 @@ Das problem was ich mit derrac hatte ist ja dass die so unglaublich unrobust war
 
 # Is that a CS?
 
-## What assumptions are we dropping
-
-* we are only dealing with one domain (movies, placetypes, courses, ..) at a time (like CS, but what's missing is a sort of categorization at first.. however that one is never talked about anyway)
-* EITHER we have euclidean metric OR we have interpretable direcitons, NOT BOTH
-* The Gropuing into several low-dimensional subspaces per domain is a lot weaker: actually we'd have to embed entities into small spaces of only one domain! This is only kinda picked up again later by \cite{Alshaikh2020}
-    * \cite{Alshaikh2020}: "When representing a particular entity in a conceptual space, we need to specify which domains it belongs to, and for each of these domains we need to provide a corresponding vector." 
 
 
 ## Points as coordinates - on Types and Tokens
 
-* I thought it was important that we are dealing with points, so why cosine distance? I thought that would be for vectors, we should be using euclidean distance! By not doing that on the final space we see again that many assumptions are dropped
-* Yes points instead of regions, but I agree that that's a bug and not a feature, and also (critizising CS als solche), computation with regions is computationally incredibly demanding. 
+Unlike many ther NLP approaches that rely on embedding (see \autoref{sec:embeddings}), in a Conceptual Space, natural language terms are not modelled as points or vectors, but as convex regions. 
+    * \cite{Derrac2015} - advantages: 
+        * It allows \q{to distinguish borderline instances of a concept from more prototypical instances, by taking the view that instances which are closer to the center of a region are more typical} \cite{Derrac2015} (they cite \cite{Gardenfors2000a})
+        * There are really good Region-based models, eg \cite{Erk2009}
+        * As we said when describing the RCC, stuff liek subsumption, mutual exclusiveness etc are obivous
+BUT \cite{Derrac2015} drop this assumption and work with vectors (OR POINTS) instead of regions.
+    * \cite{Derrac2015}: \q{In this paper, we essentially view point based representations as coarse-grained approximations of conceptual spaces, where points correspond to fine-grained categories instead of specific instances, while convex regions are used to model higher-level categories}
+    * \cite[222]{Gardenfors2000a}: mapping regions in the high-dimensional space to point-embeddings is a feature not a bug because that is GENERALIZATION.
+    * I think that makes sense: A point in such a region is one specific instance of such a concept - you could say that regions denote \textbf{types}, with the individual points corresponding to their \textbf{tokens}. -- the domain is different than the theoretical idea of Gärdenfors - especially stuff like movies and courses, what ARE they? are they type or token? Rather both at once - the region of the course XYZ is composed of only one token, at least until we take into account a much bigger dataset that would allow us to do reasoning on "the set of all introductory computer science courses" or something. (For placetypes however we ARE dealing with types!)  we have only one-instance-per, so TOKENS, so it's kiiinda reasonable that we have points! IF we would have the collection of "ALL Computer Science 1 Courses" it would be different
+    * "learning accurate region boundaries for a given concept would require a prohibitive amount of data" \cite{Derrac2015}
+    * Contra CS: computation with regions is computationally very demanding
+    * If you'd want regions, a good approach would be to just generate the type from its token. In the case of educational resources, every instance of a course is a token and thus a point/vector, and you can build your region "Introductory classes to Computer Science" by the minimal complex region that encompasses all tokens of "Informatik A" and "Introduction to Algorithmen" etc
+        * to get regions back, \cite{Erk2009} propeses an algorithm for that (region surrounding a central vec, or instance-based (with degree of variance in each dimension) by merging k-nearest-neighbors) ==> Future Work
+
+
+
+
+### Points vs Vectors
+* I thought it was important that we are dealing with points, so why cosine distance? I thought that would be for vectors, we should be using euclidean distance! By not doing that on the final space we see again that many assumptions are dropped  
+    * isn't the important difference between points and vectors that cosine would be relevant for vectors, but euclidian(/..) distance for points?! I mean warum ist unser space metric?!
+    * cosine distance used eg in my `select_salient_terms`: Do they really do that on the kidns of spaces where they claim regions are important?
+    * Future work: closeness by euclidian distance 
 * \cite{Derrac2015}: \q{SVD produces a representation in which entities correspond to vectors, which should be compared in terms of cosine similarity rather than Euclidean distance} (-> spatial relations such as betweeness and parallism wouldn't make sense) - and then proceeds to use cosine-distance?! wtf!! (acutally that may be a problem of ager & alshaikh)
 
-* WHY do they always calculate with cosine-distances (eg in my `select_salient_terms`) - I thought the important thing is that we are talking about POINTS, NOT VECTORS  (also - param-combi for closeness by euclidian distance isntead of that) -> FUTURE WORK
 * Why do their distance measures even work? Where does one even notice if they have points and no vectors? Bei der SVM (siehe meine Stackoverflow frage!) ists ja relevant.... und da nutzen sie punkte
-
-
-* supposed to be regions, but we use vectors.  [TYPES are, which are MADE UP FROM TOKENS]
-    * MUCH more computationally efficient
-    * the domain is different than the theoretical idea of Gärdenfors - especially stuff like movies and courses, what ARE they? are they type or token? Rather both at once - the region of the course XYZ is composed of only one token, at least until we take into account a much bigger dataset that would allow us to do reasoning on "the set of all introductory computer science courses" or something. (For placetypes however we ARE dealing with types!) 
-
-Unlike many ther NLP approaches that rely on embedding (see \autoref{sec:embeddings}), in a Conceptual Space, natural language terms are not modelled as points or vectors, but as convex regions. A point in such a region is one specific instance of such a concept - you could say that regions denote \textbf{types}, with the individual points corresponding to their \textbf{tokens}. 
-
-According to \cite{Derrac2015}, using regions instead of points has some clear advantages:
-* It allows \q{to distinguish borderline instances of a concept from more prototypical instances, by taking the view that instances which are closer to the center of a region are more typical} \cite{Derrac2015} (they cite \cite{Gardenfors2000a})
-* Concept Subsumption ("every pizzeria is a restaurant"), mutual exclusiveness (no restaurant can also be a beach), overlapping concepts (some bars serve wine but not all, some establishments which serve wine are bars but not all) 
-* (their [41] says that "Region based models have been shown to outperform point based models in some natural language processing tasks")
-
-
-In their algorithm, \cite{Derrac2015} drop this assumption and work with vectors instead of regions.
-<!-- \q{In this paper, we essentially view point based representations as coarse-grained approximations of conceptual spaces, where points correspond to fine-grained categories instead of specific instances, while convex regions are used to model higher-level categories} -->
-While this may seem to stand in strong contrast to an important component of the theory, 
-* Computational Complexity on regions is vastly higher than for poitns or vectors
-* "learning accurate region boundaries for a given concept would require a prohibitive amount of data" \cite{Derrac2015}
-* Gärdenfors himself said when discussing if self-orgazinizing maps are useful that that is a GOOD THING, because that IS GENERALIZATION
-* If you'd want regions, a good approach would be to just generate the type from its token. In the case of educational resources, every instance of a course is a token and thus a point/vector, and you can build your region "Introductory classes to Computer Science" by the minimal complex region that encompasses all tokens of "Informatik A" and "Introduction to Algorithmen" etc
-
-TALK ABOUT that actually, in CS concepts (=types) are regions, BUT we have only one-instance-per, so TOKENS, so it's kiiinda reasonable that we have points! IF we would have the collection of "ALL Computer Science 1 Courses" it would be different
-
-% Zum Thema points vs regions: [CS] where properties and concepts are represented using convex regions, while specific instances of a concept are represented as points. This has a num- ber of important advantages. First, it allows us to distinguish borderline instances of a concept from more prototypical instances, by taking the view that instances which are closer to the center of a region are more typical [9]. A second advantage is that using regions makes it clear whether one concept subsumes another (e.g. every pizzeria is a restaurant), whether two concepts are mutually exclusive (e.g. no restaurant can also be a beach), or whether they are overlapping (e.g. some bars serve wine but not all, some establishments which serve wine are bars but not all). Region based models have been shown to outperform point based models in some natural language processing tasks [41] On the other hand, using regions is computationally more demanding, and learning accurate region boundaries for a given concept would require a prohibitive amount of data. In this paper, we essentially view point based representations as coarse-grained approximations of conceptual spaces, where points correspond to fine-grained categories instead of specific instances, while convex regions are used to model higher-level categories
-
-In any case, we often map regions in the high-dimensional space to point-embeddings, however according to \cite[222]{Gardenfors2000a} that's a feature not a bug because that is GENERALIZATION.
-
-* We say we're dealing with POINTS but we're constantly doing cosine similarity, isn't the important difference between points and vectors that cosine would be relevant for vectors, but euclidian(/..) distance for points?! I mean warum ist unser space metric?!
-
-
-* Derrac generate EITHER metric OR interpretable directions. speaking of which, what do we know about that space? What properties can we assume there? I'd definitely say dimensions are still correlated... but what do we know about it?
-
-* This is not really a conceptual space - for example only points, for example its too highdimensional (which is what \cite{Alshaikh2019, Alshaikh2020, Alshaikh2021} noticed and worked on)
-
-* sehr viele vereinfachende sachen, like no convex regions but simply dots, however that's general reasonable 
-* still high-dimensional, that's not good
-    * [AGKS18] ist da auch mehr humble als [DESC15] und sagt "The idea of learning semantic spaces with accurate fea- ture directions can be seen as a first step towards methods for learning conceptual space representa- tions from data"
-* We know nothing about the properties (is it metric,...) of the final space!
-* The fundamental information retrieval problem - no 1:1 correspondance to words and meanings (polysemy, synonymy)! two people choose the same main key word for a single well-known object less than 20% of the time [[1] of \cite{Deerwester}]
-    * Can use LSA to, once the corresponding clusters are found, select a good one of that as representative: add pseudodocs with only one term and that term as name, and then let all DOCUMENTNAMES be candidates
-
 
 
 

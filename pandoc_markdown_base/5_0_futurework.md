@@ -127,6 +127,14 @@ There were some Hyperparameters (also Algorithmen/Komponenten) von \cite{Ager201
         * Options: [see what to take for dtm]]
         * Parameters: #dims for the rank reduction (see https://en.wikipedia.org/wiki/Latent_semantic_analysis#Rank-reduced_singular_value_decomposition)
 
+
+#### Getting back regions
+If you wanted to get regions back, \cite{Erk2009} propeses an algorithm for that (prototype-style model that induces a region surrounding a central vec, and an instance-based one that representes degree of variance in each dimension by merging k-nearest-neighbors)
+
+You can even train a vsm such that the concepts of subsumption make sense, can't you? Like Dog and Cat are similar because they occur in sentences like "This Dog is cute" and "This cat is Cute". Can't you figure out that "This animal is cute" also holds, and that dog and cat are subconcept of that because all things that hold for animal also hold for dog and cat (as in, each context of animal also occurs as context of dog/cat), but dog and cat are different instances becasue there are some things that only hold fro the one and some that only for the other?
+
+
+
 ### Completely different Algorithm
 
 * Whyyy can't I just, like compare doc2vec of the text with doc2vec of the candidate dimensions?!

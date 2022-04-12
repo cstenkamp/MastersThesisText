@@ -221,12 +221,20 @@ The algorithm relied on a classical linguistic pipeline where a frequency matrix
 
 \subsection{Is that a Conceptual Space?}
 
-\paragraph{What assumptions are we dropping}
-\todo
+In \autoref{sec:cs}, we looked at what a conceptual space is, before introducing \gencite{Derrac2015} algorithm to automatically induce these. However, their algorithm only approximates \glspl{cs} does model some parts of the definition. A first issue with the algortihm is, that it needs a clearly defined domain from the start. It takes a corpus of texts and embeds each of these into a single high-dimensional vector space. If not all texts in the corpus are from a single domain, due to the similarity-based vector space generation, outliers will greatly affect the embedding of all entities (as \cite{Ager2018} discusses at length). This sounds irrelevant in practice, but the problem is that it is impossible to clearly define what a domain is. There is the set of place types, but this domain consists of various subdomains, and some concepts apply only to a specific subset of entities. The described algorithm has no way to figure out such subdomains. This issue is partially addressed by the works of \textcite{Alshaikh2019, Alshaikh2020, Alshaikh2021} which eloaborate on the idea of subdomains. As they state, \textit{\q{When representing a particular entity in a conceptual space, we need to specify which domains it belongs to, and for each of these domains we need to provide a corresponding vector.}} \cite{Alshaikh2020} \todoparagraph{Wenn nicht in Algorithm geschrieben, dann hier die idee mit dem dass political nur relevant ist for a subset blabla} 
+
+Also we should not make the mistake of confusing what \mainalgos and this work consider a domain (the set of movies, places or courses), and the definition of domain as used by \textcite{Gardenfors2000a}. According to the latter, a domain is a low-dimensional set of correlated properties, such as \textit{the color domain} consisting of \textit{hue, saturation} and \textit{value}. This also points out another difference of the original \gls{cs} definition and the definition used here: Conceptual spaces describe an entity through several uncorrelated low-dimensional vector spaces, not a single one with several dozen dimensions. As \cite{Ager2018} puts it more humbly, \textit{\q{The idea of learning semantic spaces with accurate feature directions can be seen as a first step towards methods for learning conceptual space representations from data [...]}}. Again it is referred to thw works of \textcite{Alshaikh2019, Alshaikh2020, Alshaikh2021} which alleviate this by iteratively finding disentangled low-dimensional feature spaces.
+
+As discussed earlier, the algorithm of \textcite{Derrac2015} first embeds the entities into a euclidian space where the concepts of betweeness and parallelism make sense, and subsequently create a feature-based representation that bases on an entity's rank \wrt several human-interpretable features. In other words, the algorithm produces \textit{either} a space with a euclidean metric, \textit{or} one with interpretable directions, but no space that has \textit{both properties}. As both are important necessary conditions for a conceptual their algorithm at no point generates something that resembles a \gls{cs}. It is unclear to us why they only consider the ranking of the entites regarding the feature axis instead of their distance which may retain relations of distances, for example by applying an arithmatic change of basis for the coordinate system (linear transformation). The way their algorithm works, the final space only has ordinal scale level and linearly dependent (correlated) dimensions. An interesting research avenue is to figure out what properites the space they have, and if small changes to the final algorithm step (such as PCA to decorrelate dimensions or not only taking the rank) could help in retaining the euclidean or at least another usable metric.
 
 
-\paragraph{Points instead of Regions}
-\todo
+\subsubsection*{Points instead of Regions}
+
+Another important different from the resulting space to \glspl{cs} is that we are dealing with points instead of regions. The authors acknowledge that themselves
+
+
+
+
 
 \subsection{Regarding their research practices}
 
@@ -250,6 +258,25 @@ The algorithm relied on a classical linguistic pipeline where a frequency matrix
 
 \section{Future Work}
 \label{sec:futurework}
+
+\subsection*{Algorithm Addendums}
+\todo
+
+\paragraph{Stuff to better deal with the dataset}
+\todo
+
+\subsection*{Work ontop}
+Everything From ager and Alshaikh
+Use \cite{Erk2009}'s technique to make regions again
+It is unclear to us why they only consider the ranking of the entites regarding the feature axis instead of their distance, why not try to do some linear algebra
+\todo
+
+
+
+\subsection*{Completely Different algo}
+\todo
+
+
 
 % \includeMD{pandoc_generated_latex/5_0_futurework}
 
