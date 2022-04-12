@@ -1,4 +1,11 @@
 
+TODO: generally write about if Kappa is a good choice (see eg \url{https://en.wikipedia.org/wiki/Cohen%27s_kappa})
+
+
+The first two rows of \autoref{tab:generated_stats} display sample results of \gencite{Derrac2015} original implementation for the domains of movies and placetypes as it was uploaded by the authors. Looking at the number of candidates and the number of those with a kappa-score of at least 0.1, we see that in the case 200D $\times$ placetypes, 21\,819 out of 21\,833 candidate terms had a kappa-score of at least 0.1 and were thus considered \textit{semantic directions}.
+
+
+
 * I wrote before that "taking all words as candidate and running a \gls{pos}-tagger led to suboptimal results in previous experiments, which indicated that the robustness of the algorithm is increased if less candidates are used. This will be forther elaborated in the discussion." -> say something about the number of candidates and how its better the way I do it.
 
 * Which kappa is best and was it important to differentiate?

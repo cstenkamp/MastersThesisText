@@ -11,6 +11,8 @@ Having established the goals of replicating an algorithm for a new domain, let u
 \subsection{Replication and Reproducibility}
 \label{sec:howtoreplicate}
 
+\todoparagraph{this field of work seems constrained to a small community, without any alternative implementations or substantial improvements from outside of it.}
+
 The workflow of data science generally follows the same pattern: A paper states there is some problem \textit{X}, claims that their algorithm \textit{Y} may be good at problem \textit{X}, creates datasets \textit{Z} for \textit{X}, and then tests the code on these datasets. This test generally compares \textit{X} to alternative approaches from the literature and explores if any regularities in the algorithm \textit{Y} can be found. This may yield future research opportunities, showing what other domains the algorithm may work for as well.
 
 Replication fills this role by applying an existing algorithm to another domain. Results for this are important, as it helps to see first if the claimed results are valid, and if they work on datasets that are not artificial and specifically created for the sole purpose of testing the algorithm. Furthermore, the details of experiments in publsihed work are often opaque and omit important information to reproduce the algorithm. These issues are mitigated trough repetition: The robustness of the algorithm to changes in parameters or dataset is investigated. If changes in either of these have a major impact on the results, there is reason to doubt generalization of the algorithm, showing that it may not be good to solve problem \textit{X} after all.
@@ -210,7 +212,14 @@ The goal of this thesis is to provide explainable recommendation for educational
 
 According to \cite{Gardenfors2000a}, Representations don't need to be similiar to the objects they represent, but the *similarity relations of the representations* should correspond to those of the objects they represent
 
+
+Unlike many ther NLP approaches that rely on embedding (see \autoref{sec:embeddings}), in a Conceptual Space, natural language terms are not modelled as points or vectors, but as convex regions. \todoparagraph{advantages: Stuff below!}
+% * It allows \q{to distinguish borderline instances of a concept from more prototypical instances, by taking the view that instances which are closer to the center of a region are more typical} \cite{Derrac2015} (they cite \cite{Gardenfors2000a})
+% * There are really good Region-based models, eg \cite{Erk2009}
+% * stuff liek subsumption, mutual exclusiveness etc are obivous (see blow)
+
 \subsubsection*{Categories and Ontologies}
+\label{sec:ontology_rcc}
 
 % CS and with it ontologies "automatically" (BIG question mark) arise from prototypes + metric domain + voronoi tesselation
 
@@ -380,9 +389,11 @@ In the realm of \gls{nlp}, this also relates to \textbf{Topic Modeling}, which a
 Regarding the used domain, there is already a system incorporated into the Siddata-\gls{dsa} that aids students by finding and recommending educational resources. SidBERT \cite{Schrumpf2021DELPHI} extracts implicit information from courses and other learning material by their title by categorizing them into one of 905 classes derived from the third or fourth level of the \gls{ddc} \cite{Dewey1876}, a hierachical tree stucture system commonly used to categorize library books. SidBERT uses the same dataset as this work and classifies with a custom classification head ontop of a \gls{bert}-encoder \gls{ann} which is trained on 1.3 million book titles collected from three universities as well as the German National Library, currently achieving 45.2\% test accuracy (62.2\% recall) among 905 classes.
 
 \paragraph{Variations of this Algorithm}
+\label{sec:algo_variants}
 
 There are also techniques that extend the algorithm of \textcite{Derrac2015}: \textit{Alshaikh et al.} \cite{Alshaikh2019, Alshaikh2021} use this algorithm as one of their steps and create a similar algorithm to find disentangled features, to be more in line with the original definition of Conceptual Spaces,which requires low-dimensional domain-specific subspaces. Regarding other unsupervised ways to create Conceptual Spaces, Peter Gärdenfors himself suggested in his book \cite{Gardenfors2000a} to use self-organizing maps (Kohonen-Networks \cite{Kohonen1997}) instead of classical \gls{nlp} algorithms and \gls{mds} to unsupervisedly create concpetual spaces. And finally, the whole concepts of vector-space models for words \cite{Mikolov2013} and texts \cite{Le2014,Devlin2019} is related in that represents the meaing of terms, phrases or documents by embedding them in a vector space. However these have arbitrary non-interpretable dimensions and are no metric spaces, thus having no relation of geometry and meaning for \eg betweeness or analogical reasoning, which will be eloborated in the next section.
 
+\todoparagraph{Keep Kohonen nets, Im mentioning that in discussion}
 \todoparagraph{BERT as best language model}
 
 

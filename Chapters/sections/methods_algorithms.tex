@@ -230,6 +230,9 @@ The reasoning behind that becomes especially clear when considering the root of 
 
 Okay, enough for the theory, lets talk about the implementation. \cite{Derrac2015} say that they use the Kappa-score, which is a metric that compares rankings. With that, they compare the rankings of the svm with the ranking how-important that word is. They took kappa because that is good at dealing with high imbalances in class sizes, which are definitely given.
 
+Yet another point where \cite{Derrac2015} are really low on information what parameters they used. Sklearn allows different weighting types\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.cohen_kappa_score.html\#sklearn.metrics.cohen_kappa_score}} 
+\todoparagraph{explain what that changes respectively}
+
 Unfortunately, they give hardly any details, and there are many different ways how to implement that. While \cite{Ager2018,Alshaikh2020} explicitly say that they are interested in the PPMI-scores\footnote{Though the uploaded code of \cite{Alshaikh2020} does not compare rankings but raw values}, from \cite{Derrac2015} it is not even clear if they take the count or the PPMI-score. As that is highly relevant, we try many different ways of this scoring and report them in the results. We also compare the overlaps of different kappa-scores to check if the choice is as imporant as we think it is. Which scores we used and how they are written here is listed in the implementation details: \autoref{tab:kappa_measures}.
 
 \textcite{Ager2018} compare the kappa-score to accuracy and NDCG and say accuracy works better than kappa.
@@ -242,11 +245,13 @@ So, alogorithm: For every candidate-term, take the quantifications from the doc-
 
 
 \subsubsection{Clustering the extracted candidates}
+\label{sec:algo:cluster}
 
 An analysis of \cite{Carmel2009} showed that a statistical method to extract features from clustered text corpora identified the labels of human annotators as one of the top five most important terms in only 15\% of cases, implying ``that human labels are not necessarily significant from a statistical perspective" \cite[139]{Carmel2009}
 %TODO: die eigentliche Methode (JSD) mehr erklären!!
 %(the JSD method for feature selection identifies human labels as “significant” (appearing in the top five most important terms) for only 15% of the categories. This result implies that human labels are not necessarily significant from a statistical perspective.z)
 
+\todoparagraph{I am picking up the point of affine spaces and the question of points vs vectors and if it makes sense to compare cosine similarity in the discussion!}
 
 \subsubsection{Re-Embedding the entities into the new space}
 

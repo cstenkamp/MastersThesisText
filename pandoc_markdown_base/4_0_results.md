@@ -4,6 +4,9 @@
 
 <!-- TODO: add parts of the "How to Evaluate" section back (currently comments in text)-->
 
+I would really like to say somthing about the robustness of this algorithm for multiple runs. For that I can either take my own runs which I don't know if they are okay or theirs across dimensions. (Maybe some 2d-plot looking like a confusion matrix showing the overlap of T^0.5 terms, also intersection over union, for different runs (and also for the 4 n-dims in orig desc15))
+!!!!!!!
+
 
 Erstmal sanity-check "mein algorithmus performt wie die paper, -> reasonable dass richtig", DANN analyse im hinblich auf die fachbereiche, and interpreting the results in discussion.
 

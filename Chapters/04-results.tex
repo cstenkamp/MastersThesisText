@@ -241,23 +241,25 @@ Having established that the implementation works correctly for the domain of pla
 	  5\,937 &
 	  334 &
 	  1\,008 &
-	  481 &
+	  481* &
 	  7 &
 	  2 &
-	  30* &
+	  30 &
 	  16
 	\end{tabular}%
 	}
 	\caption{\todoparagraph{Caption in comments below!} The fact that sum is a measure of robustness and should be LOW!}
 	\label{tab:generated_stats}
 \end{table}
+% Sum column is the set union - "T^0.5 könnte over all n-dims schlechtestenfalls 740 (400+200+100+40) werte haben, bestenfalls max(400,200,100,40)=400"
 % Note that movies and placetypes are from derracs data, not mine!
 % get_all()
 % Terms = len(all_terms)  (=old Feature vectors/vectors)
 % Kappa >= 0.1 = len(canditerms) == len(set(clusters.keys()) | set(flatten(clusters.values())))
 % Cluster-Elems % = np.percentile((clslen := np.array([len(i) for i in clusters.values()])), 10), np.percentile(clslen,90)
-% Greats overall = flattened cluster-keys per-dimension (the robustness thingy). Max 740 for derrac, max 706 for me cause no 20D but 3D
+% Greats overall = flattened cluster-keys per-dimension (the robustness thingy). Max 740 for derrac, max 706 for me cause no 20D but 3D (hence star)
 % my stuff is in dataset_info_table.ipynb
+
 
 The Siddata-dataset consists of more but shorter texts associated with an entity (visualized in \autoref{tab:corpussizes}), which is why there are much less words in the respective texts that exceed a given \gls{df} for the Siddata when compared to the originally used ones (visualized in \autoref{tab:summed_unique_words}). The algorithm uses a \gls{svm} to split entities that contain a phrase from those that do not, which performs bad for heavily imbalanced class sizes. \autoref{fig:candidate_histogram} shows the distribution of texts per candidate as histogram. It shows that 90\% of the 10\,060 candidates occur in 26 to 375 of the 11\,601 documents. The median number of documents is 49, meaning that for half of the keyphrases only 0.42\% of the samples are in the positive class.
 
