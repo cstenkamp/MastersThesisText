@@ -18,3 +18,13 @@
 
 \cite{Ager2018}:
 * In principle, we may exptect that accuracy and kappa are best suited for for binary features, as they rely on a hard separation in the space between objects that have the word in their BoW representation and those that do not, while NDCG should be better suited for gradual features. => BUT NO
+
+
+
+KAPPA-OVERLAPS CHRIS
+
+* bin2bin und f1 haben sehr hohe überschneidung (bin2bin ist aber strenger)
+* k_r2r+_min and k_dig+_2 have the exact same results
+* k_r2r+_min and k_c2r+ don't have too high of an overlap
+* ALL of k_r2r+_min/k_dig+_2 (16), k_c2r+ (9) are in b2b
+* ALL of the onlypos-statistics are completely in the respective kappa bin2bin

@@ -616,6 +616,42 @@ After preliminary analysis with the number of kappas, let us also look at the pe
 \todoparagraph{What do we see? We see that tfidf is besser than ppmi blablabla}
 \todoparagraph{Die alte table sieht viel besser aus} (hier druber)
 
+\begin{table}[H] 
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{rccccccccccccc}
+		\toprule
+		 & \textbf{accuracy} & \textbf{precision} & \textbf{recall} &  \textbf{f1} & \textbf{k_r2r_d} & \textbf{k_r2r_min} & \textbf{k_b2b} & \textbf{k_dig} & \textbf{k_c2r+} & \textbf{k_r2r+_d} & \textbf{k_r2r+_min} & \textbf{k_r2r+_max} & \textbf{k_dig+_2} \\
+		\midrule
+		accuracy (10060) & - & 0.166 & \bfseries 1.000 & 0.314 & 0.000 & 0.000 & 0.303 & 0.000 & 0.000 & 0.000 & 0.024 & 0.010 & 0.100 \\
+		precision (1668) & \bfseries 1.000 & - & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.001 & 0.998 & 0.000 & 0.002 & 0.000 & 0.084 & 0.051 & 0.126 \\
+		recall (10060) & \bfseries 1.000 & 0.166 & - & 0.314 & 0.000 & 0.000 & 0.303 & 0.000 & 0.000 & 0.000 & 0.024 & 0.010 & 0.100 \\
+		f1 (3155) & \bfseries 1.000 & 0.529 & \bfseries 1.000 & - & 0.000 & 0.001 & 0.967 & 0.000 & 0.001 & 0.000 & 0.067 & 0.032 & 0.140 \\
+		k_r2r_d (0) & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+		k_r2r_min (2) & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 &  \bfseries 1.000 & 0.000 & - & \bfseries 1.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+		k_b2b (3052) & \bfseries 1.000 & 0.546 & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.001 & - & 0.000 & 0.001 & 0.000 & 0.068 & 0.033 & 0.141 \\
+		k_dig (0) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+		k_c2r+ (4) & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.000 & \bfseries 1.000 & 0.000 & - & 0.000 & \bfseries 1.000 & \bfseries 1.000 & 0.250 \\
+		k_r2r+_d (0) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 \\
+		k_r2r+_min (239) & \bfseries 1.000 & 0.586 & \bfseries 1.000 & 0.887 & 0.000 & 0.000 & 0.874 & 0.000 & 0.017 & 0.000 & - & 0.406 & 0.452 \\
+		k_r2r+_max (103) & \bfseries 1.000 & 0.825 & \bfseries 1.000 & 0.981 & 0.000 & 0.000 & 0.981 & 0.000 & 0.039 & 0.000 & 0.942 & - & 0.437 \\
+		k_dig+_2 (1010) & \bfseries 1.000 & 0.208 & \bfseries 1.000 & 0.438 & 0.000 & 0.000 & 0.426 & 0.000 & 0.001 & 0.000 & 0.107 & 0.045 & - \\
+		\bottomrule
+	\end{tabular}
+		}
+\end{table}
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
 
 \includeMD{pandoc_generated_latex/4_0_results}
 

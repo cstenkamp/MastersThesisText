@@ -39,12 +39,6 @@
 ### Create Candidate SVM
 
 
-\begin{figure}[H]
-	\begin{center}
-	  \includegraphics[width=0.9\textwidth]{3dplot_hyperplane_and_orthogonal}
-	  \caption[Visual representation of the Hyperplane of an SVM splitting a dataset]{ \label{fig:3d_hyperplane_ortho} Visual representation of the Hyperplane of a Support-Vector-Machine splitting a dataset, as well as it's orthogonal and the orthogonal projection of a set of samples onto the plane. For an interactive version of this plot, visit  {\small \url{https://nbviewer.org/github/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/hyperplane_orthogonal_3d.ipynb?flush_cache}}}
-	\end{center}
-\end{figure}
 
 
 * To be able to look at the best one lateron, we save a bunch of metrics here, comparing the ranked-data, digitized data, you name it.

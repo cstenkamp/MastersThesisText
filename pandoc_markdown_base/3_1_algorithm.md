@@ -15,40 +15,10 @@
 
 
 
-### Creating Candidate SVMs and Filter Candidates
-
-
-"To classify, the authors then use linear classifiers such as \glspl{svm}. The advantage of these is that they create a linear hyperplane that best separates positive from negative entities. The orthogonal of that hyperplane is a vector, which can serve as feature axis: The distance of orthogonally projecting an entity onto this vector induces a ranking of entities. The further away an entities' embedding is from the decision surface on the positive side, the more this feature applies"
-    Schon vorher geschrieben, aber drauf zurückkomen dass das ja mit der logik einer svm übereinstimmt
-
-Concretely,  score to assess the performance, comparing not the bare performance but rather if the ranking by distance to decision hyperplane corresponds to ranking of number of occurences of that word.
-<!-- (Why is this reasonable? [Wie war das mit stopwords undso..? War das nicht in \cite{Lowe}]) -->
-For details why this makes sense it is referred to \cite{Lowe}.
-Each of the basic features is then associated with the normal vector of the separating hyperplane as feature directions. These are subsequently clustered (reducing the number of features), and the mean direction of that cluster is then one axis of the new coordinate basis of our new conceptual space.
-
-
-* ref fig:3d_hyperplane_ortho !!
-* neuer plot "wann ist ein induziertes ranking faithful pos/neg example" (grafische Darstellung von "if the ranking induced by the SVM corresponds to the count/PPMI, we see it as faithful measure", also ein beispiel wo's passt und ein Beispiel wo's nicht passt)
-* For every candidate-term, take the quantifications from the doc-term-matrix and binarize it, such that we have two classes: one with all descriptions in which the term does occur and one with those where it doesn't.
-* On that we then train a linear classifier such as an SVM. From that, we can then calculate binary classification-quality-metrics such as accuracy, precision, recall, f1 and bin2bin-kappa. 
-    * dass wir ja nur ne dulli-SVM ohne kernel trick machen, weil wir ja eben with-hyperplane-linear für den eigentlichen space sein wollen (kerneltrick ist ja "Projecten in nem anderen space, damit das was da linear ist bei uns nonlinear ist" und ich will linear sein)
-* Additionally, the resulting SVM has a hyperplane as decision surface. The distance of a point to it's orthogonal projection onto that hyperplane can be seen as proportional to how much this point is considered to be in the respective class of the SVM. One can use these distances to enduce a ranking how prototypicality. This ranking can be compared to other heuristics encoding it, such as the ranking induced by the per-term-frequencies of the terms for all documents, or it's PPMI or tf-idf representations.
-    * see my grains of salt!
-    * \cite{Derrac2015} call this "measure the faithfulness" ...
-    * Regarding Kappa-Weighting-Algorithm: (see later)
-* \cite{Alshaikh2020}: "The learned vectors will be referred to as feature directions to emphasize the fact that only the ordering induced by the dot product d_i · e matters"
-* One of \cite{Ager2018} \cite{Alshaikh2020} said that kappa sucks
-* \cite{Alshaikh2020} do Kappa on binary (-> see later)
-* Anhang mit Kappa-scores!!
-
-von \cite{Ager2018}:
-* We say Feature *Directions* and not feature *vectors* because they are supposed to rank, not measure degrees of similarity! it only tells us "this one has the feature to a higher degree"
-
-* "if this classifier is sufficiently accurate, it must mean that whether word w relates to object o (i.e. whether it is used in the description of o) is important enough to affect the semantic space representation of o. In such a case, it seems rea- sonable to assume that w describes an important feature for the given domain." !!!!
-
-
 
 ### Cluster 
+
+Each of the basic features is then associated with the normal vector of the separating hyperplane as feature directions. These are subsequently clustered (reducing the number of features), and the mean direction of that cluster is then one axis of the new coordinate basis of our new conceptual space.
 
 \cite{Ager2018}:
 * CLustering two-fold: esnure that the feature directions are different, and makes easier to interpret (clusters are more descriptive), and alleviates sparsity issues

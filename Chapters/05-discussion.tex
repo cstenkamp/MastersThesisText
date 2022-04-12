@@ -199,18 +199,47 @@ It seems reasonable that this assumption holds for the datasets originally consi
 \subsubsection{Requiring MDS}
 \label{sec:discuss_mds}
 
-\textcite{Derrac2015} explicitly state that MDS is best dimensionality reduction technique for their algorithm, as it is one of the only ones that results in a metric space. In their paper, they describe SVD (the mathematical algorithm behind \gls{lsa}) as popular technique to for dimensionality reduction, but further state that \q{SVD produces a representation in which entities correspond to vectors, which should be compared in terms of cosine similarity rather than Euclidean distance. [...] However, we can expect that spatial relations such as betweenness and parallelism [...] are not meaningful in the representations derived from SVD} \cite[14]{Derrac2015}. These relationships are required for semantic classifiers which mimic as analogical reasoning and betweeness-based reasoning, which they demonstrate to work for all of their domains. However.
+\textcite{Derrac2015} explicitly state that MDS is best dimensionality reduction technique for their algorithm, as it is one of the only ones that results in a metric space. In their paper, they describe SVD (the mathematical algorithm behind \gls{lsa}) as popular technique to for dimensionality reduction, but further state that \q{SVD produces a representation in which entities correspond to vectors, which should be compared in terms of cosine similarity rather than Euclidean distance. [...] However, we can expect that spatial relations such as betweenness and parallelism [...] are not meaningful in the representations derived from SVD} \cite[14]{Derrac2015}. These relationships are required for semantic classifiers which mimic as analogical reasoning and betweeness-based reasoning, which they demonstrate to work for all of their domains. However, this spaces does not have semantic directions. The \textit{final} feature-based representation of the entities is reached by ranking each entity for each of the feature directions and creating new vectors from these ranks. As they state themselves \cite[22]{Derrac2015}, the feature vectors are not orthogonal, not linearly independent and only of ordinal scale level, withhout meaningful distances. \textcite{Derrac2015} create semantic classifiers both for the \textit{intermediate} space with meaningful distances (geometric betweeness- or parallelism-based classifiers) and also for feature-based representation (a-fortiori-classifiers, see \autoref{sec:reasoning}). However, \textcite{Ager2018,Alshaikh2020} are only interested in the latter space and its resulting feature axes \todoparagraph{..and so are we. die anderen sind meh}. If that is the case however, it becomes irrelevant if the intermediate space is metric or not, which enables for other algorithms to be used in that step. As stated in \autoref{sec:dim_red}, LSA may be the better choice as it explicitly detects latent topics in descriptions instead of relying on words that are explicitly mentioned. \todoparagraph{However when using it you are constantly dealing with vecotrs. However that is good.} 
+
+\cite{Ager2018} and \cite{Alshaikh2020} both don't care for this interim space and only do stuff on the re-embedded one, however keep MDS! As far as I understand, they have no reason to do so. It seems like they read to use MDS in Gärdenfors' book and then forgot that their final re-embedding step makes that irreelevant. 
+
+So if for the explainable classifiers the relevant space is the one with semantic directions, geometric properties of the intermediate space are irrelevant. Instead one should try to generate a space that has both a useful metric \textit{and} interpretable directions! Depending on what the authors consider the end result of their algortihm, only one of these necessary requirements for conceptual spaces is fulfilled. So if their end-result is the intermediate space, that's nothing more than a normal \gls{vsm} with some interesting but long-term useless geometric properties. How about instead calculating a new orthonormal basis on the coordinate system? Enforcing orthogonality of the semantic directions as good as possible, and then using linear algebra for a change of basis for the entites, such that not only their ranks but their exact position for each semantic direction (axis) is relevant.  Maybe something like Principal Component analysis to decorrelate the directions. Yes that leads to vectors without a name, that's where LSA helps!
+
 
 
 \paragraph{Using classical techniques}
 
 The algorithm relied on a classical linguistic pipeline where a frequency matrix is generated from the \gls{bow}-representation of each entity. As discussed earlier, this comes with problems such as destroying the information about word order and conceptual similarity of words. Interestingly, for both follow-ups \cite{Ager2018,Alshaikh2020} using modern neural embeddings instead did not yield substantial improvements (see \autoref{tab:f1_placetypes_long}) (even though however \cite{Alshaikh2020} state in their paper that relying on modern embeddings such as \gls{bert} \cite{Devlin2019} may lead to better results). However, what the authors did was to just replace the \gls{vsm} generated classically in the first steps of the algorithm with a neural embedding, such as averaged GloVe embeddings \cite{pennington2014glove} of the words in the text. On that they ran the exact original algorithm of creating a frequency matrix from the \gls{bow} and using a linear classifier to get the direction. \todoparagraph{Wenn man schon embeddings nutzt dann soll man auch die eigenschaft dass die sinnvolle richtungen haben nutzen. Und wenn man dann shcon mit vektoren arbeitet dann kann man auch lsa undso nutzen. Und dann hat man auch nicht mehr das problem mit too-small-positive-class}
 
+\paragraph{Other things}
+\todo
+
+
+\paragraph{Robustness}
+\todo
+
+
+\subsection{Is that a Conceptual Space?}
+
+\paragraph{What assumptions are we dropping}
+\todo
+
+
+\paragraph{Points instead of Regions}
+\todo
+
+\subsection{Regarding their research practices}
+
+\paragraph{Robustness}
+\todo
+
+\paragraph{Ambiguity}
+\todo
 
 
 
 
-\includeMD{pandoc_generated_latex/5_3_evalderrac}
+% \includeMD{pandoc_generated_latex/5_3_evalderrac}
 
 
 
