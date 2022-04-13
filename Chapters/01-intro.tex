@@ -1,6 +1,6 @@
 \chapter{Introduction}
 
-In this thesis, we want to generate a conceptual space for the domain of university courses automatically in a data-driven way from their descriptions.
+In this thesis, we want to generate a conceptual space for the domain of university courses automatically in a data-driven way from their descriptions. \phantom{\mainalgos \cite{Derrac2015} \cite{Ager2018} \cite{Alshaikh2020}}
 
 \section{Reading Instructions}
 
@@ -16,7 +16,7 @@ Unfortunately, both this thesis's printed and PDF versions do not allow for inte
 
 \paragraph*{Regarding Terminology}
 
-This thesis uses the \q{we} as \emph{Pluralis Auctoris}, signifying objectivity in science. This does not mean that anyone but the author of this thesis contributed to it unless explicitly stated otherwise. Wherever an \textit{iff} is used, it means \textit{if and only if}.Many abbreviations, symbols, and technical terms will be used throughout the text. Those that cannot be expected to be known by the reader will be clearly defined - either in the section about \nameref{sec:required_algos} or the \nameref{sec:glossary} at the end of this thesis. The glossary discriminates between clearly defined \textit{Definitions} and \textit{Custom Terms}, where concepts often referred to in this text are comprehensively explained without any claim to their true definition. 
+This thesis uses the \q{we} as \emph{Pluralis Auctoris}, signifying objectivity in science. This does not mean that anyone but the author of this thesis contributed to it unless explicitly stated otherwise. Many abbreviations, symbols, and technical terms will be used throughout the text. Those that cannot be expected to be known by the reader will be clearly defined - either in the section about \nameref{sec:required_algos} or the \nameref{sec:glossary} at the end of this thesis. The glossary discriminates between clearly defined \textit{Definitions} and \textit{Custom Terms}, where concepts often referred to in this text are comprehensively explained without any claim to their true definition. 
 
 \section{Motivation}
 
@@ -27,7 +27,7 @@ This thesis explores a novel method to generate explainable recommendations for 
 \subsubsection*{Overwhelming amounts of resources}
 \label{sec:many_resources}
 
-The university landscape has changed drastically in recent years. In 1999, the \textit{Bologna declaration} was signed by the 29 (now 45) countries of the the \textit{European Higher Education Area}, reforming their education systems to allow for international compatibility. While before 1999 there were between 70 and 180 different elementary studies in Germany \cite{Schroder2015}, that number had risen to 2554 in 2003,\footnote{\url{https://www.che.de/download/im_blickpunkt_ausdifferenzierung_studiengaenge-pdf/?wpdmdl=10620&refresh=624af74f6f7921649080143}} had become more than 5000 in 2008 and currently (winter semester 2020/2021) peaks at 9168 unique courses of study.\footnote{\url{https://www.hrk.de/fileadmin/redaktion/hrk/02-Dokumente/02-03-Studium/02-03-01-Studium-Studienreform/HRK_Statistik_BA_MA_UEbrige_WiSe_2020_21_finale.pdf}, page 10 \label{fnote:degreenums}} The number of subjects in total has almost doubled in the past thirteen years, from 11\,265 in 2007 to 20\,359 in 2020.\footnoteref{fnote:degreenums} According to the German \textit{Centrum für Hochschulentwicklung}, nowadays only 18.7\% of degrees are \textit{classical}, \ie tailored to a specific subject such as \textit{Physics}, the rest fall unter the categories hybrid, interdisciplinary or topic-focused.\footnote{\url{https://www.che.de/wp-content/uploads/upload/Im_Blickpunkt_Die_Vielfalt_der_Studiengaenge_2017.pdf}}
+The university landscape has changed drastically in recent years. In 1999, the \textit{Bologna declaration} was signed by the 29 (now 45) countries of the \textit{European Higher Education Area}, reforming their education systems to allow for international compatibility. While before 1999 there were between 70 and 180 different elementary studies in Germany \cite{Schroder2015}, that number had risen to 2554 in 2003,\footnote{\url{https://www.che.de/download/im_blickpunkt_ausdifferenzierung_studiengaenge-pdf/?wpdmdl=10620&refresh=624af74f6f7921649080143}} had become more than 5000 in 2008 and currently (winter semester 2020/2021) peaks at 9168 unique courses of study.\footnote{\label{fnote:degreenums} \url{https://www.hrk.de/fileadmin/redaktion/hrk/02-Dokumente/02-03-Studium/02-03-01-Studium-Studienreform/HRK_Statistik_BA_MA_UEbrige_WiSe_2020_21_finale.pdf}, page 10} The number of subjects in total has almost doubled in the past thirteen years, from 11\,265 in 2007 to 20\,359 in 2020.\footnoteref{fnote:degreenums} According to the German \textit{Centrum für Hochschulentwicklung}, nowadays only 18.7\% of degrees are \textit{classical}, \ie tailored to a specific subject such as \textit{Physics}, the rest fall unter the categories hybrid, interdisciplinary or topic-focused.\footnote{\url{https://www.che.de/wp-content/uploads/upload/Im_Blickpunkt_Die_Vielfalt_der_Studiengaenge_2017.pdf}}
 
 Where before there was a rigid schedule of mandatory courses, modern courses of studies are becoming increasingly modular, allowing students to draw up individual educational plans composed of a wide selection of courses.\footnote{\url{https://www.pedocs.de/volltexte/2008/285/pdf/heft98.pdf}} Due to globalisation and the Introduction of the \emph{European Credit Transfer System}, the selection of courses for this may span any course at any European university.
 
@@ -79,7 +79,7 @@ In our search of literature with related goals, the approach of \cite{VISR12} st
     \centering
     \includegraphics[width=0.7\textwidth]{graphics/stolenfigures/movietuner.png}
     \caption[The Movie Tuner Interface from \cite{VISR12}]{
-        The Movie Tuner Interface from \textcite{VISR12}. Figure reprinted from \cite{Vig2010} (permission for non-commercial use granted). 
+        The Movie Tuner Interface from \textcite{VISR12}. Figure reprinted from \cite[Fig.3]{Vig2010} (permission for non-commercial use granted). 
         \label{fig:movietuner}}
 \end{figure}
 

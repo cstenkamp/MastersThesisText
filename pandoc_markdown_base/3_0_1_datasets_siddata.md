@@ -15,13 +15,6 @@ see \autoref{sec:discuss_datasetdiffs} \todoparagraph{the fact that we mitigate 
         * Often repeating 
             * Sprachkurse-Example: Fast alle haben die gleiche description (beispiel. `....len([i for i in descriptions._descriptions if "kompetenzen entwickelt befahigen akademischen berufstypischen" in i.processed_as_string()]) == 25`  ... weil es genau 25 exakt gleiche Beschreibungen gibt, für die Fremdsprachkurse. Deswegen ist up to jede 5-wort-kombination davon ein extracted keyword`) (und das obwohl sie verschiedene Namen haben! merging them doesn't make sense but they are almost equal)
 
-        * Sample Shitty descriptions: (all from data_exploration_Siddata2021)
-            * "BA/MA Hauptmodul"
-            * "Bestandteile:Vorlesung + Übung"
-            * "Dozent  Dr. Michael Wicke"
-            * "Siehe Gruppe A"
-            * "s. Modulbeschreibung"
-            * "Literatur:wird noch bekannt gegeben"
 
 
 

@@ -18,7 +18,7 @@ While similar studies could be done in the Siddata-\gls{dsa} \cite{Schurz2021} w
 
 % This thesis relies on both qualitative analysis and quantitative anlaysis in order to quantify the algorithm's performance. In the \textit{qualitative analysis}, exemplary partial results of the algorithm will be showcased that should intuitively show if what the algorithm does looks \textit{realistic} from a human perspective. 
 
-\section{Replicating the results for placetypes}
+\section{Replicating results for the placetypes-dataset}
 \label{sec:results_placetypes}
 
 To check if the implementation correctly produces the claimed results, it was applied to \gencite{Derrac2015} placetypes-dataset and its results compared to those of the literature. \autoref{fig:scatter_mds_placetypes} in \autoref{ap:more_plots} shows a two-dimensional \gls{tsne}-embedding of the original representations of \cite{Derrac2015}, colored by their Geonames-class. This figure indicates that only few of the entities are linked with a class and that the embeddings barely cluster when compared to their embeddings for the movies-dataset (displayed in \autoref{fig:scatter_mds_movies}). 
@@ -173,7 +173,7 @@ Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, 
 \section{Dataset differences} % Dataset comparisons (is our dataset worse?)
 \label{sec:results_datasetdiffs}
 
-Having established that the implementation works correctly for the domain of placetypes, we will now check if the quantity of some key characteristics produced as interim results of the algorithm differ across domains. As discussed in \autoref{sec:datasets}, our dataset differs in some properties from those of the literature. Because interim resuls may already indicate the performance of the algorithm, looking at them provides useful information that can be considered in the performance evalaution. \autoref{tab:generated_stuff} contrasts the number of feature vectors, candidate terms and cluster elements for the movies-, placetypes- and Siddata-dataset.
+Having established that the implementation works correctly for the domain of placetypes, we will now check if the quantity of some key characteristics produced as interim results of the algorithm differ across domains. As discussed in \autoref{sec:datasets}, our dataset differs in some properties from those of the literature. Because interim resuls may already indicate the performance of the algorithm, looking at them provides useful information that can be considered in the performance evalaution. \autoref{tab:generated_stats} contrasts the number of feature vectors, candidate terms and cluster elements for the movies-, placetypes- and Siddata-dataset.
 
 \todoparagraph{With that, we want to figure out if anything is possible and if so, the correct parameters like the candidate-min-term-count}
 % Please add the following required packages to your document preamble:
@@ -241,14 +241,14 @@ Having established that the implementation works correctly for the domain of pla
 	  5\,937 &
 	  334 &
 	  1\,008 &
-	  481* &
+	  481 &
 	  7 &
 	  2 &
 	  30 &
 	  16
 	\end{tabular}%
 	}
-	\caption{\todoparagraph{Caption in comments below!} The fact that sum is a measure of robustness and should be LOW!}
+	\caption[Distributions of some interim algorithm results]{Distributions of some interim algorithm results for the considered datasets. The first two rows are extracted from the results uploaded by \textcite{Derrac2015}, the last from this implementation.	First column are all unique \textit{Terms}, second column those considered \textbf{Candidates} by the algorithm. Columns under \textbf{Kappa-Scores} indicate the number of candidates that exceeded the respective threshold (where reported). \textbf{Sum} column is the size of the set union of the candidates exceeding the respective threshold over all dimensionalities, indicating robustness (optimally $\max(400,200,100,40)=400$, worst-case $400+200+100+40=740$). \textbf{Cluster sizes} refers the 10\textsuperscript and 90\textsuperscript percentile of the cardinality of all respectively extracted clusters.}
 	\label{tab:generated_stats}
 \end{table}
 % Sum column is the set union - "T^0.5 könnte over all n-dims schlechtestenfalls 740 (400+200+100+40) werte haben, bestenfalls max(400,200,100,40)=400"
@@ -272,8 +272,6 @@ The Siddata-dataset consists of more but shorter texts associated with an entity
 \end{figure}
 
 These results show that the algorithm produces much less candidates for our dataset compared with the originally considered ones. Because of that, the subsequent steps of the algorithm have a less rich representation to choose from, decreasing the chance to achieve good performances downstream.
-
-\todoparagraph{This doesnt look good but lets look at the results!}
 
 \section{Results for the Siddata-dataset}
 \label{sec:results_siddata}
@@ -358,7 +356,7 @@ Importantly however, the results reported here are those of a sepearate classifi
 		\textbf{F1}       & 0.072 ± 0.006 & 0.125 ± 0.014 & 0.199 ± 0.007 & 0.513 ± 0.020 \\
 		\bottomrule
 	\end{tabular}
-	\slcaption{Robust Scores of a well-performing configuration when classifying all faculties at once. The reported results are mean and standard deviation from the result of ten runs with 5-fold crossvalidation each.}
+	\caption[Robust Scores for classifying all faculties at once]{Robust Scores of a well-performing configuration for classifying all faculties at once. The reported results are mean and standard deviation from the result of ten runs with 5-fold crossvalidation each.}
 	\label{tab:robustresults_allatonce}
 \end{table}
 
@@ -429,7 +427,7 @@ For trees deeper than one level, the selected features from the second level on 
 		\textbf{Biologie/Chemie} & aktivierung studierend & brd & berucksichtigung finden & 85.22\% & 62.13\% \\
 		\textbf{Sozialwissenschaften} & arbeitsmarkt & regieren & multiple & 78.60\% & 67.63\% \\
 		\end{tabular}
-		\caption{Top 3 Directions to detect the respective faculty from the data. Note that it may also be the case that low values for the respective feature encode class membership.}
+		\slcaption{Top 3 directions to detect the respective faculty from the data. Note that it may also be the case that low values for the respective feature encode class membership.}
 		\label{tab:courses_top3}
 		}
 	}
@@ -805,38 +803,6 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}.\f
 % 	\label{tab:courses_top3_2}
 % \end{table}
 
-
-\removeMe{
-
-\begin{table}[]
-	\centering
-	\begin{tabular}{r|ll}
-	\textbf{Dimension}               & \textbf{reclassify} & \textbf{main}       \\ \midrule
-	\textbf{isawyoufirst}            & beach               & beach               \\
-	\textbf{workspace}               & office              &                     \\
-	\textbf{nutrition}               & restaurant          & deli                \\
-	\textbf{goalie}                  & stadium             & footballstadium     \\
-	\textbf{pumperbuilding}          & county              &                     \\
-	\textbf{starwoodhotels}          & hotelroom           & pool                \\
-	\textbf{interstate10}            & highway             & mongolianrestaurant \\
-	\textbf{urban}                   & interior            & movietheater        \\
-	\textbf{tuolumne}                & creek               & nationalforest      \\
-	\textbf{cabs}                    & downtown            &                     \\
-	\textbf{investment}              & school              & stockexchange       \\
-	\textbf{stripmall}               & downtown            & departmentstore     \\
-	\textbf{michiganstateuniversity} & school              & campus              \\
-	\textbf{ews}                     & railroad            & train               \\
-	\textbf{anchored}                & boat                & pier                \\
-	\textbf{a10}                     & airport             &                     \\
-	\textbf{wc2}                     & restaurant          & square              \\
-	\textbf{airbase}                 & airport             & airbase             \\
-	\textbf{joshuatreenationalpark}  & canyon              &                     \\
-	\textbf{clinker}                 & building            &                    
-	\end{tabular}
-	\caption{Highest-ranking descriptions per dimension for the reclassify-algorithm and the main-algorithm}
-	\label{tab:text_per_dim}
-\end{table}
-}
 
 \removeMe{
 

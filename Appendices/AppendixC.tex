@@ -171,6 +171,40 @@ All scores are reported with a train-test split of 70\% to 30\%. Note that the r
 Final columns are the results of this work. Column \textbf{Best-all} encodes a different for each row, specifically the one that yields the best result for the respective classification task, whereas column \textbf{Mean-Best} refers to the single configuration that achieved the best results on average. \todoparagraph{Last column is best when class weighting of per-class-classifiers is forbidden}
 \todoparagraph{Shortened a few column names, rename them in description}
 
+\section{Comparison of different Cluster-Center-Algorithms}
+
+\todoparagraph{We compared reclassify and main on placetypes. For both of the techniques, we show the entitiy that scored highest}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{r|ll}
+	\textbf{Dimension}               & \textbf{reclassify} & \textbf{main}       \\ \midrule
+	\textbf{isawyoufirst}            & beach               & beach               \\
+	\textbf{workspace}               & office              &                     \\
+	\textbf{nutrition}               & restaurant          & deli                \\
+	\textbf{goalie}                  & stadium             & footballstadium     \\
+	\textbf{pumperbuilding}          & county              &                     \\
+	\textbf{starwoodhotels}          & hotelroom           & pool                \\
+	\textbf{interstate10}            & highway             & mongolianrestaurant \\
+	\textbf{urban}                   & interior            & movietheater        \\
+	\textbf{tuolumne}                & creek               & nationalforest      \\
+	\textbf{cabs}                    & downtown            &                     \\
+	\textbf{investment}              & school              & stockexchange       \\
+	\textbf{stripmall}               & downtown            & departmentstore     \\
+	\textbf{michiganstateuniversity} & school              & campus              \\
+	\textbf{ews}                     & railroad            & train               \\
+	\textbf{anchored}                & boat                & pier                \\
+	\textbf{a10}                     & airport             &                     \\
+	\textbf{wc2}                     & restaurant          & square              \\
+	\textbf{airbase}                 & airport             & airbase             \\
+	\textbf{joshuatreenationalpark}  & canyon              &                     \\
+	\textbf{clinker}                 & building            &                    
+	\end{tabular}
+	\caption{Highest-ranking descriptions per dimension for the reclassify-algorithm and the main-algorithm}
+	\label{tab:text_per_dim}
+\end{table}
+
+
 
 
 \section{F1-scores per Faculty}
@@ -223,7 +257,7 @@ Final columns are the results of this work. Column \textbf{Best-all} encodes a d
 \begin{figure}[h]
 	\begin{center}
 	  \includegraphics[width=\textwidth]{graphics/dataset_new/accuracy_boxplots.pdf}
-	  \slcaption{\todoparagraph{blub}}
+	  \slcaption{Variability of Faculty classification Accuracy as Box-Plots.}
 	  \label{fig:faculty_boxplots}
 	\end{center}
 \end{figure}
@@ -231,19 +265,35 @@ Final columns are the results of this work. Column \textbf{Best-all} encodes a d
 
 \section{Dataset samples}
 
-\begin{table}[]
+\begin{table}[H]
 	\centering
 	\resizebox{\textwidth}{!}{%
-	\begin{tabular}{lll}
-	\textbf{Course Number} & \textbf{Course}                                                   &  \\
-	1.003                  & Spez. Soz. III: Wahlforschung (Politische Soziologie)             &  \\
-	1.003                  & Erziehung, Bildung und Sozialisation in der modernen Gesellschaft &  \\
-	1.003                  & Infoveranstaltung Master Soziologie                               &  \\
-	7.441202               & "Fremdheit" in der Kinder- und Jugendliteratur                    &  \\
-	7.441202               & „Mündlichkeit und Schriftlichkeit“                                &  \\
-						   &                                                                   & 
+	\begin{tabular}{ll}
+	\textbf{Course Number} & \textbf{Course}                                                     \\
+	1.003                  & Spez. Soz. III: Wahlforschung (Politische Soziologie)               \\
+	1.003                  & Erziehung, Bildung und Sozialisation in der modernen Gesellschaft   \\
+	1.003                  & Infoveranstaltung Master Soziologie                                 \\
+	7.441202               & "Fremdheit" in der Kinder- und Jugendliteratur                      \\
+	7.441202               & „Mündlichkeit und Schriftlichkeit“                         
 	\end{tabular}%
 	}
 	\caption{Sample Duplicates in the Siddata-dataset. \todoparagraph{Compare Notebook}  data_exploration_Siddata2021.ipynb }
 	\label{tab:sample_duplicates}
+\end{table}
+
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{lll}
+	\textbf{Course} & \textbf{Description}  \\
+		                   & BA/MA Hauptmodul \\
+		                   & Bestandteile:Vorlesung + Übung \\
+		                   & Dozent  Dr. Michael Wicke \\
+			               & Siehe Gruppe A \\
+			               & „s. Modulbeschreibung \\
+						   & Literatur:wird noch bekannt gegeben
+	\end{tabular}%
+	\caption{Low quality data samples \todoparagraph{(from data_exploration_Siddata2021)}}
+	\label{tab:sample_descriptions}
 \end{table}

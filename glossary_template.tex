@@ -18,6 +18,7 @@
   ]{glossaries}
 \usepackage{glossary-longbooktabs}
 \usepackage{tabu}
+\usepackage[xindy]{glossaries-extra}
 
 \setlength{\glsdescwidth}{11cm}
 \newlength{\glsnamewidth}
@@ -31,6 +32,7 @@
 \let\oldglossaryheader\glossaryheader
 \renewcommand{\glossaryheader}{\vspace{0.25cm}\oldglossaryheader}
 
+\glssetcategoryattribute{acronym}{indexonlyfirst}{true}
 % =========================================================
 
 \newglossary[tlg]{customs}{syi}{syg}{Custom Terms}

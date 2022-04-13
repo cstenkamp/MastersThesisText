@@ -1,7 +1,7 @@
 Let us finally go into detail about the main algorithm. The implementation of this thesis replicates and extends the algorithm proposed by \textcite{Derrac2015} with some novel contributions to deal with the given dataset. Further, some improvements from the works of \textcite{Ager2018} and \textcite{Alshaikh2020} are incorporated, who also replicated and improved the original algorithm and share Prof. Steven Schokaert as last author. According to our evaluation of the field, these two papers provide some useful improvements in several aspects, as they apply the algorithm to different datasets, suggest more straight-forward ways of evaluating their performance, and help in understanding important concepts. That we are focusing on only those three papers should by no means imply that they are the only ones that were considered and influcenced this implementation\footnote{See \autoref{sec:otherwork}}, however in contrast to the other pertinent literature these two works do not substantially divert from the algorithms core principles.
 % see \autoref{sec:otherwork} - \cite{VISR12} and their tag genome, the fact that the algorithm detailed here is basically only one step in \cite{Alshaikh2019}, Gärdenfors himself suggested that one may use self-organizing maps instead of classical AI/NLP algorithms.
 
-It is important to keep in mind that the algorithm is no rigid monolith but modularly consists of several components, such as \textit{dimensionality reduction}. Many of these components do not require specific algorithms, and \mainalgos also experiment with different components. The exact system for these components may be exchanged, and in the following these exchangeable algorithms are also referred to as hyperparameters. Note further that while this thesis mostly replicates the work of \textcite{Derrac2015}, the following will describe the algorthm as implemented here, which differs in some details from the original work. For the sake of overview, very specific implementation details will be left out in the following description, as however reproducibility is an important aim for us, implementation details are available in Appendix~\ref{AppendixB} and linked where relevant. \todoparagraph{Further, there is a table that compares the implementations here and in mainalgos, as well as another table what-configs-are-available where, the config-yamls and a section on what-other-things-could-one-have-done-hereandthere.}
+It is important to keep in mind that the algorithm is no rigid monolith but modularly consists of several components, such as \textit{dimensionality reduction}. Many of these components do not require specific algorithms, and \mainalgos also experiment with different components. The exact system for these components may be exchanged, and in the following these exchangeable algorithms are also referred to as hyperparameters. Note further that while this thesis mostly replicates the work of \textcite{Derrac2015}, the following will describe the algorithm as implemented here, which differs in some details from the original work. For the sake of overview, very specific implementation details will be left out in the following description, as however reproducibility is an important aim for us, implementation details are available in Appendix~\ref{AppendixB} and linked where relevant. \todoparagraph{Further, there is a table that compares the implementations here and in mainalgos, as well as another table what-configs-are-available where, the config-yamls and a section on what-other-things-could-one-have-done-hereandthere.}
 
 \subsection*{Core Algorithm}
 
@@ -43,18 +43,16 @@ Let us finally describe the steps how to create an interpretable vector-space fr
 	\item[\saveref{sec:extract_cands}{2.}] \textbf{Extract Candidate Feature} names from words/\glspl{ngram} of the corpus.
 	\item[\saveref{sec:generate_vectorspaces}{3.}] \textbf{Embed all Entities} into a fixed-dimensional vector space with demanded properties that captures the respective semantics.
 	\item[\saveref{sec:svm_filter_cands}{4.}] \textbf{Filter Candiate Features} by training a linear classifier for each candidate that seperates the vector representations of the entities that contain the term from those that do not. If a specified metric for this classifier is sufficiently high, assume that the candidate term captures a \textit{salient} feature - its direction is then characterized by the orthogonal of the classifier's separatrix.
-	\item[\saveref{sec:algo:cluster}{5.}] \textbf{Cluster the candidates} and calculate the feature direction for each cluster from its components.
+	\item[\saveref{sec:algo:cluster}{5.}] \textbf{Cluster/Merge the candidates} and calculate the feature direction for each cluster from its components, and (optionally) find a representative cluster-name.
 	\item[\saveref{sec:algo:postprocess}{6.}] (optionally) \textbf{Post-process} the candidate-clusters.
 	\item[\saveref{sec:algo:reembed}{7.}] \textbf{Re-embed the entities} into a space of semantic directions by calculating their distance to each of the feature direction separatrices.	
 \end{enumerate}
-
-\todoparagraph{The first part of the algo is to "create semantic spaces". This can be completely exchanged, as done by Ager}
 
 This techniques first embeds the collection of texts into a  vector space, to afterwards extract important features from this space using linear classifiers. The second step is an original idea of \cite{Derrac2015}, however creating vector space embeddings from texts is a very popular technique, used for many tasks in \gls{nlp} \cite{Mikolov:Regularities,Mikolov2013a,Guo,Lowe,Turney2010}. This implementation relies on classical creation of the \gls{vsm}, for which the general creation process was explained in \autoref{sec:vsm_construction}. The steps \textit{Build the Frequency Matrix}, \textit{Transform Raw Frequency Counts} and \textit{Smooth the Frequency Matrix} are squashed into the preprocessing and embedding of entities (steps 1 and 3).
 
  An explicit and simple implementation compliant with each step could be a simple word tokenization and count to generate a bag-of-words (step 1) where each sufficiently frequent word is used as candidate (step 2). A \gls{dissimmat} of the individual \gls{bow}-vectors is compressed using MDS (step 3). A \gls{svm} calculates the accuracy for each candidate (step 4), and k-means-clustering on the 500 top-scoring terms subsequently creates 100 clusters and averages their directions (step 5). The distance to each of the hyperplanes is calculate (step 6), yielding new space for the entities. The sequence of steps is also given as pseudocode in \autoref{ap:algorithm_pseudo}. 
  
- Again it should be stressed that many different components can be considered for each step and the distinction of steps is not rigid: Instead of creating a dissimilarity-matrix followed by dimensionality reduction, \cite{Ager2018,Alshaikh2020} use neural word or document embeddings.\footnote{see \autoref{sec:compared_algos}} Instead of extracing candidates from corpus tokens and training a linear classifier for each of them and use their orthogonal as direction, techniques such as LSA or LDA can be employed to find topic vectors directly. We will come back to these ideas when discussing future research opportunities (\autoref{sec:futurework}) by listing what other ways of fulfilling each respective step could have been considered.
+ Again it should be stressed that many different components can be considered for each step and the distinction of steps is not rigid: Instead of creating a dissimilarity-matrix followed by dimensionality reduction, \cite{Ager2018,Alshaikh2020} use neural word or document embeddings.\footnote{see \autoref{sec:embeddings}} Instead of extracing candidates from corpus tokens and training a linear classifier for each of them and use their orthogonal as direction, techniques such as LSA or LDA can be employed to find topic vectors directly. We will come back to these ideas when discussing future research opportunities (\autoref{sec:futurework}) by listing what other ways of fulfilling each respective step could have been considered.
 
 \autoref{fig:dependency_graph} shows an automatically exported dependency-graph, displaying the individual steps of the algorithm as done in the accompaning code, also showing where selected important parameters are first used. As explained in \autoref{sec:architecture}, the modularity of the provided architecture allows individual components to be exchanged as needed and run in parallel.
 
@@ -75,11 +73,9 @@ Before looking at the steps in turn, it should be noted that even the preprocess
 
 \label{sec:algo_preproc}
 
-\todoparagraph{Filter out all descriptions that don't have a minimal number of words}
-
 A common prerequisit for NLP algorithms is to pre-process the text corpus. The preprocessing itself consists of multiple independent components chained after each other. Which components are necessary also depends on the processed dataset - as for example the \emph{placetypes}-dataset consists of a collection of \textit{tags} instead of full sentences, tokenizing sentences or removing \glspl{stopword} becomes irrelevant. Other datasets may require additional cleaning or are already available in preprocessed form.
 
-\paragraph{Translation} As the main considered dataset of university-courses is highly multilingual (see \autoref{fig:sid_statistics}), one of the first questions that needs to be addressed is how entities of different langauges are handled. The algorithm consists of classical language processing algorithms such as comparing \gls{bow} representation of the entities, which means that the same text in two different languages may result in maximally different representations.\footnote{\todoparagraph{Ref the BoW-representation again!}} Because of this, before any other processing, the languages of each entity is checked, such that those of languages other than the demanded may be either translated, left out or used anyway. For details about the translation, it is referred to Appendix \ref{ap:translating}.\footnote{It should be noted that professional automatic translation is costly and thus not all texts are available in all languages.}
+\paragraph{Translation} As the main considered dataset of university-courses is highly multilingual (see \autoref{fig:sid_statistics}), one of the first questions that needs to be addressed is how entities of different langauges are handled. The algorithm consists of classical language processing algorithms such as comparing \gls{bow} representation of the entities, which means that the same text in two different languages may result in maximally different representations (see \autoref{sec:techniques:bow}). Because of this, before any other processing, the languages of each entity is checked, such that those of languages other than the demanded may be either translated, left out or used anyway. For details about the translation, it is referred to Appendix \ref{ap:translating}.\footnote{It should be noted that professional automatic translation is costly and thus not all texts are available in all languages.}
 
 \paragraph{Components} The following components are developed for the preprocessing, every one of which can be individually enabled or disabled:
 
@@ -103,7 +99,7 @@ A common prerequisit for NLP algorithms is to pre-process the text corpus. The p
 The above can be done either be done with proprietary code for all of these steps,\footnote{Mostly relying on the python package \emph{nltk} \cite{bird2009natural}} or using \codeother{sklearn}\footnote{\url{https://scikit-learn.org/stable/}}s \codeother{CountVectorizer} (which is faster, but less configurable), as \cite{Ager2018} claim to have done.
 
 \paragraph{On Stop-Words}
-Removing stop-words from the texts is useful because it makes the resulting frequency more compact and thus less computationally intensive, and stop-words generally have very discriminative power, meaning their occurence among the entities is arbitrary, just making hte emeddings more noisy (cf. \autoref{sec:word_count_techniques}). There are however reasons to not remove them: Two words that are considered stop-words may posess relevant semantic content (such as a \textsc{Fällt aus} in a course title), and also stopwordslists are often incomplete and of low quality \cite{nothman-etal-2018-stop}. For these reasons it is also possible to instead remove \glspl{ngram} that succeeded a certain frequency (\gls{df}).
+Removing stop-words from the texts is useful because it makes the resulting frequency more compact and thus less computationally intensive, and stop-words generally have very discriminative power, meaning their occurence among the entities is arbitrary, just making hte emeddings more noisy (cf. \autoref{sec:word_count_techniques}). There are however reasons to not remove them: Two words that are considered stop-words may posess relevant semantic content (such as a \textsc{Fällt aus} in a course title), and also stopwordslists are often incomplete and of low quality \cite{nothman-etal-2018-stop}. For these reasons it is also possible to instead remove \glspl{ngram} that exceeded a certain frequency (\gls{df}).
 
 \paragraph{On Lemmatization}
 The languages most prevalent in the considered datasets are considered \textit{agglomerative}, which means word stems are changed by the addition of affixes and suffixes. Consequently, the same word may be present in multiple different forms, which modelled as completely dissimilar vectors in the present \glspl{bow}-approach. Lemmatization is the process of mapping different forms of these words onto the same stem. Considering that the Siddata-dataset consists of far fewer words than the others, this has important implications. For the german descriptions, this implementation relies on the \textit{HanTa} lemmatizer. \todoparagraph{Correct citation for hanta!!} %https://textmining.wp.hs-hannover.de/Preprocessing.html#Lemmatisierung
@@ -147,8 +143,6 @@ Three main techniques are implemented to extract candidates from the text-corpus
 \end{description}
 
 Using KeyBERT results in candidate terms that are most appealing in qualitative inspection, however it is also most computational demanding, techniques and requires substantial amounts of post-processing for the resulting phrases. More details on KeyBERT and how it is incorporated into the algorithm are given in the implementation are given in Appendix~\ref{ap:details_keybert}
-
-\todoparagraph{Possible step after this is to bootstrap more candidates using LSI }
 
 Finally, a \gls{doctermmat} is created from the postprocessed candidates, containing the frequency for each candidate-phrase in each entity. The creation of this frequency matrix mirrors the process described in \autoref{sec:vsm_construction}, however only for the extracted words. After filtering this matrix to ensure that only candidates with a minimal \gls{df} or \textit{stf} are considered, a quantification is applied as described in \autoref{sec:word_count_techniques}. Available Quantifications include raw count, binarization\footnote{meaning all counts are either one or zero. According to \cite{Alshaikh2020} this improves performance \todoparagraph{Aber ich hab logische Probleme damit}}, tf-idf or PPMI.
 
@@ -244,31 +238,107 @@ So, alogorithm: For every candidate-term, take the quantifications from the doc-
 \cite{Ager2018}: \q{We say Feature *Directions* and not feature *vectors* because they are supposed to rank, not measure degrees of similarity! it only tells us "this one has the feature to a higher degree"}
 
 
+In the end we have a shitton of scores, and two threshold, yielding great ones and okay ones.
+Ehm, why didn't I just take the ndims*2 best ones instead of hard-thresholding??
+Well, I can say it was because:
 
-\subsubsection{Clustering the extracted candidates\arrowref{sec:algorithmsteps}}
+At this point we already have an estimate of how good the parameter-combination so far was: if not enough great-ones were extracted, we don't need to bother continuing.
+
+
+
+\includeMD{pandoc_generated_latex/3_1_algorithm}
+
+
+
+
+\subsubsection{Merging the extracted candidate-directions\arrowref{sec:algorithmsteps}}
 \label{sec:algo:cluster}
 
+The previous step yielded many \textit{basic feature directions} that are defined as direction of the orthogonal vector for the hyperplanes splitting each individual candidate \gls{ngram}. The performance-thresholds are set such that many more directions are generated than the demanded dimansionality of the final embedding, such that they must be clustered and merged.
 
-\todoparagraph{And recalculate their feature directions}
+This is done via the following substeps, each of whch will be closer eloaborated:
 
-\todoparagraph{THat I am using a better technique than Derrac here!}
+\begin{itemize}
+	\item Cluster good-performing candidates by their similarity
+	\item (optional) Remove uninformative features
+	\item Recalulate the direction of the cluster
+	\item (optional) Find a representative name for the cluster
+\end{itemize}
 
-An analysis of \cite{Carmel2009} showed that a statistical method to extract features from clustered text corpora identified the labels of human annotators as one of the top five most important terms in only 15\% of cases, implying ``that human labels are not necessarily significant from a statistical perspective" \cite[139]{Carmel2009}
-%TODO: die eigentliche Methode (JSD) mehr erklären!!
-%(the JSD method for feature selection identifies human labels as “significant” (appearing in the top five most important terms) for only 15% of the categories. This result implies that human labels are not necessarily significant from a statistical perspective.z)
+\paragraph{Clustering the candidates}
 
-\todoparagraph{I am picking up the point of affine spaces and the question of points vs vectors and if it makes sense to compare cosine similarity in the discussion!}
+Clustering refers to an unsupervised algorithm that groups items based on some notion of similarity. In our case the assumption is that semantically similar concepts have \textit{close} vectors, which is given due to the \gls{bow}-hypothesis that states that the underlying structure of our dataset is expressed by the usage of related words ((\autoref{sec:bow_hypothesis}), \ref{sec:lsi}).\footnote{In case of the Siddata-dataset, it may mean that in courses that contain the word \textit{computer} have a high chance of also containing \textit{program}.} As these vectors in principle only encode a direction, their similarity can be calculated by their \gls{cos}.
+
+The clustering should reduce the number of features and also ensure that the resulting directions are different enough. Note that unlike \eg in Principal Component Analysis (PCA), the suggested here techniques do not enforce orthogonality, such that the resulting directions may remain linearly dependent to a certain degree. As in the final embedding only the projection onto those directions is relevant, it must be ensured that enough of the data's original variation is covered by these directions. To ensure that, we follow \gencite{Derrac2015} suggestion to allow for redundancy by extracting twice as many directions than the original \gls{vsm} dimensionality. 
+
+This implementation implements the original clustering-method of \cite{Derrac2015}:
+
+First, we consider the best \textit{basic features} as \textit{main directions}. For that, we select one of the scores calculated in the previous step and select all candidates that exceed a threshold (\cite{Derrac2015} suggest $\kappa \geq 0.5$).
+To get the directions, we follow the following algoritm:
+
+\vspace{-1ex}
+\begingroup
+\verbatimfont{\footnotesize}%
+\begin{verbatim}
+	greats = filter(candidates, 0.5)
+	directions = greats.argmax()
+	for nterm in range(ndims*2):
+	  greats = set(greats)-set(directions)
+	  distances = {cand: min(comparer(cand, compareto) 
+	                for compareto in directions) 
+	                  for cand in greats}
+		directions.append(compares.argmax)
+\end{verbatim}
+\endgroup
+\vspace{-1ex}
+
+This starts with the best candidate and then iteratively adds the one from the set of top-scoring candidates that most dissimilar to the set of final directions. The result is a set of $ndims*2$ main directions, which are henceforth considered the Cluster centers. Subsequently, all leftover terms from $T^{0.5}$ as well as all terms from $T^{0.5}$ are added to the respective cluster whose direction they are most similar to. 
+
+\textcite{Derrac2015} used the \gls{cos} distance to measure the respective similarities. This may lead to unexpected situations (discussed in \autoref{sec:discuss_points}). As alternative similarity metric that does not rely on the angle between their vectors, \cite{Alshaikh2019} suggest to use the overlap of the positive-samples of two features as similarity. This was however not yet implemented in this thesis.
+
+Alternatively to the described algorithm, is is also possible to use the popular \textit{k-means} algorithm for clustering, as done by \cite{Ager2018}. We do not present results for this approach here however, as it lead to a substantial increase in runtime, without affecting performance much. In the development we also noticed that many clusters contain a lot of irrelevant terms. To alleviate this, we experimented with different techniques, for example setting minimal similarity thershold that must be given for a term to be added to a cluster, however so far no formal evaluation to test how this affects performance was performed.
+
+\removeMe{
+\todoparagraph{Doesn't one bad word in the cluster destroy it?} No. It *IS* okay if common words (like "course") are in clusters, it is NOT the case that as soon as the word occurs once it is said to have a certain property. ("Wenn cluster-threshold zu groß, kommt “A1” in ein cluster mit “Course” and everything is over" is FALSE). However it IS not too good -> A cluster with many words like "course" in it has a high degree of randomness (there is no information gain by such words, it occurs random across courses, a cluster of courses that mention that they are courses is useless) The word occurs randomly, if a course is assumed to have a certain property because of that it's certainly wrong
+}
+
+\paragraph{Find Cluster-Direction}
+
+So far, we have a set of clustered canidates terms, each of which has an individual direction. The final \textit{feature-direction} must subsequently be found from the elements of the cluster. For that, \cite{Derrac2015} and \cite{Ager2018} define the cluster centroids as the average of all (normalized) vectors per cluster. In our experiments, however, we noticed that the final direction tends to be too much affected by irrelevant cluster-elements. Because of this, we experimented with other techniques to determine the cluster direction. Two other considered methods include to just consider the direction of the cluster-center, or to weight the influcence of each cluster-element by their kappa-score.
+
+The best performaning method however was the \textit{reclassify}-algorithm, which (similar to \cite{Alshaikh2020}) finds the cluster-direction by training a new classifier that splits those \glspl{entity} that contain \textit{any of the elements} from the cluster from those that do not, analogous to the previous step (except that it requires to generate and quantify a new frequency matrix from the sums of the individual counts). Doing this however often leads to the opposite problem than the previous step, namely that for many clusters there are almost no entities that do not contain at least one of the cluster elements. To counter this, we instead trained a classifier to split the 30\% of entities with the highest \glspl{quant} from the 30\% of entities with the lowest \glspl{quant}. A comparison of this algorithm with the method of \cite{Derrac2015} is given in the Appendix as \autoref{tab:text_per_dim}. As \cite{Alshaikh2020} already performed formal experiments with this that have shown its superior performance, all generated results of this work rely on this algorithm. 
+
+\paragraph{Bad Clusters}
+
+After these steps, we finally have the vectors that correspond to semantic directions. As there however still be clusters of uniformative terms, \textcite{Alshaikh2020} have an additional step to remove uninformative cluster. As this however bases on another clustering algorithm used by the author (namely \textit{affinity propagation}) which does not allow to specify the number of clusters, it was not implemented in the scope of this thesis.
+
+\paragraph{Find a representative Cluster Name}
+
+An important advantage of the clustering process is that it makes the extracted directions more \textit{descriptive} due to the fact that they are described by several phrases instead of only one. However, it may be helpful for an attractive user interface to find the single \textit{best} description of the cluster direction by its element.
+
+An analysis of \cite{Carmel2009} showed that a statistical method to extract features from clustered text corpora identified the labels of human annotators as one of the top five most important terms in only 15\% of cases, implying \q{that human labels are not necessarily significant from a statistical perspective} \cite[139]{Carmel2009}. In their paper, they suggest several methods to find one representative name for the cluster. 
+
+\cite{Derrac2015} and its follow-ups \cite{Ager2018,Alshaikh2020} did care about such methods and instead use either the name of the cluster center as its description or the cluster center plus two other sample elements. This work experimented with several techniques to get a more representative direction name. One of these techniques used the KeyBERT-algorithm (see \autoref{ap:details_keybert}) to find the term that is most similar to the set of terms making up the cluster. We also experimented with a method that embeds the cluster terms using \gls{word2vec} and returns  the word behind the vector that is closest to their average (which is not neccessarily part of the original set of words). Similarly to \gls{lsa} (\autoref{sec:lsi}), it is also possible to consider the entity whose \textit{pseudo-document} embeddings is closest in direction to the cluster direction.
+
+S so far the best technique to find a cluster-name was not evaluated yet. All considered methods (of \mainalgos and here) that formally evaluate the corresponding feature-directions work independently of the actual cluster name. This is unfortunate, because \textit{subjectively}, the name of the respective directions is very important for the usability of any recommendation engine based on this work. Especially this subjectivity however indicates that the only way to evaluate the cluster-names is with study of human subjects.
+
+\todoparagraph{Kappa in den Glossary!!}
 
 \subsubsection{Postprocessing the Feature-Directions\arrowref{sec:algorithmsteps}}
 \label{sec:algo:postprocess}
 
-This step was the main contribution of the work of \textcite{Ager2018}. As has been shown that it increases the algorithm performance only slightly while adding a substantial amount of work, it was not implemented in the scope of this thesis. The Modification is however described in \autoref{sec:ager}
+This step was the main contribution of the work of \textcite{Ager2018}. As has been shown that it increases the algorithm performance only slightly while adding a substantial amount of work, it was not implemented in the scope of this thesis. The Modification is described in \autoref{sec:ager}, its gist is to use the rank for quantified summed count of any cluster-word as weak supervision signal to distort the embeddings such that their feature directions better correspond to this value.
 
 \subsubsection{Re-Embedding the entities into the new space\arrowref{sec:algorithmsteps}}
 \label{sec:algo:reembed}
 
+In the end we re-embed the entities into a space where each of the vector components is a semantic directions and the value are the respective \gls{rank}ings. That's what we then finally call its \textbf{feature-based representation} 
+
+NOT a change of basis, only ordinal scale level bc rank, no linear independence.
+
 from Alshaikh2020: "The learned vectors will be referred to as feature directions to emphasize the fact that only the ordering induced by the dot product d_i · e matters"
 
+Maybe better idea is maths?
 
 
 
@@ -293,8 +363,6 @@ Generally this is a great idea. Among others the explicit usage of all cluster-w
 
 \removeMe{
 \subsection{Concluding stuff for algo}
-
-\includeMD{pandoc_generated_latex/3_1_algorithm}
 
 \subsection{Features and differences to original algorithm}
 

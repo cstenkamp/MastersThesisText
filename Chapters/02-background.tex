@@ -1,5 +1,24 @@
 \chapter{Background}
 
+This chapter will introduce all necessary concepts relevant for the methodology implemented in this work. For that, it will explain some important concepts for software and replication and introduce the SIDDATA-project that revolves around the domain educational resources. After that, Conceptual Spaces, the algorithm to generate them unsupervisedly and how reasoning using them can be performed is introduced. Finally, the work is put into the context of computational \gls{nlp} with an overview of related research as well as the theoretical foundation of the algorithm and its components.
+
+% ===Kathis suggestions===
+% Reproducibility Section) 
+% 	Iso-Teil kann ich sogar kürzen (einfach nach den 8 dingen abbrechen)
+% CS Section)
+% Anfang)
+% 	Es wird ebennicht deutlich dass es diese dichotomie zwischen classical symbolic/logisch (explainable aber manuell) und neural gibt, und diese CS halt dazwischen.
+% 	Das kann ich aber wunderbar einbringen - VOR den 3 Leveln, also am Anfang vom "THeory of CS", den ersten absatz ausbauen. WARUM braucht es diese brücke
+% Defintion)
+% 	Irritierend dass ich anfang mit erst beispiel dann definition hab. Beispiel vor corolarries 
+% DataDrivenGeneration)
+% 	Einleitungssatz. Wir wissen was CS sind, jetzt scaheun wir uns die datadriven generation an.
+% ExplainableReasoning
+% 	Die überleitung muss halt her.
+% 	"THe goal of this thesis is to provide explainable [...]" ist EGAL
+% 	Instead: "Wir haben geschaut was sie sind, wir haben geschaut wie sie generiert werden, jetzt scahuen wir wie das zu reasoning related"
+
+
 % SIDDATA (mit Educational Resources dabei, muss kein sub-chapter sein)
 % Conceptual Spaces (What is this?)
 % Required techniques and algorithms
@@ -11,7 +30,7 @@ Having established the goals of replicating an algorithm for a new domain, let u
 \subsection{Replication and Reproducibility}
 \label{sec:howtoreplicate}
 
-\todoparagraph{this field of work seems constrained to a small community, without any alternative implementations or substantial improvements from outside of it.}
+% \todoparagraph{this field of work seems constrained to a small community, without any alternative implementations or substantial improvements from outside of it.}
 
 The workflow of data science generally follows the same pattern: A paper states there is some problem \textit{X}, claims that their algorithm \textit{Y} may be good at problem \textit{X}, creates datasets \textit{Z} for \textit{X}, and then tests the code on these datasets. This test generally compares \textit{X} to alternative approaches from the literature and explores if any regularities in the algorithm \textit{Y} can be found. This may yield future research opportunities, showing what other domains the algorithm may work for as well.
 
@@ -100,41 +119,30 @@ The dataset used here was collected through the Siddata platform, which collecte
 
 % This section will introduce conceptual spaces as tool of choice as well as how to generate them and how reasoning on them works, as well as some other related work to what's done in this thesis.
 
-This section will introduce conceptual spaces as tool of choice as well as how to generate them and how reasoning on them works, as well as some other related work to what's done in this thesis.
+This section will introduce \glspl{cs} as tool of choice and introduces the replicated algorithm to generate them unsupervisedly. Standing in between classical symbolic artificial intelligence and modern black-box techniques, \gls{cs} can serve as a bridge that allow to model commonsense reasoning geometrically. Some examples for that will be elucidated later in this section.
+%reasoning on (?) them works. Afterwards, it briefly explores other related work, such as... 
+%This section will introduce conceptual spaces as tool of choice as well as how to generate them and how reasoning on them works, as well as some other related work to what's done in this thesis.
 
 \subsection*{Theory of Conceptual Spaces}
 
-The theory of Conceptual Spaces was first introduced by Peter Gärdenfors in his 2000 book \citetitle{Gardenfors2000a} \cite{Gardenfors2000a} both as a theoretical model of human concept formation, but also as format for knowledge representation in artificial systems \cite{Gardenfors2004}. 
+The theory of Conceptual Spaces was first introduced by Peter Gärdenfors in his 2000 book \citetitle{Gardenfors2000a} \cite{Gardenfors2000a} both as a theoretical model of human concept formation and a format for knowledge representation in artificial systems \cite{Gardenfors2004}. 
 
-On the one hand, \glspl{cs} should serve as bridge between symbolistic and connectionistic approaches to knowledge representation. By having CS as layer of reasoning and representation in between both, classical symbols would be grounded in noisy high-dimensional data, allowing for high-level syllogistic reasoning from real-world data. 
+The recent years have seen a successively increase of the dichotomy between \textbf{symbolistic} and \textbf{connectionistic} approaches to knowledge representation. The former explicitly model knowledge representation and reasoning through \eg logical calculi, sets of rules or semantic knowledge bases. This allows for explicit and explainable re-creation of high-level, abstract human reasoning such as deduction (\textit{syllogisms}), but requires explicit manual creation of abstract knowledge bases such as ontologies, lexicons and sets of rules. The other side consists of modern \gls{ml} techniques such as \glspl{ann} and other data science algorithms. Many of these techniques can work with noisy, high-dimensional data, such as direct visual input. On real world datasets, they generally outperform classical algorithms with high margins whilst only requiring some \textit{target} label. However, they are \textit{black boxes}, meaning that their inner workings cannot be inspected or manually tweaked.\footnote{And also blindly replicate biases in the data, see \eg \url{https://hbr.org/2019/10/what-do-we-do-about-the-biases-in-ai} (accessed at \date{2022}{04}{03})}. \glspl{cs} can serve as a bridge between symbolistic and connectionistic approaches to knowledge representation. By having \glspl{cs} as a layer of reasoning and representation in between both, classical knowledge base \textit{symbols} would be grounded in noisy high-dimensional data, allowing for high-level syllogistic reasoning from real-world data.
 
-If a computer has a knowledge base that says $\exists x.Red(x) \& Apple(x)$, does it know what "red" and "apple" mean? We need to ground symbols, to express meaning!
+% If a computer has a knowledge base that says $\exists x.Red(x) \& Apple(x)$, does it know what "red" and "apple" mean? We need to ground symbols, to express meaning!
 
 According to Gärdenfors, concept-representation in humans is represented by three levels of accounting for observations: The symbolic level, the conceptual level and the subconceptual level \cite[204]{Gardenfors2000a}:
 \begin{description}
-    \item[Subconceptual] Observations are the firing of the neurons of our sensory receptors, without any conceptualization.  (connectionism, \glspl{ann})
-    \item[Conceptual] Observations are defined not as token of a symbol, but as vector in a conceptual space of some quality  (prototype theory, linear algebra)
-    \item[Symbolic] represents observations by describing them in some specified language (formal logic, syllogisms, symbolism, classical AI, logical positivism)
+    \item[Subconceptual] sees observations are the firing of the neurons of our sensory receptors, without any conceptualization (\textit{connectionism, black-box algorithms, ANNs, ML}).
+    \item[Conceptual,] where observations are defined not as token of a symbol, but as vector in a metric space of some quality (\textit{prototype theory, linear algebra}).
+    \item[Symbolic] represents observations by describing them in some specified language (\textit{formal logic, syllogisms, symbolism, classical AI, logical positivism}).
 \end{description}
 
-These levels are not in conflict, but different models of the same phenonemon, each covering distinct important aspects and each allowing a set of algorithms. The process of inducing a general rule from few samples for example is represented as pattern-matching on the firing patterns in the subconceptual level, which translates to the conceptual level as geometric reasoning through regions and direction. As another example, semantic relations such as hyponyms from the symbolic level are modelled as geometric sub-regions on the conceptual level. So on the one hand, automatically generated conceptual spaces could allow for high-level syllogistic reasoning on real-world data without the need to manually add countless facts. However it also provides a new way to model reasoning and inference for both other levels through geometric relations, providing explanations for the noisy subconceptual level and computationally less complex algorithms for the symbolic level. The validity of the statement \textit{a robin is a bird} is given because robins are gemmetrically a subregion of the region of birds.
+These levels are not in conflict, but different models of the same phenonemon, each covering distinct important aspects and each allowing a set of reasoning methods. The process of inducing a general rule from, few samples, for example is represented as pattern-matching on the firing patterns in the subconceptual level, which translates to the conceptual level as geometric reasoning through regions and direction. As another example, semantic relations such as hyponyms from the symbolic level are modelled as geometric sub-regions on the conceptual level.\footnote{For example, the validity of the statement \textit{a robin is a bird} is given because the concept \textit{robin} is geometrically a subregion of the concept \textit{bird}.} Automatically generated conceptual spaces could allow to mimic high-level syllogistic reasoning from real-world data without the need to manually add countless facts. Additionally, it provides a new way to model reasoning and inference for both other levels through geometric relations, providing explanations for the noisy subconceptual level and computationally less complex algorithms for the symbolic level. 
 
-Summarized, rregardless of the theory's aspiration to accurately model human conceptualization and reasoning, it provides a useful knowledge representation method and tool that allows to model kinds of human reasoning with novel algorithms that cannot be done with both other well-researched methods \cite[Sec.~6.7]{Gardenfors2000a}. Furthermore it can serve as representational format to express semantic relations for the semantic web \cite{Gardenfors2004} with a richer structure than classical ontologies (\eg RDS, OWL or WordNet) and thus allowing more than deductive reasoning and based on strict is-a relationships and explicit, unambiguous, universal truths.
+Summarized, regardless of the theory's aspiration to accurately model human conceptualization and reasoning, it provides a useful knowledge representation method and tool that allows to model kinds of human reasoning with novel algorithms that cannot be done with both other well-researched methods \cite[Sec.~6.7]{Gardenfors2000a}. Furthermore, it can serve as a representational format to express semantic relations for the semantic web \cite{Gardenfors2004} with a richer structure than classical ontologies (\eg RDS, OWL or WordNet) and thus allows more than deductive reasoning based on strict \textit{is-a} relationships and explicit, unambiguous, universal truths.
 
 \subsection*{Definition}
-
-In conceptual spaces, concepts are represented as convex regions in domain-specific, human-interpretable spaces. \autoref{fig:apple_cs} represents a sample space for the concept of \textit{apple}, such that every instance of an apple is thus a vector that lies inside the region of the concept. This allows for high-level reasoning: The question \textit{\q{Will an apple fit into my bag?}} can be answered by checking if the \textit{size} dimension of the region is smaller than the dimension of the bag.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth]{graphics/stolenfigures/apple_space.png}
-	\caption[Inner form of a Conceptual Space for an apple]{
-		Inner form of a Conceptual Space for an apple, displayed as product of different properties, which are convex regions in different quality domain spaces. Adapted from \cite{Fiorini2013}.
-	}
-    \label{fig:apple_cs}
-\end{figure}
-
-
 
 \fbox{\begin{minipage}{40em}
     \newtheorem*{theorem*}{Conceptual Space}
@@ -145,44 +153,54 @@ In conceptual spaces, concepts are represented as convex regions in domain-speci
 \end{minipage}}
 \label{sec:csdefinition}
 
+In conceptual spaces, concepts are represented as convex regions in domain-specific, human-interpretable spaces. \autoref{fig:apple_cs} represents a sample space for the concept of \textit{apple}, such that every instance of an apple is thus a vector that lies inside the region of the concept. This allows for high-level reasoning: The question \textit{\q{Will an apple fit into my bag?}} can be answered by checking if the \textit{size} dimension of the region is smaller than the dimension of the bag.
 
-Formally defined, a conceputal spaces needs the following definitions:
+Formally defined, a conceptual space requires the following definitions:
 \begin{description}
-    \item[Quality Dimensions] are atomic units of perception. Some of these are necessarily linked (such as hue and saturation), making them \textit{integral}, whereas others (\eg. temperature and weight) are \textit{seperable}. Typically each dimension corresponds to a primitive cognitive feature.
+    \item[Quality Dimensions] are atomic units of perception. Some of these are necessarily linked (such as hue and saturation), making them \textit{integral}, whereas others (\eg temperature and weight) are \textit{seperable}. Typically, each dimension corresponds to a primitive cognitive feature.
     \item[Domain] A set of integral dimensions that are seperable from others, like the \textit{color} domain made up from hue, saturation and value. Conceptual spaces are grouped into several low-dimensional subspaces according to these domains.
     \item[Similarity] is defined as inverse distance, which requries a metric. A distinction can be made for the aggregation of integral and separable dimensions. 
-    \item[Betweenness] An object Y is between two other objects X and Z iff d(x,y) + d(y,z) = d(x,z).
+    \item[Betweenness] An object Y is between two other objects X and Z if and only if d(x,y) + d(y,z) = d(x,z).
     \item[Natural Properties (\textit{criterion P} \cite{Gardenfors2000a})] are defined as convex regions of a domain in a conceptual space. A convex region has the property that an interpolation between any two points in this region is necessarily also in this region. 
     \item[Concepts (\textit{criterion C} \cite{Gardenfors2000a})] are combinations of (potentially correlated) properties. \q{A concept is represented as a set of convex regions in a number of
     domains together with a prominence assignment to the domains and information about how the regions in different domains are correlated} \cite[8]{Gardenfors2004}
     \item[Entities] are specific instances (tokens) of a concept, encoded as points. 
-    \item[Context] can be modelled in a CS by weighting certain dimensions higher than others, influencing distance and how concepts are fromed from properties.
+    \item[Context] can be modelled in a CS by weighting certain dimensions higher than others, influencing distance and how concepts are formed from properties.
 \end{description}
 
-Some corollaries: 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{graphics/stolenfigures/apple_space.png}
+	\caption[Inner form of a Conceptual Space for an apple]{
+		Inner form of a Conceptual Space for an apple, displayed as product of different properties, which are convex regions in different quality domain spaces. Adapted from \cite{Fiorini2013}.
+	}
+    \label{fig:apple_cs}
+\end{figure}
+
+Let us explore some corollaries of the previous definition:
 
 \begin{itemize}
-    \item Each conceptual space contains only items for which the space's dimensions make sense, so you wouldn't find kings in a conceptual space of cabbages.
-    \item Concepts roughly correspond to (non-proper) nouns, adjectives to properties and proper nouns (the name of a particular person, place, organization, or thing to points.)
+    \item Each conceptual space contains only items for which the space's dimensions make sense, so you would not find kings in a conceptual space of cabbages.
+    \item \textit{Concepts} roughly correspond to (non-proper) nouns. \textit{Properties} generally encode Adjectives, and \textit{points} refer to proper nouns (the name of \eg a particular person, place, organization, or thing).
     \item From the criterion of convexity for natural properties and the definition of betweenness, it follows that if an object Y is between X and Z, and both X and Z have a property, Y must also have this property.
-    \item Relative properties can be defined as regions on a relative scale - the property "\textit{tall}" acccordingly can be defined to be true iff the entity is in the top 33\% \wrt the size-property of all relevant objects.
+    \item Relative properties can be defined as regions on a relative scale - the property "\textit{tall}" can accordingly be defined to be true if the entity is in the top 33\% with respect to the size-property of all relevant objects.
 \end{itemize}
 
 % \includeMD{pandoc_generated_latex/2_2_conceptualspaces}
-\todoparagraph{look if I want to take a paragraph from 22conceptualspacesMD}
 
 \subsection{Data-Driven Generation of Conceptual Spaces}
 \label{sec:generate_cs}
 
 So far, the area of application for Conceptual Spaces has been small. Most of the current works that rely on conceptual spaces create custom \textit{phenonemal} spaces for semantic domains, where quality dimensions are chosen by the researchers (eg \cite{Schockaert2011}). 
 
-The previous section has shown that \glspl{cs} can serve as a framework allowing to allow for interpretable classifiers that allow for explainable recommendation based on geometric reasoning, replacing the need to manually create knowledge bases. If however now one needs to manually create these spaces, not much was gained. The work of \cite{Derrac2015} is a technique that alllows to automatically generate spaces from pairwise dissimilarites of a corpus of texts in a data-driven fashion. In his book, Gärdenfors provided several suggestions how one could build spaces from high-dimensional input neurons. One of these was to use the \gls{mds} algorithm for that creates a euclidian space from pairwise distance matrices, such as an individual's assessement of similarities. The work of \cite{Derrac2015} basically follows this suggestion using classical AI algorithms. % and \cite{Ager2018} and \cite{Alshaikh2020} provided some useful additions for it without changing the main logic. So, we'll work with their algorithm, also only making small improvemenents. So the two main areas of work are implementing the original algorithm, and changing small details of it where most appropriate such that it works well for the domain we're interested in.
+The previous section has shown that \glspl{cs} can serve as a framework for interpretable classifier that allow for explainable recommendation based on geometric reasoning, replacing the need to manually create knowledge bases. If, however, one needs to manually create these spaces, not much was gained. The work of \cite{Derrac2015} is a technique that allows to automatically generate spaces from pairwise dissimilarites of a corpus of texts in a data-driven fashion. In his book, Gärdenfors provided several suggestions how one could build spaces from high-dimensional input neurons. One of these was to use the \gls{mds} algorithm which creates a euclidian space from pairwise distance matrices, such as an individual's assessement of similarities. The work of \cite{Derrac2015} basically follows this suggestion using classical AI algorithms. % and \cite{Ager2018} and \cite{Alshaikh2020} provided some useful additions for it without changing the main logic. So, we'll work with their algorithm, also only making small improvemenents. So the two main areas of work are implementing the original algorithm, and changing small details of it where most appropriate such that it works well for the domain we're interested in.
 
-To create the space, the authors unsupervisedly extract words of the text descriptions of corpus of \glspl{entity} of a specified domain. These words serve as candidates for semantic feature directions of a conceptual space. To find out which candidates are useful as features, they first embed all entities in a vector space. To identify which of the candidates constitute meaningful features, they create create a linear classifier for each of the candidates that splits embeddings of descriptions that contain the word from those that do not. Those words for which the classification performance performs well enough are considered meaningful features.  
+To create the space, the authors unsupervisedly extract words of the text descriptions of corpus of \glspl{entity} of a specified domain. These words serve as candidates for semantic feature directions of a conceptual space. To find out which candidates are useful as features, they first embed all entities in a vector space. To identify which of the candidates constitute meaningful features, they create a linear classifier for each of the candidates that splits embeddings of descriptions that contain the word from those that do not. Those words for which the classification performance performs well enough are considered meaningful features.  
 
-In their paper, the authors create domain-specific conceptual spaces for three domains that allowed easy collection of text corpora, which were movies and their \gls{imdb}-reviews, place-types and tags of photos at these places and wines and their reviews on a respective platform. Each movie, place-type or wine will henceforth be termed \gls{entity}. A representation of a movie is then generated from the \gls{bow} of the descriptions of the individual movies, leading to a very high-dimensional and sparse representation for all movies. To make the representations less sparse and more meaningful, the words in the \gls{bow} are subsequently \gls{ppmi}-weighted, which (similar to \gls{tf-idf}) weights words that appear often in the description of a particular movie while being infrequent in the corpus overall high, ensuring that discriminative words are more relevant in the embedding.This weighted \gls{bow} is however no Euclidian space, which is why the authors subsequently use \gls{mds}, a dimensionality reduction technique that creates a Euclidian space while ensuring that original distances are preserved as well as possible. This space already allows for interpretable geometric reasoning such as betweeness, but its directions are not interpretable human concepts. To find these, the authors assume that words that describe relevant features of the respective entites appear among their descriptions and that words describing meaningful features correlate with good classifier performance in separating entities based on them. To classify, the authors then use linear classifiers such as \glspl{svm}. 
+In their paper, the authors create domain-specific conceptual spaces for three domains that allowed easy collection of text corpora, which were movies and their \gls{imdb}-reviews, place-types and tags of photos at these places, as well as wines and their reviews on a respective platform. Each movie, place-type or wine will henceforth be termed \gls{entity}. A representation of a movie is then generated from the \gls{bow} of the descriptions of the individual movies, leading to a very high-dimensional and sparse representation for all movies. To make the representations less sparse and more meaningful, the words in the \gls{bow} are subsequently \gls{ppmi}-weighted, which (similar to \gls{tf-idf}) weights words that appear often in the description of a particular movie while being infrequent in the corpus overall high, ensuring that discriminative words are more relevant in the embedding.This weighted \gls{bow} is, however, no Euclidian space, which is why the authors subsequently use \gls{mds}, a dimensionality reduction technique that creates a Euclidian space while ensuring that original distances are preserved as well as possible. This space already allows for interpretable geometric reasoning such as betweeness, but its directions are not interpretable human concepts. To find these, the authors assume that words that describe relevant features of the respective entites appear among their descriptions and that words describing meaningful features correlate with good classifier performance in separating entities based on them. To classify, the authors then use linear classifiers such as \glspl{svm}. 
 
-Consider the domain of movies, and the word "scary" as candidate feature direction. The movie-embeddings are grouped into those that contain the words and those that do no, and finds a hyperplane that divides both groups. The advantage of linear classifiers is that they create a linear hyperplane that best separates positive from negative entities. The orthogonal of that hyperplane is a vector, which can serve as feature axis: The distance of orthogonally projecting an entity onto this vector induces a ranking of entities. The further away an entities' embedding is from the decision surface on the positive side, the more this feature entity. To assess the performance, \cite{Derrac2015} use Cohen's kappa measure to compare the ranking induced by the plane with the number of occurences of the word for the entity. The better these rankings match, the higher the likelyhood that a good feature direction was found. To reduce the number of resulting features, they are subsequently clustered based on the similarity of their orthogonals before the mean direction of this feature-cluster is calculated. 
+Consider the domain of movies, and the word "scary" as candidate feature direction. The movie-embeddings are grouped into those that contain the words and those that do no, and finds a hyperplane that divides both groups. The advantage of linear classifiers is that they create a linear hyperplane that best separates positive from negative entities. The orthogonal of that hyperplane is a vector, which can serve as feature axis: The distance of orthogonally projecting an entity onto this vector induces a ranking of entities. The further away an entity's embedding is from the decision surface on the positive side, the more this feature applies to the entity. To assess the performance, \cite{Derrac2015} use Cohen's kappa measure to compare the ranking induced by the plane with the number of occurences of the word for the entity. The better these rankings match, the higher the likelyhood that a good feature direction was found. To reduce the number of resulting features, they are subsequently clustered based on the similarity of their orthogonals before the mean direction of this feature-cluster is calculated. 
 
 The final \textbf{feature-based representation} is generated by representing each entity as vector whose individual components corespond to the ranking of this entity compared to all others for each of the most salient feature directions. Thus, in the final feature-based representation only the relation of each entity in relation to all others with respect to the salient directions is relevant. Given that respective directions are not orthogonal \cite[22]{Derrac2015} and that rankings are only ordinal (where distances are not quantifiable), the final embedding loses some geometric properties such as the Euclidean distance metric, but gains interpretable directions.
 
@@ -195,23 +213,11 @@ The algorithm is optimized to \textit{look good to humans}, meaning there are no
 % was "computational reasoning"
 \label{sec:reasoning}
 
-\todoparagraph{So the commonsense reasoning classifier fromd errac are betweeness-based, relational-similarity-based, and classification based on salient properties, a fortiori reasoning "if X is scarier than the shining it is likely a horror film". FOr the last one they then consider the salient directions that they extracted. For the others the directions are irrelevant}
+The goal of this thesis is to provide explainable recommendation for educational resources. The main reason we are considering \glspl{cs} as knowledge representation method for our domain is their ability to model many cognitive reasoning methods computationally. The relations of semantic features can be used for classification based on properties understanable for humans. Further, they allow the entities to be ranked such that a user can specify her demanded degree how much a property applies, as exemplified by the Movie Tuner in \autoref{fig:movietuner}. 
+
+Conceptual Spaces allow to model many forms of commonsense reasoning geometrically or algebraically. Another property that is important to us is that in contrast to typical recommendation engines, in \glspl{cs} similarity is necessarily context-dependent. \textcite{Derrac2015} use these features to create many forms of reasoning systems such as ones based on betweeness, \textit{relational similarity} or \textit{a fortiori rasoning}. Let us look at what this means in practice, as well as how standard symbolisic reasoning can be modelled in conceptual spaces.
 
 
-\todoparagraph{Ager bringt viele gute Punkte regarding warum der bums sinnvoll fur explainable recommenders ist}
-
-\todoparagraph{important for us is that we} don't have ONE SINGLE SIMILARTIY; BUT THAT IT's context-dependent!!!!
-
-\todoparagraph{However a short paragraph about reasoning-based classifiers and the respective intutitive explanations for known classifiers}
-
-The goal of this thesis is to provide explainable recommendation for educational resources. This section elaborates how the framework of \glspl{cs} allows to computationally model commonsense reasoning through analytic geometry and algebra.
-
-\todoparagraph{We are looking how symbolistic stuff relates to CS}
-
-According to \cite{Gardenfors2000a}, Representations don't need to be similiar to the objects they represent, but the *similarity relations of the representations* should correspond to those of the objects they represent
-
-
-Unlike many ther NLP approaches that rely on embedding (see \autoref{sec:embeddings}), in a Conceptual Space, natural language terms are not modelled as points or vectors, but as convex regions. \todoparagraph{advantages: Stuff below!}
 % * It allows \q{to distinguish borderline instances of a concept from more prototypical instances, by taking the view that instances which are closer to the center of a region are more typical} \cite{Derrac2015} (they cite \cite{Gardenfors2000a})
 % * There are really good Region-based models, eg \cite{Erk2009}
 % * stuff liek subsumption, mutual exclusiveness etc are obivous (see blow)
@@ -219,15 +225,12 @@ Unlike many ther NLP approaches that rely on embedding (see \autoref{sec:embeddi
 \subsubsection*{Categories and Ontologies}
 \label{sec:ontology_rcc}
 
-% CS and with it ontologies "automatically" (BIG question mark) arise from prototypes + metric domain + voronoi tesselation
-
-\todoparagraph{Vor allem sollte hier ruberkommen warum das gut fur mich und meinen recommender fur educational resources ist argh}
-
-Logic-Based reasoning/inference can do many things already, however it requires the knowledge to be encoded in logic (a lot of manual work) and doesn't allow for fuzzyness.
-In formal logic/ontologies/lexical databases, semantic relations of concepts are explicitly modelled. The \gls{rcc} \cite{Cohn1997a} links these relations to their geometric interpretation, providing a bridge between this and Conceptual Spaces \cite{Gardenfors2001}. Once you have created the structure, the following emerges automatically:
+Logic-Based reasoning/inference can model many forms of reasonings, but it requires the knowledge to be encoded in logic in manual work and doesn't allow for fuzzyness.
+In formal logic/ontologies/lexical databases, semantic relations of concepts are explicitly modelled. The \gls{rcc} \cite{Cohn1997a} links these relations to their geometric interpretation, providing a bridge between these and Conceptual Spaces \cite{Gardenfors2001}, in which natural language terms are not modelled as points or vectors, but as convex regions Once the handled entities are embedded into a conceptual space, many ontological relations are implied through the relation of these regions. This allows to replace symbolic inference engines with geometric algorithm when using the richer structure of CS instead of ontologies. \autoref{tab:rcc_cs} displays these respective relations.
 
 \vspace{2ex}
 
+\begin{table}[h]
 \begin{tabularx}{1.05\textwidth}{P{0.16\textwidth}|P{0.25\textwidth}|P{0.25\textwidth}|X}
     Ontology Relation & Other Names        & RCC5 \cite{Cohn1997a} analog / \textit{Geometric equivalent} & Example \\ \midrule
 
@@ -249,19 +252,13 @@ In formal logic/ontologies/lexical databases, semantic relations of concepts are
     Token Identity    & {\scriptsize Equality of Names, Synonymy } & \textit{Equal coordinates}   & Morning star \& Venus \\ 
     Meronymy / Holonymy & {\scriptsize \textit{part-whole realationship} }& \textit{Product spaces} (see \cite{Fiorini2013}        & Trees \& Leaves
 \end{tabularx}
-
-regions and betweeness:
-* convex hull as the set of all convex combinations of a point
-* can be done by linear programming with polynomial cost
-
-
-\vspace{4ex}
+\slcaption{Link between Conceptual Spaces, the Region Connection Calulus and Ontologial Relations}
+\label{tab:rcc_cs}
+\end{table}
 
 % Also: characteristics of properties (transitivity, symmetry) (from intrinsic features of dimensions (time is linear because the dimension is linear))
 
-So for example the validity of "a robin is a bird" is encoded by it being a subregion. So, no reason for a symbolic inference when using the richer structure of CS instead of ontologies.
-
-So a CS can model all semantic relations of classical ontologies/formal logic/symbolistic approaches/knowledge bases. However as it encodes more than just a taxonomy of concepts, it for higher/more forms of inference and (common-sense) reasoning, among others by enabling for interpolation and extrapolation of knowledge. These are:
+Apart from this, a \gls{cs} encodes more than just a taxonomy of concepts, but allows for interpolation and extrapolation of knowledge. This allows for other human forms of resoning.
 
 \subsubsection*{Similarity-based reasoning}
 
@@ -282,41 +279,38 @@ As discussed already in \autoref{sec:amazonalgo}, modern recommendation algorith
 
 \vspace{2ex}
 
-This is something that cannot be done by classical logic, which can not model degrees of something but only universal full truths. Another advantage is that it's easy to train, however a disadvantage is that it requires enough similar concepts which may not be given This algorithm however lacks \textit{explainability}: The employed distance function does not encode \textit{in what respect} two items are similar. For human reasoning however, there is no \textbf{overall Similarity} - instead similarity is relative to a domain and only meaningful in context \cite{Goodman1972-GOOPAP-3}: \q{any measurement of similarity is based on assumptions concerning the properties of a similarity relation} \cite[110]{Gardenfors2000a}. In a conceptual space, this can be modelled: The distance function can give weight for certain dimensions depending on context or objects of different concepts can be considered similar if they share enough properties. Most importantly however, in a CS a system for recommendation can ask users what dimensions of a given entity the user liked to suggest items that are similar in that regard.
+This is something that cannot be done by classical logic, which can not model degrees of something but only universal full truths. While modern recommendation engines require only labelled examples, these algorithm lack \textit{explainability}: The employed distance function does not encode \textit{in what respect} two items are similar. For human reasoning however, there is no such \textit{overall Similarity} - instead similarity is relative to a domain and only meaningful in context\cite[110]{Gardenfors2000a}. In a conceptual space, this can be modelled: The distance function can give weight for certain dimensions depending on context or objects of different concepts can be considered similar if they share enough properties. Most importantly however, in a CS a system for recommendation can ask users what dimensions of a given entity the user liked to suggest items that are similar in that regard.
 % a system serving me a similar wine to the one I want that is not available can ask me what dimensions of that wine were important before suggesting new ones.
 
 \subsubsection*{Induction}
 
-Another very important tool of human common-sense reasoning is abstraction/generalization/ \textbf{induction}, going from single observations to general rules. For that, we need to decide which properties of the respective observation are relevant, distilling sensible information from the receptors from unimportant information to make inferences from limited information about an object? The connectionistic answer to that would be "pattern matching", and ML algorithms work extremely well for that, however this lacks explainability, and also we want to model the underlying algorithm and the underlying patterns. All three levels can model some kinds of induction and generalization, remember they are not in conflict. On the Conceptual Level you can eg model \textit{If two different entities of the same class have a property, maybe all entities of that class have a property}, which would be \textit{categroical inductive inverences}
+Another very important tool of human common-sense reasoning is abstraction and generalization: Going from single observations to general rules. For that, we need to decide which properties of the respective observation are relevant, distilling sensible information from irrelevant noise. Instead of just implementing \textit{black boxes} that do inexplicable pattern matching, it helps to look at the underlying rules. On the Conceptual Level, eg \textit{If two different entities of the same class have a property, maybe all entities of that class have a property} can be modeled through \textit{categorical inductive inverences}:
 
 \syllogism{Grizzly bears love onions \\
 Polar bears love onions}
 {All bears love onions \cite[226]{Gardenfors2000a}}
 
-Other kinds of inductive reasoning we can model:
 
-\textbf{Interpolative Reasoning}
+% \cite{Schockaert2011}: \q{intermediary conditions lead to intermediary conclusions} 
 
-\cite{Schockaert2011}: \q{intermediary conditions lead to intermediary conclusions} 
-
-\noindent
-\begin{minipage}{.6\textwidth}
-  \syllogism{Cars have tires \\
-             Bikes have tires \\
-             Motorcycles are between cars and bikes
-             }{Motorcycles likely also have tires}
-\end{minipage}% 
-\begin{minipage}{.4\textwidth}
-    \syllogism{\textbf{A} has property \textbf{x} \\
-               \textbf{C} has property \textbf{x} \\
-               \textbf{B} is conceptually between \textbf{A} and \textbf{C}}
-               {\textbf{B} likely also has property \textbf{x}}
-\end{minipage}% 
+% \noindent
+% \begin{minipage}{.6\textwidth}
+%   \syllogism{Cars have tires \\
+%              Bikes have tires \\
+%              Motorcycles are between cars and bikes
+%              }{Motorcycles likely also have tires}
+% \end{minipage}% 
+% \begin{minipage}{.4\textwidth}
+%     \syllogism{\textbf{A} has property \textbf{x} \\
+%                \textbf{C} has property \textbf{x} \\
+%                \textbf{B} is conceptually between \textbf{A} and \textbf{C}}
+%                {\textbf{B} likely also has property \textbf{x}}
+% \end{minipage}% 
 
 % Source looking into it ([28] of [DESC15]): M. Abraham, D. Gabbay, U. Schild, Analysis of the talmudic argumen- tum a fortiori inference rule (kal vachomer) using matrix abduction, Studia Logica 92 (2009) 281–364.
 
+According to \textcite{Gardenfors2000a}, representations don't need to be similiar to the objects they represent, but the \textit{similarity relations of the representations} should correspond to those of the objects they represent. From this follow a few other translations of reasoning and geometric properties. \cite{Derrac2015} elaborate on many other of these and build semantic classifier that model other kinds of reasoning. For this thesis, let us look at one example of these, which may prove useful in recommendation and classificiation and exemplifies how the representations benefit from salient directions, namely \textbf{A fortiori reasoning}:
 \vspace{2ex}
-\textbf{A fortiori reasoning}
 
 \noindent
 \begin{minipage}{.6\textwidth}
@@ -335,30 +329,27 @@ Other kinds of inductive reasoning we can model:
 
 \vspace{2ex}
 
-\textbf{Extrapolative reasoning (Analogical Reasoning)} \cite{Schockaert2011}: \q{Analogous changes in the conditions should lead to analogous changes in the conclusion}, or \q{Concepts which differ in analogous ways have properties which differ in analaogous ways}. This is \textit{relational similarity}: If the analogical proportion a : b :: c : d holds, the pairs (a, b) and (c, d) are called relationally similar. Simply maps to geometric parallelism. 
+% \textbf{Extrapolative reasoning (Analogical Reasoning)} \cite{Schockaert2011}: \q{Analogous changes in the conditions should lead to analogous changes in the conclusion}, or \q{Concepts which differ in analogous ways have properties which differ in analaogous ways}. This is \textit{relational similarity}: If the analogical proportion a : b :: c : d holds, the pairs (a, b) and (c, d) are called relationally similar. Simply maps to geometric parallelism. 
 
-I wrote down the syllogisms here, however that's not the only way to apply it, I can also "look for things that". In the case of analogies, I can ask "what is the thing that behaves to waterski like snowboarding to skiing"?
+% I wrote down the syllogisms here, however that's not the only way to apply it, I can also "look for things that". In the case of analogies, I can ask "what is the thing that behaves to waterski like snowboarding to skiing"?
 
-\textbf{Metaphors / Metonymy} (saying "the Pentagon" when referring to the US military) follow from a fortiori/analogical reasoning
+% \textbf{Metaphors / Metonymy} (saying "the Pentagon" when referring to the US military) follow from a fortiori/analogical reasoning
 
+% \todoparagraph{I am referring to this figure in the discussion!}
+% \begin{figure}[H]
+% 	\centering
+% 	\includegraphics[width=\textwidth]{graphics/stolenfigures/reasoning_samples.png}
+% 	\slcaption{
+% 		Different forms of reasoning represented graphically. \todoparagraph{Holy shit remove me}
+% 	}
+%     \label{fig:graphic_reasoning}
+% \end{figure}
 
-\todoparagraph{I am referring to this figure in the discussion!}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth]{graphics/stolenfigures/reasoning_samples.png}
-	\slcaption{
-		Different forms of reasoning represented graphically. \todoparagraph{Holy shit remove me}
-	}
-    \label{fig:graphic_reasoning}
-\end{figure}
+% To model the stuff in \autocite{fig:graphic_reasoning}, we need a good metric, and what we see there definitely sounds euclidian!
 
-To automate these forms of inference, we need a richer form of knowledge than what is available in calssical logic: We need a notion of / Information about \textbf{Betweenness} and \textbf{Directionality}.
+As argued by \textcite{Derrac2015}, automating this and many other forms of inference requires a richer form of knowledge than what is available in classical logic, namely a notion of \textbf{Betweenness} and \textbf{Directionality}. In Euclidean spaces, the intuitive notion of these concepts is most faithfully modelled. Because of that, the authors regard it a necessary condition for their algorithm.
 
-To model the stuff in \autocite{fig:graphic_reasoning}, we need a good metric, and what we see there definitely sounds euclidian!
-
-\textbf{Summarized, CS are better than symbolism because we save the inference engine (plus we can extend and simulate knowledge bases with commonsense reasoning, just like humans deal with incomplete knowledge!) and better than connectionism because they are explainable. Klar soweit?!}
-
-\todoparagraph{The problems of polysemy und synonymy for classical stuff, see fundamental information retrieval problem}
+Summarized, conceptual spaces allow to model the forms of explainable reasoning that thus far required symbolic inference engines and do not share the problems of symbolistic approaches such as having to explicitly identify synonymy. On top of that, they also to allow to model fuzzy real-world concepts and relations. If Euclidean spaces are used, similarity relations of the representations, such as betweeness and parallelism, correspond to the real-word objects they model.
 
 
 % \includeMD{pandoc_generated_latex/2_4_typesofreasoning}
@@ -370,7 +361,7 @@ This thesis focuses on the aforementioned algorithm, primarily considering \cite
 
 \paragraph{Tag Genome} 
 
-By far the closest to what we do is the algorithm of \textcite{VISR12}, who generate a so-called tag genome for the domain of movies supervisedly based on keywords that users have assigned manually. Their algorithm takes these binary assignments and creates a dense representation that encodes a degree of relevance for each combination of movie and tag. Furthermore, they create a dedicated movie recommendation system on basis of this (interface reprinted in \autoref{fig:movietuner}). This system provides explainable recommendation based on these tags, allowing users to request recommendations for movies such as \textit{\q{I‘d like something less violent than Reservoir Dogs}} \cite[3]{VISR12}. Not only is their application exactly what is being demanded here, but the algorithm itself also performed significantly better than the one of \textcite{Derrac2015} in a human study of the latter, in which they directly compared the techniques by asking subjects which of the respectively extracted keywords better describes the difference between two movies \cite[44]{Derrac2015}. Considering however that \gencite{VISR12} algorithm is supervised and requires data which does not exist for our domain, it cannot be applied in our case. On the contrary, the final results of their algorithm are preferred by users over the ones generated with the algorithm considered in this work, but structurally exactly equal. This provides clear evidence that the desired application of this work is possible, albeit of lower quality than what their work achieved.
+By far the closest to what we do is the algorithm of \textcite{VISR12}, who generate a so-called tag genome for the domain of movies supervisedly based on keywords that users have assigned manually. Their algorithm takes these binary assignments and creates a dense representation that encodes a degree of relevance for each combination of movie and tag. Furthermore, they create a dedicated movie recommendation system on basis of this (interface reprinted in \autoref{fig:movietuner}). This system provides explainable recommendation based on these tags, allowing users to request recommendations for movies such as \textit{\q{I'd like something less violent than Reservoir Dogs}} \cite[3]{VISR12}. Not only is their application exactly what is being demanded here, but the algorithm itself also performed significantly better than the one of \textcite{Derrac2015} in a human study of the latter, in which they directly compared the techniques by asking subjects which of the respectively extracted keywords better describes the difference between two movies \cite[44]{Derrac2015}. Considering however that \gencite{VISR12} algorithm is supervised and requires data which does not exist for our domain, it cannot be applied in our case. On the contrary, the final results of their algorithm are preferred by users over the ones generated with the algorithm considered in this work, but structurally exactly equal. This provides clear evidence that the desired application of this work is possible, albeit of lower quality than what their work achieved.
 
 Generally, what is being done here corresponds to \textbf{Representation Learning}, whose aim is to discover the inherent semantic structure of a representation unsupervisedly \cite{Dayan1995}. More specifically \textbf{Disentangled Representation Learning}, where only salient attributes relevant to the task at hand should be extracted, which means finding latent embeddings whose dimensions are meaningful interpretable features. Generative Adversarial Networks \cite{Goodfellow2014} or Variational Autoencoders \cite{Kingma2013} are modern techniques that are good at finding latent information in images. Especially InfoGAN \cite{Chen2016} should be named, which can extract interpretable features such as pose, hairstyle, prensence of glasses and emotions from images unsupervisedly. 
 
@@ -397,14 +388,14 @@ There are also techniques that extend the algorithm of \textcite{Derrac2015}: \t
 
 % \todoparagraph{dont forget the links for lsa und lda - are in lsa-long-md }
 
-Thus far, we have described the base algorithm which this thesis replicates. Before describing each of its step in detail, it is useful to get a grasp of the theoretical foundation that form the basis of the creation of linguistical \glspl{vsm} in general. This also helps to place the algorithm in the context of the field of computational \gls{nlp}. Note that this section primarily serves to understand the key concepts required for the methodology of \textcite{Derrac2015}. To do that, we will sometimes put emphasis on other algorithms of the same type than those actually used in the implementation if they express the model more explicitly. The the methodology is modular and \eg only requires \textit{some} algorithm for dimensionality reduction.
+Thus far, we have described the base algorithm which this thesis replicates. Before describing each of its step in detail, it is useful to get a grasp of the theoretical foundation of the creation of linguistical \glspl{vsm} in general. This also helps to place the algorithm in the context of the field of computational \gls{nlp}. Note that this section primarily serves to understand the key concepts required for the methodology of \textcite{Derrac2015}. To do that, we will sometimes put emphasis on other algorithms of the same type than those actually used in the implementation if they express the model more explicitly. The methodology is modular and \eg only requires \textit{some} algorithm for dimensionality reduction.
 
 %  also quickly look at what other techniques can be used for some of its components.
 
 \subsection{Classical Vector Space Construction}
 \label{sec:vsm_construction}
 
-The methodology in question consists of several components, each of it being an algorithm in itself. The first steps are basically classical linguistic tools: A text corpus is preprocessed and the words of its entites are counted and raw counts transformed. From these values a frequency matrix is generated and its dimensionality is reduced, before directions for domain-specific similarity measures are extracted.
+The methodology in question consists of several components, each of it being an algorithm in itself. The first steps are basically classical linguistic tools: A text corpus is preprocessed and the words of its entites are counted and raw counts are transformed. From these values a frequency matrix is generated and its dimensionality is reduced, before directions for domain-specific similarity measures between the regarded entities are extracted.
 
 \textcite{Lowe} conceived a general framework to construct vector spaces from texts, splitting the process into the steps of first counting the token frequencies, then transforming the raw counts into more useful \gls{quant} measures %adjust the weights of the elements in the matrix, because common words will have high frequencies yet are less informative than rare words.
  %TODO: talk about a fucking DOC-TERM-MATRIX, A MATRIX OF FREQUENCIES!!!
@@ -419,7 +410,7 @@ and smoothing the space using dimensionality reduction, before calculating the s
 
 The core principle behind any kind of embedding of linguistics units such as words or documents is the distributional hypothesis, which states that linguistic items with similar distributions have similar meanings. If this is the case, the meaning of words correlate with their distribution: Words that occur in similar surroundings have similar meanings.
 
-More precisely, vector-space models fall into different categories depending on if the similarity of documents (\textit{Term-Document-Model}) or of words (\textit{Word-Context-Model}) is in question. Because the algorithm considered here describes the relation of entites through their descriptions it falls unser the latter category. According to \textcite{Turney2010}, the assumption underneath the Term-Document model is more precisely called the \textbf{bag-of-word hypothesis}, which states that documents with similar distributions of words have similar meaning. Accordingly, when embedding documents into a vector space, it must be ensured that the similarity relations of the embeddings closely resemble the similarity of the original documents.
+More precisely, vector-space models fall into different categories depending on if the similarity of documents (\textit{Term-Document-Model}) or of words (\textit{Word-Context-Model}) is in question. Because the algorithm considered here describes the relation of entites through their descriptions it falls under the latter category. According to \textcite{Turney2010}, the assumption underneath the Term-Document model is more precisely called the \textbf{bag-of-word hypothesis}, which states that documents with similar distributions of words have similar meaning. Accordingly, when embedding documents into a vector space, it must be ensured that the similarity relations of the embeddings closely resemble the similarity of the original documents.
 
 Many \gls{nlp} tasks rely on documents being represented as vectors, such as Information Retrieval, Recommendation, Text Classification, Translation, Sentiment Analysis and many more \cite{Smith2017,bird2009natural,Devlin2019,Le2014,Mikolov2013a,Turney2010,Guo,Chen2018,Maas2011}. The process of turning a collection of texts document into numerical feature vectors is referred to as \textit{vectorization}. According to \textcite{Turney2010} (who base their work on \textcite{Lowe}), the construction of a \gls{vsm} from texts can be decomposed into a four steps:\footnote{When considering neural embeddings such as \gls{word2vec}, the separation of these steps is hidden in the algorithm and not as distinct, but the principles hold also in these techniques.}
 
@@ -435,19 +426,19 @@ Many \gls{nlp} tasks rely on documents being represented as vectors, such as Inf
     \item[4) Calculating Similarities] of individual vectors is the final step and aim of most embedding algorithms. This can be done in various ways, a classical technique is to use their \gls{cos}.
 \end{description}
 
-Importantly, our algorithm differs from this four-step-process by injecting several additional steps before calculating similarities. This is because we hold the notion that similarity is necessarily context-dependent and there is no overall similarity (see \autoref{sec:reasoning}), which requires additional dissection of this step. In the following, we will describe three steps relevant for us.
+Importantly, our algorithm differs from this four-step-process by injecting several additional steps before calculating similarities. This is because we hold the notion that similarity is necessarily context-dependent and there is no overall similarity (see \autoref{sec:reasoning}), which requires additional dissection of the final step. In the following, we will describe three steps relevant for us.
 
 
 \subsubsection{1. Bag-of-ngrams representation}
 \label{sec:techniques:bow}
 
-The most relevant information that can be taken into account when comparing two texts are the words they consist of. Accordingly, an obvious choice to vectorize a collection of documents is to describe each document the counts of its word occurences, which is called \gls{bow}-representation. 
+The most relevant information that can be taken into account when comparing two texts are the words they consist of. Accordingly, an obvious choice to vectorize a collection of documents is to describe each document by the counts of its word occurences, which is called \gls{bow}-representation. 
 
-This approach is simple but has important drawbacks: Firstly, a document is not fully described only by the words it contains but also specifies their constellation. The information about ordering and relative position is lost in this representation (consider not knowing the position of negations). To alleviate this issue, texts can instead be represented as glspl{n-grams}, where the tokens are not single words but all sequences of words of length $n$. The drawback is that this vastly increases sparseness and dimensionality.
+This approach is simple but has important drawbacks: Firstly, a document is not fully described only by the words it contains but also by their constellation. The information about ordering and relative position is lost in this representation (consider not knowing the position of negations). To alleviate this issue, texts can instead be represented as glspl{n-grams}, where the tokens are not single words but all sequences of words of length $n$. The drawback is that this vastly increases sparseness and dimensionality.
 
-Further, by representing each word as separate \textit{one-hot-vector} ignores word semantics: as every vector is equally distant from any other, synonyms (cases where the same meaning is expressed with different words) are just as far apart as antonyms (opposites). This unreliability of term-document-association is what \textcite{Deerwester} calls the \textit{fundamental information retrival problem}: The mapping between words and their meanings is not bijective, but ambiguous. Different words can be used to express the same concept, and sometimes the same word refers to different concepts. This issue is partially alleviated by the dimensionality reduction performed subsequently, which may provide a way to determine what concepts are implied and obfuscated by fallible word choice.
+Further, by representing each word as separate \textit{one-hot-vector} ignores word semantics: as every vector is equally distant from any other, synonyms (cases where the same meaning is expressed with different words) are just as far apart as antonyms (opposites). This unreliability of term-document-association is what \textcite{deerwester90} calls the \textit{fundamental information retrival problem}: The mapping between words and their meanings is not bijective, but ambiguous. Different words can be used to express the same concept, and sometimes the same word refers to different concepts. This issue is partially alleviated by the dimensionality reduction performed subsequently, which may provide a way to determine what concepts are implied and obfuscated by fallible word choice.
 
-To address both issues, modern algorithms exist that train a document embedding directly based on constellation (alleviating lost ordering) of word-embeddings that are pre-trained based on their usual context (alleviating distance relation problems)
+To address both issues, modern algorithms exist, which train a document embedding directly based on constellation (alleviating lost ordering) of word-embeddings that are pre-trained based on their usual context (alleviating distance relation problems)
 . \todoparagraph{But later.}
 
 \subsubsection{2. Word-weighting techniques}
@@ -470,7 +461,7 @@ $$ w_{t,d} = \text{\textit{tf}}_{t,d} * log(\frac{|C|}{df_t}) $$
 \paragraph{PPMI}
 % See also: https://stackoverflow.com/a/58725695/5122790
 
-\textcite{Turney2010} suggested to use the \gls{ppmi} measure instead of \gls{tf-idf} to weight the counts in \glspl{doctermmat}, relying on \cite{Bullinaria2007}'s work taking into account psychological models to extract information about lexical semantics from co-occurence statistics. According to these works, \gls{ppmi} performs most plausible to measure semantic similarity in word-context matrices compared to human evaluation. For that reason, \textcite{Derrac2015} and its follow-up works \cite{Ager2018,Alshaikh2020} rely solely on this technique. %(sec 4.2) of \cite{Turney2010}: Bullinaria and Levy (2007) demonstrated that PPMI performs better than a wide variety of other weighting approaches when measuring semantic similarity with word-context matrices.
+\textcite{Turney2010} suggested to use the \gls{ppmi} measure instead of \gls{tf-idf} to weight the counts in \glspl{doctermmat}, relying on \cite{Bullinaria2007}'s work taking into account psychological models to extract information about lexical semantics from co-occurence statistics. According to these works, \gls{ppmi} performs most plausible when measuring semantic similarity in word-context matrices compared to human evaluation. For that reason, \textcite{Derrac2015} and its follow-up works \cite{Ager2018,Alshaikh2020} rely solely on this technique. %(sec 4.2) of \cite{Turney2010}: Bullinaria and Levy (2007) demonstrated that PPMI performs better than a wide variety of other weighting approaches when measuring semantic similarity with word-context matrices.
 Like tf-idf, it weights terms that are strongly associated with a document highly by favoring terms frequently associated with document $d$ while infrequent in the corpus overall. For that, it uses the logarithm of the probability of the considered term-document-combination $d,t$, normalized by the probability of this document co-occuring with any term ($d,*$) and this term co-occuring with any document ($t,*$)
 \vspace{-2.2ex}
 \begin{align*}
@@ -487,14 +478,15 @@ At this step, we have a sparse and high-diensional matrix quantifying the import
 %TODO: we said in bow-representation that LSA helps with the fact that the same thing can be expressed in different ways
 % We start with sparse vectors, and then \q{some form of dimensionality reduction is typically used to obtain vectors whose components correspond to concepts.} \cite{Derrac2015}
 
-The technique that most explicitly models a document's latent topics is \gls{lsi} \cite{Deerwester}, which relies on the fact that words that are close in meaning will occur in similar pieces of text to yield embeddings where words and documents of similar meaning are similar. 
+The technique that most explicitly models a document's latent topics is \gls{lsi} \cite{deerwester90}, which relies on the fact that words that are close in meaning will occur in similar pieces of text to yield embeddings where words and documents of similar meaning are similar. 
 
 \paragraph*{LSI/LSA\footnote{Both terms refer to the same algorithm, which is generally called \gls{lsi} when applied to document similarity and information retrieval, and \gls{lsa} when applied to word similarity.}}
+\label{sec:lsi}
 
 While language is used to express the world, it is also highly ambiguous and redundant, such that the relationship of model and reality is only a statistical one. The same thing can be expressed with different words (synonymy), and sometimes a word has different meaning depending on context (polysemy). The underyling latent semantic structure in texts is obscured by the randomness of word choce, such that individual words provide only unreliable evidence about the conceptual topic or meaning of a document.
 % When comparing two texts (text and query, ...) what we have are the words which are only a sample descrption of the underlying conceptual/semantic context.
 
-However, language has a lot of structure, which allows to treat this as statistical problem: The occurrence of some patterns of words gives a strong clue as to the likely occurrence of others. According to the distributional hypothesis, the matrix of observed occurrences of terms applied to documents can be used to estimate parameters of the underlying true model. This is explicitly done using linear algebra operations on the frequency matrix in \gls{lsi} \cite{Deerwester}. 
+However, language has a lot of structure, which allows to treat this as statistical problem: The occurrence of some patterns of words gives a strong clue as to the likely occurrence of others. According to the distributional hypothesis, the matrix of observed occurrences of terms applied to documents can be used to estimate parameters of the underlying true model. This is explicitly done using linear algebra operations on the frequency matrix in \gls{lsi} \cite{deerwester90}. 
 
 This algorithm decomposes the \gls{doctermmat} into a product of three linearly independent factors: \textit{words-per-topic} \texttimes \textit{topic-importance} \texttimes \textit{corpus-topic-distribution}. Then it runs \textit{Truncated Singular Value Decomposition} (SVD), which finds a lower-rank approximation of the matrix containing the \textit{hidden information} while identifying and keeping relationship patterns. In other words, by taking only the important components from this matrix (\textit{rank-reduction}), the new representation becomes lower-dimensional, less noisy and less sparse, but still approximates the original similarity behaviours.
 
@@ -502,12 +494,12 @@ LSI explicitly represents both documents and terms in the same semantic space, s
 
 As consequence of the compression, some dimensions are combined and depend on more than one term - generally this merges embeddings of similar terms, mitigating synonymy. Also Polysemy is reduced, as only the components of polysemous words that have encode a similar meaning than the cluster are relevant for the combined direction of the vector. Another consequence is that terms that did not actually appear in a document may still end up close to the document, if that is consistent with the major patterns of association in the data: Terms that \textit{could} have been used as well.\q{if the tags \textit{love story} and \textit{hilarious} have been applied to an item, it is likely that the tag \textit{romantic comedy} is highly relevant\cite{VISR12}.}
 
-The algorith to create the Tag Genome in \cite{VISR12} bases to a high degree on this algorithm: It creates a binary frequency matrix for all considered documents and a set of \textit{tags}, embeds documents and pseudo-documents generated from the tags and compresses it with LSI. The relevance of a tag for a documents \codefunc{tag-lsi-sim(t,i)} is then calculated by their embeddings' cosine similiarity. Also, the algorithm appears to be a good method to find clusters of similar terms for semantic direction, given that it considers these terms as directional vectors already. 
-
-\textcite{Derrac2015}, however, additionally require that spatial relations such as betweeness and parallelism hold in the vector space embedding. For that, they require a space of Euclidean metric which is not given in LSA, which generates a space based on the similarity-centred objective to reduce \glspl{cos} of similar entites. Instead they follow \textcite{Gardenfors2000} suggestion and rely on \gls{mds}. While the algorithm bases on Euclidean distance, the principle that items of similar meaning will end up in similar positions still holds. In fact, it should hold most kind of compression, bearing in mind the distributional hypothesis and the fact that if there is some inherent \textit{structure} (obfuscated by wording) that explains the dissimilarity of any text corpus sufficiently well, it will remain after the compression.
+The algorithm to create the Tag Genome in \cite{VISR12} bases to a high degree on this algorithm: It creates a binary frequency matrix for all considered documents and a set of \textit{tags}, embeds documents and pseudo-documents generated from the tags and compresses it with LSI. The relevance of a tag for a documents \codefunc{tag-lsi-sim(t,i)} is then calculated by their embeddings' cosine similiarity. Also, the algorithm appears to be a good method to find clusters of similar terms for semantic direction, given that it considers these terms as directional vectors already. 
 
 \paragraph*{Multi-dimensional Scaling}
 \label{sec:mds}
+
+\textcite{Derrac2015}, require that spatial relations such as betweeness and parallelism hold in the vector space embedding. For that, they require a space of Euclidean metric which is not given in LSA, which generates a space based on the similarity-centred objective to reduce \glspl{cos} of similar entites. Instead they follow \textcite{Gardenfors2000a} suggestion and rely on \gls{mds}. While the algorithm bases on Euclidean distance, the principle that items of similar meaning will end up in similar positions still holds. In fact, it should hold most kind of compression, bearing in mind the distributional hypothesis and the fact that if there is some inherent \textit{structure} (obfuscated by wording) that explains the dissimilarity of any text corpus sufficiently well, it will remain after the compression.
 
 \Gls{mds} \cite{Mead1992} is a dimensionality reduction technique that induces a finite vector-space representation from pairwise similarities. It takes a \gls{dissimmat} as input and returns a fixed-dimensional embedding in which original distances are kept as close to the ones of the \gls{dissimmat} as possible. Gärdenfors considered using this technique it to find an underlying \textit{phenonemal} conceptual space from human similarity judgements, given that it yield q{as high a correlation as possible between the similarity judgements of the subjects and the corresponding distances in the estimated dimensional space} \cite[22]{Gardenfors2000a}. The algorithm has quadratic space complexity \cite{Alshaikh2021}
 

@@ -10,9 +10,11 @@
 * WHen extracting ngrams we have to set a max-size, I'd argue its around 5.
 
 
-### Optimal Parameters
+### Optimal Parameters and Algorithm Complexity
 
 * Explain why we thresholded at 80 words
 * Calculate optimal Number Candidates the way derrac did it, and quickly look at tables 3.1 and 3.2 as basis
 * theorize that accuracy may work better than kappa
 * Come back to the reason why I extracted less candidates than \mainalgos!
+
+\todoparagraph{In practical terms}, efficient calculation of the PPMI-score for high-dimensional \glspl{doctermmat} requires excessives amounts of RAM, as it does not appear to be implemented in any major Python-library and its calculating requires multiplication of huge matrices.
