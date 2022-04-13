@@ -140,7 +140,7 @@ Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, 
 \multicolumn{1}{l}{} & \textbf{Any} & -    & -             & 0.72          & \textbf{0.73}  & -    & -             & -             
 	\end{tabular}%
 	% } %resizebox
-	\slcaption{F1-Scores of classifiers predicting GeoNames- and Foursquare-labels for three baselines, \mainalgos and this work. \textbf{Cls} column encodes the classifier: \textbf{D1/3} are \glspl{dt} of depth 1/3, \textbf{DN} unbounded \gls{dt}. Condition \textbf{Any} refers to the best of \cite{Derrac2015}'s  semantic classifiers. \hspace{1ex}
+	\caption[F1-Scores of classifiers for placetype-taxonomies of \mainalgos and this work]{F1-Scores of classifiers predicting GeoNames- and Foursquare-labels for three baselines, \mainalgos and this work. \textbf{Cls} column encodes the classifier: \textbf{D1/3} are \glspl{dt} of depth 1/3, \textbf{DN} unbounded \gls{dt}. Condition \textbf{Any} refers to the best of \cite{Derrac2015}'s  semantic classifiers. \hspace{1ex}
 	Baseline-columns: \textbf{Ran} is the \textit{Random} baseline as reported by \cite{Alshaikh2020}, \textbf{LDA} is \acrshort{lda} as reported by \cite{Ager2018}, \textbf{BL} is the best baseline-condition from \cite{Derrac2015}. \hspace{1ex}
 	Columns \textbf{\cite{Derrac2015}, \cite{Ager2018}}, \textbf{\cite{Alshaikh2020}} encode the best reported scores per publication. Starred values in column \textbf{\cite{Derrac2015}} refer to results that \cite{Ager2018} reported for the configuration of \cite{Derrac2015} for conditions not covered by the latter. Final column reports the results of this work (with balanced samples and 1vsRest-condition; unlike \autoref{tab:f1_geonames_foursquare_all}, this reports the respectively optimal parameter-configuration just like the best reported config from \mainalgos) with a literature-consistent train-test-split of 70-30. A longer version of this table listing more configurations per publication can be found in the Appendix as \autoref{tab:f1_placetypes_long}.}
 	\label{tab:f1_mainalgos_me_short}
@@ -293,7 +293,9 @@ As previously described, the primary method used here to check if the described 
 	\end{center}
 \end{figure}
 
-To see if it is possible to extract any kind of structured data from the unstructured course descriptions, a \gls{bert}-based Neural Network classifier was trained on the dataset, classifying the subset of courses that are for the \gls{uos} to the faculty they belong to. The classifier trained for 12 epochs before \emph{stopping early} due to its performance on the test-set decreasing. It achieved an accuracy of \textbf{85.19\%} for the test-set (94.13\% on the training set), providing strong indication that the faculty can be considered a latent property of its description. Because \gls{bert} is one of the best general language classifiers to date \cite{Devlin2019}, this accuracy will be considered the upper boundary for the results of our algorithm.
+To see if it is possible to extract any kind of structured data from the unstructured course descriptions, a \gls{bert}-based Neural Network classifier was trained on the dataset, classifying the subset of courses that are for the \gls{uos} to the faculty they belong to. The architecture of the classifier is described in the Appendix~\ref{sec:faculty_classifier}
+
+The classifier trained for 12 epochs before \emph{stopping early} due to its performance on the test-set decreasing. It achieved an accuracy of \textbf{85.19\%} for the test-set (94.13\% on the training set), providing strong indication that the faculty can be considered a latent property of its description. Because \gls{bert} is one of the best general language classifiers to date \cite{Devlin2019}, this accuracy will be considered the upper boundary for the results of our algorithm.
 
 \autoref{fig:scatter_mds_siddata} displays a \gls{tsne}-representation of the dissimilarity-matrix generated from the normalized angular distances (\autoref{eq:norm_ang_dist}) of the \gls{bow}-representations generated from the courses (only those that have one, which are \todoparagraph{somany}) A first comparison of this scatter-plot and its placetypes-counterpart (\autoref{fig:scatter_mds_placetypes}) reveals that siddata appears to have more homogenous clusters.
 
@@ -435,23 +437,92 @@ For trees deeper than one level, the selected features from the second level on 
 
 
 
-
+\removeMe{
 
 \subsubsection{Are the phrases making up the semantic-direction-clusters similar?}
 
-\todoparagraph{TODO}
+\todo
 
 \subsubsection{Are there dimensions encoding the COVID-19 pandemic?}
 
-\todoparagraph{TODO}
+\todo
+
+}
 
 \subsubsection{Are intuitively appealing phrases among the semantic directions?}
 
-\todoparagraph{TODO}
+\begin{table}[H]
+	\begin{tabular}{rcccc}
+	\toprule
+	 \textbf{NDim} & \multicolumn{2}{l}{\textbf{50}} & \multicolumn{2}{l}{\textbf{200}} \\
+	 & \textbf{0.1} & \textbf{0.5} & \textbf{0.1} & \textbf{0.5}  \\
+	\midrule
+	computer & 24 & 0 & 4 & 11 \\
+	recht & 27 & 0 & 11 & 4 \\
+	musik & 17 & 12 & 7 & 8 \\
+	management & 25 & 0 & 9 & 6 \\
+	literatur & 0 & 0 & 0 & 0 \\
+	sprache & 22 & 0 & 9 & 6 \\
+	psychologie & 23 & 2 & 3 & 12 \\
+	wirtschaft & 25 & 0 & 13 & 2 \\
+	geographie & 28 & 0 & 10 & 3 \\
+	schule & 17 & 8 & 7 & 6 \\
+	kultur & 22 & 0 & 5 & 8 \\
+	wissenschaft & 17 & 0 & 14 & 0 \\
+	sport & 10 & 12 & 4 & 11 \\
+	N & 38 & 38 & 15 & 15 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+	
+
+FIRST LOOKING ONLY AT THOSE THAT WERE USED FOR DTs
+
+All detected clustercenters by 53 configs:
+
+Mathematik/Informatik               werkstoff, ki, pierre, smart, powerpoint, testverfahren, 4 0, judische, bull, adobe, berechnung, ingenieurinnen sommeruni, technisch mechanik, linear, visualisieren, technische mechanik, programmiersprache, programmierung, variabel, modellierung, computer, 3d
+Wirtschaftswissenschaften           career center, sozialwiss uni, fallstudie, musik, kind, economics, data, 4 0, tanz, prasenzveranstaltung, prof dr, korper, steuerrecht, barth, kommune, visualisieren, veranstaltungssuche suchen, arbeitgeber, the beginning of the course, care center, veranstaltung studierenden, ki, bereichern, https, smart, hobbys, lessing, wirtschaftsgeographie, fallstudie, wiwi, business, betrieblich, management, organisation, center betriebswirtschaftlich kompetenz
+Rechtswissenschaften                schuldrecht, geistiges, strafrecht, rollenspiel, deutsch recht, verhandlung, abs, offentliches recht, sp 5, vo, grundrechte, urheberrecht, steuerrecht, offentliches, strafrecht, deutsches europaisches, europaisches, deutsch recht, juristisch, recht, sp 5, grundrechte
+Sprach-/Literaturwissenschaften     kanon, stuttgart reclam, manifest, roman, artikulation, neu deutsch, 1961, seminar stellt, lekture empfehlen, text, studierend gelegenheit, tristan, lessing, grass, la, dame, lateinischen, thomas mann, deutsch literaturwissenschaft, romans, text, deutschen literatur, texte, literarisch
+Humanwissenschaften                 biophysik, gesundheitsforderung, storung, entscheidungsfindung, stress, kognition, therapeutisch, psychologie, genetisch, resilienz, coaching, adl 1, erkrankungen, verhaltensweise, taglich leben, testverfahren, entspannungstechniken, mediation, patient, fuhrte, landes, therapeutisch, psychologie, gehirn, psychisch
+Biologie/Chemie                     barrierefreiheit workshop kontaktieren bitte frau, bourdieu, umstellung, hintergrund aktuell, strassburg, 20 00, tutor innen, beruflichen, erfahren studierend, qualifizierung, rhetorische, coaching, beruflich, verona, dissertation, innen, vorstellen gemeinsam, detailliert information, fruh neuzeit, jahrhundert, konkreten ablauf veranstaltung, lehr lernmethoden, schiller, lessing, kommunikation, kanon, mail studip, 1977, ruckmeldung, werkstattseminar, forschend lernen, vi, geschichte, raten, umgangsform
+Physik                              tatigkeitsfelder, klarer, erfolgsbescheinigung, singen, vorstellungsgesprach, stress, textarbeit, musik, funktionalitat, workshop, alltagssituation, lernen eigen, biologischen, ungefahr, fd, gremien, verortung, coaching, neu deutsch, kuhl, eigen person, radio, entspannt, rollenspiele, 46, ubergreifend, heiligen, ding, team, stress, neu entwicklung, gestik, geschichte, islam, narrativ, klar, projektmanagement, mitarbeiterinnen
+Kultur-/Geowissenschaften           westfalisch, physischen, tourismus, exkursion, wirtschaftlicher, gis, arbeiten leitfaden studierende geographie bern, physischen geographie, architektur, lebensbedingung, industrielle, flache, bewohner, stadtgeographie, geookologisch, landwirtschaft, geographisch, tourismus, stadt, physischen geographie, klimawandel, humangeographische ubung, stadtgeographie, geographie
+Erziehungs-/Kulturwissenschaften    bildung, kinder, haupt realschule, interkulturelles lernen, berufsbildenden schulen, urheberrecht, heranwachsend, religionswissenschaft, koran, padagogisch, beruflich bildung, lernwerkstatt, klinkhardt, didaktik methodik, efp, pisa, schuljahr, sozialpadagogisch, schule, prasenzlehre, lernumgebungen, theologie, erwachsenenbildung, entwicklungsaufgabe, ausserschulisch, padagogik, padagogischen, erziehungswissenschaft, kind jugendlich, padagogisch, schule
+Sozialwissenschaften                entscheidungsfindung, migration, demographisch, sports, demokratie, migrationsforschung, sozial, economics, internationales, politisch system, eu, effektivitat, usa, springer vs, strukturwandel, arbeitgeber, losungsvorschlage, sozial bewegung, staatlicher, berufen, effekt, sozialstruktur, staatlicher, parteien, politik, policy, demokratisch, arbeitsmarkt, wirtschaft, soziologie
+
+
+When word is detected:
+
+computer ['Mathematik/Informatik']
+recht ['Rechtswissenschaften']
+musik ['Wirtschaftswissenschaften', 'Physik']
+management ['Wirtschaftswissenschaften']
+psychologie ['Humanwissenschaften']
+wirtschaft ['Sozialwissenschaften']
+geographie ['Kultur-/Geowissenschaften']
+schule ['Erziehungs-/Kulturwissenschaften']
+
+Checking if it is part of a T$^{0.5}$ term
+Mathematik/Informatik               programmiersprache
+Wirtschaftswissenschaften           wirtschaftsgeographie
+Rechtswissenschaften                schuldrecht, strafrecht, deutsch recht, offentliches recht, grundrechte, urheberrecht, steuerrecht, strafrecht, deutsch recht, recht, grundrechte
+Erziehungs-/Kulturwissenschaften    religionswissenschaft, erziehungswissenschaft
+Physik                              projektmanagement
+Sprach-/Literaturwissenschaften     deutsch literaturwissenschaft
+Humanwissenschaften                 psychologie, psychologie
+Kultur-/Geowissenschaften           arbeiten leitfaden studierende geographie bern, physischen geographie, stadtgeographie, physischen geographie, stadtgeographie, geographie
+Sozialwissenschaften                sports
+
+
+
+
+\removeMe{
 
 \subsubsection{Is there a direction capturing advanced courses?}
 
-\todoparagraph{TODO}
+\todo
+}
 
 \subsubsection{Are embeddings of known similar entities close?}
 
@@ -469,9 +540,12 @@ Further, even though neither course description contains the word \textit{mathem
 
 \subsubsection{Extended analysis}
 
+\removeMe{
 \todoparagraph{Also interesting: The top-ranked entities for some of the features }
 
 \todoparagraph{Neben den Clustern die ich mir anzeigen lassen kann und qualitativ analysieren kann}, kann ich mir auch die distances to the origins of the respective dimensions (induced by the clusters), what induces the respective rankings! (see DESC15 p.24u, proj2 of load_semanticspaces.load_projections) anzeigen lassen - da kann ich sagen "term xyz ist bei "nature" am höchsten".
+}
+
 
 To further analyse the quality of the results, we are interested in the top courses of those directions that best represent the different faculties. \autoref{tab:highest_ranking} displays the most prototypical examples for each of those, which is directly derived from the rankings induced by the classifier.
 
@@ -499,13 +573,45 @@ To further analyse the quality of the results, we are interested in the top cour
 \end{table}
 
 
+\paragraph*{Robustness}
+
+\removeMe{
+
+How many unique in sum are there (out of 53 possible)
+
+Mathematik/Informatik: 22,
+Wirtschaftswissenschaften: 34,
+Rechtswissenschaften: 18,
+Sprach-/Literaturwissenschaften: 23,
+Humanwissenschaften: 23,
+Biologie/Chemie: 35,
+Physik: 37,
+Kultur-/Geowissenschaften: 21,
+Erziehungs-/Kulturwissenschaften: 29,
+Sozialwissenschaften: 29
+
+Mathematik/Informatik: -,
+Wirtschaftswissenschaften: fallstudie (2),
+Rechtswissenschaften: deutsch recht (2), grundrechte (2), sp 5 (2), strafrecht (2)
+Sprach-/Literaturwissenschaften: text (2)
+Humanwissenschaften: psychologie (2), therapeutisch (2)
+Biologie/Chemie: -,
+Physik: stress (2)
+Kultur-/Geowissenschaften: physischen geographie (2), stadtgeographie (2), tourismus (2)
+Erziehungs-/Kulturwissenschaften: padagogisch (2), schule (2)
+Sozialwissenschaften: staatlicher (2)
+
+}
+
+
 
 
 \section{Optimal Parameters}
 \label{sec:results_params}
 
+\removeMe{
 \todoparagraph{Die narrative vorher} ist "ja es funktioniert across domain", zusätzlich hab cih noch hyperparameter search gemacht, was in contrast do derrac15 etc ging dank meiner scalable implementation, blubblub, die reporte ich jetzt natürlich, aber sie ist für die kernaussage nicht so relevant.
-
+}
 The previous sections displayed results for a parameter-combination that performed well on average for the aforementioned classification-task. This section compares all of the parameter-combinations that were considered. 
 
 As described in \autoref{sec:workflow}, a good first approximation is to check how many candidate-terms get a kappa-score which is above the threshold of 0.5. \autoref{tab:kappa_table} shows the results of many runs with different parameter-combinations with the purpose of figuring out which combination of parameters and kappa-metrics lead to enough candidate-terms (\todoparagraph{Also ref the figure of workflow where I check what threshold was realistic})
@@ -612,31 +718,35 @@ After preliminary analysis with the number of kappas, let us also look at the pe
 	}
 \end{table}
 
+\removeMe{
+
 \todoparagraph{As exptected, 3D is not too good, and we see that the best combination is blablabla}
 
 
 \todoparagraph{What do we see? We see that tfidf is besser than ppmi blablabla}
 \todoparagraph{Die alte table sieht viel besser aus} (hier druber)
+}
 
 \begin{table}[H] 
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{rccccccccccccc}
 		\toprule
-		 & \textbf{accuracy} & \textbf{precision} & \textbf{recall} &  \textbf{f1} & \textbf{k_r2r_d} & \textbf{k_r2r_min} & \textbf{k_b2b} & \textbf{k_dig} & \textbf{k_c2r+} & \textbf{k_r2r+_d} & \textbf{k_r2r+_min} & \textbf{k_r2r+_max} & \textbf{k_dig+_2} \\
+		 & \textbf{accuracy} & \textbf{precision} & \textbf{recall} &  \textbf{f1} & \textbf{r2r-d} & \textbf{r2r-min} & \textbf{b2b} & \textbf{dig} & \textbf{c2r+} & \textbf{r2r+d} & \textbf{r2r+min} & \textbf{r2r+max} & \textbf{dig+2} \\
+		 & (10060) & (1668) & (10060) & (3155) & (0) & (2) & (3052) &  (0) & (4) & (0) & (239) & (103) & (1010) \\
 		\midrule
-		accuracy (10060) & - & 0.166 & \bfseries 1.000 & 0.314 & 0.000 & 0.000 & 0.303 & 0.000 & 0.000 & 0.000 & 0.024 & 0.010 & 0.100 \\
-		precision (1668) & \bfseries 1.000 & - & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.001 & 0.998 & 0.000 & 0.002 & 0.000 & 0.084 & 0.051 & 0.126 \\
-		recall (10060) & \bfseries 1.000 & 0.166 & - & 0.314 & 0.000 & 0.000 & 0.303 & 0.000 & 0.000 & 0.000 & 0.024 & 0.010 & 0.100 \\
-		f1 (3155) & \bfseries 1.000 & 0.529 & \bfseries 1.000 & - & 0.000 & 0.001 & 0.967 & 0.000 & 0.001 & 0.000 & 0.067 & 0.032 & 0.140 \\
-		k_r2r_d (0) & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
-		k_r2r_min (2) & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 &  \bfseries 1.000 & 0.000 & - & \bfseries 1.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
-		k_b2b (3052) & \bfseries 1.000 & 0.546 & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.001 & - & 0.000 & 0.001 & 0.000 & 0.068 & 0.033 & 0.141 \\
-		k_dig (0) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
-		k_c2r+ (4) & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.000 & \bfseries 1.000 & 0.000 & - & 0.000 & \bfseries 1.000 & \bfseries 1.000 & 0.250 \\
-		k_r2r+_d (0) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 \\
-		k_r2r+_min (239) & \bfseries 1.000 & 0.586 & \bfseries 1.000 & 0.887 & 0.000 & 0.000 & 0.874 & 0.000 & 0.017 & 0.000 & - & 0.406 & 0.452 \\
-		k_r2r+_max (103) & \bfseries 1.000 & 0.825 & \bfseries 1.000 & 0.981 & 0.000 & 0.000 & 0.981 & 0.000 & 0.039 & 0.000 & 0.942 & - & 0.437 \\
-		k_dig+_2 (1010) & \bfseries 1.000 & 0.208 & \bfseries 1.000 & 0.438 & 0.000 & 0.000 & 0.426 & 0.000 & 0.001 & 0.000 & 0.107 & 0.045 & - \\
+		accuracy & - & 0.166 & \bfseries 1.000 & 0.314 & 0.000 & 0.000 & 0.303 & 0.000 & 0.000 & 0.000 & 0.024 & 0.010 & 0.100 \\
+		precision & \bfseries 1.000 & - & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.001 & 0.998 & 0.000 & 0.002 & 0.000 & 0.084 & 0.051 & 0.126 \\
+		recall  & \bfseries 1.000 & 0.166 & - & 0.314 & 0.000 & 0.000 & 0.303 & 0.000 & 0.000 & 0.000 & 0.024 & 0.010 & 0.100 \\
+		f1  & \bfseries 1.000 & 0.529 & \bfseries 1.000 & - & 0.000 & 0.001 & 0.967 & 0.000 & 0.001 & 0.000 & 0.067 & 0.032 & 0.140 \\
+		r2r-d  & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+		r2r-min  & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 &  \bfseries 1.000 & 0.000 & - & \bfseries 1.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+		b2b  & \bfseries 1.000 & 0.546 & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.001 & - & 0.000 & 0.001 & 0.000 & 0.068 & 0.033 & 0.141 \\
+		dig & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+		c2r+  & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.000 & \bfseries 1.000 & 0.000 & - & 0.000 & \bfseries 1.000 & \bfseries 1.000 & 0.250 \\
+		r2r+d  & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 \\
+		r2r+min  & \bfseries 1.000 & 0.586 & \bfseries 1.000 & 0.887 & 0.000 & 0.000 & 0.874 & 0.000 & 0.017 & 0.000 & - & 0.406 & 0.452 \\
+		r2r+max  & \bfseries 1.000 & 0.825 & \bfseries 1.000 & 0.981 & 0.000 & 0.000 & 0.981 & 0.000 & 0.039 & 0.000 & 0.942 & - & 0.437 \\
+		dig+2  & \bfseries 1.000 & 0.208 & \bfseries 1.000 & 0.438 & 0.000 & 0.000 & 0.426 & 0.000 & 0.001 & 0.000 & 0.107 & 0.045 & - \\
 		\bottomrule
 	\end{tabular}
 		}
@@ -696,7 +806,7 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}.\f
 % \end{table}
 
 
-
+\removeMe{
 
 \begin{table}[]
 	\centering
@@ -726,7 +836,9 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}.\f
 	\caption{Highest-ranking descriptions per dimension for the reclassify-algorithm and the main-algorithm}
 	\label{tab:text_per_dim}
 \end{table}
+}
 
+\removeMe{
 
 \todoparagraph{Just print a few fucking clusters here}
 
@@ -748,3 +860,11 @@ religionswissenschaft: religionsunterrichts, spirituelle, religions, teil verans
    aktive beteiligung: teilnahme ersten, wochentliche, zweit, festlegung, ubergreifende, auml ndige, ndige, ...
  		 unsicherheit: covid 19 pandemie, korperlich, wendet studierende, webinar, risiko, einbringen, fachlich, ...
 	 wirtschaftlicher: industrialisierung, wachstum, republik, wirtschaftspolitik, konkurrenz, positive, russland, ...
+}
+
+
+\subsection{Robustness}
+
+first is nsamples, second is maximal number, last is max number
+For 50D:  38 3800 1003
+For 200D: 15 6000 1707

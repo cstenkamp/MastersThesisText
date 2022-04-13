@@ -10,14 +10,6 @@ wenn meine ergebnisse anders sind als die von dem paper kann ich halt erst dann 
 
 
 
-
-## Outlook 
-
-There are also techniques that extend the algorithm of \textcite{Derrac2015}: \textcite{Alshaikh2019} take a vector space embedding and decompose it to several low-dimensional spaces, such that it more closely corresponds to the definition of a \gls{cs} which are split into multiple domain-specific spaces of low dimension. For that, they take the spaces from \cite{Derrac2015} to then cluster their features by domain and iteratively remove these groups to create multiple subspaces, while ensuring that \gls{word2vec} embeddings close to those of the removed ones are disregarded for future features.
-
-\cite{Alshaikh2021} want to get rid of MDS with it's quadratic space complexity and also write a completely new, unsupervised ANN algorithm based on GloVe embeddings (and suggest that doing that on BERT may be the shit). In it, they learn domain-specific embeddings from the BoW and like \cite{Derrac2015} use classification of candidate-from-text-occurs vs not-occurs for the ANN training while punishing close embeddings like \cite{Alshaikh2019}.
-
-
 # Regarding their research practices
 
 

@@ -1,4 +1,6 @@
-% \newcommand*{\NoMarkdown}{}
+\newcommand*{\NoMarkdown}{}
+% \newcommand*{\RemoveAll}{}
+
 
 %TODO: once the text is "finished": [see sublime note]
 % see also: https://www.wiwi.uni-osnabrueck.de/fileadmin/documents/public/3_fachgebiete/3.11_mikro/Guidelines/Guidelines_Thesis.pdf
@@ -12,6 +14,8 @@
 	\PassOptionsToPackage{colorlinks=true}{hyperref}
 \fi
 
+
+
 \documentclass[11pt,
   paper=a4, 
 %   twoside,
@@ -21,6 +25,9 @@
   captions=tableheading,
   BCOR=5mm,
 ]{scrreprt}
+
+\setcounter{tocdepth}{1}
+% \setcounter{secnumdepth}{2}
 
 \usepackage{geometry}
 \geometry{a4paper, bottom=20mm}
@@ -212,7 +219,8 @@
        bookmarksnumbered=false,
        plainpages=false,
        hyperindex=true,
-       pdfstartview=%
+	   bookmarksdepth=3, 
+       pdfstartview=%,
  ]{hyperref} % why so many options? https://golatex.de/viewtopic.php?p=22119&sid=ebe25f27fce1765ab7d8b1d2e91ee979#p22119
 \usepackage{bookmark} %also https://golatex.de/viewtopic.php?p=22119&sid=ebe25f27fce1765ab7d8b1d2e91ee979#p22119
 \addto\extrasenglish{\def\sectionautorefname{Section}}
@@ -793,6 +801,15 @@
 \newcommand{\mainalgos}{\cite{Derrac2015,Ager2018,Alshaikh2020}\xspace}
 
 
+
+\ifdefined\RemoveAll
+	\newcommand{\removeMe}[1]{\ignorespaces}
+\else
+	\newcommand{\removeMe}[1]{#1}
+\fi
+
+
+
 \input{special_highlight.tex}
 
 % If we add the \NoMarkdown at compilation, we won't use any of the \@input. See https://tex.stackexchange.com/a/220101/108199, https://tex.stackexchange.com/a/33577/108199
@@ -878,7 +895,6 @@
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
 \renewcommand{\baselinestretch}{1.15}
-
 
 \begin{document}
 

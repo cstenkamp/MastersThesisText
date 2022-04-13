@@ -15,3 +15,6 @@ Ich habs geschafft diesen Algorithmus zu reproduzieren und es scheint ganz gut z
 
 "im vergleich zu demundem haben wir das geliche rausbekommen, ...", "die arbeit extended dasunddas weil wir's in ne andere domäne geschoben haben und ..."
 
+
+
+dass sowohl die architektur hierfür, als auch meine Grid-solutions eine major contribution sind die sich sehen lassen können!

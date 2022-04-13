@@ -130,8 +130,8 @@ In conceptual spaces, concepts are represented as convex regions in domain-speci
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{graphics/stolenfigures/apple_space.png}
-	\slcaption{
-		Inner form of a Conceptual Space for an apple, displayed as product of different properties, which are convex regions in different quality domain spaces. Reprinted from \cite{Hernandez-Conde2017}, who adapted it from \cite{Fiorini2013}.
+	\caption[Inner form of a Conceptual Space for an apple]{
+		Inner form of a Conceptual Space for an apple, displayed as product of different properties, which are convex regions in different quality domain spaces. Adapted from \cite{Fiorini2013}.
 	}
     \label{fig:apple_cs}
 \end{figure}
@@ -381,8 +381,6 @@ Generally, what is being done here corresponds to \textbf{Representation Learnin
 
 In the realm of \gls{nlp}, this also relates to \textbf{Topic Modeling}, which aims to extract multiple hidden themes from a given text corpus by discovering groups of co-occuring words unsupervisedly. A well-known algorithm for this is Latent Dirichlet Allocation (LDA) \cite{Blei2003}, which represents documents by its salient \textit{topics}, each of which being a cluster of natural language terms. This technique bases on the assumption that each text consists of various topics, which are in turn made up by various keywords, making it possible to represent texts as multinomial distribution over latent topics which are aggregations of these keywords. Assuming a hierachical bayesian distribution where each text of a corpus is represented as mixture of topics it contains, their unsupervised algorithm extracts these by approximating the underlying infinite mixture of topic with an expectation-maximization (EM) algorithm. This yields a representation where each text is explicitly represented by the most propable words according to this distribution for a finite number of most probable topics. The algorithm finds use in text classification and collaborative filtering, but relies on unflexible \gls{bow} representations, making it hard to incorporate additional information such as correlations between topics \cite{Ager2018}.
 
-\todoparagraph{LDA is still sometimes better than this algo} - see \autoref{tab:f1_mainalgos_me_short}
-
 
 \paragraph{Academic Interests Recommender}
 \label{sec:sidbert}
@@ -527,7 +525,7 @@ Given metric distances $d(p_i, p_j) \forall 1 \leq i, i \leq j$ and the demanded
 \vspace{-2ex}
 $$ \sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(d(p_i, p_j) - \lVert v_i - v_j \rVert)^2 $$
 
-
+\removeMe{
 \subsection{Other important Techniques}
 
 
@@ -539,6 +537,4 @@ Lexical databases of semantic relations between words, the most famous of which 
 embeddings may encode similar information implicitly, when relying on dictionary-based word encodings they are an important tool when using classical linguistic techniques. For the developed algorithm, the information how many hyponyms of a candidate word for a semantic direction %TODO: did I explain the algorithm well enough before this to throw this much information at the reader?!
 occur in its corresponding text-corpus can be highly relevant. To do that, WordNet \cite{Miller1995} and it's German equivalent, GermaNet \cite{hamp-feldweg-1997-germanet,Henrich},\footnote{\url{(https://uni-tuebingen.de/fakultaeten/philosophische-fakultaet/fachbereiche/neuphilologie/seminar-fuer-sprachwissenschaft/arbeitsbereiche/allg-sprachwissenschaft-computerlinguistik/ressourcen/lexica/germanet-1/)}} are used in the respective step.
 
-
-
-
+}

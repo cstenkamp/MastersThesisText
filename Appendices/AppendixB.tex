@@ -23,7 +23,7 @@ This appendix goes into more detail for selected components of the algorithm.
 
 \label{AppendixB} 
 
-\section{Algorithm Details}
+\section{Algorithm Implemetatation Details}
 
 \subsection*{Preprocessing}
 
@@ -112,6 +112,19 @@ In practice, though both variants extracted different phrases, the results for e
 \end{table}
 
 
+
+
+
+\subsection*{Faculty-Classifier}
+\label{sec:faculty_classifier}
+
+As one of the evaluations is to compare the results of classifiers based on the algorithm here with a powerful classification algorithm, a neural network that classifies the Faculty of a course in the Siddata-Dataset was also implemented. The implementation for that will not be elaborated upon except that it is available at \todoparagraph{Link to the repo}, it relies on sacred,\footnote{\todoparagraph{link to sacred, note that to get the results like I did you'll need a MongoDB in a docker container, see this link}} and that it uses Google's `universal-sentence-encoder-multilingual` in Version 3 (linear in textlength, thus managable time and space requirements) plus a few classification layers ontop. The encoder is trained \q{on a number of natural language prediction tasks that require modeling the meaning of word sequences rather than just individual words},\footnote{Quote from their description at \url{https://tfhub.dev/google/collections/universal-sentence-encoder/1} (accessed \date{2022}{03}{25})} aimed being the base for architectures for many NLP tasks through the usage of sentence embeddings \cite{Guo}. It was trained on with a train-test-split of 90/10 (the results being consitent through sampled cross-validation)
+
+
+\todoparagraph{Another purpose of the classifier} is to check if it is anyhow possible to extract meaningful information from the descriptions: If it is possible to train a classifier on the data that can reasonably predict a qualitative feature, there is enough structure in the data such that the algorithm I'm about to produce can work. 
+
+Also, we have a lower bound for useful data: we can just throw away data that cannot be classified!!
+
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
 \section{Used Software}
@@ -152,15 +165,25 @@ In practice, though both variants extracted different phrases, the results for e
 
 \subsection{\textcite{Ager2018}}
 
+\input{pandoc_generated_latex/ZZ_listingreplacement_ager}
+
+\removeMe{
 \begin{lstlisting}[language=yaml, caption={YAML for \textcite{Ager2018}}]
     max_ngram:              1
     classifier_succmetric:  [cohen_kappa, accuracy, ndcg]
     dcm_quant_measure:      ppmi    
 \end{lstlisting}
+}
 
 
-\subsection{\textcite{Alshaikh2020}}
+\todo 
 
-\begin{lstlisting}[language=yaml, caption={YAML for \textcite{Alshaikh2020}}]
-    TODO: do
-\end{lstlisting}
+% \removeMe{
+
+% \subsection{\textcite{Alshaikh2020}}
+
+% \begin{lstlisting}[language=yaml, caption={YAML for \textcite{Alshaikh2020}}]
+%     TODO: do
+% \end{lstlisting}
+
+% }

@@ -8,7 +8,7 @@ It is important to keep in mind that the algorithm is no rigid monolith but modu
 \todoparagraph{The following explanation assumes that we accept some things as given. For now we'll do that, but we will later revisit and critically question many of these assumptions!}
 
 % The core idea of the algorithm is to unsupervisedly find a a set of features which can be modelled as directions for a vector-space representation of the respetive entities.
-The main goal of the algorithm is to unsupervisedly use text-corpora associated with the considered from a certain domain\glspl{entity}\footnote{From now on, the term \textit{\glspl{entity}} refers to the sample described by one text from the corpus (description, concatenated reviews, ...). The corpus accordingly defines the domain: educational resources, movies, ...} to embed these into a vector-space where the axes correspond to human concepts/Properties.\footnote{\textit{Concepts} and \textit{Properties} explicitly refer to what is defined in Criterions C and P, see \ref{sec:csdefinition}} This is referred to as \textit{feature-based} representation: A high-dimensional vector that numerically encodes the degree (\textit{protoypicality}) to which the entity corresponds to a number of appropriate dimensions. This is generally referred to as Conceptual Space and can be used as basis for explainable reasoning.\\
+The main goal of the algorithm is to unsupervisedly use text-corpora associated with the considered from a certain domain\glspl{entity}\footnote{From now on, the term \textit{\glspl{entity}} refers to the sample described by one text from the corpus (description, concatenated reviews, ...). The corpus accordingly defines the domain: educational resources, movies, ...} to embed these into a vector-space where the axes correspond to human concepts/Properties.\footnote{\textit{Concepts} and \textit{Properties} explicitly refer to what is defined in Criterions C and P, see \ref{sec:csdefinition}} This is referred to as \textit{feature-based} representation: A high-dimensional vector that numerically encodes the degree (\textit{protoypicality}) to which the entity corresponds to a number of appropriate dimensions. This is generally referred to as Conceptual Space and can be used as basis for explainable reasoning.
 
 The general idea to achieve that is as follows: First, the entities are embedded as fixed-dimensional vectors. To allow for the types of reasoning mentioned in Section \ref{sec:cs_reasoning}, it is embedded into metric spaces where the concepts of direction and distance are well-defined \gencite{Derrac2015} original algorithm uses MDS (see \ref{sec:mds}) for this matter, which enforces metric distances. \cite{Ager2018,Alshaikh2020} both soften this requirement and also use document embedding techniques such as doc2vec and averaged GloVe \todoparagraph{REFERENCE!} embeddings.
 
@@ -16,10 +16,11 @@ Additionally, words or phrases from the text are extracted as candidates for the
 % * from Alshaikh2020: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candi- date word w a linear classifier which separates the embeddings of entities that have w in their description from the others. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
 In a final step, the candidate-words are clustered according to their similarity to find a fixed set of \emph{semantic directions}. A representative term for the directions is selected as dimension name, and the entities are re-embedded into a new space comprised of these dimensions, where the individual vector-components correspond to the ranking of an entity with respect to these dimensions.
 
-The rest of this section goes into further detail for each of the individual components of the algorithm. An overview of which of the considered literature supports each components is given in \autoref{tab:compared_algos}. Further, configuration files to enable exactly the respective components of the papers \mainalgos for the codebase of this thesis are listed in \aref{ap:yamls_for_origalgos}.
+The rest of this section goes into further detail for each of the individual components of the algorithm. \removeMe{An overview of which of the considered literature supports each components is given in \autoref{tab:compared_algos}.} Further, configuration files to enable exactly the respective components of the papers \mainalgos for the codebase of this thesis are listed in \aref{ap:yamls_for_origalgos}.
 
 \todoparagraph{but before that, ager and alshaikh}
 
+\removeMe{
 \subsection{Regarding ager and alshaikh}
 
 \todoparagraph{describe shortly what the improvements from [2,3] were}
@@ -27,7 +28,7 @@ The rest of this section goes into further detail for each of the individual com
 \todoparagraph{Dass die den Zwischenschritt mit dem ganzen geeometric reasoning auf dem interim space nicht machen und DESWEGEN die requirement mit MDS soften konnen}
 
 In principle Derrac2015, but with some components from Ager2018 and Alshaikh2020 as well as some own stuff. I'll be testing some claims or nonclaims of \mainalgos, bspw nutzen sie immer PPMI ohne je tf-idf zu testen. Also of course different nature of the dataset - their "how does this dimension correspond to the count in the reviews" doesn't make sense (their success-metric for the SVM is tailored to the one property, so I expect that one to be worse). I'll elaborate on different ways to deal with that later.
-
+}
 
 \subsection{Algorithm Steps}
 \label{sec:algorithm_steps}
@@ -42,9 +43,9 @@ Let us finally describe the steps how to create an interpretable vector-space fr
 	\item[\saveref{sec:extract_cands}{2.}] \textbf{Extract Candidate Feature} names from words/\glspl{ngram} of the corpus.
 	\item[\saveref{sec:generate_vectorspaces}{3.}] \textbf{Embed all Entities} into a fixed-dimensional vector space with demanded properties that captures the respective semantics.
 	\item[\saveref{sec:svm_filter_cands}{4.}] \textbf{Filter Candiate Features} by training a linear classifier for each candidate that seperates the vector representations of the entities that contain the term from those that do not. If a specified metric for this classifier is sufficiently high, assume that the candidate term captures a \textit{salient} feature - its direction is then characterized by the orthogonal of the classifier's separatrix.
-	\item[\saveref{sec:generate_vectorspaces}{5.}] \textbf{Cluster the candidates} and calculate the feature direction for each cluster from its components.
-	\item[\saveref{sec:generate_vectorspaces}{6.}] (optionally) \textbf{Post-process} the candidate-clusters.
-	\item[\saveref{sec:generate_vectorspaces}{7.}] \textbf{Re-embed the entities} into a space of semantic directions by calculating their distance to each of the feature direction separatrices.	
+	\item[\saveref{sec:algo:cluster}{5.}] \textbf{Cluster the candidates} and calculate the feature direction for each cluster from its components.
+	\item[\saveref{sec:algo:postprocess}{6.}] (optionally) \textbf{Post-process} the candidate-clusters.
+	\item[\saveref{sec:algo:reembed}{7.}] \textbf{Re-embed the entities} into a space of semantic directions by calculating their distance to each of the feature direction separatrices.	
 \end{enumerate}
 
 \todoparagraph{The first part of the algo is to "create semantic spaces". This can be completely exchanged, as done by Ager}
@@ -53,7 +54,7 @@ This techniques first embeds the collection of texts into a  vector space, to af
 
  An explicit and simple implementation compliant with each step could be a simple word tokenization and count to generate a bag-of-words (step 1) where each sufficiently frequent word is used as candidate (step 2). A \gls{dissimmat} of the individual \gls{bow}-vectors is compressed using MDS (step 3). A \gls{svm} calculates the accuracy for each candidate (step 4), and k-means-clustering on the 500 top-scoring terms subsequently creates 100 clusters and averages their directions (step 5). The distance to each of the hyperplanes is calculate (step 6), yielding new space for the entities. The sequence of steps is also given as pseudocode in \autoref{ap:algorithm_pseudo}. 
  
- Again it should be stressed that many different components can be considered for each step and the distinction of steps is not rigid: Instead of creating a dissimilarity-matrix followed by dimensionality reduction, \cite{Ager2018,Alshaikh2020} use neural word or document embeddings.\footnote{see \autoref{tab:compared_algos}} Instead of extracing candidates from corpus tokens and training a linear classifier for each of them and use their orthogonal as direction, techniques such as LSA or LDA can be employed to find topic vectors directly. We will come back to these ideas when discussing future research opportunities (\autoref{sec:futurework}) by listing what other ways of fulfilling each respective step could have been considered.
+ Again it should be stressed that many different components can be considered for each step and the distinction of steps is not rigid: Instead of creating a dissimilarity-matrix followed by dimensionality reduction, \cite{Ager2018,Alshaikh2020} use neural word or document embeddings.\footnote{see \autoref{sec:compared_algos}} Instead of extracing candidates from corpus tokens and training a linear classifier for each of them and use their orthogonal as direction, techniques such as LSA or LDA can be employed to find topic vectors directly. We will come back to these ideas when discussing future research opportunities (\autoref{sec:futurework}) by listing what other ways of fulfilling each respective step could have been considered.
 
 \autoref{fig:dependency_graph} shows an automatically exported dependency-graph, displaying the individual steps of the algorithm as done in the accompaning code, also showing where selected important parameters are first used. As explained in \autoref{sec:architecture}, the modularity of the provided architecture allows individual components to be exchanged as needed and run in parallel.
 
@@ -107,7 +108,7 @@ Removing stop-words from the texts is useful because it makes the resulting freq
 \paragraph{On Lemmatization}
 The languages most prevalent in the considered datasets are considered \textit{agglomerative}, which means word stems are changed by the addition of affixes and suffixes. Consequently, the same word may be present in multiple different forms, which modelled as completely dissimilar vectors in the present \glspl{bow}-approach. Lemmatization is the process of mapping different forms of these words onto the same stem. Considering that the Siddata-dataset consists of far fewer words than the others, this has important implications. For the german descriptions, this implementation relies on the \textit{HanTa} lemmatizer. \todoparagraph{Correct citation for hanta!!} %https://textmining.wp.hs-hannover.de/Preprocessing.html#Lemmatisierung
 
-\todoparagraph{The result of this step is a bag-of-ngrams representation for each entity.} \autoref{sec:techniques:bow}
+The result of this step is a bag-of-ngrams representation for each entity (see \autoref{sec:techniques:bow})
 
 
 \subsubsection{Extract Candidates\arrowref{sec:algorithmsteps}}
@@ -244,8 +245,13 @@ So, alogorithm: For every candidate-term, take the quantifications from the doc-
 
 
 
-\subsubsection{Clustering the extracted candidates}
+\subsubsection{Clustering the extracted candidates\arrowref{sec:algorithmsteps}}
 \label{sec:algo:cluster}
+
+
+\todoparagraph{And recalculate their feature directions}
+
+\todoparagraph{THat I am using a better technique than Derrac here!}
 
 An analysis of \cite{Carmel2009} showed that a statistical method to extract features from clustered text corpora identified the labels of human annotators as one of the top five most important terms in only 15\% of cases, implying ``that human labels are not necessarily significant from a statistical perspective" \cite[139]{Carmel2009}
 %TODO: die eigentliche Methode (JSD) mehr erklären!!
@@ -253,11 +259,39 @@ An analysis of \cite{Carmel2009} showed that a statistical method to extract fea
 
 \todoparagraph{I am picking up the point of affine spaces and the question of points vs vectors and if it makes sense to compare cosine similarity in the discussion!}
 
-\subsubsection{Re-Embedding the entities into the new space}
+\subsubsection{Postprocessing the Feature-Directions\arrowref{sec:algorithmsteps}}
+\label{sec:algo:postprocess}
+
+This step was the main contribution of the work of \textcite{Ager2018}. As has been shown that it increases the algorithm performance only slightly while adding a substantial amount of work, it was not implemented in the scope of this thesis. The Modification is however described in \autoref{sec:ager}
+
+\subsubsection{Re-Embedding the entities into the new space\arrowref{sec:algorithmsteps}}
+\label{sec:algo:reembed}
 
 from Alshaikh2020: "The learned vectors will be referred to as feature directions to emphasize the fact that only the ordering induced by the dot product d_i · e matters"
 
 
+
+
+
+
+
+\subsection{Modifications from \textcite{Ager2018,Alshaikh2020}}
+
+\subsubsection{\textcite{Ager2018}}
+\label{sec:ager}
+
+
+The main contribution of \textcite{Ager2018} is a postprocessing step that changes the final space such the ranking of entities \wrt each feature direction more closely mimics the ranking of frequencies of that direction's cluster words. The reasoning is that the original embeddings from which the feature directions are created are based on global similarity. This makes it very vulnerable to outliers which often take up extreme positions. If one now creates the feature directions from the space, these outliers are assumed to have certain properties. So the space is optimized for that, which limits the quality of feature directions in the space. Problem again is global similarity: If one entity ranks high for a feature, it is very likely that another entity that is close to that will also rank high for this feature, even though it may be something completely different. So to get better feature directions one has to distort the space. 
+
+They do this fully unsupervisedly as an extra step after the full pipeline of \cite{Derrac2015}, by again using the BoW representation of the entites. After the clusters are collected and the entities re-embedded, for each feature a new ranking is computed by the summed frequency of any of a cluster's words per feature and entity. Each entity is thus represented as Bag-of-Clusters and again scored with PPMI to generate a ranking for each cluser/direction. This ranking is then used as a target for a simple \gls{ann} that distorts the space representation.
+
+Generally this is a great idea. Among others the explicit usage of all cluster-words should help, as it is a lot less sparse than a single word that only occurs in 0.6\% of entites. However the results of their approach are mixed: For some of their considered datasets the fine-tuning even decreases performance - according to the authors especially \q{when the considered categorizes are too specialized} \cite{Ager2018}, because the resulting space is too much distorted towards the selected features.\footnote{See also \autoref{tab:f1_placetypes_long}} Considering its bad performance, this contribution was not considered in this work.
+
+\textcite{Alshaikh2020}
+
+\todo
+
+\removeMe{
 \subsection{Concluding stuff for algo}
 
 \includeMD{pandoc_generated_latex/3_1_algorithm}
@@ -271,3 +305,4 @@ from Alshaikh2020: "The learned vectors will be referred to as feature direction
 \includeMD{pandoc_generated_latex/3_reasonableparams}
 
 \subsection{Algorithm Complexity}
+}
