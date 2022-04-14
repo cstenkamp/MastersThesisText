@@ -1,5 +1,5 @@
 % \newcommand*{\NoMarkdown}{}
-% \newcommand*{\RemoveAll}{}
+\newcommand*{\RemoveAll}{}
 
 
 %TODO: once the text is "finished": [see sublime note]
@@ -824,9 +824,12 @@
 	\newcommand{\todoparagraph}[1]{\ignorespaces}	
 \else
 	\makeatletter
-	\newcommand{\includeMD}[1]{\color{gray} \input{#1} \color{black}}
-	% \let\includeMD\input
-	\newcommand{\todoparagraph}[1]{\highlight[red]{#1}}
+	% \newcommand{\includeMD}[1]{\color{gray} \input{#1} \color{black}}
+	% % \let\includeMD\input
+	% \newcommand{\todoparagraph}[1]{\highlight[red]{#1}}
+
+	\newcommand{\includeMD}[1]{\ignorespaces}
+	\newcommand{\todoparagraph}[1]{\ignorespaces}	
 \fi
 
 % let ALL paragraphs not have an indent but an empty line between
