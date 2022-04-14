@@ -23,7 +23,7 @@ This appendix goes into more detail for selected components of the algorithm.
 
 \label{AppendixB} 
 
-\section{Algorithm Implemetatation Details}
+\section{Algorithm Implementation Details}
 
 \subsection*{Preprocessing}
 
@@ -35,7 +35,7 @@ see \autoref{sec:algo_preproc}
 To check the languages of the entities, the \codeother{langdetect}\footnote{\url{https://pypi.org/project/langdetect/}, \textcite{nakatani2010langdetect}} library is used, which is a direct port of a java library that claims to have 99.8\% accuracy on longer texts \cite{nakatani2010langdetect}. 
 \newline
 
-Depending on the translation-policy, it is possible to either take only those entities of the demanded language, ignore it and consider all entities in their original language, or enforce the demanded language by translating all entities from their original language to the demanded one. The accompaning code for this thesis contains extensive code to do that using the \emph{Google Cloud Translation API}\footnote{\url{https://cloud.google.com/translate}}. Many descriptions of the SIDDATA-dataset were translated using this technique\footnote{As, however, only 500.000 characters per google-account and month can be translated \href{https://cloud.google.com/translate/pricing}{free of charge}, the translation-process for the descriptions is still in progress.}. As of now, Google's Cloud Translation Service uses an embedding-based neural model of a hybrid architecture that has a transformer encoder, followed by an RNN decoder \cite{Chen2018}. All of the languages detected in the SIDDATA-dataset are supported by the system - translating between the languages German, English and Spanish, which make up \todoparagraph{HOWMANY} percent of the SIDDATA-descriptions, is what the system is particularly optimized for. 
+Depending on the translation-policy, it is possible to either take only those entities of the demanded language, ignore it and consider all entities in their original language, or enforce the demanded language by translating all entities from their original language to the demanded one. The accompaning code for this thesis contains extensive code to do that using the \emph{Google Cloud Translation API}\footnote{\url{https://cloud.google.com/translate}}. Many descriptions of the Siddata-dataset were translated using this technique\footnote{As, however, only 500.000 characters per google-account and month can be translated \href{https://cloud.google.com/translate/pricing}{free of charge}, the translation-process for the descriptions is still in progress.}. As of now, Google's Cloud Translation Service uses an embedding-based neural model of a hybrid architecture that has a transformer encoder, followed by an RNN decoder \cite{Chen2018}. All of the languages detected in the Siddata-dataset are supported by the system - translating between the languages German, English and Spanish, which make up \todoparagraph{HOWMANY} percent of the Siddata-descriptions, is what the system is particularly optimized for. 
 \todoparagraph{write short about their percentage, bleu score etc}
 
 \includeMD{pandoc_generated_latex/6_1_implementationdetails}
@@ -67,7 +67,7 @@ In practice, though both variants extracted different phrases, the results for e
 \begin{figure}[H]
 	\begin{center}
 	  \includegraphics[width=\textwidth]{3dplot_hyperplane_and_orthogonal}
-	  \caption[Visual representation of the Hyperplane of an SVM splitting a dataset]{ \label{fig:3d_hyperplane_ortho} Visual representation of the Hyperplane of a Support-Vector-Machine splitting a dataset, as well as it's orthogonal and the orthogonal projection of a set of samples onto the plane. For an interactive version of this plot, visit  {\small \url{https://nbviewer.org/github/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/hyperplane_orthogonal_3d.ipynb?flush_cache}}}
+	  \caption[Visual representation of the hyperplane of an SVM splitting a dataset]{ \label{fig:3d_hyperplane_ortho} Visual representation of the Hyperplane of a Support-Vector-Machine splitting a dataset, as well as it's orthogonal and the orthogonal projection of a set of samples onto the plane. For an interactive version of this plot, visit  {\small \url{https://nbviewer.org/github/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/hyperplane_orthogonal_3d.ipynb?flush_cache}}}
 	\end{center}
 \end{figure}
 
@@ -85,7 +85,7 @@ In practice, though both variants extracted different phrases, the results for e
       all &
       Digitized &
       Digitized &
-      \begin{tabular}[c]{@{}l@{}}Bins decided by np.histogram\_bin\_edges \\ from min and max of all data\end{tabular} \\
+      \begin{tabular}[c]{@{}l@{}}10 bins. Positions decided by np.histogram\_bin\_edges \\ from min and max of all data \end{tabular} \\
     count2rank\_onlypos       & c2r+           & positive      & Unchanged                & Dense-Ranked     & Only for Count as Quantification \\
     rank2rank\_onlypos\_dense & r2r+d          & positive      & Dense-Ranked           & Dense-Ranked     &                                  \\
     rank2rank\_onlypos\_min   & r2r+min        & positive      & Min-Ranked               & Min-Ranked         &                                  \\
@@ -95,13 +95,13 @@ In practice, though both variants extracted different phrases, the results for e
       positive &
       Digitized &
       Digitized &
-      \begin{tabular}[c]{@{}l@{}}Bins decided by np.histogram\_bin\_edges \\ from min and max of all data\end{tabular} \\
+      \begin{tabular}[c]{@{}l@{}}10 bins. Positions by np.histogram\_bin\_edges \\ from min and max of all data\end{tabular} \\
     digitized\_onlypos\_2 &
       dig+2 &
       positive &
       Digitized &
       Digitized &
-      \begin{tabular}[c]{@{}l@{}}Bins decided by np.histogram\_bin\_edges \\ from min and max of all positive data\end{tabular}
+      \begin{tabular}[c]{@{}l@{}}10 bins. Positions by np.histogram\_bin\_edges \\ from min and max of all positive data\end{tabular}
     \end{tabular}%
     }
     \caption{Dense means: if there are 14.900 zeros, the next is a 1
@@ -112,16 +112,22 @@ In practice, though both variants extracted different phrases, the results for e
 \end{table}
 
 
+\section{Other Algorithms}
+
+\subsection{Semantic Knowledge Bases}
+
+Lexical databases of semantic relations between words, the most famous of which being WordNet,\footnote{\url{https://wordnet.princeton.edu/}} link words in a graph that encodes explicit semantic relations like synonyms and hyponyms (subtypes/ \emph{is-a}-relationships). While neural %TODO: nicht neural, aber halt data-driven? naja das was word2vec undso sind... by-context-created/trained...?! similarity-based? -> DISTRIBUTIONAL MODELS (ones trained from the co-occurrence patterns of temrs)
+embeddings may encode similar information implicitly, when relying on dictionary-based word encodings they are an important tool when using classical linguistic techniques. For the developed algorithm, the information how many hyponyms of a candidate word for a semantic direction %TODO: did I explain the algorithm well enough before this to throw this much information at the reader?!
+occur in its corresponding text-corpus can be highly relevant. To do that, WordNet \cite{Miller1995} and it's German equivalent, GermaNet \cite{hamp-feldweg-1997-germanet,Henrich},\footnote{\url{(https://uni-tuebingen.de/fakultaeten/philosophische-fakultaet/fachbereiche/neuphilologie/seminar-fuer-sprachwissenschaft/arbeitsbereiche/allg-sprachwissenschaft-computerlinguistik/ressourcen/lexica/germanet-1/)}} are used in the respective step.
 
 
-
-\subsection*{Faculty-Classifier}
+\subsection{Faculty-Classifier}
 \label{sec:faculty_classifier}
 
-As one of the evaluations is to compare the results of classifiers based on the algorithm here with a powerful classification algorithm, a neural network that classifies the Faculty of a course in the Siddata-Dataset was also implemented. The implementation for that will not be elaborated upon except that it is available at \todoparagraph{Link to the repo}, it relies on sacred,\footnote{\todoparagraph{link to sacred, note that to get the results like I did you'll need a MongoDB in a docker container, see this link}} and that it uses Google's `universal-sentence-encoder-multilingual` in Version 3 (linear in textlength, thus managable time and space requirements) plus a few classification layers ontop. The encoder is trained \q{on a number of natural language prediction tasks that require modeling the meaning of word sequences rather than just individual words},\footnote{Quote from their description at \url{https://tfhub.dev/google/collections/universal-sentence-encoder/1} (accessed \date{2022}{03}{25})} aimed being the base for architectures for many NLP tasks through the usage of sentence embeddings \cite{Guo}. It was trained on with a train-test-split of 90/10 (the results being consitent through sampled cross-validation)
+As one of the evaluations is to compare the results of classifiers based on the algorithm here with a powerful classification algorithm, a neural network that classifies the Faculty of a course in the Siddata-Dataset was also implemented. The implementation for that will not be elaborated upon except that it is available at \todoparagraph{Link to the repo}, it relies on sacred,\footnote{\todoparagraph{link to sacred, note that to get the results like done here you'll need a MongoDB in a docker container, see this link}} and that it uses Google's `universal-sentence-encoder-multilingual` in Version 3 (linear in textlength, thus managable time and space requirements) plus a few classification layers ontop. The encoder is trained \q{on a number of natural language prediction tasks that require modeling the meaning of word sequences rather than just individual words},\footnote{Quote from their description at \urlx{https://tfhub.dev/google/collections/universal-sentence-encoder/1} \acc{03}{25} } aimed being the base for architectures for many NLP tasks through the usage of sentence embeddings \cite{Guo}. It was trained on with a train-test-split of 90/10 (the results being consitent through sampled cross-validation)
 
 
-\todoparagraph{Another purpose of the classifier} is to check if it is anyhow possible to extract meaningful information from the descriptions: If it is possible to train a classifier on the data that can reasonably predict a qualitative feature, there is enough structure in the data such that the algorithm I'm about to produce can work. 
+\todoparagraph{Another purpose of the classifier} is to check if it is anyhow possible to extract meaningful information from the descriptions: If it is possible to train a classifier on the data that can reasonably predict a qualitative feature, there is enough structure in the data such that the algorithm we are about to produce can work. 
 
 Also, we have a lower bound for useful data: we can just throw away data that cannot be classified!!
 

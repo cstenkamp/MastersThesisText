@@ -30,7 +30,7 @@
 		\resizebox{\textwidth}{!}{%
 			\begin{tabular}{lllll} % statt textcite mit \fancyquotecite https://tex.stackexchange.com/a/468286/108199
 			& \textbf{\textcite{Derrac2015}} & \textbf{\textcite{Ager2018}} & \textbf{\textcite{Alshaikh2020}} & \textbf{This codebase} \\
-			\textbf{Step 1: Pre-process text corpus} & \multicolumn{3}{c}{\textit{see \tref{tab:all_datasets}}} & \specialcell[l]{placetypes: \textit{see \tref{tab:all_datasets}} \\ SIDDATA: \textit{see section \ref{sec:algo_preproc}} }
+			\textbf{Step 1: Pre-process text corpus} & \multicolumn{3}{c}{\textit{see \tref{tab:all_datasets}}} & \specialcell[l]{placetypes: \textit{see \tref{tab:all_datasets}} \\ Siddata: \textit{see section \ref{sec:algo_preproc}} }
 			\\ \midrule
 			\textbf{Step 2: Generate Vector Spaces (Embeddings) from text corpus} 
 			& 
@@ -45,7 +45,7 @@
 			&
 			\specialcell[l]{ \textbf{movies and placetypes:} Re-used the 100D-embeddings of \textcite{Derrac2015} \\ \textbf{other datasets}: \\ \tabitem 100d Document Embeddings from angular differences and MDS\\  \tabitem 100d-Doc2Vec\footref{foot:doc2vec} }
 			& 
-			\specialcell[l]{ \tabitem MDS, \tabitem t-SNE or \tabitem Isomap with arbitrary number of dimensions \\ on a dissimilarity-matrix based on \tabitem BoW (raw counts), \tabitem BoW (binarized), \tabitem tf-idf-weighted BoW, \tabitem ppmi-weighted BoW, \tabitem tf-weighted BoW \\ distance measure \tabitem normalized angular distance \tabitem cosine distance \tabitem TODO: the other distance measures}
+			\specialcell[l]{ \tabitem MDS, \tabitem t-SNE or \tabitem Isomap with arbitrary number of dimensions \\ on a dissimilarity matrix based on \tabitem BoW (raw counts), \tabitem BoW (binarized), \tabitem tf-idf-weighted BoW, \tabitem ppmi-weighted BoW, \tabitem tf-weighted BoW \\ distance measure \tabitem normalized angular distance \tabitem cosine distance \tabitem TODO: the other distance measures}
 			\\ \midrule
 
 			\specialcell[l]{ \textbf{Step 3: Generate Candidate Words} \\ \textbf{for Feature Directions} } 

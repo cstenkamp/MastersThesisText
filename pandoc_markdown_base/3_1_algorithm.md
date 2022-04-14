@@ -8,7 +8,7 @@
 * Afterwards, the Doc-Term-Matrix may be converted into a quantification, such that the respective Bag-Of-Word Representations of the documents don't contain the raw counts, but the respective tf-idf/ppmi-representations, relative to all documents and all possible terms.
 
 
-* My algorithm then saves this dissimilarity-matrix, and what follows is the embedding.
+* My algorithm then saves this dissimilarity matrix, and what follows is the embedding.
     * For this thesis, the creation of the dissimiliarity-matrix and the embedding are split into individual steps because both have a substantial runtime, and as the number of dimensions for the embedding is only relevant in the embedding-step, a lot of runtime can be saved if the dissimiliarity-matrix can be re-used for different embeddings and dimensions.
 
 

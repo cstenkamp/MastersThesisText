@@ -2,7 +2,7 @@
 <!-- Hier: WAS interessiert mich und WARUM -->
 <!-- This section explains what kind of results I'm gonna generate in the next chapter and why I'm interested in them. Bc it's not classification, we'll have to think of our own metrics (come up with tricks).  -->
 
-Two goals were stated in this thesis' introduction: To implement a reliable software-architecture that successfully replicates the works of \textcite{Derrac2015}, and figure out if their methodology also works for the domain of educational reasources. Given that there is not one single correct target that the algorithm needs to optimize for, there are also no obvious quantifiable metrics that can be applied straight-forward to test the performance of the algorithm. Instead, one has to rely on qualitative analysis of certain produced features as well as proxy metrics. This section explains what kind of results have been chosen to represent the algorithm's performance as well as why these results are suitable proxies.
+Two goals were stated in this thesis' introduction: To implement a reliable software-architecture that successfully replicates the works of \textcite{Derrac2015}, and figure out if their methodology also works for the domain of educational resources. Given that there is not one single correct target that the algorithm needs to optimize for, there are also no obvious quantifiable metrics that can be applied straight-forward to test the performance of the algorithm. Instead, one has to rely on qualitative analysis of certain produced features as well as proxy metrics. This section explains what kind of results have been chosen to represent the algorithm's performance as well as why these results are suitable proxies.
 
 <!-- What we can do in order to quantitatively evaluate is to check if the detected features are any good is to check if known qualitative features / categories (as eg the Faculty) can be easily predicted from them. -->
 
@@ -34,11 +34,11 @@ As we also wanted to test the architecture itself, we'll run our code for Placet
         * "To evaluate whether the discovered features are semantically meaningful, we test how similar they are to natural categories, by training depth-1 decision trees"
         * My Argumentation that the way Ager & Alshaikh report their accuracies it must be the case that they did that per class (see also Slack with Johannes!)
         * Faculty
-            * does it cluster such that the Faculty is reconizable (->Fig 4.1) (`notebooks/analyze_results/siddata/decisiontrees_bestconfig.ipynb`)
+            * does it cluster such that the Faculty is reconizable (->Fig 4.1) (`notebooks/analyse_results/siddata/decisiontrees_bestconfig.ipynb`)
             * Can we get Faculty from shallow decision-trees (like \cite{Ager2018,Alshaik2020}) (->Fig 4.2)
             * is that able to compete with state-of-the-art classification algorithms? "To see if it is possible to extract any kind of structured data from the unstructured course descriptions, a Neural Network classifier was trained on the dataset, classifying courses to the faculty they run under. Accuracy of that: (WO WAR DAS?!)"
         * DDC
-            * decision-trees for that (`notebooks/analyze_results/siddata/decisiontrees_bestconfig.ipynb`)
+            * decision-trees for that (`notebooks/analyse_results/siddata/decisiontrees_bestconfig.ipynb`)
             * TODO: schaff ich's level 2 davon auch zu machen wie \cite{Alshaikh2020}?
 
 * Can we recover courses from the detected direcitons?
@@ -52,7 +52,7 @@ As we also wanted to test the architecture itself, we'll run our code for Placet
 * Are the words in clusters similar 
 	* if things you know to be similar are actually in the same clusters
 	* in the "scary" cluster, is there also often something like "horror" or "gore"?
-	* in courses that would be "A1" and "A2", both hinting at langauge courses 
+	* in courses that would be "A1" and "A2", both hinting at language courses 
 		* OLD RESULTS didn't show that => Distance-threshold small: no clusters at all; threshold high: "A1" is in a cluster with "course", which makes it useless
     * "A1" and "A2" cluster
     * Gibt's ne Direction für Corona-Kurse? "FÄLLT AUS"?? 

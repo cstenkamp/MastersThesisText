@@ -6,24 +6,24 @@
 \begin{figure}[h]
 	\begin{center}
 	  \includegraphics[width=\textwidth]{graphics/figures/scatter_mds_tsne_places_Geonames.pdf}
-	  \slcaption{2D Visualization of the Placetypes-Dissimilarity-Matrix \todoparagraph{not mine, but the one of Derrac}, generated with \gls{tsne}. See \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/desc15_mds_2d3d.ipynb} for the origin of this plot. Individual class frequencies: spot,building,farm: 176 | stream,lake: 74 | mountain,hill,rock: 68 | parks,area: 28 | undersea: 27 | road,railroad: 16 | forest,heath: 14}
+	  \caption[2D visualization of the placetypes-dissimilarity matrix]{2D visualization of the placetypes-dissimilarity matrix for the data uploaded by \textcite{Derrac2015}, colored by GeoNames. Generated with \gls{tsne}. See \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/desc15_mds_2d3d.ipynb} for the origin of this plot. Individual class frequencies: spot,building,farm: 176 | stream,lake: 74 | mountain,hill,rock: 68 | parks,area: 28 | undersea: 27 | road,railroad: 16 | forest,heath: 14}
 	  \label{fig:scatter_mds_placetypes}
-      %TODO: "colored by Geonames"
+      %TODO: "colored by GeoNames"
 	\end{center}
 \end{figure}
 
-
+F
 \begin{figure}[h]
 	\begin{center}
 	  \includegraphics[width=\textwidth]{graphics/figures/scatter_mds_tsne_movies_Genres.pdf}
-	  \slcaption{2D Visualization of the Movie-Dissimilarity-Matrix, generated with \gls{tsne}. See \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/desc15_mds_2d3d.ipynb} for the origin of this plot.}
+	  \caption[2D visualization of the movies-dissimilarity matrix]{2D visualization of the movies-dissimilarity matrix for the data uploaded by \textcite{Derrac2015}, colored by genre. Generated with \gls{tsne}. See \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/desc15_mds_2d3d.ipynb} for the origin of this plot.}
 	  \label{fig:scatter_mds_movies}
       %TODO: "colored by genre"
 	\end{center}
 \end{figure}
 
 
-\todoparagraph{Note that at} \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/desc15_mds_2d3d.ipynb} there are also interactive 3D-Versions of these plots. The one for the SIDDATA-dataset is at \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualize_embeddings.ipynb}, also 2D and interactive 3D. 
+\todoparagraph{Note that at} \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/desc15_mds_2d3d.ipynb} there are also interactive 3D-Versions of these plots. The one for the Siddata-dataset is at \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualize_embeddings.ipynb}, also 2D and interactive 3D. 
 
 \clearpage
 \section{Results for Classifiers on placetypes}
@@ -159,7 +159,7 @@
 		\end{tabular}%
 		} % resizebox
 	} % makebox
-	\caption{F1-Scores of classifiers predicting GeoNames- and Foursquare-labels for baselines, \mainalgos and this work (long). Described in detail below.}
+	\caption{F1-scores of classifiers predicting GeoNames- and Foursquare-labels for baselines, \mainalgos and this work (long). Described in detail below.}
 	\label{tab:f1_placetypes_long}
 \end{table}
 
@@ -204,6 +204,7 @@ Final columns are the results of this work. Column \textbf{Best-all} encodes a d
 	\label{tab:text_per_dim}
 \end{table}
 
+We see that using the respectively best-fitting DOCUMENT (without LSI or anything, just the one with the highest ranking!)  is often even the MUCH BETTER direction!!! 
 
 
 
@@ -231,7 +232,7 @@ Final columns are the results of this work. Column \textbf{Best-all} encodes a d
 		\bottomrule
 		\end{tabular}
 	}
-	\slcaption{Robust F1-scores per Faculty of a well-performing configuration. The reported results are mean and standard deviation from the result of ten runs with 5-fold crossvalidation each. \backref{tab:robustresults_perfb}}
+	\slcaption{Robust F1-scores per faculty of a well-performing configuration. The reported results are mean and standard deviation from the result of ten runs with 5-fold crossvalidation each. \backref{tab:robustresults_perfb}}
 	\label{tab:robustresults_perfb_f1}
 \end{table}
 
@@ -243,7 +244,7 @@ Final columns are the results of this work. Column \textbf{Best-all} encodes a d
 	\begin{center}
 	  \makebox[\textwidth][c]{
 		\includegraphics[width=1.1\textwidth]{graphics/dataset_new/boxes_rechtswis.png}
-		\slcaption{A classification with a Level-2-Decisiontree. Visualize in 3D: \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/display_top3_SIDDATA.ipynb} \arrowback}
+		\slcaption{Sample classification of a level-2-decisiontree. Visualize in 3D: \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/display_top3_SIDDATA.ipynb} \arrowback}
 		\label{fig:boxes_rechtswis}
 		% möchte sagen: How does a decision look graphically, and how does it compare to the original 3D?
 		% TODO: add accuracy 
@@ -257,7 +258,7 @@ Final columns are the results of this work. Column \textbf{Best-all} encodes a d
 \begin{figure}[h]
 	\begin{center}
 	  \includegraphics[width=\textwidth]{graphics/dataset_new/accuracy_boxplots.pdf}
-	  \slcaption{Variability of Faculty classification Accuracy as Box-Plots.}
+	  \slcaption{Variability of faculty classification cccuracy as box-plots.}
 	  \label{fig:faculty_boxplots}
 	\end{center}
 \end{figure}
@@ -277,7 +278,7 @@ Final columns are the results of this work. Column \textbf{Best-all} encodes a d
 	7.441202               & „Mündlichkeit und Schriftlichkeit“                         
 	\end{tabular}%
 	}
-	\caption{Sample Duplicates in the Siddata-dataset. \todoparagraph{Compare Notebook}  data_exploration_Siddata2021.ipynb }
+	\caption{Sample duplicates in the Siddata-dataset. \todoparagraph{Compare Notebook}  data_exploration_Siddata2021.ipynb }
 	\label{tab:sample_duplicates}
 \end{table}
 
@@ -297,3 +298,8 @@ Final columns are the results of this work. Column \textbf{Best-all} encodes a d
 	\caption{Low quality data samples \todoparagraph{(from data_exploration_Siddata2021)}}
 	\label{tab:sample_descriptions}
 \end{table}
+
+
+\section{Hyperparameter search}
+
+\input{include/results_table_1}

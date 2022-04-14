@@ -1,7 +1,7 @@
 <!-- 
 VON JOHANNES: 
 "Wo geht mein Argument für diese subsection hin?!"
--> Nutzen das auch zum gucken ob wir fehler in der implentation haben, und wenn wir dann SIDDATA drauf schmeißen können wir sehen wie gut das performt und ob das aussagekräftig ist.
+-> Nutzen das auch zum gucken ob wir fehler in der implentation haben, und wenn wir dann Siddata drauf schmeißen können wir sehen wie gut das performt und ob das aussagekräftig ist.
 
 Der Train of thought ist sehr gut, ABER NICHT STIMMIG IN DIESER SECTION
 => workflow section!! (Oder direkt unter methods, ist eine sehr schöne überleitung dazu dann erstmal die datasets zu beschreiben und was die datasets aus der literatur ausmacht ==> Der einleitene Absatz von hier ist vollkommen valide dafür, kann ich stattdessen einfach in 3.0 packen
@@ -12,15 +12,14 @@ DATASETS:PLACETYPES SECTION PRE-TEXT
 
 * Didn't do the openCYC taxonomy bc they say that they don't use one level of the taxonomy consistently but also never explain where they go to which level
 * The fact that this dataset is created precisely to be good for the respective algorithm, in contrast to mine!
-* Ref link for Geonames categories: http://www.geonames.org/export/codes.html
 * look/think was die anderen auszeichnet - bei dem placetypedataset ists ja gar kein fließtext sondern direkt ein bag-of-tags
-* TODO: link geonames and foursquare and say how many entities have a class
+* TODO: link GeoNames and Foursquare and say how many entities have a class
 
 
 So, infos from \cite{Derrac2015}:
-* GeoNames has 667 place-types in 9 categories (403 used)
-* Foursquare has 435 place-types in 9 top-level categories (391 used))
-* content: tags of Flickr photos. Photos assumed to be of a type if one of the tags is the name of that type (so they queried for photos with that tag), and then all other tags of that picture make up the BoW.
+* GeoNames has 667 placetypes in 9 categories (403 used)
+* Foursquare has 435 placetypes in 9 top-level categories (391 used))
+* content: tags of Flickr photos. Photos assumed to be of a type if  (so they queried for photos with that tag), and then all other tags of that picture make up the BoW.
 * 22816139 photos, types with less than 1000 photos removed.
 
 

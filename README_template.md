@@ -71,7 +71,7 @@ Once added you need to review the bibliographic metadata in the desktop app.
 
 #### Reading papers
 
-When reading a paper you should at least summarize it in three to four key points in the notes section.
+When reading a paper you should at least summarise it in three to four key points in the notes section.
 Moreover, you should highlight important sections in the paper itself. 
 You can use color coding to signify different purposes:
 

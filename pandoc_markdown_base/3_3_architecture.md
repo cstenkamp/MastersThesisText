@@ -1,6 +1,6 @@
 ## My workflow to generate results:
 
-* In Notebooks zum results anzeigen `getfiles_allconfigs` (bspw `configs, print_cnf = getfiles_allconfigs("clusters", verbose=True)` wenn ich durch alle durchiterieren möchte, `get_best_conf` wenn ich die beste according to decision trees haben will (bspw `conf, perf = get_best_conf("Geonames", verbose=True, balance_classes=True, one_vs_rest=True, dt_depth=1, test_percentage_crossval=0.33)`). Davor `load_envfiles("placetypes")`, welches das envfile für placetypes auswählt und anhand dessen dataset und whatever.
+* In Notebooks zum results anzeigen `getfiles_allconfigs` (bspw `configs, print_cnf = getfiles_allconfigs("clusters", verbose=True)` wenn ich durch alle durchiterieren möchte, `get_best_conf` wenn ich die beste according to decision trees haben will (bspw `conf, perf = get_best_conf("GeoNames", verbose=True, balance_classes=True, one_vs_rest=True, dt_depth=1, test_percentage_crossval=0.33)`). Davor `load_envfiles("placetypes")`, welches das envfile für placetypes auswählt und anhand dessen dataset und whatever.
 * Zum runnen env-files pro dataset, conf-files pro runconfig erzeugen, und dann entweder
 	* locally, mit click falls single files oder snakemake für multiple configs
 	* submitted-to-grid, by ssh'ing and using `MA_ENV_FILE=siddata.env submit -r by_config --configfile config/derrac2015_edited.yml --keep-going` and downloading from the scratch (snakefile & grid-config-yamls specifying resource allocation and another env-file specifying stuff like bare paths that differ on grid and loal). To keep track of statuses run `~/derive_conceptualspaces/workflow/sge/util/logfile_for.py`.
@@ -181,7 +181,7 @@ Foremost design principle: Modularity
 			* ...but that you have to abuse it a lot to get where I want it to be (have rules that don't rely on files in the same file with rules that do, no good way to debug, apparently small community (no SO answers etc (mit quelle wie viele Fragen es gibt!!!)), the fact that I need nondynamic filenames that are set from the start of the execution)
 			* Im Nachhinein nicht sicher ob Snakemake die beste wahl war und dass ich die logik teilweise hart abuse etc (-> reference appendix A)
 		* From their paper:
-			* has a domain specific language (statements and dclarations that specifically model central components of workflow management, less boilerplate), implemented as extension to the generic python langauge, so access to the full power of it to handle conditions, configuration, etc. 
+			* has a domain specific language (statements and dclarations that specifically model central components of workflow management, less boilerplate), implemented as extension to the generic python language, so access to the full power of it to handle conditions, configuration, etc. 
 				* Stuff can also be declared using configuration formats
 			* better reproducibility "by allowing the definition and scalable execution of each involved step, including deployment of the software stack needed for each step (e.g. via the Conda package manager  Docker or Singularity containers)
 			* Workflows are decomposed into individual *rules*, which describe how to get an output from inputs (shell-command, scriptcall, code, ..). Input and output can be stored on remote storage. What smk then does is resolve the dependencies for those rules. Through wildcards, rules can be generic.
@@ -320,7 +320,7 @@ generated with command `generate-conceptualspace show-data-info`
 Created with command `snakemake --cores 1 -np --dag | grep -A99999 "digraph" | dot -Tsvg > dag.svg``
 
 - Die Workflows mit der Architektur! Ich möchte mir ein Zwischenergebnis anschauen? Ich kann das `generate-conceptualspace show-data-info` ausführen, das zeigt mir obige plots, erlaubt mir alte prints sämtlicher Schritte anzuschauen (TODO: sogar die Graphen wiederherzustellen), etc
-- Dank JsonSerializer kann ich das ebenfalls leicht in jupyter notebooks einlesen und anschauen, dinge wie `show_info()`nochmal auszuführen... (bspw `analyze_pipeline_results.ipynb`)
+- Dank JsonSerializer kann ich das ebenfalls leicht in jupyter notebooks einlesen und anschauen, dinge wie `show_info()`nochmal auszuführen... (bspw `analyse_pipeline_results.ipynb`)
 - Snakemake um 2400 Parameterkombinationen auf einem Cluster auszuführen, um sämtliche dependencies von einem gerade angescahutem/debuggtem Teil des codes zu autogenerieren (TODO und dann auch das flag dafür), etc
 - Dass ich halt mit command-line-args, aber auch mit environment variables arbeiten kann, und dass das mir erlaubt halt für 2 verschiedene datasets easy einfach 2 verschiedene envfiles haben kann, fertig.
 

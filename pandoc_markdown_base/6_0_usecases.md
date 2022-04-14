@@ -17,6 +17,8 @@ You can also run stuff from the docker-container, if you want to install it it i
 
 ## Using Click
 
+\label{ap:usecase_click}
+
 Architecture: command -> subcommand -> subsubcommand (every subcommand can load more stuff to the json-persistor and has its own arguments). At any subcommand you can run `--help` to get a list of arguments and commands
 
 This list is ordered by priority of the arguments, so you can combine all the ways below, where the upper ways to set arguments overwrite the lower ones, but you'll be warned if something overwrites something etc.
@@ -31,6 +33,8 @@ Minimal way of calling it: `python -m derive_conceptualspace generate-conceptual
 
 ## Using Snakemake
 
+\label{ap:usecase_snakemake}
+
 * Minimal way of calling it: `(export $(cat $MA_SELECT_ENV_FILE | xargs) && snakemake --cores 1 -p default)`, or using Docker `...`
 * If you have installed the package with pip, you can just do it like this, if not you may need to set the env-var `PYTHONPATH=$(realpath <path/to/repobase>):$PYTHONPATH `
 [//]: # Snakemake-args like `--use-conda` etc?
@@ -44,6 +48,8 @@ Envoking it:
 * from_config `snakemake ...`
 
 ## In Notebooks
+
+\label{ap:usecase_notebook}
 
 ```
 assert load_dotenv(abspath(join(os.getcwd(), "..", "config", "siddata.env")))

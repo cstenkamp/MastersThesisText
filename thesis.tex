@@ -1,5 +1,5 @@
 % \newcommand*{\NoMarkdown}{}
-% \newcommand*{\RemoveAll}{}
+\newcommand*{\RemoveAll}{}
 
 
 %TODO: once the text is "finished": [see sublime note]
@@ -192,6 +192,7 @@
 \usepackage{pdflscape} % if this is used, those pages within {landscape} are turned when viewed digitally (https://tex.stackexchange.com/a/141444/108199)
 \usepackage{footmisc}
 
+\let\origsection\section % Backup old section-command BEFORE placeins https://tex.stackexchange.com/a/303448/108199
 \usepackage[section]{placeins} %for FloatBarrier, https://tex.stackexchange.com/a/282/108199
 % Keep floats in the section they were defined in.
 
@@ -283,6 +284,8 @@
 \newacronym{rcc}{RCC}{Region Connection Calculus}
 \newacronym{lsi}{LSI}{Latent Semantic Indexing}
 \newacronym{lsa}{LSA}{Latent Semantic Analysis}
+\newacronym{iou}{IoU}{Intercept over Union}
+\newacronym{pca}{PCA}{Principal Component Analysis}
 % END Acronym definitions
 %TODO: update acronym script for Plural!!
 %TODO: also let the acronym script define eg. an \svm command that is just an alias for \gls{svm} and an \svms for \glspl{svm}
@@ -880,8 +883,21 @@
 \else \hypersubsection[#1]{\hyperlink{toc.subsection.\thesubsection}{\textcolor{defaultcolor}{#2}}}
 \fi}
 
-
 \renewcommand{\date}[3]{\DTMdisplaydate{#1}{#2}{#3}{-1}}
+\newcommand{\acc}[2]{{\scriptsize (accessed at \date{2022}{#1}{#2})}}
+
+% https://tex.stackexchange.com/a/524575/108199
+% TT every character and hyphenate after it
+\def\hyphenateAndTtWholeString #1{\xHyphenate#1$\wholeString\unskip}
+\def\xHyphenate#1#2\wholeString {\if#1$%
+    \else\transform{#1}%
+    \takeTheRest#2\ofTheString\fi}
+
+\def\takeTheRest#1\ofTheString\fi
+{\fi \xHyphenate#1\wholeString}
+\def\transform#1{\url{#1}\hskip 0pt plus 1pt}
+\def\urlx #1{\href{#1}{\hyphenateAndTtWholeString{#1}}} % Define the \urlx command which works like \url, but with line breaks
+
 
 \ifdefined\ForPrinting
 	\let\oldcaption\caption

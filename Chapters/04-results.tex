@@ -1,17 +1,20 @@
 \newcommand{\mfauhcsdT}{\specialcell[t]{\tabitem \textbf{Sentence-} \\ \textbf{~~~wise merge} \\ \tabitem \textbf{add titles} \\ \tabitem \textbf{add subtitles} \\ \tabitem \textbf{rm HTML-tags} \\ \tabitem \textbf{lower-case} \\ \tabitem \textbf{rm stopwords} \\ \tabitem \textbf{rm diacritics} \\ \tabitem \textbf{use SK-Learn} }}
 
-\newcommand{\mfauhtcsldp}{\specialcell[t]{\tabitem \textbf{Sentence-} \\ \textbf{~~~wise merge} \\ \tabitem \textbf{add titles} \\ \tabitem \textbf{add subtitles} \\ \tabitem \textbf{rm HTML-tags} \\ \tabitem \textbf{Sentence-} \\ \textbf{~~~tokenization} \\ \tabitem \textbf{lower-case} \\ \tabitem \textbf{rm stopwords} \\ \tabitem \textbf{Lemmatize} \\ \tabitem \textbf{rm diacritics} \\ \tabitem \textbf{rm punctuation} }}
+\newcommand{\mfauhtcsldp}{\specialcell[t]{\tabitem \textbf{Sentence-} \\ \textbf{~~~wise merge} \\ \tabitem \textbf{add titles} \\ \tabitem \textbf{add subtitles} \\ \tabitem \textbf{rm HTML-tags} \\ \tabitem \textbf{Sentence-} \\ \textbf{~~~tokenisation} \\ \tabitem \textbf{lower-case} \\ \tabitem \textbf{rm stopwords} \\ \tabitem \textbf{Lemmatize} \\ \tabitem \textbf{rm diacritics} \\ \tabitem \textbf{rm punctuation} }}
 
 
 \chapter{Results}
 
+\removeMe{
 \todoparagraph{Bei allen plots and tables dabeischreiben ob sie aus ner speziellen oder best-on-avarage kamen}
 
+Für die Fälle wo verschiedene parameter-configurationen verschiedene Ergebnisse haben und ich nciht verhindern kann dass ich an verschiedenen stellen der results section verschiedene Dinge Zeige.... Kann ich einfach mal am Anfang exemplarisch zeigen dass alle diese Begriffe aber nah beieinander liegen und das daher valide ist
+
 \todoparagraph{Explicitly say that it may be confusing that sometimes different results are reported, but keep in mind they come from 165 different paramcombis, and importantly every one has the corresponding plot proving that they are not faked or something. It would have been easy to edit the plots here manually such that they all match up, but that would just not correspond ot the truth. Making random seeds did not help because new configs were added as they came in}
+}
+This section summarises the results that the described algorithm achieved on the described datasets according to the described metrics. Before going into detail about the performance on the Siddata-dataset, a brief summary of the results on the placetypes-dataset serves to demonstrate if the specific implementation can achieve comparable results to \mainalgos, thus putting the other results into perspective in terms of what the algorithm can realistically achieve on dedicated high-quality datasets.
 
-This section summarizes the results that the described algorithm achieved on the described datasets according to the described metrics. Before going into detail about the performance on the Siddata-dataset, a brief summary of the results on the placetypes-dataset serves to demonstrate if the specific implementation can achieve comparable results to \mainalgos, thus putting the other results into perspective in terms of what the algorithm can realistically achieve on dedicated high-quality datasets.
-
-Due to the implemented algorithm being an \gls{unsupervised} algorithm, there is no explicit target value for each of the considered samples, making it impossible to straight-forwardly apply well-known \gls{ml} metrics such as \Gls{acc} or \gls{f1}. What this algorithm tries to achieve is a lot \textit{fuzzier} than in the realm of classification: The end-goal of it is to embed the given \glspl{entity} into a vector-space that consists of semantically meaniningful directions, so the only actual metric would be a comparison checking if the respective categorization here corresponds closely to human judgement. To do that, the best evaluation is likely a study that asks for feedback of users that see the results of a developed system.\footnote{An example for such a system is the \textit{Movie Tuner} interface from \textcite{VISR12}, reprinted as \autoref{fig:movietuner}.} \textcite{Derrac2015} performed crowdsourcing experiments on CrowdFlower,\footnote{\url{http://www.crowdflower.com}} asking users among other tasks which of several candidates could best describe the difference between two movies. They also compared their results with those of running the supervised algorithm of \cite{VISR12} on a subset of their data. Furthermore they tested if the explainable classifiers generated from this algorithm (see \autoref{sec:reasoning}) \q{help users spot incorrect classifications} \cite[48]{Derrac2015}, as well as if their algorithmic classification corresponds to human judgement.\footnote{The task was set only for classification into OpenCYC and Foursquare Taxonomies of the placetypes-dataset (see column `\textbf{classification classes}' in \autoref{tab:all_datasets}).} 
+Due to the implemented algorithm being an \gls{unsupervised} algorithm, there is no explicit target value for each of the considered samples, making it impossible to straight-forwardly apply well-known \gls{ml} metrics such as \Gls{acc} or \gls{f1}. What this algorithm tries to achieve is a lot \textit{fuzzier} than in the realm of classification: The end-goal of it is to embed the given \glspl{entity} into a vector-space that consists of semantically meaniningful directions, so the only actual metric would be a comparison checking if the respective categorization here corresponds closely to human judgement. To do that, the best evaluation is likely a study that asks for feedback of users that see the results of a developed system.\footnote{An example for such a system is the \textit{Movie Tuner} interface from \cite{VISR12}, reprinted as \autoref{fig:movietuner}.} \textcite{Derrac2015} performed crowdsourcing experiments on CrowdFlower,\footnote{\url{http://www.crowdflower.com}} asking users among other tasks which of several candidates could best describe the difference between two movies. They also compared their results with those of running the supervised algorithm of \cite{VISR12} on a subset of their data. Furthermore they tested if the explainable classifiers generated from this algorithm (see \autoref{sec:reasoning}) \q{help users spot incorrect classifications} \cite[48]{Derrac2015}, as well as if their algorithmic classification corresponds to human judgement.\footnote{The task was set only for classification into OpenCYC and Foursquare Taxonomies of the placetypes-dataset (see column `\textbf{classification classes}' in \autoref{tab:all_datasets}).} 
 % \todoparagraph{TODO: Should I also quickly mention their results?}
 While similar studies could be done in the Siddata-\gls{dsa} \cite{Schurz2021} without additional costs, carrying these out is outside the scope of this thesis.
 
@@ -21,10 +24,10 @@ While similar studies could be done in the Siddata-\gls{dsa} \cite{Schurz2021} w
 \section{Replicating results for the placetypes-dataset}
 \label{sec:results_placetypes}
 
-To check if the implementation correctly produces the claimed results, it was applied to \gencite{Derrac2015} placetypes-dataset and its results compared to those of the literature. \autoref{fig:scatter_mds_placetypes} in \autoref{ap:more_plots} shows a two-dimensional \gls{tsne}-embedding of the original representations of \cite{Derrac2015}, colored by their Geonames-class. This figure indicates that only few of the entities are linked with a class and that the embeddings barely cluster when compared to their embeddings for the movies-dataset (displayed in \autoref{fig:scatter_mds_movies}). 
+To check if the implementation correctly produces the claimed results, it was applied to \gencite{Derrac2015} placetypes-dataset and its results compared to those of the literature. \autoref{fig:scatter_mds_placetypes} in \autoref{ap:more_plots} shows a two-dimensional \gls{tsne}-embedding of the original representations of \cite{Derrac2015}, colored by their GeoNames-class. This figure indicates that only few of the entities are linked with a class and that the embeddings barely cluster when compared to their embeddings for the movies-dataset (displayed in \autoref{fig:scatter_mds_movies}). 
 
-Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, depth-3 and unbounded decision trees classifying an entities' category according to the Placetypes- and Geonames-taxonomy. \autoref{tab:f1_mainalgos_me_short} lists their results as well as some of their baselines in comparison with the results of this work. As shown in the table, this implementation outperforms the previous results for all classification-task-configurations. \autoref{tab:f1_geonames_foursquare_all} shows the results of different configurations to generate the decision-tree classification. In contrast to the results reported in \autoref{tab:f1_mainalgos_me_short} which are optimized for their respective classification target, these results are from a single parameter-combination and robustly reproducible. 
-\todoparagraph{Again, in the first I took a generally-good hyperparam-combination, and in the second I selected both for this work and for the literature, for every generated result that hyperparam-combi leading to the best results for best comparability.}
+Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, depth-3 and unbounded decision trees classifying an entities' category according to the Placetypes- and GeoNames-taxonomy. \autoref{tab:f1_mainalgos_me_short} lists their results as well as some of their baselines in comparison with the results of this work. As shown in the table, this implementation outperforms the previous results for all classification-task-configurations. \autoref{tab:f1_geonames_foursquare_all} shows the results of different configurations to generate the decision-tree classification. In contrast to the results reported in \autoref{tab:f1_mainalgos_me_short} which are optimized for their respective classification target, these results are from a single parameter-combination and robustly reproducible. 
+\todoparagraph{Again, in the first we took a generally-good hyperparam-combination, and in the second we selected both for this work and for the literature, for every generated result that hyperparam-combi leading to the best results for best comparability.}
 
 \todoparagraph{nicht wundern dass D3 manchmal schlechter als D1 ist, war es bei Ager auch (overfit on train)}
 
@@ -64,7 +67,7 @@ Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, 
 % 		}
 % 		\caption{Foursquare}\label{tab:f1_foursquare_all}
 % 	\end{subtable}
-% 	\slcaption{F1-Scores of various-depth decision trees predicting GeoNames- and Foursquare-labels. All scores are the result of 5-fold cross-validation averaged across 10 random seeds, but from a single parameter-configuration. Rows correspond to different hyperparameters for the \gls{dt}. If not \textit{1vsRest}, a single tree must predict all classes at once (max. 2\textsuperscript{depth}), in the other the performance of one classifier per class is averaged. If \textit{Balanced}, class weights are inversely propertional to class frequencies.}
+% 	\slcaption{F1-Scores of various-depth decision trees predicting GeoNames- and Foursquare-labels. All scores are the result of 5-fold cross-validation averaged across 10 random seeds, but from a single parameter-configuration. Rows correspond to different hyperparameters for the \gls{dt}. If not \textit{1vsRest}, a single tree must predict all classes at once (max. 2\textsuperscript{depth}), in the other the performance of one classifier per class is averaged. If \textit{Balanced}, class weights are inversely proportional to class frequencies.}
 % 	\label{tab:f1_geonames_foursquare_all}
 % \end{table}
 
@@ -110,7 +113,7 @@ Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, 
 		}
 		\caption{Foursquare}\label{tab:f1_foursquare_all}
 	\end{subtable}
-	\slcaption{F1-Scores of various decision trees predicting GeoNames- and Foursquare-labels. All scores result from 5-fold cross-validation averaged across 10 random seeds, all from the parameter-configuration. Rows correspond to different hyperparameters for the \gls{dt}: If not \textit{1vsRest}, a single tree must predict all classes at once (max. 2\textsuperscript{depth}), otherwise performances of one classifier per class are averaged. Middle rows report scores weighted by class frequency, bottom rows (Condition \textbf{T,U}) unweighted averages of the same classifiers. If \textit{Balanced}, class weights are inversely propertional to class frequencies. Results highlighted in green are respectively optimal scores, bold results are optimal scores if class-score-weighting is forbidden.}
+	\slcaption{F1-scores of various decision trees predicting GeoNames- and Foursquare-labels. All scores result from 5-fold cross-validation averaged across 10 random seeds, all from the parameter-configuration. Rows correspond to different hyperparameters for the \gls{dt}: If not \textit{1vsRest}, a single tree must predict all classes at once (max. 2\textsuperscript{depth}), otherwise performances of one classifier per class are averaged. Middle rows report scores weighted by class frequency, bottom rows (Condition \textbf{T,U}) unweighted averages of the same classifiers. If \textit{Balanced}, class weights are inversely proportional to class frequencies. Results highlighted in green are respectively optimal scores, bold results are optimal scores if class-score-weighting is forbidden.}
 	\label{tab:f1_geonames_foursquare_all}
 \end{table}
 
@@ -130,7 +133,7 @@ Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, 
 	  \textbf{\cite{Ager2018}} &
 	  \textbf{\cite{Alshaikh2020}} &
 	  \textbf{this work} \\ \midrule
-	\textbf{Geonames}    & \textbf{D1}  & 0.23 & \textbf{0.34} & -             & \textbf{0.32*} & 0.32 & 0.28          & \textbf{0.51} \\
+	\textbf{GeoNames}    & \textbf{D1}  & 0.23 & \textbf{0.34} & -             & \textbf{0.32*} & 0.32 & 0.28          & \textbf{0.51} \\
 						 & \textbf{D3}  & 0.27 & 0.32          & -             & 0.31*          & 0.31 & \textbf{0.34} & \textbf{0.54} \\
 						 & \textbf{DN}  & -    & 0.27          & 0.2           & \textbf{0.37}  & 0.24 & -             & \textbf{0.46} \\
 	\multicolumn{1}{l}{} & \textbf{Any} & -    & -             & 0.36          & \textbf{0.41}  & -    & -             & -            \\
@@ -140,9 +143,9 @@ Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, 
 \multicolumn{1}{l}{} & \textbf{Any} & -    & -             & 0.72          & \textbf{0.73}  & -    & -             & -             
 	\end{tabular}%
 	% } %resizebox
-	\caption[F1-Scores of classifiers for placetype-taxonomies of \mainalgos and this work]{F1-Scores of classifiers predicting GeoNames- and Foursquare-labels for three baselines, \mainalgos and this work. \textbf{Cls} column encodes the classifier: \textbf{D1/3} are \glspl{dt} of depth 1/3, \textbf{DN} unbounded \gls{dt}. Condition \textbf{Any} refers to the best of \cite{Derrac2015}'s  semantic classifiers. \hspace{1ex}
+	\caption[F1-scores of classifiers for placetype-taxonomies of \mainalgos and this work]{F1-scores of classifiers predicting GeoNames- and Foursquare-labels for three baselines, \mainalgos and this work. \textbf{Cls} column encodes the classifier: \textbf{D1/3} are \glspl{dt} of depth 1/3, \textbf{DN} unbounded \gls{dt}. Condition \textbf{Any} refers to the best of \cite{Derrac2015}'s  semantic classifiers. \hspace{1ex}
 	Baseline-columns: \textbf{Ran} is the \textit{Random} baseline as reported by \cite{Alshaikh2020}, \textbf{LDA} is \acrshort{lda} as reported by \cite{Ager2018}, \textbf{BL} is the best baseline-condition from \cite{Derrac2015}. \hspace{1ex}
-	Columns \textbf{\cite{Derrac2015}, \cite{Ager2018}}, \textbf{\cite{Alshaikh2020}} encode the best reported scores per publication. Starred values in column \textbf{\cite{Derrac2015}} refer to results that \cite{Ager2018} reported for the configuration of \cite{Derrac2015} for conditions not covered by the latter. Final column reports the results of this work (with balanced samples and 1vsRest-condition; unlike \autoref{tab:f1_geonames_foursquare_all}, this reports the respectively optimal parameter-configuration just like the best reported config from \mainalgos) with a literature-consistent train-test-split of 70-30. A longer version of this table listing more configurations per publication can be found in the Appendix as \autoref{tab:f1_placetypes_long}.}
+	Columns \textbf{\cite{Derrac2015}, \cite{Ager2018}}, \textbf{\cite{Alshaikh2020}} encode the best reported scores per publication. Starred values in column \textbf{\cite{Derrac2015}} refer to results that \cite{Ager2018} reported for the configuration of \cite{Derrac2015} for conditions not covered by the latter. Final column reports the results of this work (with balanced samples and 1vsRest-condition; unlike \autoref{tab:f1_geonames_foursquare_all}, this reports the respectively optimal parameter-configuration just like the best reported configuration from \mainalgos) with a literature-consistent train-test-split of 70-30. A longer version of this table listing more configurations per publication can be found in the Appendix as \autoref{tab:f1_placetypes_long}.}
 	\label{tab:f1_mainalgos_me_short}
 \end{table}
 
@@ -167,13 +170,14 @@ Both \cite{Ager2018} and \cite{Alshaikh2020} report the performance of depth-1, 
 % 	}
 % \end{table}
 
-\todoparagraph{Because of the big difference, we also report our results per param-combi and show that PPMI suuucks}
-
 
 \section{Dataset differences} % Dataset comparisons (is our dataset worse?)
 \label{sec:results_datasetdiffs}
 
-Having established that the implementation works correctly for the domain of placetypes, we will now check if the quantity of some key characteristics produced as interim results of the algorithm differ across domains. As discussed in \autoref{sec:datasets}, our dataset differs in some properties from those of the literature. Because interim resuls may already indicate the performance of the algorithm, looking at them provides useful information that can be considered in the performance evalaution. \autoref{tab:generated_stats} contrasts the number of feature vectors, candidate terms and cluster elements for the movies-, placetypes- and Siddata-dataset.
+Having established that the implementation works correctly for the domain of placetypes, we will now check if the quantity of some key characteristics produced as interim results of the algorithm differ across domains. As discussed in \autoref{sec:datasets}, our dataset differs in some properties from those of the literature. Because interim resuls may already indicate the performance of the algorithm, looking at them provides useful information that can be considered in the performance evaluaution. \autoref{tab:generated_stats} contrasts the number of feature vectors, candidate terms and cluster elements for the movies-, placetypes- and Siddata-dataset.
+
+Note that the first two rows display sample results of \gencite{Derrac2015} original implementation for the domains of movies and placetypes as it was uploaded by the authors. Looking at the number of candidates and the number of those with a kappa-score of at least 0.1, we see that in the case 200D $\times$ placetypes, 21\,819 out of 21\,833 candidate terms had a kappa-score of at least 0.1 and were thus considered \textit{semantic directions}.
+
 
 \todoparagraph{With that, we want to figure out if anything is possible and if so, the correct parameters like the candidate-min-term-count}
 % Please add the following required packages to your document preamble:
@@ -280,12 +284,12 @@ These results show that the algorithm produces much less candidates for our data
 
 As previously described, the primary method used here to check if the described methodology works for the domain of educational resources is to check if low-depth decision trees trained on the extracted semantic directions of the Siddata-dataset can classify a courses' faculty. Before doing that however, it is important to first validate if it can reasonably assumed that the faculty \textit{can generally} be extracted from only the descriptions associated with the entities.
 
-\subsection*{Extracing Faculty without the algorithm}
+\subsection*{Extracing faculties without the algorithm}
 
 \begin{figure}[h]
 	\begin{center}
 	  \includegraphics[width=0.9\textwidth]{graphics/dataset_new/scatter_mds_tsne_e2a70a9bf2.pdf}
-	  \slcaption{2D Visualization of the Course-Dissimilarity-Matrix, generated with \gls{tsne}. See \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualize_embeddings.ipynb} for the origin of this plot as well as a 3D-plot on unaltered 3D-MDS-data that doesn't rely on t-SNE.}
+	  \slcaption{2D Visualization of the Course-dissimilarity matrix, generated with \gls{tsne}. See \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualize_embeddings.ipynb} for the origin of this plot as well as a 3D-plot on unaltered 3D-MDS-data that doesn't rely on t-SNE.}
 	  \label{fig:scatter_mds_siddata}
 	  % möchte sagen: Die Embeddings Clustern -> es lassen sich "sinnvolle Sachen" (wie faculty) draus ziehen.
 	\end{center}
@@ -295,9 +299,9 @@ To see if it is possible to extract any kind of structured data from the unstruc
 
 The classifier trained for 12 epochs before \emph{stopping early} due to its performance on the test-set decreasing. It achieved an accuracy of \textbf{85.19\%} for the test-set (94.13\% on the training set), providing strong indication that the faculty can be considered a latent property of its description. Because \gls{bert} is one of the best general language classifiers to date \cite{Devlin2019}, this accuracy will be considered the upper boundary for the results of our algorithm.
 
-\autoref{fig:scatter_mds_siddata} displays a \gls{tsne}-representation of the dissimilarity-matrix generated from the normalized angular distances (\autoref{eq:norm_ang_dist}) of the \gls{bow}-representations generated from the courses (only those that have one, which are \todoparagraph{somany}) A first comparison of this scatter-plot and its placetypes-counterpart (\autoref{fig:scatter_mds_placetypes}) reveals that siddata appears to have more homogenous clusters.
+\autoref{fig:scatter_mds_siddata} displays a \gls{tsne}-representation of the dissimilarity matrix generated from the normalized angular distances (\autoref{eq:norm_ang_dist}) of the \gls{bow}-representations generated from the courses (only those from the \gls{uos}) A first comparison of this scatter-plot and its placetypes-counterpart (\autoref{fig:scatter_mds_placetypes}) reveals that Siddata appears to have more homogenous clusters.
 
-From this distance matrix, the algorithm subsequently creates an embedding using the \gls{mds}-algorithm to afterwards train multiple \glspl{svm} for each of the extracted candidate-dimensions before re-embedding the entities into a new space where the dimensions encode the \gls{rank} for each of the extracted features. To evaluate the algorithm, we will check if it is to be able to classify the faculty with a decision tree that uses between one and maximally $2^3=8$ of these features. To provide a context for the resulting performance, we will first look at a classification which does not use the feature-based representation, but on a raw low-dimensional embedding without class-specific dimensions. This can be seen as the lower boundary of what a classification without selecting the most relevant dimensions but instead use an optimal but general three-dimensional space can achieve. A classification-performance of low-level decision trees that use only the most important features from all available ones that is higher than this thus provides evidence that the detected features encode important distinctive properties. \autoref{fig:mds_3d_hyperplane} visually represents the result of the classification using a linear \gls{svm} on a three-dimensional space generated as result of \gls{mds} on the dissimilarity-matrix of the entities. Averaged over all Faculties, this classifier reaches a weighted accuracy of 64.3\% (unweighted accuracy 69.0\%, weighted F1: 0.414, unweighted F1: 0.269). Note that these values are reached by training on the full data without a separate testing-set.
+From this distance matrix, the algorithm subsequently creates an embedding using the \gls{mds}-algorithm to afterwards train multiple \glspl{svm} for each of the extracted candidate-dimensions before re-embedding the entities into a new space where the dimensions encode the \gls{rank} for each of the extracted features. To evaluate the algorithm, we will check if it is to be able to classify the faculty with a decision tree that uses between one and maximally $2^3=8$ of these features. To provide a context for the resulting performance, we will first look at a classification which does not use the feature-based representation, but on a raw low-dimensional embedding without class-specific dimensions. This can be seen as the lower boundary of what a classification without selecting the most relevant dimensions but instead use an optimal but general three-dimensional space can achieve. A classification-performance of low-level decision trees that use only the most important features from all available ones that is higher than this thus provides evidence that the detected features encode important distinctive properties. \autoref{fig:mds_3d_hyperplane} visually represents the result of the classification using a linear \gls{svm} on a three-dimensional space generated as result of \gls{mds} on the dissimilarity matrix of the entities. Averaged over all Faculties, this classifier reaches a weighted accuracy of 64.3\% (unweighted accuracy 69.0\%, weighted F1: 0.414, unweighted F1: 0.269). Note that these values are reached by training on the full data without a separate testing-set.
 % text_referenced_plots/siddata_analysis/visualize_embeddings_mds.ipynb
 
 
@@ -313,7 +317,10 @@ From this distance matrix, the algorithm subsequently creates an embedding using
 	\end{center}
 \end{figure}
 
-Now that we have established upper and lower boundary for what can reasonably be expected from the algorithm, let us finally look at the performance of its decision-trees, to gain evidence if human concepts are encoded in its extracted features. \autoref{tab:robustresults_perfb} lists average accuracies per faculty for decision trees created on the basis of a single hyperparameter-configuration that was selected to achive high performance on average. The respective values are the average and standard-deviation of runs with 5-fold crossvalidation each for trees of various depths. The results show high accuracies across al faculties even for low-depth trees, but the faculty \textit{Humanwissenschaften} displays a high standard deviation for that condition.
+
+\subsection*{Extracing faculties with \glspl{dt} based on the algorithm}
+
+Now that we have established upper and lower boundary for what can reasonably be expected from the algorithm, let us finally look at the performance of its decision-trees, to gain evidence if human concepts are encoded in its extracted features. \autoref{tab:robustresults_perfb} lists average accuracies per faculty for decision trees created on the basis of a single hyperparameter-configuration that was selected to achive high performance on average. The respective values are the average and standard-deviation of runs with 5-fold crossvalidation each for trees of various depths. The results show high accuracies across all faculties even for low-depth trees, but the faculty \textit{Humanwissenschaften} displays a high standard deviation for that condition.
 
 \begin{table}[H]
 	\resizebox{\textwidth}{!}{%
@@ -336,7 +343,7 @@ Now that we have established upper and lower boundary for what can reasonably be
 		\bottomrule
 		\end{tabular}
 	}
-	\slcaption{Robust Accuracies per Faculty of a well-performing configuration. The reported results are mean and standard deviation from the result of ten runs with 5-fold crossvalidation each.\hideref{tab:robustresults_perfb_f1}{F1-Table}}
+	\slcaption{Robust cccuracies per faculty of a well-performing configuration. The reported results are mean and standard deviation from the result of ten runs with 5-fold crossvalidation each.\hideref{tab:robustresults_perfb_f1}{F1-Table}}
 	\label{tab:robustresults_perfb}
 \end{table}
 
@@ -356,23 +363,24 @@ Importantly however, the results reported here are those of a sepearate classifi
 		\textbf{F1}       & 0.072 ± 0.006 & 0.125 ± 0.014 & 0.199 ± 0.007 & 0.513 ± 0.020 \\
 		\bottomrule
 	\end{tabular}
-	\caption[Robust Scores for classifying all faculties at once]{Robust Scores of a well-performing configuration for classifying all faculties at once. The reported results are mean and standard deviation from the result of ten runs with 5-fold crossvalidation each.}
+	\caption[Robust scores for classifying all faculties at once]{Robust scores of a well-performing configuration for classifying all faculties at once. The reported results are mean and standard deviation from the result of ten runs with 5-fold crossvalidation each.}
 	\label{tab:robustresults_allatonce}
 \end{table}
 
 
-\subsubsection{Recovering Entities from Salient directions}
+\subsubsection{Recovering entities from salient directions}
+\label{sec:duplicate_maps}
 
-\todoparagraph{We also wanted to check if the produced embedding is still adequate}
+After having tested if our semantic embedding captures at least one prominent latent topic of the data, we will additionally check if the produced embedding adequately captures enough of the general variability of the data. For that, we check if it is possible to recover entities from the salient directions, to ensure that no important relevant information was lost when mapping them to their semantic embedding. To get a general understanding, let us consider under what circumstances multiple different entities will fall towards the exact same coordinates. 
 
-To do something else than only looking at the Faculties, here we will also check if we can recover entites from the salient directions, to ensure that no important relevant information was lost. So to get a general understanding, let us consider under what circumstances mutliple different entitiees will fall towards the exact same coordinates: \autoref{tab:duplicates_per_comb}. \todoparagraph{God damn it warum hab ich denn jetzt nicht mehr das ding wie viel der space gefullt ist}
+To get an estimate of the importance of each dimension of the embedding, we started with a full matrix where each entity is defined via each semantic direction. Starting with a 200-dimensional space, we removed random directions. Further we applied different levels of discretisation to the remaining dimensions. We are wondering what amounts of discretisation and removal of dimensions is necessary for multiple entities to fall onto the same category. Each combination was done multiple times, each time removing other random directions, and the percentage of duplicates in the data was counted. \autoref{tab:duplicates_per_comb} displays the result of this.
 
 \begin{table}
-	\caption{Duplicates per Combination of n-dims and n-categories-per-dim}
+	\caption[Duplicates per combination of dimensionality and discretisation-categories]{Duplicates per combination of dimensionality and amount of categories per left-over category. Row = number of left-over dimensions, cols = discretisation (number in parantheses is the divisor of the orginal value)}
 	\begin{tabular}{lrrrrrr}
 	\toprule
 	 & \textbf{2} & \textbf{11} & \textbf{23} & \textbf{116} & \textbf{232} & \textbf{1160} \\
-	\#dims &  &  &  &  &  &  \\
+	\#dims & (5800) & (100) & (50) & (10) & (5) & (2) \\
 	\midrule
 	3 & 100\% & 99.85\% & 68.98\% & 6.85\% & 5.25\% & 3.97\% \\
 	5 & 100\% & 24.91\% & 9.79\% & 5.25\% & 4.72\% & 3.42\% \\
@@ -387,7 +395,6 @@ To do something else than only looking at the Faculties, here we will also check
 \end{table}
 
 
-Depth-N-Trees are basically again an answer of the question if it can recover courses from the dimensions, not how important the dimensions are. But that seems to be good as well so we seem to capture a lot of what's revelant..
 
 
 \subsection{Qualitative Analysis}
@@ -405,7 +412,7 @@ The main goal of the algorithm is not to optimally classify the respective facul
 	\end{center}
 \end{figure}
 
-For trees deeper than one level, the selected features from the second level on are not necessarily the most important ones.\footnote{A \gls{dt} has separate conditions for every subtree, which means on level two there are two different features that depend on the result of the first split} Instead it is possible to extract the most important features for a classification by looking at the respective information gain achieved by splitting it. \autoref{tab:courses_top3} displays the resulting three most important directions for each of the respective faculties. While the details of this result will be eloborated upon in the discussion, most of the detected features appear convincing. \todoparagraph{remove sentence} Regarding an acutal classification using these features, \autoref{fig:boxes_rechtswis} in the Appendix displays the result of a sample classification of a decision tree with three features.
+For trees deeper than one level, the selected features from the second level on are not necessarily the most important ones.\footnote{A \gls{dt} has separate conditions for every subtree, which means on level two there are two different features that depend on the result of the first split} Instead it is possible to extract the most important features for a classification by looking at the respective information gain achieved by splitting it. \autoref{tab:courses_top3} displays the resulting three most important directions for each of the respective faculties. While the details of this result will be eloborated upon in the discussion, most of the detected features appear convincing. \todoparagraph{remove sentence} Regarding an actual classification using these features, \autoref{fig:boxes_rechtswis} in the Appendix displays the result of a sample classification of a decision tree with three features.
 
 
 \begin{table}[H]
@@ -434,191 +441,108 @@ For trees deeper than one level, the selected features from the second level on 
 \end{table}
 
 
-
-\removeMe{
-
-\subsubsection{Are the phrases making up the semantic-direction-clusters similar?}
-
-\todo
-
-\subsubsection{Are there dimensions encoding the COVID-19 pandemic?}
-
-\todo
-
-}
-
-\subsubsection{Are intuitively appealing phrases among the semantic directions?}
-
-\begin{table}[H]
-	\begin{tabular}{rcccc}
-	\toprule
-	 \textbf{NDim} & \multicolumn{2}{l}{\textbf{50}} & \multicolumn{2}{l}{\textbf{200}} \\
-	 & \textbf{0.1} & \textbf{0.5} & \textbf{0.1} & \textbf{0.5}  \\
-	\midrule
-	computer & 24 & 0 & 4 & 11 \\
-	recht & 27 & 0 & 11 & 4 \\
-	musik & 17 & 12 & 7 & 8 \\
-	management & 25 & 0 & 9 & 6 \\
-	literatur & 0 & 0 & 0 & 0 \\
-	sprache & 22 & 0 & 9 & 6 \\
-	psychologie & 23 & 2 & 3 & 12 \\
-	wirtschaft & 25 & 0 & 13 & 2 \\
-	geographie & 28 & 0 & 10 & 3 \\
-	schule & 17 & 8 & 7 & 6 \\
-	kultur & 22 & 0 & 5 & 8 \\
-	wissenschaft & 17 & 0 & 14 & 0 \\
-	sport & 10 & 12 & 4 & 11 \\
-	N & 38 & 38 & 15 & 15 \\
-	\bottomrule
-\end{tabular}
-\end{table}
-	
-
-FIRST LOOKING ONLY AT THOSE THAT WERE USED FOR DTs
-
-All detected clustercenters by 53 configs:
-
-Mathematik/Informatik               werkstoff, ki, pierre, smart, powerpoint, testverfahren, 4 0, judische, bull, adobe, berechnung, ingenieurinnen sommeruni, technisch mechanik, linear, visualisieren, technische mechanik, programmiersprache, programmierung, variabel, modellierung, computer, 3d
-Wirtschaftswissenschaften           career center, sozialwiss uni, fallstudie, musik, kind, economics, data, 4 0, tanz, prasenzveranstaltung, prof dr, korper, steuerrecht, barth, kommune, visualisieren, veranstaltungssuche suchen, arbeitgeber, the beginning of the course, care center, veranstaltung studierenden, ki, bereichern, https, smart, hobbys, lessing, wirtschaftsgeographie, fallstudie, wiwi, business, betrieblich, management, organisation, center betriebswirtschaftlich kompetenz
-Rechtswissenschaften                schuldrecht, geistiges, strafrecht, rollenspiel, deutsch recht, verhandlung, abs, offentliches recht, sp 5, vo, grundrechte, urheberrecht, steuerrecht, offentliches, strafrecht, deutsches europaisches, europaisches, deutsch recht, juristisch, recht, sp 5, grundrechte
-Sprach-/Literaturwissenschaften     kanon, stuttgart reclam, manifest, roman, artikulation, neu deutsch, 1961, seminar stellt, lekture empfehlen, text, studierend gelegenheit, tristan, lessing, grass, la, dame, lateinischen, thomas mann, deutsch literaturwissenschaft, romans, text, deutschen literatur, texte, literarisch
-Humanwissenschaften                 biophysik, gesundheitsforderung, storung, entscheidungsfindung, stress, kognition, therapeutisch, psychologie, genetisch, resilienz, coaching, adl 1, erkrankungen, verhaltensweise, taglich leben, testverfahren, entspannungstechniken, mediation, patient, fuhrte, landes, therapeutisch, psychologie, gehirn, psychisch
-Biologie/Chemie                     barrierefreiheit workshop kontaktieren bitte frau, bourdieu, umstellung, hintergrund aktuell, strassburg, 20 00, tutor innen, beruflichen, erfahren studierend, qualifizierung, rhetorische, coaching, beruflich, verona, dissertation, innen, vorstellen gemeinsam, detailliert information, fruh neuzeit, jahrhundert, konkreten ablauf veranstaltung, lehr lernmethoden, schiller, lessing, kommunikation, kanon, mail studip, 1977, ruckmeldung, werkstattseminar, forschend lernen, vi, geschichte, raten, umgangsform
-Physik                              tatigkeitsfelder, klarer, erfolgsbescheinigung, singen, vorstellungsgesprach, stress, textarbeit, musik, funktionalitat, workshop, alltagssituation, lernen eigen, biologischen, ungefahr, fd, gremien, verortung, coaching, neu deutsch, kuhl, eigen person, radio, entspannt, rollenspiele, 46, ubergreifend, heiligen, ding, team, stress, neu entwicklung, gestik, geschichte, islam, narrativ, klar, projektmanagement, mitarbeiterinnen
-Kultur-/Geowissenschaften           westfalisch, physischen, tourismus, exkursion, wirtschaftlicher, gis, arbeiten leitfaden studierende geographie bern, physischen geographie, architektur, lebensbedingung, industrielle, flache, bewohner, stadtgeographie, geookologisch, landwirtschaft, geographisch, tourismus, stadt, physischen geographie, klimawandel, humangeographische ubung, stadtgeographie, geographie
-Erziehungs-/Kulturwissenschaften    bildung, kinder, haupt realschule, interkulturelles lernen, berufsbildenden schulen, urheberrecht, heranwachsend, religionswissenschaft, koran, padagogisch, beruflich bildung, lernwerkstatt, klinkhardt, didaktik methodik, efp, pisa, schuljahr, sozialpadagogisch, schule, prasenzlehre, lernumgebungen, theologie, erwachsenenbildung, entwicklungsaufgabe, ausserschulisch, padagogik, padagogischen, erziehungswissenschaft, kind jugendlich, padagogisch, schule
-Sozialwissenschaften                entscheidungsfindung, migration, demographisch, sports, demokratie, migrationsforschung, sozial, economics, internationales, politisch system, eu, effektivitat, usa, springer vs, strukturwandel, arbeitgeber, losungsvorschlage, sozial bewegung, staatlicher, berufen, effekt, sozialstruktur, staatlicher, parteien, politik, policy, demokratisch, arbeitsmarkt, wirtschaft, soziologie
-
-
-When word is detected:
-
-computer ['Mathematik/Informatik']
-recht ['Rechtswissenschaften']
-musik ['Wirtschaftswissenschaften', 'Physik']
-management ['Wirtschaftswissenschaften']
-psychologie ['Humanwissenschaften']
-wirtschaft ['Sozialwissenschaften']
-geographie ['Kultur-/Geowissenschaften']
-schule ['Erziehungs-/Kulturwissenschaften']
-
-Checking if it is part of a T$^{0.5}$ term
-Mathematik/Informatik               programmiersprache
-Wirtschaftswissenschaften           wirtschaftsgeographie
-Rechtswissenschaften                schuldrecht, strafrecht, deutsch recht, offentliches recht, grundrechte, urheberrecht, steuerrecht, strafrecht, deutsch recht, recht, grundrechte
-Erziehungs-/Kulturwissenschaften    religionswissenschaft, erziehungswissenschaft
-Physik                              projektmanagement
-Sprach-/Literaturwissenschaften     deutsch literaturwissenschaft
-Humanwissenschaften                 psychologie, psychologie
-Kultur-/Geowissenschaften           arbeiten leitfaden studierende geographie bern, physischen geographie, stadtgeographie, physischen geographie, stadtgeographie, geographie
-Sozialwissenschaften                sports
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
 
 
-
-\removeMe{
-
-\subsubsection{Is there a direction capturing advanced courses?}
-
-\todo
-}
-
-\subsubsection{Are embeddings of known similar entities close?}
-
-\begin{figure}[H]
+\begin{table}[h]
 	\centering
-	\includegraphics[width=\figwidth]{svm_mathematik_highlight_infoAB.png}
-	\caption[3D-Plot with an SVM for the term \textit{mathematik}]{
-		\label{fig:3dplot_mathe_infoab}
-		3D-Plot with an SVM for the term \textit{mathematik}, also highlighting the courses \textit{Informatik A} and \textit{Informatik B}. Negative samples are hidden for better visibility, and entities that contain the word more often than the 75\textsuperscript{th} percentile have bigger markers.
-	}
-\end{figure}
-
-\autoref{fig:3dplot_mathe_infoab} displays a 3D-Embedding for courses, splitting courses which contain the term "\textit{mathematik}" from those that don't, also hightlighting the courses \textit{Informatik A} and \textit{Informatik B}. Both courses are close to each other for both \gls{normangdist} and also euclidean distance.\footnote{Normalized Angular Distance: Average 1.00, Info A and Info B: 0.37 (Percentile 8.2), Euclidean Distance: Average 0.88, Info A and Info B: 0.39 (Percentile: 8.9)}
-Further, even though neither course description contains the word \textit{mathematik}, both courses are would receive high values for this feature, indicated by the distance to the decision plane.\footnote{Both statements are better visible in the interactive version of the plot, which can be found at \todoparagraph{link!!}}
-
-\subsubsection{Extended analysis}
-
-\removeMe{
-\todoparagraph{Also interesting: The top-ranked entities for some of the features }
-
-\todoparagraph{Neben den Clustern die ich mir anzeigen lassen kann und qualitativ analysieren kann}, kann ich mir auch die distances to the origins of the respective dimensions (induced by the clusters), what induces the respective rankings! (see DESC15 p.24u, proj2 of load_semanticspaces.load_projections) anzeigen lassen - da kann ich sagen "term xyz ist bei "nature" am höchsten".
-}
-
-
-To further analyse the quality of the results, we are interested in the top courses of those directions that best represent the different faculties. \autoref{tab:highest_ranking} displays the most prototypical examples for each of those, which is directly derived from the rankings induced by the classifier.
-
-
-\begin{table}[H]
 	\makebox[\textwidth][c]{
-	\resizebox{1.1\textwidth}{!}{%
-	\begin{tabular}{rcl}
-	\textbf{Faculty} & \textbf{Top Direction} & \textbf{Top Course for Direction} \\
-	\midrule
-	\textbf{Erziehungs-/Kulturw.} & erziehungswissenschaft & BA GM 3.2: Der Kinder Zukunft aus elementarpädagogischer Sicht \\
-	\textbf{Rechtswissenschaften} & schuldrecht & Strafprozessuales Ermittlungsverfahren, [...] \\
-	\textbf{Wirtschaftsw.} & fallstudie & WIWI-B-18001-WI: Management Support Systems B I (BI-Praktikum SAP/BW) \\
-	\textbf{Kultur-/Geow.} & stadtgeographie & Mittelseminar/Angewandtes Seminar: Geographische Handelsforschung [...] \\
-	\textbf{Mathem./Informatik} & mechanik & Technische Mechanik IV für Maschinenbau \\
-	\textbf{Sprach-/Literaturw.} & deutschen literatur & Deutsch - diachron: Historische Linguistik und Sprachwandel in der Gegenwart [...] \\
-	\textbf{Humanwissenschaften} & gehirn & Willensfreiheit und Hirnforschung [...] \\
-	\textbf{Physik} & klar & B1-B2 Schwedisch Erweiterungskurs: Schweden - das Land und die Menschen (DIGITAL) \\
-	\textbf{Biologie/Chemie} & stattgefunden & Transformation wohlfahrtsstaatlicher Regime in Europa: Aktuelle Forschungskontroversen \\
-	\textbf{Sozialwissenschaften} & parteien & Modul Vergleichende Politikwissenschaft I: Westliche Regierungssysteme im Vergleich \\
+		\resizebox{1.1\textwidth}{!}{%
+	\begin{tabular}{R{0.2\textwidth}|L{0.9\textwidth}}
+	   Cluster Center & Cluster Elements \\ \midrule
+				 opnv & befragungen, bewohner, urbanen, 00 uhr \\
+	   bertolt brecht & brecht, exil, bertolt, weiss, weimarer republik, auschwitz, weimarer, ... \\
+religionswissenschaft & religionsunterrichts, spirituelle, religions, teil veranstaltung, religion, studienbeginn, auml ischen, ... \\ 
+		 erkrankungen & klinischen, gesundheitlichen, krankheit, rehabilitation, pravention, aufrechterhaltung, exemplarische inhalte, ... \\
+	  		  lineare & integrierte, berechnung, variablen, skript, ubungsaufgaben, losung, vorliegen \\
+	 		 parteien & verfassung, demokratischen, zivilgesellschaft, semester sowie, einander, folgendem link, sozialwiss uni osnabrueck, ... \\
+	 		 kleidung & textilien, mode, textile, parallelen \\
+			    kreuz & heilige, christentum, 1957, fuhrungen \\
+ 		 offentliches & offentlichkeitsarbeit, verwaltungsrecht, offentlichen recht, offentliches recht, europarecht, staatsrecht, teilnahmevoraussetzungen veranstaltung, ... \\
+	    masterstudium & fortgeschrittene, schlusselkompetenzen, betriebswirtschaftslehre, untereinander \\
+	unterrichtspraxis & fachlichen, unterrichtsplanung, schulalltag, lehrerinnen, schulische, daz, bildung nachhaltige, ... \\
+  		  aristoteles & asthetik, semantik, dialoge, menschheit, sucht, benutzt, philosophische, ... \\
+   		   mythologie & athen, mythos, mann, griechen, ubersetzung, figur, griechischen, ... \\
+ 		 flexibilitat & weiterbildung, schlusselqualifikation, erfolgreiches, fordert, vorlagen, strukturierte, berufsleben, ... \\
+   aktive beteiligung & teilnahme ersten, wochentliche, zweit, festlegung, ubergreifende, auml ndige, ndige, ... \\
+ 		 unsicherheit & covid 19 pandemie, korperlich, wendet studierende, webinar, risiko, einbringen, fachlich, ... \\
+	 wirtschaftlicher & industrialisierung, wachstum, republik, wirtschaftspolitik, konkurrenz, positive, russland, ... \\
 	\end{tabular}
-	\caption{Highest ranking courses per feature that best predicts the faculty}
-	\label{tab:highest_ranking}
 	}}
-\end{table}
+	\label{tab:clusters}
+	\caption{Exemplary clusters found in the Siddata-dataset}
+\end{table}	
 
 
-\paragraph*{Robustness}
+% \removeMe{
+% \subsubsection{Are the phrases making up the semantic-direction-clusters similar?}
+% \todo
+% \subsubsection{Are there dimensions encoding the COVID-19 pandemic?}
+% \todo
+% \subsubsection{Is there a direction capturing advanced courses?}
+% \todo
+% }
 
-\removeMe{
 
-How many unique in sum are there (out of 53 possible)
 
-Mathematik/Informatik: 22,
-Wirtschaftswissenschaften: 34,
-Rechtswissenschaften: 18,
-Sprach-/Literaturwissenschaften: 23,
-Humanwissenschaften: 23,
-Biologie/Chemie: 35,
-Physik: 37,
-Kultur-/Geowissenschaften: 21,
-Erziehungs-/Kulturwissenschaften: 29,
-Sozialwissenschaften: 29
+% \subsubsection{Extended analysis}
+% \removeMe{
+% \todoparagraph{Also interesting: The top-ranked entities for some of the features }
 
-Mathematik/Informatik: -,
-Wirtschaftswissenschaften: fallstudie (2),
-Rechtswissenschaften: deutsch recht (2), grundrechte (2), sp 5 (2), strafrecht (2)
-Sprach-/Literaturwissenschaften: text (2)
-Humanwissenschaften: psychologie (2), therapeutisch (2)
-Biologie/Chemie: -,
-Physik: stress (2)
-Kultur-/Geowissenschaften: physischen geographie (2), stadtgeographie (2), tourismus (2)
-Erziehungs-/Kulturwissenschaften: padagogisch (2), schule (2)
-Sozialwissenschaften: staatlicher (2)
-
-}
+% \todoparagraph{Neben den Clustern die ich mir anzeigen lassen kann und qualitativ analysieren kann}, kann ich mir auch die distances to the origins of the respective dimensions (induced by the clusters), what induces the respective rankings! (see DESC15 p.24u, proj2 of load_semanticspaces.load_projections) anzeigen lassen - da kann ich sagen "term xyz ist bei "nature" am höchsten".
+% }
 
 
 
 
-\section{Optimal Parameters}
+\origsection{Optimal Parameters}
 \label{sec:results_params}
 
-\removeMe{
-\todoparagraph{Die narrative vorher} ist "ja es funktioniert across domain", zusätzlich hab cih noch hyperparameter search gemacht, was in contrast do derrac15 etc ging dank meiner scalable implementation, blubblub, die reporte ich jetzt natürlich, aber sie ist für die kernaussage nicht so relevant.
-}
-The previous sections displayed results for a parameter-combination that performed well on average for the aforementioned classification-task. This section compares all of the parameter-combinations that were considered. 
+Having established the algorithm's ability to be transferred to the domain of educational resources, we will conclude this chapter with the results of our hyperparameter search. The algorithm was run with hundreds of different hyperparameter-combinations for both the placetypes- and Siddata-dataset throughout the process of its implementation and testing. As the precise hyperparameter-combination was not very imporant for our research questions, only some exemplary results for the Siddata-dataset will be reported here for the sake of brevity.
 
-As described in \autoref{sec:workflow}, a good first approximation is to check how many candidate-terms get a kappa-score which is above the threshold of 0.5. \autoref{tab:kappa_table} shows the results of many runs with different parameter-combinations with the purpose of figuring out which combination of parameters and kappa-metrics lead to enough candidate-terms (\todoparagraph{Also ref the figure of workflow where I check what threshold was realistic})
+The reports produced in the previous section are the best ones from a final set of 165 different parameter-combinations, run over the course of three days on the \gls{ikw}-grid. \todoparagraph{which was in contrast to the mainalgos easy thanks to my scalable implementation hehe} 
 
-\input{include/results_table_1}
 
-\todoparagraph{What kappas mean what} is explained in the implementation details in  \autoref{tab:kappa_measures}
+Generally, we selected a parameter-configuration that reached a high accuracy on average for the aforementioned classifiation based on shallow decision trees as representatively \textit{good} configuration. Here we compare all of the parameter-combinations that were considered - however the printed tables are shortened for a clearer overview.
 
-After preliminary analysis with the number of kappas, let us also look at the performance of the parameter-combinations for the decision-trees. \autoref{tab:best_params} lists the accuracies of of the decision-trees classifying a course's faculty per parameter-combination. Specifically, this compares accuracies for several one-vs-rest decision trees of depth one with a test-set size of 33\%.
+As described in \autoref{sec:svm_filter_cands}, a good first approximation for the quality of an embedding is to check how many candidate-terms get a kappa-score which is above the threshold of $0.5$. Unfortunately, \cite{Derrac2015} and its follow-ups \cite{Ager2018,Alshaikh2020} did not explictly and unambiguously state how the kappa-score was calculated. Not only does its implementation\footnote{\todoparagraph{Link}} have many arguments, but also the application may vary. In general, it compares the \textit{prototypicality} according to the classificiation decision with the \gls{quant} of how often the according word occurs in the entities' associated texts. The precise mechanism of has however many more parameters: for example, one can only consider those entities that have a positive \gls{quant}-score, such that not almost all of the candidates have a score of zero\footnote{For the movies-dataset, a \gls{df} threshold of 100 for a candidate means that up to 14\,900 entities (99.33\%) do not contain the entities, meaning all scores and accordingly also their rank will be zero. In constrast to that, the ranking induced by mapping of the high-dimensional and real-valued embeddings onto the separatrix orthogonal will almost always lead to unique ranks.}. Another open question is when considering the raw count as quantification\footnote{The exact wording of \textcite{Derrac2015} is: \textit{\q{[...] measure the correlation between the ranking induced by \vec{v_t} and the number of times t appears in the documents associated with each entity [...]}}. This seems to imply that they are using the raw count, even though \cite{Ager2018,Alshaikh2020} write in their algorithm summary that they used the \gls{ppmi}-score}, if the rankings induced by the orthogonal of the hyperplane are to be compared with the raw count, or the \textit{ranking induced} by the count. To clarify this ambiguity, we tried out many different interpretations for this score. 
+
+\autoref{tab:kappa_table} (moved to the Appendix) shows the results of many runs with different parameter-combinations with the purpose of figuring out which combination of parameters and kappa-metrics lead to enough candidate-terms. The meaning of the different kappa-scores encoded in the columns is given in the implementation details in \autoref{tab:kappa_measures}. \todoparagraph{Also ref the figure of workflow where we check what threshold was realistic}. The table shows drastically differing values for the individual scoring methods. To understand if the difference in scoring has an effect on \textit{which} candidates are extracted, let us look at the overlap of different measures in \autoref{tab:kappa_overlap}. \todoparagraph{Zeigt er hier ?? ?}
+
+
+\begin{table}[H] 
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{rccccccccccccc}
+		\toprule
+		 & \textbf{accuracy} & \textbf{precision} & \textbf{recall} &  \textbf{f1} & \textbf{r2r-d} & \textbf{r2r-min} & \textbf{b2b} & \textbf{dig} & \textbf{c2r+} & \textbf{r2r+d} & \textbf{r2r+min} & \textbf{r2r+max} & \textbf{dig+2} \\
+		 & (10060) & (1668) & (10060) & (3155) & (0) & (2) & (3052) &  (0) & (4) & (0) & (239) & (103) & (1010) \\
+		\midrule
+		accuracy & - & 0.166 & \bfseries 1.000 & 0.314 & 0.000 & 0.000 & 0.303 & 0.000 & 0.000 & 0.000 & 0.024 & 0.010 & 0.100 \\
+		precision & \bfseries 1.000 & - & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.001 & 0.998 & 0.000 & 0.002 & 0.000 & 0.084 & 0.051 & 0.126 \\
+		recall  & \bfseries 1.000 & 0.166 & - & 0.314 & 0.000 & 0.000 & 0.303 & 0.000 & 0.000 & 0.000 & 0.024 & 0.010 & 0.100 \\
+		f1  & \bfseries 1.000 & 0.529 & \bfseries 1.000 & - & 0.000 & 0.001 & 0.967 & 0.000 & 0.001 & 0.000 & 0.067 & 0.032 & 0.140 \\
+		r2r-d  & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+		r2r-min  & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 &  \bfseries 1.000 & 0.000 & - & \bfseries 1.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+		b2b  & \bfseries 1.000 & 0.546 & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.001 & - & 0.000 & 0.001 & 0.000 & 0.068 & 0.033 & 0.141 \\
+		dig & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+		c2r+  & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.000 & \bfseries 1.000 & 0.000 & - & 0.000 & \bfseries 1.000 & \bfseries 1.000 & 0.250 \\
+		r2r+d  & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 \\
+		r2r+min  & \bfseries 1.000 & 0.586 & \bfseries 1.000 & 0.887 & 0.000 & 0.000 & 0.874 & 0.000 & 0.017 & 0.000 & - & 0.406 & 0.452 \\
+		r2r+max  & \bfseries 1.000 & 0.825 & \bfseries 1.000 & 0.981 & 0.000 & 0.000 & 0.981 & 0.000 & 0.039 & 0.000 & 0.942 & - & 0.437 \\
+		dig+2  & \bfseries 1.000 & 0.208 & \bfseries 1.000 & 0.438 & 0.000 & 0.000 & 0.426 & 0.000 & 0.001 & 0.000 & 0.107 & 0.045 & - \\
+		\bottomrule
+	\end{tabular}
+	\slcaption{Overlap of different scoring methods in percent. Numbers in parantheses list the total number of extracted samples for each scoring method. Upper right triangle encodes the cardinality of the union divided by the cardinality of column-method, lower left triangle divides by row.}
+	\label{tab:kappa_overlap}
+	}
+\end{table}
+	
+This table additionally reports the raw \textit{accuracy, precision, recall} and \textit{f1}-scores of the classifier. The overlaps of these scores will  serve to test our hypothesis that due to the different nature of the Siddata-dataset, comparing the \textit{ranking} of the candidates leads to worse performances than comparing raw classification scores (also suggested by \cite{Ager2018}).
+
+After these preliminary analyses with the number of extracted candidates, let us also quickly look at differences in perforamances of the decision-trees depending on parameter-combinations. \autoref{tab:best_params} lists the accuracies of \glspl{dt} classifying a course's faculty per parameter-setup for some of the configurations of the final run. Specifically, this compares accuracies for several \textit{1vsRest} decision trees of depth one with a test-set size of 33\%.
 
 
 \newcommand{\SmfauhcsdT}{\setlength\extrarowheight{-5pt} \scriptsize \mfauhcsdT}
@@ -664,7 +588,7 @@ After preliminary analysis with the number of kappas, let us also look at the pe
 % Args for best Tree: balance_classes=True, one_vs_rest=True, dt_depth=1, test_percentage_crossval=0.33
 \begin{table}
 	\resizebox{\textwidth}{!}{%
-	\caption{Decision-Tree-Accuracies for different Parameter-Combinations}
+	\caption{decision tree accuracies for different parameter-combinations. (tree of depth 1, balanced, 1vsRest, 33\% testset)}
 	\label{tab:best_params}
 	\begin{tabular}{rrrrllllll}
 	\toprule
@@ -716,67 +640,15 @@ After preliminary analysis with the number of kappas, let us also look at the pe
 	}
 \end{table}
 
-\removeMe{
-
-\todoparagraph{As exptected, 3D is not too good, and we see that the best combination is blablabla}
-
-
-\todoparagraph{What do we see? We see that tfidf is besser than ppmi blablabla}
-\todoparagraph{Die alte table sieht viel besser aus} (hier druber)
-}
-
-\begin{table}[H] 
-	\resizebox{\textwidth}{!}{%
-	\begin{tabular}{rccccccccccccc}
-		\toprule
-		 & \textbf{accuracy} & \textbf{precision} & \textbf{recall} &  \textbf{f1} & \textbf{r2r-d} & \textbf{r2r-min} & \textbf{b2b} & \textbf{dig} & \textbf{c2r+} & \textbf{r2r+d} & \textbf{r2r+min} & \textbf{r2r+max} & \textbf{dig+2} \\
-		 & (10060) & (1668) & (10060) & (3155) & (0) & (2) & (3052) &  (0) & (4) & (0) & (239) & (103) & (1010) \\
-		\midrule
-		accuracy & - & 0.166 & \bfseries 1.000 & 0.314 & 0.000 & 0.000 & 0.303 & 0.000 & 0.000 & 0.000 & 0.024 & 0.010 & 0.100 \\
-		precision & \bfseries 1.000 & - & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.001 & 0.998 & 0.000 & 0.002 & 0.000 & 0.084 & 0.051 & 0.126 \\
-		recall  & \bfseries 1.000 & 0.166 & - & 0.314 & 0.000 & 0.000 & 0.303 & 0.000 & 0.000 & 0.000 & 0.024 & 0.010 & 0.100 \\
-		f1  & \bfseries 1.000 & 0.529 & \bfseries 1.000 & - & 0.000 & 0.001 & 0.967 & 0.000 & 0.001 & 0.000 & 0.067 & 0.032 & 0.140 \\
-		r2r-d  & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
-		r2r-min  & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 &  \bfseries 1.000 & 0.000 & - & \bfseries 1.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
-		b2b  & \bfseries 1.000 & 0.546 & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.001 & - & 0.000 & 0.001 & 0.000 & 0.068 & 0.033 & 0.141 \\
-		dig & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
-		c2r+  & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 & \bfseries 1.000 & 0.000 & 0.000 & \bfseries 1.000 & 0.000 & - & 0.000 & \bfseries 1.000 & \bfseries 1.000 & 0.250 \\
-		r2r+d  & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & - & 0.000 & 0.000 & 0.000 \\
-		r2r+min  & \bfseries 1.000 & 0.586 & \bfseries 1.000 & 0.887 & 0.000 & 0.000 & 0.874 & 0.000 & 0.017 & 0.000 & - & 0.406 & 0.452 \\
-		r2r+max  & \bfseries 1.000 & 0.825 & \bfseries 1.000 & 0.981 & 0.000 & 0.000 & 0.981 & 0.000 & 0.039 & 0.000 & 0.942 & - & 0.437 \\
-		dig+2  & \bfseries 1.000 & 0.208 & \bfseries 1.000 & 0.438 & 0.000 & 0.000 & 0.426 & 0.000 & 0.001 & 0.000 & 0.107 & 0.045 & - \\
-		\bottomrule
-	\end{tabular}
-		}
-\end{table}
-	
-	
-	
 
 
 
 
+% \includeMD{pandoc_generated_latex/4_0_results}
 
 
 
 
-
-
-
-\includeMD{pandoc_generated_latex/4_0_results}
-
-The plots \ref{fig:scatter_mds_movies} and \ref{fig:scatter_mds_placetypes} show a 2D-representation of the MDS %TODO: link MDS anyway, if not to the glossary than to the section
-of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}.\footnote{\url{https://www.cs.cf.ac.uk/semanticspaces/}} Visually comparing them to their equivalent to the SIDDATA-dataset (\autoref{fig:scatter_mds}) \todoparagraph{shows that while the movie-embeddings looks pretty clustered}, the clustering of the placetypes-dataset looks in fact a lot worse than that of the SIDDATA-dataset.
-%TODO: obviously write again. What do we see? A 2D-Version of the MDS. If we see very distinct clusters in that, we can conclude that it sounds possible that we can detect whatever-we-colored-by from this embeddings to an okay degree.
-
-
-
-
-
-
-
-
-\todoparagraph{By the way, I also wanted to test if any important information gets lost when using only the extracted semantic directions} - the results for unbounded decision trees (\autoref{tab:robustresults_perfb}) which achieve 94.3\% weighted accuracies indicate that at least regarding inforomation about the faculty seems to not get lost, and keep in mind that we didn't train for the faculty at all, that is just a side effect.
 
 
 % % Please add the following required packages to your document preamble:
@@ -802,35 +674,3 @@ of the movies- and placetypes-dataset as made public by \textcite{Derrac2015}.\f
 % 	\caption{Top 3 Directions to detect the respective faculty from the data. a (!) behind a direction means that its inversed (LOW values point towards the class)}
 % 	\label{tab:courses_top3_2}
 % \end{table}
-
-
-\removeMe{
-
-\todoparagraph{Just print a few fucking clusters here}
-
-
-				 opnv: befragungen, bewohner, urbanen, 00 uhr
-	   bertolt brecht: brecht, exil, bertolt, weiss, weimarer republik, auschwitz, weimarer, ...
-religionswissenschaft: religionsunterrichts, spirituelle, religions, teil veranstaltung, religion, studienbeginn, auml ischen, ...
-         erkrankungen: klinischen, gesundheitlichen, krankheit, rehabilitation, pravention, aufrechterhaltung, exemplarische inhalte, ...
-	  		  lineare: integrierte, berechnung, variablen, skript, ubungsaufgaben, losung, vorliegen
-	 		 parteien: verfassung, demokratischen, zivilgesellschaft, semester sowie, einander, folgendem link, sozialwiss uni osnabrueck, ...
-	 		 kleidung: textilien, mode, textile, parallelen
-			    kreuz: heilige, christentum, 1957, fuhrungen
- 		 offentliches: offentlichkeitsarbeit, verwaltungsrecht, offentlichen recht, offentliches recht, europarecht, staatsrecht, teilnahmevoraussetzungen veranstaltung, ...
-	    masterstudium: fortgeschrittene, schlusselkompetenzen, betriebswirtschaftslehre, untereinander
-	unterrichtspraxis: fachlichen, unterrichtsplanung, schulalltag, lehrerinnen, schulische, daz, bildung nachhaltige, ...
-  		  aristoteles: asthetik, semantik, dialoge, menschheit, sucht, benutzt, philosophische, ...
-   		   mythologie: athen, mythos, mann, griechen, ubersetzung, figur, griechischen, ...
- 		 flexibilitat: weiterbildung, schlusselqualifikation, erfolgreiches, fordert, vorlagen, strukturierte, berufsleben, ...
-   aktive beteiligung: teilnahme ersten, wochentliche, zweit, festlegung, ubergreifende, auml ndige, ndige, ...
- 		 unsicherheit: covid 19 pandemie, korperlich, wendet studierende, webinar, risiko, einbringen, fachlich, ...
-	 wirtschaftlicher: industrialisierung, wachstum, republik, wirtschaftspolitik, konkurrenz, positive, russland, ...
-}
-
-
-\subsection{Robustness}
-
-first is nsamples, second is maximal number, last is max number
-For 50D:  38 3800 1003
-For 200D: 15 6000 1707

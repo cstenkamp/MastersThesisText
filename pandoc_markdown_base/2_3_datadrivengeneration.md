@@ -20,7 +20,7 @@ Standard problem is that they would have to be manually generated, which of cour
 
 ### Okay, let's get to \textcite{Derrac2015}
 
-Like we said, \cite{Gardenfors2000a} said "Dimensionality Reduction from the high-dimensional input (neurons) eg using MDS into a euclidian space, and then geometric reasoning on that" 
+Like we said, \cite{Gardenfors2000a} said "Dimensionality Reduction from the high-dimensional input (neurons) eg using MDS into a Euclidean space, and then geometric reasoning on that" 
 
 and \cite{Ager2018} and \cite{Alshaikh2020} provided some useful additions for it without changing the main logic. So, we'll work with their algorithm, also only making small improvemenents. So the two main areas of work are implementing the original algorithm, and changing small details of it where most appropriate such that it works well for the domain we're interested in.
 
@@ -53,7 +53,7 @@ Each of the basic features is then associated with the normal vector of the sepa
 
 
 
-\textbf{Conceptual Space in our Case = Euclidian space with interpretable dimensions}
+\textbf{Conceptual Space in our Case = Euclidean space with interpretable dimensions}
 
 Am ende soll rauskommen: A \textbf{feature-based representation}
 

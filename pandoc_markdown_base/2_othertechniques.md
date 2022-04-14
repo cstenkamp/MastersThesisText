@@ -37,7 +37,7 @@ Don't forget to mention distributional hypoth.
 
 
 * BERT als "bestes (except gpt) Neural language Model for documents"  
-TODO: Ist word2vec schon nen euclidian space? Why/Why not?
+TODO: Ist word2vec schon nen Euclidean space? Why/Why not?
 
 
 
