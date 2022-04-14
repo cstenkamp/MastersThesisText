@@ -35,8 +35,8 @@ see \autoref{sec:algo_preproc}
 To check the languages of the entities, the \codeother{langdetect}\footnote{\url{https://pypi.org/project/langdetect/}, \textcite{nakatani2010langdetect}} library is used, which is a direct port of a java library that claims to have 99.8\% accuracy on longer texts \cite{nakatani2010langdetect}. 
 \newline
 
-Depending on the translation-policy, it is possible to either take only those entities of the demanded language, ignore it and consider all entities in their original language, or enforce the demanded language by translating all entities from their original language to the demanded one. The accompaning code for this thesis contains extensive code to do that using the \emph{Google Cloud Translation API}\footnote{\url{https://cloud.google.com/translate}}. Many descriptions of the Siddata-dataset were translated using this technique\footnote{As, however, only 500.000 characters per google-account and month can be translated \href{https://cloud.google.com/translate/pricing}{free of charge}, the translation-process for the descriptions is still in progress.}. As of now, Google's Cloud Translation Service uses an embedding-based neural model of a hybrid architecture that has a transformer encoder, followed by an RNN decoder \cite{Chen2018}. All of the languages detected in the Siddata-dataset are supported by the system - translating between the languages German, English and Spanish, which make up \todoparagraph{HOWMANY} percent of the Siddata-descriptions, is what the system is particularly optimized for. 
-\todoparagraph{write short about their percentage, bleu score etc}
+Depending on the translation-policy, it is possible to either take only those entities of the demanded language, ignore it and consider all entities in their original language, or enforce the demanded language by translating all entities from their original language to the demanded one. The accompaning code for this thesis contains extensive code to do that using the \emph{Google Cloud Translation API}\footnote{\url{https://cloud.google.com/translate}}. Many descriptions of the Siddata-dataset were translated using this technique\footnote{As, however, only 500.000 characters per google-account and month can be translated \href{https://cloud.google.com/translate/pricing}{free of charge}, the translation-process for the descriptions is still in progress.}. As of now, Google's Cloud Translation Service uses an embedding-based neural model of a hybrid architecture that has a transformer encoder, followed by an RNN decoder \cite{Chen2018}. All of the languages detected in the Siddata-dataset are supported by the system - translating between the languages German, English and Spanish, which make up more than 99 percent of the Siddata-descriptions, is what the system is particularly optimized for. 
+% \todoparagraph{write short about their percentage, bleu score etc}
 
 \includeMD{pandoc_generated_latex/6_1_implementationdetails}
 
@@ -47,7 +47,7 @@ see \autoref{sec:extract_cands}
 \subsubsection*{KeyBERT}
 \label{ap:details_keybert}
 
-The \emph{KeyBERT}-algorithm\footnote{\label{fnote:keybertgibhut}\fullcite{MaartenGr2021}} \cite{grootendorst2020keybert} is one of the techniques used to select phrases of the text-corpus as candidates for \gls{feature}-directions. 
+The \emph{KeyBERT}-algorithm\footnote{\label{fnote:keybertgibhut}\fullcite{MaartenGr2021}} \cite{grootendorst2020keybert} is one of the techniques used to select phrases of the text-corpus as candidates for feature-directions. 
 
 KeyBERT is a keyword-extraction technique \q{that leverages BERT embeddings to create keywords and keyphrases that are most similar to a document}\footnoteref{fnote:keybertgibhut}. \Gls{bert} is a neural language representation model that is able to embed both words and documents. Its embeddings are obtained by training a multi-layer bidirectional transformer encoder \gls{ann} architecture on a task in which a masked word must be predicted from the its bidirectional context as well subsequent fine-tuning tasks \cite{Devlin2019}. To extract keywords, the KeyBERT algorithm embeds both the document as well as its containing \glspl{ngram} of a configurable length using BERT and returns those phrases whose embedding ist most similar to the document-embedding according to the cosine-similiarity\footnoteref{fnote:keybertgibhut}.
 
@@ -104,7 +104,7 @@ In practice, though both variants extracted different phrases, the results for e
       \begin{tabular}[c]{@{}l@{}}10 bins. Positions by np.histogram\_bin\_edges \\ from min and max of all positive data\end{tabular}
     \end{tabular}%
     }
-    \caption{Dense means: if there are 14.900 zeros, the next is a 1
+    \slcaption{Different values of calculating Cohen's Kappa score. Dense means: if there are 14.900 zeros, the next is a 1
     Min means: if there are 14.900 zeros, the next one is a 14.901
     Max means: if there are 14.900 zeros, they all get the label 14.900
     These scores are weighted}
@@ -124,12 +124,11 @@ occur in its corresponding text-corpus can be highly relevant. To do that, WordN
 \subsection{Faculty-Classifier}
 \label{sec:faculty_classifier}
 
-As one of the evaluations is to compare the results of classifiers based on the algorithm here with a powerful classification algorithm, a neural network that classifies the Faculty of a course in the Siddata-Dataset was also implemented. The implementation for that will not be elaborated upon except that it is available at \todoparagraph{Link to the repo}, it relies on sacred,\footnote{\todoparagraph{link to sacred, note that to get the results like done here you'll need a MongoDB in a docker container, see this link}} and that it uses Google's `universal-sentence-encoder-multilingual` in Version 3 (linear in textlength, thus managable time and space requirements) plus a few classification layers ontop. The encoder is trained \q{on a number of natural language prediction tasks that require modeling the meaning of word sequences rather than just individual words},\footnote{Quote from their description at \urlx{https://tfhub.dev/google/collections/universal-sentence-encoder/1} \acc{03}{25} } aimed being the base for architectures for many NLP tasks through the usage of sentence embeddings \cite{Guo}. It was trained on with a train-test-split of 90/10 (the results being consitent through sampled cross-validation)
+As one of the evaluations is to compare the results of classifiers based on the algorithm here with a powerful classification algorithm, a neural network that classifies the faculty of a course in the Siddata-Dataset was also implemented. The implementation for that will not be elaborated upon except %that it is available at \todoparagraph{Link to the repo}, it relies on sacred, %\footnote{\todoparagraph{link to sacred, note that to get the results like done here you'll need a MongoDB in a docker container, see this link}} 
+that it uses Google's `universal-sentence-encoder-multilingual` in Version 3 (linear in textlength, thus managable time and space requirements) plus a few classification layers ontop. The encoder is trained \q{on a number of natural language prediction tasks that require modeling the meaning of word sequences rather than just individual words},\footnote{Quote from their description at \urlx{https://tfhub.dev/google/collections/universal-sentence-encoder/1} \acc{03}{25} } aimed being the base for architectures for many NLP tasks through the usage of sentence embeddings \cite{Guo}. It was trained on with a train-test-split of 90/10 (the results being consitent through sampled cross-validation)
 
 
-\todoparagraph{Another purpose of the classifier} is to check if it is anyhow possible to extract meaningful information from the descriptions: If it is possible to train a classifier on the data that can reasonably predict a qualitative feature, there is enough structure in the data such that the algorithm we are about to produce can work. 
-
-Also, we have a lower bound for useful data: we can just throw away data that cannot be classified!!
+Another purpose of the classifier is to check if it is anyhow possible to extract meaningful information from the descriptions: If it is possible to train a classifier on the data that can reasonably predict a qualitative feature, there is enough structure in the data such that the algorithm we are about to produce can work. Also, we have a lower bound for useful data: we can just throw away data that cannot be classified.
 
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
@@ -180,7 +179,7 @@ Also, we have a lower bound for useful data: we can just throw away data that ca
 % \end{lstlisting}
 
 
-\todo 
+% \todo 
 
 
 % \subsection{\textcite{Alshaikh2020}}

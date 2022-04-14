@@ -312,7 +312,7 @@ Polar bears love onions}
 
 % Source looking into it ([28] of [DESC15]): M. Abraham, D. Gabbay, U. Schild, Analysis of the talmudic argumen- tum a fortiori inference rule (kal vachomer) using matrix abduction, Studia Logica 92 (2009) 281–364.
 
-According to \textcite{Gardenfors2000a}, representations don't need to be similiar to the objects they represent, but the \textit{similarity relations of the representations} should correspond to those of the objects they represent. From this follow a few other translations of reasoning and geometric properties. \cite{Derrac2015} elaborate on many other of these and build semantic classifier that model other kinds of reasoning. For this thesis, let us look at one example of these, which may prove useful in recommendation and classificiation and exemplifies how the representations benefit from salient directions, namely \textbf{A fortiori reasoning}:
+According to \textcite{Gardenfors2000a}, representations do not need to be similiar to the objects they represent, but the \textit{similarity relations of the representations} should correspond to those of the objects they represent. From this follow a few other translations of reasoning and geometric properties. \cite{Derrac2015} elaborate on many other of these and build semantic classifier that model other kinds of reasoning. For this thesis, let us look at one example of these, which may prove useful in recommendation and classificiation and exemplifies how the representations benefit from salient directions, namely \textbf{A fortiori reasoning}:
 \vspace{2ex}
 
 \noindent
@@ -387,7 +387,7 @@ There are also techniques that extend the algorithm of \textcite{Derrac2015}: \t
 \section{Relevant Algorithms and Techniques}
 \label{sec:required_algos}
 
-\todoparagraph{TODO: term? phrase? n-gram? - check where I mean what}
+% \todoparagraph{TODO: term? phrase? n-gram? - check where I mean what}
 
 % \todoparagraph{dont forget the links for lsa und lda - are in lsa-long-md }
 
@@ -442,7 +442,7 @@ This approach is simple but has important drawbacks: Firstly, a document is not 
 Further, by representing each word as separate \textit{one-hot-vector} ignores word semantics: as every vector is equally distant from any other, synonyms (cases where the same meaning is expressed with different words) are just as far apart as antonyms (opposites). This unreliability of term-document-association is what \textcite{deerwester90} calls the \textit{fundamental information retrival problem}: The mapping between words and their meanings is not bijective, but ambiguous. Different words can be used to express the same concept, and sometimes the same word refers to different concepts. This issue is partially alleviated by the dimensionality reduction performed subsequently, which may provide a way to determine what concepts are implied and obfuscated by fallible word choice.
 
 To address both issues, modern algorithms exist, which train a document embedding directly based on constellation (alleviating lost ordering) of word-embeddings that are pre-trained based on their usual context (alleviating distance relation problems)
-. \todoparagraph{But later.}
+% . \todoparagraph{But later.}
 
 \subsubsection{2. Word-weighting techniques}
 \label{sec:word_count_techniques}
@@ -523,5 +523,4 @@ $$ \sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(d(p_i, p_j) - \lVert v_i - v_j \rVert)^2 $$
 
 \includeMD{pandoc_generated_latex/2_othertechniques}
 
-\todoparagraph{10 Minuten Word2Vec into the appendix}
 }

@@ -18,17 +18,17 @@ In a final step, the candidate-words are clustered according to their similarity
 
 The rest of this section goes into further detail for each of the individual algorithm components. \removeMe{An overview of which of the considered literature supports each components is given in \autoref{tab:compared_algos}.} Further, configuration files to enable exactly the respective components of the papers \mainalgos for the codebase of this thesis are listed in \aref{ap:yamls_for_origalgos}.
 
-\todoparagraph{but before that, ager and alshaikh}
+% \todoparagraph{but before that, ager and alshaikh}
 
-\removeMe{
-\subsection{Regarding ager and alshaikh}
+% \removeMe{
+% \subsection{Regarding ager and alshaikh}
 
-\todoparagraph{describe shortly what the improvements from [2,3] were}
+% \todoparagraph{describe shortly what the improvements from [2,3] were}
 
-\todoparagraph{Dass die den Zwischenschritt mit dem ganzen geeometric reasoning auf dem interim space nicht machen und DESWEGEN die requirement mit MDS soften konnen}
+% \todoparagraph{Dass die den Zwischenschritt mit dem ganzen geeometric reasoning auf dem interim space nicht machen und DESWEGEN die requirement mit MDS soften konnen}
 
-In principle Derrac2015, but with some components from Ager2018 and Alshaikh2020 as well as some own stuff. We will testi some claims or nonclaims of \mainalgos, bspw nutzen sie immer PPMI ohne je tf-idf zu testen. Also of course different nature of the dataset - their "how does this dimension correspond to the count in the reviews" doesn't make sense (their success-metric for the SVM is tailored to the one property, so we expect that one to be worse). We will elaborate on different ways to deal with that later.
-}
+% In principle Derrac2015, but with some components from Ager2018 and Alshaikh2020 as well as some own stuff. We will testi some claims or nonclaims of \mainalgos, bspw nutzen sie immer PPMI ohne je tf-idf zu testen. Also of course different nature of the dataset - their "how does this dimension correspond to the count in the reviews" doesn't make sense (their success-metric for the SVM is tailored to the one property, so we expect that one to be worse). We will elaborate on different ways to deal with that later.
+% }
 
 \subsection{Algorithm Steps}
 \label{sec:algorithm_steps}
@@ -61,8 +61,8 @@ An explicit and simple implementation compliant with each step could be a simple
 \begin{figure}[h]
 	\begin{center}
 	  \includegraphics[width=0.9\textwidth]{dependency_graph.pdf}
-	  \caption[Dependency-graph of the implementation]{Dependency-graph of the implementation, displaying the individual steps of the algorithm as well as their dependencies and where selected important parameters are first used. \todoparagraph{Generated using command XYZ}}
-	  \label{fig:dependency_graph}
+	  \caption[Dependency-graph of the implementation]{Dependency-graph of the implementation, displaying the individual steps of the algorithm as well as their dependencies and where selected important parameters are first used.}
+	  \label{fig:dependency_graph} % \todoparagraph{Generated using command XYZ}
 	\end{center}
 \end{figure}
 
@@ -113,12 +113,12 @@ The result of this step is a bag-of-ngrams representation for each entity (see \
 \label{sec:extract_cands}
 % Section 4.2.1 of Derrac2015
 
-The final result of the algorithm is a metric space in which the individual dimensions (\emph{\glspl{feature}}/\emph{interpretable directions}) correspond to natural-language concepts and attributes. The candidates for these features are verbatim phrases extracted from the text-corpus of the \glspl{entity}, which are subsequently filtered and merged as necessary.
+The final result of the algorithm is a metric space in which the individual dimensions (\emph{features}/\emph{interpretable directions}) correspond to natural-language concepts and attributes. The candidates for these features are verbatim phrases extracted from the text-corpus of the \glspl{entity}, which are subsequently filtered and merged as necessary.
 
 In \gencite{Derrac2015} work, the selection of phrases to be extracted depends on the dataset: For placetypes-dataset, all sufficiently frequent\footnote{\label{fnote:cand_thresholds}The respective thresholds are listed in \autoref{tab:all_datasets} as ``candidate word threshold''.} 1-grams\footnote{Note that in the case of the placetypes dataset, a 1-gram corresponds to all merged words of a tag.} were considered. For the other two datasets, they applied a \gls{pos}-tagger that extracted all sufficiently frequent\footnoteref{fnote:cand_thresholds} \textbf{adjectives, nouns, adjective phrases} and \textbf{noun phrases}, assuming that adjectives would correspond to gradual properties (\eg \textit{violent, funny}) and nouns to topics (\eg the \textit{genre}) \cite[Sec. 4.2.1]{Derrac2015}. Also, the authors ensured that the number of extracted candidates for both datasets is roughly equal, getting around 20\,000 candidates for movies and placetypes.
 
 % Their method depended on the dataset - as their placetypes-dataset was just a collection of tags and the number of tags with term-freq >= XYZ (docfreq>2?! hä?) corresponded to their desired number of candidates anyway (around 22k), they just took all of these as candidates. For their movie-reviews-dataset, they considered all nouns, adjectives, nounphrases 	and adjective-phrases as detected by a POS-tagger. Doing something similar in the scope of this thesis led to suboptimal results, which is why alternative methods were developed
-For this step, the implementation of this thesis differs from the original algorithm, as both taking all words as candidate and running a \gls{pos}-tagger led to suboptimal results in previous experiments, which indicated that the robustness of the algorithm is increased if less candidates are considered in earlier steps. \todoparagraph{This will be further argued and elaborated in the discussion.} To ensure comparability to these works however, in the case of the placetypes-dataset the original method of taking all words with a term-frequency of at least 50 was used. Similar techniques for the Siddata-dataset were also considered, but in constrast to the placetypes-dataset it is also important to consider various-length n-grams. 
+For this step, the implementation of this thesis differs from the original algorithm, as both taking all words as candidate and running a \gls{pos}-tagger led to suboptimal results in previous experiments, which indicated that the robustness of the algorithm is increased if less candidates are considered in earlier steps. This will be further argued and elaborated in the discussion. To ensure comparability to these works however, in the case of the placetypes-dataset the original method of taking all words with a term-frequency of at least 50 was used. Similar techniques for the Siddata-dataset were also considered, but in constrast to the placetypes-dataset it is also important to consider various-length n-grams. 
 
 % \todoparagraph{thing is I have less words but the algorithm seems to profit from less words as that makes it more robust}
 % I would however argue that the difference here doesn't make a relevant difference 
@@ -130,7 +130,7 @@ In our implementation the candidate-extraction is split into four subsequently e
 	\item Creating the \gls{doctermmat} for the candidates and applying a \gls{quant}
 \end{itemize}
 
-As visualized in \autoref{fig:dependency_graph}, these substeps only depend on the preprocessed descriptions, which means they can be run in parallel to the creation of the embedding if \eg running on compute clusters.
+As visualised in \autoref{fig:dependency_graph}, these substeps only depend on the preprocessed descriptions, which means they can be run in parallel to the creation of the embedding if \eg running on compute clusters.
 
 % This can be done either based on the frequency (meaning all terms with a minimal term-frequency), based on some notion of *importance* (based on scores like tf-idf or ppmi), or by more complex means of figuring out *important* keywords and keyphrases. An example of the latter would be KeyBERT
 Three main techniques are implemented to extract candidates from the text-corpus. Irrespective of the algorithm, only words with a sufficiently high \gls{df} are extracted, which is important to ensure that the classifier that determines its meaningfulness has enough samples in both clases. This means that the minimal freqeuncy can be calculated from the dataset size: In \cite{Derrac2015}, the minimal frequency for the movies-dataset with 15\,000 entities was only 100, meaning that the algorithm even works if only 0.6\% of samples are in the positive class. 
@@ -197,7 +197,7 @@ A score function compares these rankings, such that only those terms where the c
 
 Subsequently, only those candidates with high enough scores are considered, and the othogonals of the respective classifiers considered their respective \textit{candidate feature direction}, encoding the degree how much an entity corresponds to this feature. The number of features with a sufficiently high score can also serve as estimate of how good the parameter-combination so far was: if not enough well-scoring features were extracted, the final embedding which is created through only a subset of these features does not explain much of the original variability in the data.
 
-\todoparagraph{Tpower0.5 etc in den Glossary!}
+% \todoparagraph{Tpower0.5 etc in den Glossary!}
 
 \subsubsection{Merging the extracted candidate-directions\arrowref{sec:algorithmsteps}}
 \label{sec:algo:cluster}
@@ -267,7 +267,7 @@ An analysis of \cite{Carmel2009} showed that a statistical method to extract fea
 
 The best technique to find a cluster-name was not evaluated yet. All considered methods that formally evaluate the corresponding feature-directions work independently of the actual cluster name. This is unfortunate, because \textit{subjectively}, the name of the respective directions is very important for the usability of any recommendation engine based on this work. Especially this subjectivity indicates that the only way to evaluate the cluster-names is with a study of human subjects.
 
-\todoparagraph{Kappa in den Glossary!!}
+% \todoparagraph{Kappa in den Glossary!!}
 
 \subsubsection{Postprocessing the Feature-Directions\arrowref{sec:algorithmsteps}}
 \label{sec:algo:postprocess}

@@ -8,7 +8,7 @@
 	* MDS from angular differences of PPMI-weighted BoW
 	* PCA from angular differences of PPMI-weighted BoW (no quadratic time)
 	* Doc2Vec (Le and Mikolov 2014)
-	* Averaged pretrained GLoVe of words with df >= 2("surprisingly competative")
+	* Averaged pretrained GLoVe of words with df >= 2("surprisingly competitive")
 	* Averaged pretrained GLoVe, weighted by PPMI
 * ndims of embedding 50, 100, 200 
 * number of direcitons for cluster INPUT 500, 1000, 2000

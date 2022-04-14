@@ -87,7 +87,7 @@
     name=document-term \mbox{matrix},
     plural=document-term matrices,
     description={
-        A document-term matrix encodes the frequency of terms (words, n-grams or other) for a collection of texts in a matrix. The (often very sparse) matrix has a rows represending the documents and columns corresponding to terms, the individual values encoding the pure counts, frequencies or quantifications of all combinations of document and term. \todoparagraph{one component for every term occurring in the corpus}
+        A document-term matrix encodes the frequency of terms (words, n-grams or other) for a collection of texts in a matrix. The (often very sparse) matrix has a rows represending the documents and columns corresponding to terms, the individual values encoding the pure counts, frequencies or quantifications of all combinations of document and term. 
         }
 }
 
@@ -106,15 +106,14 @@
     type=defs,
     name=Word2Vec,
     description={
-        word2vec is the most famous of a family of \emph{neural language models} \cite{Le2014}. Here we'll use it as \textit{Pars pro Toto} for all of these or rather the respectively most appropriate one. \todoparagraph{Write more about it, rather in a section!}
-        }
+        word2vec is the most famous of a family of \emph{neural language models} \cite{Mikolov2013}. These models are trained on large corpora of texts to predict a word from its surrounding words or vice versa. Each word is represented as a vector, and the training ensures that semantically similar words end up with similar vector representations. This helps with many NLP tasks, as it counters problems of synonymy and polysemy by considering context. The difference between vectors carry semantic meaning, however unlike conceptual spaces they are not domain-spefic and embed all natural language words in a high-dimensional space of arbitrary dimensions.}
 }
 
 \newglossaryentry{doc2vec}{
     type=defs,
     name=Doc2Vec,
     description={
-        \todoparagraph{The term Doc2Vec is not originally used by the authors, only \emph{Paragraph Vectors}, but that's what it's generally called}
+        doc2vec (or \emph{Paragraph Vectors}) refers to a technique by \cite{Le2014} that represents a document by a dense vector that is trained to predict the word occuring in it, analaogous to the training of word2vec. In contrast to bag-of-words-representations of texts, it considers word order and semantics of the words, which often leads to substantial improvements \eg in classification and information retrieval tasks. Nowadays, there are many better performance models based on \textit{transformer} \gls{ann} architectures such as \gls{bert} \cite{Devlin2019} wich base on similar training techniques but outperform in such tasks.
         }
 }
 
@@ -124,7 +123,7 @@
     type=defs,
     name=t-SNE,
     description={
-        t-SNE is a dimensionality-reduction algorithm often used to visualize high-dimensional data in two or three dimensions. It converts distances between data point to probabilities and minimizes the pairwise Kullback-Leibler-divergence between the joint probabilities of the original data and their respective embeddings. % https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html
+        t-SNE is a dimensionality-reduction algorithm often used to visualise high-dimensional data in two or three dimensions. It converts distances between data point to probabilities and minimizes the pairwise Kullback-Leibler-divergence between the joint probabilities of the original data and their respective embeddings. % https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html
         }
 }
 
@@ -132,7 +131,7 @@
     type=defs,
     name=accuracy,
     description={
-        \todoparagraph{TODO!}
+        $\frac{TP+TN}{TP+TN+FP+FN}$
         }
 }
 
@@ -140,31 +139,21 @@
     type=defs,
     name=F-1 score,
     description={
-        \todoparagraph{TODO!}
+        $2*\frac{precision*recall}{percision+recall} = \frac{TP}{TP+\frac{1}{2}(FP+FN)}$
         }
 }
 
-\newglossaryentry{unsupervised}{
-    type=defs,
-    name=unsupervised learning,
-    description={
-        \todoparagraph{TODO!}
-        }
-}
+
+% \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+% \usepackage{fourier,esvect}
+% \newcommand{\cross}[2]{\bigl[ \vv{#1},\vv{#2\vphantom{#1}} \bigr]}
+% \newcommand\z{\vphantom{{}'}}
 
 \newglossaryentry{cos}{
     type=defs,
     name=cosine distance,
     description={
-        \todoparagraph{TODO!}
-        }
-}
-
-\newglossaryentry{normangdist}{
-    type=defs,
-    name=Normalized Angular Distance,
-    description={
-        \todoparagraph{TODO!}
+        $\cos(\theta )={\mathbf {A} \cdot \mathbf {B}  \over \|\mathbf {A} \|\|\mathbf {B} \|}$
         }
 }
 
@@ -180,7 +169,7 @@
     type=customs,
     name=rank,
     description={
-        \todoparagraph{Rank here means} ordered-by-value, specifically the value of an entity with respect to a semantic direction. Relevant in the \gls{fbr}
+        A ranking of a set up numbers refers to their respective index when  ordered-by-value. In this work it refers specifically to the value of an entity with respect to a semantic direction. Relevant in the \gls{fbr}.
     }
 }
 
@@ -188,7 +177,7 @@
     type=customs,
     name=feature-based representation,
     description={
-        In the context of the given algorithm, the \textbf{feature-based representation} of an \gls{entity} is its representation as a feature-vector, where each dimension corresponds to a semantic \gls{feature} and its value is the entity's respective \gls{rank} for that feature.
+        In the context of the given algorithm, the \textbf{feature-based representation} of an \gls{entity} is its representation as a feature-vector, where each dimension corresponds to a semantic feature and its value is the entity's respective \gls{rank} for that feature.
     }
 }
 
@@ -215,23 +204,8 @@
     type=customs,
     name=hyperparameter,
     description={
-        \todoparagraph{When I refer to hyperparameters, I mean not only stuff like the number of dimensions, but also which specific algorithm is used in a step!!}
+        When it is referred to \textit{hyperparameter} in this work, it does not only refer to scalars like the dimensionality of an embedding, but also \eg which specific algorithm is used in a step of the algorithm.
         }
 }
 
 
-\newglossaryentry{cand}{
-    type=customs,
-    name=candidate-phrase,
-    description={
-        \todoparagraph{Candidateterm, Candidate, Candidate-phrase, potato, potahto}
-        }
-}
-
-\newglossaryentry{feature}{
-    type=customs,
-    name=feature,
-    description={
-        \todoparagraph{Feature, the semantic human-interpretable dimensions, words or groups of words that are supposed to represent a concept or attribute, used as dimension in the embedding}
-        }
-}

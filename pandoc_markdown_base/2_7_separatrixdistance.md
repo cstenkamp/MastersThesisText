@@ -15,7 +15,7 @@ Translated into terms relevant to the aim of this thesis, the classes may be tho
 
 %TODO mention that I'm in a cartesian coordinate system
 %TODO mention that I'm thinking in Euclidean coordinates, see https://en.wikipedia.org/wiki/Plane_(geometry)
-\noindent In the following paragraphs, I will visualize how to calculate the orthogonal distance from a sample to the hyperplane exemplary for the case of three-dimensional text-vectors.
+\noindent In the following paragraphs, I will visualise how to calculate the orthogonal distance from a sample to the hyperplane exemplary for the case of three-dimensional text-vectors.
 
 Generally, the separatrix splitting positive from negative samples for an $n$-dimensional space $\mathds{R}^n$ is an $n-1$-dimensional subspace (called \textit{hyperplane}), which in the case of $\mathds{R}^3$ corresponds to a plane. 
 %https://en.wikipedia.org/wiki/Plane_(geometry)#Representation

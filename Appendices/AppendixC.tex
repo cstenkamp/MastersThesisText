@@ -16,14 +16,13 @@ F
 \begin{figure}[h]
 	\begin{center}
 	  \includegraphics[width=\textwidth]{graphics/figures/scatter_mds_tsne_movies_Genres.pdf}
-	  \caption[2D visualization of the movies-dissimilarity matrix]{2D visualization of the movies-dissimilarity matrix for the data uploaded by \textcite{Derrac2015}, colored by genre. Generated with \gls{tsne}. See \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/desc15_mds_2d3d.ipynb} for the origin of this plot.}
+	  \caption[2D visualization of the movies-dissimilarity matrix]{2D visualization of the movies-dissimilarity matrix for the data uploaded by \textcite{Derrac2015}, colored by genre. Generated with \gls{tsne}. See \url{https://github.com/cstenkamp/MAAnalysisNotebooks/blob/main/analyze_results/derrarc2015/mds_derrac2015_moviesplaces_2d3d.ipynb} for the origin of this plot.}
 	  \label{fig:scatter_mds_movies}
-      %TODO: "colored by genre"
 	\end{center}
 \end{figure}
 
-
-\todoparagraph{Note that at} \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/desc15_mds_2d3d.ipynb} there are also interactive 3D-Versions of these plots. The one for the Siddata-dataset is at \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualize_embeddings.ipynb}, also 2D and interactive 3D. 
+% \todo
+Note that at \url{https://github.com/cstenkamp/MAAnalysisNotebooks/blob/main/analyze_results/derrarc2015/mds_derrac2015_moviesplaces_2d3d.ipynb} there are also interactive 3D-Versions of these plots. The one for the Siddata-dataset is at \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualise_embeddings.ipynb}, also 2D and interactive 3D. 
 
 \clearpage
 \section{Results for Classifiers on placetypes}
@@ -159,7 +158,7 @@ F
 		\end{tabular}%
 		} % resizebox
 	} % makebox
-	\caption{F1-scores of classifiers predicting GeoNames- and Foursquare-labels for baselines, \mainalgos and this work (long). Described in detail below.}
+	\caption[F1-scores of classifiers for placetype-taxonomies of \mainalgos and this work (long)]{F1-scores of classifiers predicting GeoNames- and Foursquare-labels for three baselines, \mainalgos and this work. (long). Described in detail below.}
 	\label{tab:f1_placetypes_long}
 \end{table}
 
@@ -168,7 +167,7 @@ F
 \textbf{Cls} column encodes the classifier: \textbf{D1/3} are \glspl{dt} of depth 1/3, \textbf{DN} an unbounded \gls{dt}. Condition \textbf{Any} refers to the best of all semantic classifiers developed by \cite{Derrac2015}. \\
 First five columns are the exact results reported by \cite{Alshaikh2020}, next five columns those by \cite{Ager2018}, afterwards the best config of \cite{Derrac2015} and the best baseline-condition of \cite{Derrac2015}. The exact conditions of that work are (left to right, top to bottom): C4.5\textsubscript{dir}, C4.5\textsubscript{MDS}, Col, 1-NN (100D), C4.5\textsubscript{dir}, C4.5\textsubscript{MDS}, Analog\textsubscript{C}, 1-NN (50D). Explanations of the respective conditions can be found in their work. \\
 All scores are reported with a train-test split of 70\% to 30\%. Note that the reported results of \cite{Ager2018} are unrepresentive when compared to the other datasets: For the placetypes-dataset, \textbf{LDA} performs consistently better than their methods, which is not the case for all other datasets used by them. In the case of \cite{Alshaikh2020}, the results for the placetypes-dataset seem to indicate that the \textbf{Ortho}-condition performs consistently better than the \textbf{Sub}-condition, which was however not the case for any of the other datasets the authors considered. \\
-Final columns are the results of this work. Column \textbf{Best-all} encodes a different for each row, specifically the one that yields the best result for the respective classification task, whereas column \textbf{Mean-Best} refers to the single configuration that achieved the best results on average. \todoparagraph{Last column is best when class weighting of per-class-classifiers is forbidden}
+Final columns are the results of this work. Column \textbf{Best-all} encodes a different for each row, specifically the one that yields the best result for the respective classification task, whereas column \textbf{Mean-Best} refers to the single configuration that achieved the best results on average. Last column is best when class weighting of per-class-classifiers is forbidden.
 \todoparagraph{Shortened a few column names, rename them in description}
 
 \section{Comparison of different Cluster-Center-Algorithms}
@@ -200,15 +199,15 @@ Final columns are the results of this work. Column \textbf{Best-all} encodes a d
 	\textbf{joshuatreenationalpark}  & canyon              &                     \\
 	\textbf{clinker}                 & building            &                    
 	\end{tabular}
-	\caption{Highest-ranking descriptions per dimension for the reclassify-algorithm and the main-algorithm}
+	\caption[Highest-ranking descriptions per dimension for different algorithms]{Highest-ranking descriptions per dimension for the reclassify-algorithm and the main-algorithm}
 	\label{tab:text_per_dim}
 \end{table}
 
-We see that using the respectively best-fitting DOCUMENT (without LSI or anything, just the one with the highest ranking!)  is often even the MUCH BETTER direction!!! 
+% We see that using the respectively best-fitting DOCUMENT (without LSI or anything, just the one with the highest ranking!)  is often even the MUCH BETTER direction!!! 
 
 
 
-\section{F1-scores per Faculty}
+\section{F1-scores per faculty}
 
 
 \begin{table}[H]
@@ -244,7 +243,7 @@ We see that using the respectively best-fitting DOCUMENT (without LSI or anythin
 	\begin{center}
 	  \makebox[\textwidth][c]{
 		\includegraphics[width=1.1\textwidth]{graphics/dataset_new/boxes_rechtswis.png}
-		\slcaption{Sample classification of a level-2-decisiontree. Visualize in 3D: \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/display_top3_SIDDATA.ipynb} \arrowback}
+		\slcaption{Sample classification of a level-2-decisiontree. visualise in 3D: \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/display_top3_SIDDATA.ipynb} \arrowback}
 		\label{fig:boxes_rechtswis}
 		% möchte sagen: How does a decision look graphically, and how does it compare to the original 3D?
 		% TODO: add accuracy 
@@ -270,34 +269,34 @@ We see that using the respectively best-fitting DOCUMENT (without LSI or anythin
 	\centering
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{ll}
-	\textbf{Course Number} & \textbf{Course}                                                     \\
+	\textbf{Number} & \textbf{Course} \\
 	1.003                  & Spez. Soz. III: Wahlforschung (Politische Soziologie)               \\
 	1.003                  & Erziehung, Bildung und Sozialisation in der modernen Gesellschaft   \\
 	1.003                  & Infoveranstaltung Master Soziologie                                 \\
 	7.441202               & "Fremdheit" in der Kinder- und Jugendliteratur                      \\
 	7.441202               & „Mündlichkeit und Schriftlichkeit“                         
 	\end{tabular}%
-	}
-	\caption{Sample duplicates in the Siddata-dataset. \todoparagraph{Compare Notebook}  data_exploration_Siddata2021.ipynb }
+D	}
+	\caption{Sample duplicates in the Siddata-dataset. }
 	\label{tab:sample_duplicates}
 \end{table}
 
 
 
-\begin{table}[H]
-	\centering
-	\begin{tabular}{lll}
-	\textbf{Course} & \textbf{Description}  \\
-		                   & BA/MA Hauptmodul \\
-		                   & Bestandteile:Vorlesung + Übung \\
-		                   & Dozent  Dr. Michael Wicke \\
-			               & Siehe Gruppe A \\
-			               & „s. Modulbeschreibung \\
-						   & Literatur:wird noch bekannt gegeben
-	\end{tabular}%
-	\caption{Low quality data samples \todoparagraph{(from data_exploration_Siddata2021)}}
-	\label{tab:sample_descriptions}
-\end{table}
+% \begin{table}[H]
+% 	\centering
+% 	\begin{tabular}{lll}
+% 	\textbf{Description}  \\
+% 		                   & BA/MA Hauptmodul \\
+% 		                   & Bestandteile:Vorlesung + Übung \\
+% 		                   & Dozent  Dr. Michael Wicke \\
+% 			               & Siehe Gruppe A \\
+% 			               & „s. Modulbeschreibung \\
+% 						   & Literatur:wird noch bekannt gegeben
+% 	\end{tabular}%
+% 	\caption{Low quality data samples \todoparagraph{(from data_exploration_Siddata2021)}}
+% 	\label{tab:sample_descriptions}
+% \end{table}
 
 
 \section{Hyperparameter search}
