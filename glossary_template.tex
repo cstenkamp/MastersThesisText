@@ -69,6 +69,17 @@
         \endhead}
 }
 
+\newglossarystyle{long3colheaderMINE2}{%
+    \setglossarystyle{long3colheader}% base this style on the list style
+    \renewenvironment{theglossary}{
+        \begin{longtable}{@{}p{\glsnamewidth} p{\glsdescwidth-5ex} p{\glspagelistwidth}@{}}}%
+        {\end{longtable}}%
+    \renewcommand*{\glossaryheader}{%  Change the table header
+        \bfseries Notation & \bfseries Description & \bfseries Page List \\[0.5em]
+        %       \hline
+        \endhead}
+}
+
 \newglossarystyle{3colger}{%
     \setglossarystyle{longragged3col}% base this style on the list style
     \renewenvironment{theglossary}{% Change the table type --> 3 columns

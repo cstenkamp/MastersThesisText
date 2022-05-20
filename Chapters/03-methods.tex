@@ -66,7 +66,7 @@ A very distinctive difference of the datasets is their size: the movies-dataset 
 	\textbf{movies}  & 589\,727 & 279\,429 & 128\,850 & 55\,429  & 39\,976  & 28\,768  & 11\,431 & 6931  & 1786   & 332 
 	\end{tabular}
 	}
-	\caption[Words that exceed various df thresholds for three datasets]{Words that exceed various \gls{df} thresholds for the Siddata, placetypes and movies datasets. In \cite{Derrac2015}, the candidate-threshold for placetypes was 50, and the threshold for movies 100. The last columns are relative to the dataset-size ($|C|$ = number of entities).}
+	\caption[Words that exceed various df thresholds for three datasets.]{Words that exceed various \gls{df} thresholds for the Siddata, placetypes and movies datasets. In \cite{Derrac2015}, the candidate-threshold for placetypes was 50, and the threshold for movies 100. The last columns are relative to the dataset-size ($|C|$ = number of entities).}
 	\label{tab:summed_unique_words}
 	% SUMMED-TERM-FREQUENCIES:
 	% \textbf{Siddata} & 163285 & 87840  & 40998  & 11619  & 6649   & 3722   & 765   & 317   & 60     & 8     \\
@@ -88,7 +88,7 @@ The Siddata-dataset unfortunately does not share this property, as the texts tha
 
 \paragraph{Other considered datasets}
 
-One of the goals was to build an adaptable architecture, so we also want to check if it can quickly and easily be applied to other datasets. For that, a dataset of 1002 short stories from project guttenberg\footnote{\url{https://www.kaggle.com/datasets/shubchat/1002-short-stories-from-project-guttenberg?select=db_books.csv}} and one of 100\,000 coursera course reviews\footnote{Source: \url{https://www.kaggle.com/septa97/100k-courseras-course-reviews-dataset}, Exploratory Analysis: url{https://www.kaggle.com/roshansharma/coursera-course-reviews}} were created. The former is similar to our dataset because it is also not made up as concatenation of multiple invididual texts. The latter is made up from reviews like the aformentioned ones, but from the educational domain. These were created primarily to test the architecture, and no results will reported or analysed for these datasets, as that would go far beyond its scope and intended length.
+One of the goals was to build an adaptable architecture, so we also want to check if it can quickly and easily be applied to other datasets. For that, a dataset of 1002 short stories from project guttenberg\footnote{\url{https://www.kaggle.com/datasets/shubchat/1002-short-stories-from-project-guttenberg?select=db_books.csv}} and one of 100\,000 coursera course reviews\footnote{Source: \url{https://www.kaggle.com/septa97/100k-courseras-course-reviews-dataset}, Exploratory Analysis: \url{https://www.kaggle.com/roshansharma/coursera-course-reviews}} were created. The former is similar to our dataset because it is also not made up as concatenation of multiple invididual texts. The latter is made up from reviews like the aformentioned ones, but from the educational domain. These were created primarily to test the architecture, and no results will reported or analysed for these datasets, as that would go far beyond its scope and intended length.
 %TODO: I could try to merge it with this one https://www.kaggle.com/siddharthm1698/coursera-course-dataset or another one (see https://www.kaggle.com/mihirs16/coursera-course-data which links names to links, https://www.kaggle.com/search?q=coursera+in%3Adatasets for other places)
 
 
@@ -160,7 +160,7 @@ The data used here is collected from three separate dumps, created at different 
 	 &  &  &  & \textbf{sum} & 30811 & 24752 & 5671 & 330 \\
 	\bottomrule
 	\end{tabular}
-	\caption[Metadata of the Siddata-dataset]{Metadata of the Siddata-dataset. Languages are reported as detected (see \ref{ap:translating}), other metadata as it was available in the dumps. Column titles encode the number of entities whose description has at least 20, 50, 200 or 500 words. \label{tab:siddata_metadata}}
+	\caption[Metadata of the Siddata-dataset.]{Metadata of the Siddata-dataset. Languages are reported as detected (see \ref{ap:translating}), other metadata as it was available in the dumps. Column titles encode the number of entities whose description has at least 20, 50, 200 or 500 words. \label{tab:siddata_metadata}}
 	}
 \end{table}
 
@@ -309,19 +309,6 @@ While the code required to scalably run on the \gls{ikw}-grid required much more
 and the 64 allocated \emph{parallel environments} (slots) are maximally utilized, while most of the complexity of the scheduling system is abstracted away.\footnote{To the best of \my knowledge, no attempts going beyond simple \mytokensfnote{.sge}-files as job-descriptions were attempted on the IKW-grid before, and much of the available documentation turned out to be false information (as consultations with the grid's administrator have shown).} The workflow is installed and run with a single (well documented) command and can be customized using explicit configuration-files. A sample output of the custom-made watcher is listed in \autoref{lst:joblog}.  
 
 
-\begin{widepage}
-	\lstconsolestyle
-	\lstinputlisting[
-		caption={[Sample terminal output of the custom watcher]Sample terminal output of the custom watcher when running a full configuration on the \gls{ikw}-grid. The script lists the currently running jobs continously, including their progress and runtime and informs of finished jobs and failed jobs. There is another script that summarises the progress as per snakemake's dependency-graph.}, 
-		label={lst:joblog},
-		float,
-		floatplacement=h!,
-		xleftmargin=-0.5cm, 
-		xrightmargin=-0.5cm,
-		]{listings/joblog\_grid.txt}
-	\lstdefaultstyle
-\end{widepage}
-
 \subsection{Conclusion}
 
 It was originally unexpected, but implementing an appropriate architecture for the present codebase has been a major focus of work for this thesis, and the result fulfills all of the desired design criteria: 
@@ -331,12 +318,28 @@ It was originally unexpected, but implementing an appropriate architecture for t
 \begin{description}[style=unboxed]
 	\item[Modularity] has been the main focus in the design, so exchanging components or running individual steps is easy and intuitive.
 	\item[Scalability] is reached thanks to massive parallelisation wherever possible as well as a professional workflow management system that is perfectly adjusted to the available cluster engine but also highly customizable for other engines.
-	\item[Reproducibility and Adaptability] are guaranteed by stringent encapsulation of components, completely automating the full data-analysis-pipeline, open-sourcing the code as proper package and containerization of the entire codebase for guaranteed and worry-free setup on any machine or compute cluster. The exact \gls{param}-combinations of \mainalgos are included (see \autoref{ap:yamls_for_origalgos}), allowing to re-create even the original papers using this code-base. Running the code on new datasets is documented and can be done in a matter of minutes. Extending or exchanging steps of the pipeline is seamless due to a consistent and understandable data schema, and pre-existing analysis-notebooks can easily create informative plots and figures.
-	\item[Transparency and Understandability] are ensured due to rigorous documentation\footnote{\todoparagraph{TODO:} Link github-documentation!} (among others in this thesis) at any level of detail, from rough descriptions to concrete code-examples. Code, documentation and used data are publicly and easily available. Many analyses are included with the source-codes, for example allowing to visualise all steps of the process that can work with arbitrary numbers of dimension interactively in 3D. Code, data and configurations are clearly divided. All steps of the pipeline are very explicit about the used configurations and dependencies (making them traceable) and generate output at configurable levels of verbosity. All intermediate output can be re-accessed using helper commands.% (see \footnote{\todoparagraph{TODO:} ref the appendix with the show-info-command and a notebook with \mytokensfnote{create_svm("mathematik", embedding, dcm, pp_descriptions, highlight=["Informatik A: Algorithmen", "Informatik B: Grundlagen der Software-Entwicklung"])}}), including clear traces of the first usage of parameters (as \eg in a plot as depicted in \autoref{fig:dependency_graph})
+	\item[Reproducibility and Adaptability] are guaranteed by stringent encapsulation of components, completely automating the full data-analysis-pipeline, open-sourcing the code as proper package and containerization of the entire codebase for guaranteed and worry-free setup on any machine or compute cluster. The exact \gls{param}-combinations of \mainalgos are included (see \autoref{ap:yamls_for_origalgos}), allowing to re-create the original papers using this code-base. Running the code on new datasets is documented and can be done in a matter of minutes. Extending or exchanging steps of the pipeline is seamless due to a consistent and understandable data schema, and pre-existing analysis-notebooks can easily create informative plots and figures.
+	\item[Transparency and Understandability] are ensured due to rigorous documentation\footnote{\url{https://github.com/cstenkamp/derive_conceptualspaces/tree/main/doc}} (among others in this thesis) at any level of detail, from rough descriptions to concrete code-examples. Code, documentation and used data are publicly and easily available. Many analyses are included with the source-codes, for example allowing to visualise all steps of the process that can work with arbitrary numbers of dimension interactively in 3D. Code, data and configurations are clearly divided. All steps of the pipeline are very explicit about the used configurations and dependencies (making them traceable) and generate output at configurable levels of verbosity. All intermediate output can be re-accessed using helper commands.% (see \footnote{\todoparagraph{TODO:} ref the appendix with the show-info-command and a notebook with \mytokensfnote{create_svm("mathematik", embedding, dcm, pp_descriptions, highlight=["Informatik A: Algorithmen", "Informatik B: Grundlagen der Software-Entwicklung"])}}), including clear traces of the first usage of parameters (as \eg in a plot as depicted in \autoref{fig:dependency_graph})
 	% it is crucial that the analysis code is as readable as possible such that it can be easily modified (looking at you, 40 unnamed cmd-args!)
 	% code is readable and well-documented 
 	% mit 2 Zeilen code kannst du dir in nem Jupyternotebook nen 3D-Plot anzeigen mit ner SVM die "Mathematik" von nicht-mathe trennt, mit gehighlighted ob "Informatik A" und "Informatik B" beeinander sind
 \end{description}
+
+
+
+
+\begin{widepage}
+	\lstconsolestyle
+	\lstinputlisting[
+		caption={[Sample terminal output of the custom watcher]Sample terminal output of the custom watcher running a full configuration on the \gls{ikw}-grid. The script lists the currently running jobs continously, including their progress and runtime and informs of finished or failed jobs. Another script summarises the progress in snakemake's dependency-graph.}, 
+		label={lst:joblog},
+		float,
+		floatplacement=h!,
+		xleftmargin=-0.5cm, 
+		xrightmargin=-0.5cm,
+		]{listings/joblog\_grid.txt}
+	\lstdefaultstyle
+\end{widepage}
 
 % \includeMD{pandoc_generated_latex/3_3_architecture}
 

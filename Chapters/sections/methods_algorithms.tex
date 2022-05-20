@@ -52,19 +52,19 @@ This techniques first embeds the collection of texts into a  vector space, to af
 
 An explicit and simple implementation compliant with each step could be a simple word tokenization and count to generate a bag-of-words (step 1) where each sufficiently frequent word is used as candidate (step 2). A \gls{dissimmat} of the individual \gls{bow}-vectors is compressed using MDS (step 3). A \gls{svm} calculates the accuracy for each candidate (step 4), and k-means-clustering on the 500 top-scoring terms subsequently creates 100 clusters and averages their directions (step 5). The distance to each of the hyperplanes is calculated (step 6), yielding new space for the entities. The sequence of steps is also given as pseudocode in \autoref{ap:algorithm_pseudo}. 
  
- The distinction of steps is not always this rigid: Instead of creating a dissimilarity matrix followed by dimensionality reduction, \cite{Ager2018,Alshaikh2020} use neural word or document embeddings.\footnote{see \autoref{sec:embeddings}} %Instead of extracing candidates from corpus tokens and training a linear classifier for each of them and use their orthogonal as direction, techniques such as LSA or LDA can be employed to find topic vectors directly. 
- We will come back to other ideas ideas when discussing future research opportunities (\autoref{sec:futurework}) by listing what other ways of fulfilling each respective step could have been considered.
 
-\autoref{fig:dependency_graph} shows an automatically exported dependency-graph, displaying the individual steps of the algorithm as done in the accompaning code, also showing where selected important parameters are first used. As explained in \autoref{sec:architecture}, the modularity of the provided architecture allows individual components to be exchanged as needed and run in parallel.
-
-
-\begin{figure}[h]
+\begin{figure}[H]
 	\begin{center}
 	  \includegraphics[width=0.9\textwidth]{dependency_graph.pdf}
-	  \caption[Dependency-graph of the implementation]{Dependency-graph of the implementation, displaying the individual steps of the algorithm as well as their dependencies and where selected important parameters are first used.}
+	  \caption[Dependency-graph of the implementation.]{Dependency-graph of the implementation, displaying the individual steps of the algorithm as well as their dependencies and where selected important parameters are first used.}
 	  \label{fig:dependency_graph} % \todoparagraph{Generated using command XYZ}
 	\end{center}
 \end{figure}
+
+ The distinction of steps is not always this rigid: Instead of creating a dissimilarity matrix followed by dimensionality reduction, \cite{Ager2018,Alshaikh2020} use neural word- or document embeddings. %Instead of extracing candidates from corpus tokens and training a linear classifier for each of them and use their orthogonal as direction, techniques such as LSA or LDA can be employed to find topic vectors directly. 
+ We will come back to other ideas ideas when discussing future research opportunities (\autoref{sec:futurework}) by listing what other ways of fulfilling each respective step could have been considered.
+
+\autoref{fig:dependency_graph} shows an automatically exported dependency-graph, displaying the individual steps of the algorithm as done in the accompaning code, also showing where selected important parameters are first used. As explained in \autoref{sec:architecture}, the modularity of the provided architecture allows individual components to be exchanged as needed and run in parallel.
 
 
 \subsubsection{Preprocessing\arrowref{sec:algorithmsteps}}
@@ -98,7 +98,7 @@ A common prerequisit for NLP algorithms is to pre-process the text corpus. The p
 	\item Remove punctuation 
 \end{itemize}
 
-The above can be done either be done with proprietary code for all of these steps,\footnote{Mostly relying on the python package \emph{nltk} \cite{bird2009natural}} or using \codeother{sklearn}\footnote{\url{https://scikit-learn.org/stable/}}s \codeother{CountVectorizer} (which is faster, but less configurable), as \cite{Ager2018} claim to have done.
+The above can be done either be done with proprietary code for all of these steps,\footnote{Mostly relying on the python package \codeother{nltk} \cite{bird2009natural}} or using \codeother{sklearn}\footnote{\url{https://scikit-learn.org/stable/}} \codeother{CountVectorizer} (which is faster, but less configurable), as \cite{Ager2018} claim to have done.
 
 \paragraph{On Stop-Words}
 Removing stop-words from the texts is useful because it makes the resulting frequency more compact and thus less computationally intensive, and stop-words generally have very discriminative power, meaning their occurence among the entities is arbitrary, just making hte emeddings more noisy (cf. \autoref{sec:word_count_techniques}). There are however reasons to not remove them: Two words that are considered stop-words may posess relevant semantic content (such as a \textsc{Fällt aus} in a course title), and stopwordslists are often incomplete and of low quality \cite{nothman-etal-2018-stop}. For these reasons it is also possible to instead remove \glspl{ngram} that exceeded a certain frequency (\gls{df}).
@@ -144,7 +144,7 @@ Three main techniques are implemented to extract candidates from the text-corpus
 
 Using KeyBERT results in candidate terms that are most appealing in qualitative inspection, however it is also most computational demanding, techniques and requires substantial amounts of post-processing for the resulting phrases. More details on KeyBERT and how it is incorporated into the algorithm are given in the implementation are given in Appendix~\ref{ap:details_keybert}
 
-Finally, a \gls{doctermmat} is created from the postprocessed candidates, containing the frequency for each candidate-phrase in each entity. The creation of this frequency matrix mirrors the process described in \autoref{sec:vsm_construction}, however only for the extracted words. After filtering this matrix to ensure that only candidates with a minimal \gls{df} or \textit{stf} are considered, a quantification is applied as described in \autoref{sec:word_count_techniques}. Available Quantifications include raw count, binarization\footnote{meaning all counts are either one or zero. According to \textcite{Alshaikh2020} this improves performance, however we could not confirm this.}, tf-idf or PPMI. We expect that expressing the relation of terms and documents by something else than the raw count will prove especailly useful for the Siddata-dataset: As it does not consist of concatenated reviews but short descriptions, each individual word will only occur a few times per description. Because of that, a \gls{rank} induced from the count will be not very meaningful when later comparing it to the ranking induced by the classifier.
+Finally, a \gls{doctermmat} is created from the postprocessed candidates, containing the frequency for each candidate-phrase in each entity. The creation of this frequency matrix mirrors the process described in \autoref{sec:vsm_construction}, however only for the extracted words. After filtering this matrix to ensure that only candidates with a minimal \gls{df} or \textit{stf} are considered, a quantification is applied as described in \autoref{sec:word_count_techniques}. Available Quantifications include raw count, binarization\footnote{When using binarization, all counts are either one or zero. According to \textcite{Alshaikh2020} this improves performance, however we could not confirm this.}, tf-idf or PPMI. We expect that expressing the relation of terms and documents by something else than the raw count will prove especailly useful for the Siddata-dataset: As it does not consist of concatenated reviews but short descriptions, each individual word will only occur a few times per description. Because of that, a \gls{rank} induced from the count will be not very meaningful when later comparing it to the ranking induced by the classifier.
 
 \subsubsection{Generating Vector Space Embeddings\arrowref{sec:algorithmsteps}}
 \label{sec:generate_vectorspaces}
@@ -161,9 +161,11 @@ As stated in \autoref{sec:mds}, \gls{mds} calculcates a Euclidean \gls{vsm} from
 
 In this implementation, the dissimilarity matrix is created using distance metrics for the quantified bags-of-ngrams of the respective entities. Note that this quantifiation does not need to be the same one as the one used for quantifying the relatedness of the extracted candidates and the documents.\footnote{As will be shown in the result, doing so sometimes even outperformed other configurations.}
 
+\vspace{-0.4ex}
 \paragraph{Document embeddings}
 If the strict requirement for a metric space is dropped however, many different algorithms may instead be used at this point - not only different dimensionality reduction methods for the embedding, but also ones that do not rely on the distance matrix or even the \gls{bow} at all, like document-embedding-techniques such as \gls{doc2vec} \cite{Le2014} (as \eg used by \cite{Alshaikh2020}). This would not require the count of token frequencies followed by a \gls{quant}, but not affect the rest of the algorithm. As, however, document embeddings tend to be created on the basis of \gls{cos}, this will not result in a Euclidean metric. \textcite{Alshaikh2020} experimented with this, however it performed worse than the original algorithm relying on MDS (see \autoref{tab:f1_placetypes_long}), which is why this technique was not futher pursued in this work.
 
+\vspace{-0.4ex}
 \paragraph{Classical Processing}
 The default way of doing it is, however, to create frequency matrix counting the token frequencies of each word of an entity and using a \gls{quant} to transform these raw counts. In this implementation, the \gls{dissimmat} that is required for the MDS-algorithm created on basis of the \emph{normalized angular distances} of the \glspl{bow} of the respective entities, which is relates to the \gls{cos} and is defined by \textcite{Derrac2015} as:
 
@@ -183,7 +185,7 @@ In the publication of \textcite{Derrac2015}, the result of this embedding is use
 
 This step brings together the entity embeddings and the extracted keyphrases, to finally find semantically meaningful directions in the space the entities are embedded in. For that, classifiers are trained for all previously extracted candidates, each yielding a \textit{Candidate Feature Direction}, which are subsequently filtered to detect those corresponding to semantically meaningful features. The algorithm is executed separately for each candidate term and looks as follows:
 
-All entities are split into two classes: Those that contain the respectively handled candidate term and those that do not. To quantify how well each candidate word captures semantic content of the entities, a linear classifier is trained to separate the embeddings of these two classes. The best example for such a classifier is a \gls{svm} which does not rely on the kernel trick. As visually exemplified in \autoref{fig:3d_hyperplane_ortho}, the result is a hyperplane that best divides the positive from the negative samples. Regardless of the dimensionality of the original space, this hyperplane has a one-dimensional orthogonal vector. Each of the entity-embeddings is subsequently orthogonally projected onto it. The distance of this projection to the plane offset\footnote{The coordinate where it crosses the decision surface} is a scalar that encodes the distance to this decision hyperplane. 
+All entities are split into two classes: Those that contain the respectively handled candidate term and those that do not. To quantify how well each candidate word captures semantic content of the entities, a linear classifier is trained to separate the embeddings of these two classes. The best example for such a classifier is a \gls{svm} which does not rely on the kernel trick. As visually exemplified in \autoref{fig:3d_hyperplane_ortho}, the result is a hyperplane that best divides the positive from the negative samples. Regardless of the dimensionality of the original space, this hyperplane has a one-dimensional orthogonal vector. Each of the entity-embeddings is subsequently orthogonally projected onto it. The distance of this projection to the plane offset\footnote{The \textit{offset} encodes the coordinate where the projection crosses the decision surface.} is a scalar that encodes the distance to this decision hyperplane. 
 
 This distance encodes \textit{how much} this point is considered to be protoypical of the respective class by the classifier, for the positive as well as the negative class. Given that the original space is created based on similarity measures of the entities, the \textit{Bag-Words-Hypothesis} (\autoref{sec:bow_hypothesis}) states that similar words should have similar words - meaning maximally dissimilar entities are far apart from positive ones.\footnote{To stick with the example of movies, the assumption is that movies that are maximally unscary are maximally far from the away from scary ones: An entity that has a maximally dissimilar distribution of words than those that are \textit{scary} means a maximally maximally dissimilar movie, as little of its \textit{latent topics} (see \autoref{sec:lsi}) agrees with the scary ones: The more dissimilar, the less scary.} Because of this, the hyperplane's orthogonal can be considered an axis that encodes how much each entity agrees with the feature that is the basis of the classification. Accordingly, a ranking of the entities in terms of this distance should encode their degree of having the respective feature.
 
@@ -193,7 +195,7 @@ Because of this, \cite{Derrac2015} henceforth only consider those terms as \text
 
 Concretely, the score used by \cite{Derrac2015} to assess the performance is not the accuracy or some other measure of the binary performance of the classifer, but rather if the ranking induced by the classifier corresponds to ranking of number of occurences\footnote{or the PPMI-score, the authers are imprecise in their wording - we will elaborate more on that later} of that word: The more these agree, the more we consider this direction \q{to be a faithful representation of the term} \cite[20]{Derrac2015}. The reasoning behind that becomes especially clear when considering the root of their datasets - in the case of reviews or tags it is the case that the more often a word is mentioned, the more relevant the word is for that entity. In the case of using a \gls{quant} such as the \gls{ppmi}-score, this instead becomes: The more salient relevant for this entity but not for the others the word is, the higher the score.
 
-A score function compares these rankings, such that only those terms where the correspondance of these rankings exceeds a certain threshold are considered as candidate directions henceforth. For that, \textcite{Derrac2015} say that they use the Cohen's kappa, which is a metric to compare rankings that can deal with highly imbalanced data. Considering that for most candidates, most of the entities will be in the negative class this makes sense.\footnote{\textcite{Ager2018} compare the kappa-score to accuracy and argue that accuracy works better than the kappa-scores.} Unfortunately, the authors do not give many details on how this scoring is implemented. While \cite{Ager2018,Alshaikh2020} explicitly say that they are interested in the PPMI-scores\footnote{Though the uploaded code of \cite{Alshaikh2020} does not compare rankings but raw values}, from \cite{Derrac2015} it is not even clear if they take the count or the PPMI-score. As that is highly relevant, we try many different ways of this scoring and report them in the results. We also compare the overlaps of different kappa-scores to check if the choice is as imporant as we think it is. Which scores we used and how they are written here is listed in the implementation details: \autoref{tab:kappa_measures}.
+A score function compares these rankings, such that only those terms where the correspondance of these rankings exceeds a certain threshold are considered as candidate directions henceforth. For that, \textcite{Derrac2015} say that they use the Cohen's kappa, which is a metric to compare rankings that can deal with highly imbalanced data. Considering that for most candidates, most of the entities will be in the negative class this makes sense.\footnote{\textcite{Ager2018} compare the kappa-score to accuracy and argue that accuracy works better than the kappa-scores.} Unfortunately, the authors do not give many details on how this scoring is implemented. While \cite{Ager2018,Alshaikh2020} explicitly say that they are interested in the PPMI-scores\footnote{Though the uploaded code of \cite{Alshaikh2020} does not compare rankings but raw values.}, from \cite{Derrac2015} it is not even clear if they take the count or the PPMI-score. As that is highly relevant, we try many different ways of this scoring and report them in the results. We also compare the overlaps of different kappa-scores to check if the choice is as imporant as we think it is. Which scores we used and how they are written here is listed in the implementation details: \autoref{tab:kappa_measures}.
 
 Subsequently, only those candidates with high enough scores are considered, and the othogonals of the respective classifiers considered their respective \textit{candidate feature direction}, encoding the degree how much an entity corresponds to this feature. The number of features with a sufficiently high score can also serve as estimate of how good the parameter-combination so far was: if not enough well-scoring features were extracted, the final embedding which is created through only a subset of these features does not explain much of the original variability in the data.
 
@@ -224,7 +226,7 @@ The following steps describe the implementation of the original clustering metho
 First, we consider the best \textit{basic features} as \textit{main directions}. For that, we select one of the scores calculated in the previous step and select all candidates that exceed a threshold (\cite{Derrac2015} suggest $\kappa \geq 0.5$).
 To get the directions, we follow the following algoritm:
 
-\vspace{-1ex}
+\vspace{-1.3ex}
 \begingroup
 \verbatimfont{\footnotesize}%
 \begin{verbatim}
@@ -238,7 +240,7 @@ To get the directions, we follow the following algoritm:
 		directions.append(compares.argmax)
 \end{verbatim}
 \endgroup
-\vspace{-1ex}
+\vspace{-1.2ex}
 
 This starts with the best candidate and then iteratively adds the one from the set of top-scoring candidates that most dissimilar to the set of final directions. The result is a set of $ndims*2$ main directions, which are henceforth considered the Cluster centers. Subsequently, all leftover terms from $T^{0.5}$ as well as all terms from $T^{0.5}$ are added to the respective cluster whose direction they are most similar to. 
 
@@ -255,11 +257,11 @@ The best performaning method however was the \textit{reclassify}-algorithm, whic
 
 \paragraph{Bad Clusters}
 
-After these steps, we finally have the vectors that correspond to semantic directions. However, as there were still clusters of uninformative terms, \textcite{Alshaikh2020} have an additional step to remove uninformative cluster. As this bases on another clustering algorithm used by the author (namely \textit{affinity propagation}) which does not allow to specify the number of clusters, it was not implemented in the scope of this thesis.
+After these steps, we finally have the vectors that correspond to semantic directions. However, as there were still clusters of uninformative terms, \textcite{Alshaikh2020} have an additional step to remove uninformative clusters. As this bases on another clustering algorithm used by the author (\textit{affinity propagation}) which does not allow to specify the number of clusters, it was not implemented here.
 
 \paragraph{Find a representative Cluster Name}
 
-An important advantage of the clustering process is that it makes the extracted directions more \textit{descriptive} due to the fact that they are described by several phrases instead of only one. However, it may be helpful for an attractive user interface to find the single \textit{best} description of the cluster direction by its element.
+An important advantage of the clustering process is that it makes the extracted directions more \textit{descriptive} due to them being described by several phrases instead of only one. However, it may be helpful for an attractive user interface to find the single \textit{best} description of the cluster direction by its element.
 
 An analysis of \cite{Carmel2009} showed that a statistical method to extract features from clustered text corpora identified the labels of human annotators as one of the top five most important terms in only 15\% of cases, implying \q{that human labels are not necessarily significant from a statistical perspective} \cite[139]{Carmel2009}. In their paper, they suggest several methods to find one representative name for the cluster. 
 
@@ -267,14 +269,13 @@ An analysis of \cite{Carmel2009} showed that a statistical method to extract fea
 
 The best technique to find a cluster-name was not evaluated yet. All considered methods that formally evaluate the corresponding feature-directions work independently of the actual cluster name. This is unfortunate, because \textit{subjectively}, the name of the respective directions is very important for the usability of any recommendation engine based on this work. Especially this subjectivity indicates that the only way to evaluate the cluster-names is with a study of human subjects.
 
-% \todoparagraph{Kappa in den Glossary!!}
-
+\vspace{-0.5ex}
 \subsubsection{Postprocessing the Feature-Directions\arrowref{sec:algorithmsteps}}
 \label{sec:algo:postprocess}
 
-
 The main contribution of \textcite{Ager2018} is a postprocessing step that changes the final space such that the ranking of entities \wrt each feature direction more closely mimics the ranking of frequencies of that direction's cluster words. The reasoning behind this is that the original embeddings from which the feature directions are created are based on global similarity. This makes it very vulnerable to outliers which often take up extreme positions. If one now creates the feature directions from the space, these outliers are assumed to have certain properties. The space is optimized for that, which limits the quality of feature directions in the space. The problem here is again the global similarity: If one entity ranks high for a feature, it is very likely that another entity that is close to that will also rank high for this feature, even though it may be something completely different. So to get better feature directions one has to distort the space. The authors accordingly again use the BoW representation of the entites to fine-tune the positions of the embeddings in the final space: After the clusters are collected and the entities re-embedded, for each feature a new ranking is computed by the summed frequency of any of a cluster's words per feature and entity. Each entity is thus represented as Bag-of-Clusters and again scored with PPMI to generate a ranking for each cluser/direction. This ranking is then used as a target for a simple \gls{ann} that distorts the space representation. As has been shown that it increases the algorithm performance only slightly while adding a substantial amount of work, it was not implemented in the scope of this thesis. 
 
+\vspace{-0.5ex}
 \subsubsection{Re-Embedding the entities into the new space\arrowref{sec:algorithmsteps}}
 \label{sec:algo:reembed}
 

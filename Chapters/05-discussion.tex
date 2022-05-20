@@ -71,6 +71,7 @@ One of our two research questions was to figure out if the methodology works for
 \subsubsection{Quantifiable dataset differences}
 \label{sec:discuss_datasetdiffs}
 
+\vspace{-1.1ex}
 When describing the datasets in \autoref{sec:datasets}, we noticed that they are quite different. An important difference from our to the originally used datasets is, that in our dataset the relationship between how relevant a concept is for an entity and how often its words occur in the respective \gls{bow} is not given. Furthermore, the Siddata-dataset contains far less words per entity: the median number of unique words per description is three orders of magnitude smaller compared to the placetypes-dataset (see \autoref{tab:summed_unique_words}). Even though the number of entities in the dataset is higher, in sum it contains substantially less unique words. The difference is very prominent in relation to the dataset size (indicated by the last two columns). Because of this, for most of the \glspl{ngram} that serve as candidate-terms in the subsequent classification the positive class (\textit{entities that contain the phrase}) is far smaller than the negative class. 
 % As established, a very important difference is that more relevant words do not occur more often. We assumed  because of that, the kappas that compare rankings are not so good
 
@@ -88,11 +89,12 @@ Increasing the threshold a candidate to be considered a \textit{faithful} repres
 
 These observations lead us to the conclusion, that extracting less candidates may better capture the semantic content of the dataset. The disadvantage is that the resulting embedding captures less variance of the original dataset, however, those directions that are extracted show increased robustness. This is also indicated by the lower number of uniquely extracted candidates summed over all run-configurations in \autoref{tab:generated_stats}. 
 
-When discussing the dataset, we already theorized that only keeping those entites for which a classifier can successfully predict its faculty may help to increase dataset quality. That turned out to be not necessary but would still be a good future research opportunity. Another possibility that could have been considered in the case of low performances is to use only the 1500 with the longest descriptions, bringing its distribution closer to the placetypes-dataset (but still not changing the properties). 
+When discussing the dataset, we already theorized that only keeping those entites for which a classifier can successfully predict its faculty may help to increase dataset quality. That turned out to be not necessary but would still be a good future research opportunity. Another possibility that could have been considered in the case of low performances is to use only the 1500 with the longest descriptions, bringing its distribution closer to the placetypes-dataset (but not changing the properties). 
 
 % \todoparagraph{or only those ones where BERT can sucessfully }classify the faculty. Again, faculty is not everything, BUT if the faculty CAN be extracted, cases that only list names or places are out (...except FROM the name of place follows the faculty but lets ignore that)
 
 In sum, our previous hypothesis that the different dataset statistics leads to different conditions for the algorithm seems confirmed by the intermediate results. On the other hand, the final classification performances (\autoref{tab:robustresults_perfb}) are proof some important information of the dataset is captured regardless. In fact, not only are enough candiates extracted by the algorithm, but the results even indicate less sensibility for different hyperparameters for our dataset compared to the results of \cite{Derrac2015} for the placetypes-dataset. Regarding the algorithm, our results indicate that the methodology is robust and does not only work for datasets with the aforementioned properties.
+
 
 \subsubsection{Classification results}
 
@@ -133,14 +135,14 @@ It is, however, much more interesting to analyse which of the entities did becom
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{r|ccc}
     \textbf{Course Name} & \multicolumn{3}{c}{\textbf{Leftover Dimensions}} \\ \
-    & strukturierten & internationales & 1950er \\ midrule
+    & strukturierten & internationales & 1950er \\ \midrule
     !! FÄLLT AUS !! Anna Seghers: Das siebte Kreuz (1942) & 2              & 15              & 18     \\
     Anna Seghers: Das siebte Kreuz (1942)                 & 2              & 15              & 18     \\
     Anna Seghers: Das siebte Kreuz (1942) (NDL 2)         & 2              & 15              & 18     \\
     Friedrich Hebbel: Agnes Bernauer (1852)               & 2              & 15              & 18    
     \end{tabular}%
     }
-    \caption{Sample courses falling onto the same embedding after discretisation}
+    \caption{Sample courses falling onto the same embedding after discretisation.}
     \label{tab:same_embed}
 \end{table}
 
@@ -238,21 +240,30 @@ In almost all results, the extracted dimensions for the faculties \textit{Physik
 
 In \autoref{sec:pre_qual_an}, we decided on some terms that would make intuitive sense as semantic directions. The results from \autoref{tab:appealing_phrases} show that many of these were actually used as candidates robustly among many different parameter-combinations. This is a very promising result, especially considering that the actual document frequencies for these terms are comparably low, making the result even more astonishing and indicating robustness by how many different configurations found these teerms to be significant. \\
 
-\vspace{-3ex}
-
+\vspace{-2.5ex}
 \begingroup
 \renewcommand{\arraystretch}{0.75}
-\begin{tabular}{lll}
-    computer     & 1.0\% \\
-    mathematik   & 0.8\% \\
-    mathe        & 0.0\% \\
-    wissenschaft & 3.3\% \\
-    recht        & 4.16\% \\
-    musik        & 2.27\% \\
-    sport        & 1.03\% 
-\end{tabular}
+\begin{minipage}[t]{.33\textwidth}
+	\begin{tabular}{ll}
+		computer     & 1.0\% \\
+		mathematik   & 0.8\% \\
+		mathe        & 0.0\% 
+	\end{tabular}
+\end{minipage}\hfil
+\begin{minipage}[t]{.33\textwidth}
+	\begin{tabular}{ll}
+		wissenschaft & 3.3\% \\
+		recht        & 4.16\% 
+	\end{tabular}
+\end{minipage}
+\begin{minipage}[t]{.33\textwidth}
+	\begin{tabular}{ll}
+		musik        & 2.27\% \\
+		sport        & 1.03\% 
+	\end{tabular}
+\end{minipage}
 \endgroup
-\vspace{0.5ex}
+\vspace{0.4ex}
 
 Some of these phrases even regularly end up as a deciding factor to detect one of the faculties in the decision trees, such as \textit{computer} for \textit{Mathe/Informatik}, \textit{psychologie} for \textit{Humanwissenschaften}, \textit{Schule} for \textit{Erziehungs/Kulturwissenschaften} or (interestingly) \textit{wirtschaft} for \textit{Sozialwissenschaften}. This was even much more pronunced when also counting if the phrase was part of the word, such as \textit{recht} being in the detected dimension \textit{wirtschaftsrecht}. All extracted ones are: \textit{schuldrecht, strafrecht, deutsch recht, offentliches recht, grundrechte, urheberrecht, steuerrecht, strafrecht, deutsch recht, recht, grundrechte}.
 % \autoref{tab:appealing_phrases} looks suprisingly good. 
@@ -282,7 +293,7 @@ Some of these phrases even regularly end up as a deciding factor to detect one o
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\figwidth]{svm_mathematik_highlight_infoAB.png}
-	\caption[3D-Plot with an SVM for the term \textit{mathematik}]{
+	\caption[3D-Plot with an SVM for the term \textit{mathematik}.]{
 		\label{fig:3dplot_mathe_infoab}
 		3D-Plot with an SVM for the term \textit{mathematik}, also highlighting the courses \textit{Informatik A} and \textit{Informatik B}. Negative samples are hidden for better visibility, and entities that contain the word more often than the 75\textsuperscript{th} percentile have bigger markers.
 	}
@@ -335,7 +346,7 @@ To further analyse the quality of the results, we are interested in the top cour
 	\textbf{Biologie/Chemie} & stattgefunden & Transformation wohlfahrtsstaatlicher Regime in Europa: Aktuelle Forschungskontroversen \\
 	\textbf{Sozialwissenschaften} & parteien & Modul Vergleichende Politikwissenschaft I: Westliche Regierungssysteme im Vergleich \\
 	\end{tabular}
-	\caption{Highest ranking courses per feature that best predicts the faculty}
+	\caption{Highest ranking courses per feature that best predicts the faculty.}
 	\label{tab:highest_ranking}
 	}}
 \end{table}
@@ -448,6 +459,7 @@ Besides these observations, the other hyperparameters did not seem to affect cla
 % Is there a direction capturing advanced courses?
 % Nen Plot der closeness im embedding mit levensthein-distanz und anzahl-gleicher-wörter korreliert und schaut wie explainable das ist
 
+\vspace{-1ex}
 \subsection{Did we achieve the thesis goal?}
 
 Let us now take a step back and answer the question if the results indicate that we achieved the aims of this work. For one, there is certainly more work to do to increase robustness of the results in the sense that an unambiguous name for the resulting semantic direction comes up without being affected much by precise hyperparameter choices or random seeds. The fact that we have tested only by comparing how good the classification can be predicted is also a drawback, but a human study would be clearly outside the scope of this work.

@@ -47,12 +47,12 @@
 %     % nonumberlist,
 % } 
 
-\newglossaryentry{vector-space}{
-    name=\ensuremath{V},
-    type=symbols,
-    description={a vector space}, 
-    sort=V
-}
+% \newglossaryentry{vector-space}{
+%     name=\ensuremath{V},
+%     type=symbols,
+%     description={a vector space}, 
+%     sort=V
+% }
 
 % =========================================================
 % DEFINITIONS
@@ -68,9 +68,9 @@
 
 \newglossaryentry{stopword}{
     type=defs,
-    name=stopword,
+    name=stop word,
     description={
-        TODO: do
+        \textbf{Stop words} are words that are very common to a language and thus of low discriminative power for differentiating between individual texts of a corpus. Stop word lists are used as negative dictionary to remove them before text processing. There are no universally agreed-upon stop word lists.
         }
 }
 
@@ -186,7 +186,7 @@
     type=customs,
     name=quantificiation,
     description={
-        \hspace{1.2em} In the scope of this thesis, the term \textbf{quantification} refers to the relative score for an n-gram in a document, depending on its frequency as well as other frequencies, as calculated by one of the \nameref{sec:word_count_techniques}, also called \textbf{quantification measures}. %TODO: to lower-case see https://tex.stackexchange.com/questions/445404/capitalization-variants-of-nameref 
+        \hspace{1em} In the scope of this thesis, the term \textbf{quantification} refers to the relative score for an n-gram in a document, depending on its frequency as well as other frequencies, as calculated by one of the \nameref{sec:word_count_techniques}, also called \textbf{quantification measures}. %TODO: to lower-case see https://tex.stackexchange.com/questions/445404/capitalization-variants-of-nameref 
         }
 }
 
@@ -204,7 +204,7 @@
     type=customs,
     name=hyperparameter,
     description={
-        When it is referred to \textit{hyperparameter} in this work, it does not only refer to scalars like the dimensionality of an embedding, but also \eg which specific algorithm is used in a step of the algorithm.
+        \hspace{0.55em}  When it is referred to \textit{hyperparameter} in this work, it does not only refer to scalars like the dimensionality of an embedding, but also \eg which specific algorithm is used in a step of the algorithm.
         }
 }
 

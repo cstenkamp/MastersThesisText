@@ -17,7 +17,6 @@ Active Jobs:
       Progress: Creating dissimilarity matrix:   2%|▏         | 3/200 [00:20<22:40,  6.91s/it]
   Job 736329: does create_dissim_mat.83.sh for 0:00:17 on vr6 with 3 procs.
   Job 736330: does create_dissim_mat.100.sh for 0:00:17 on bunda with 3 procs.
-  Job 736331: does extract_candidate_terms.81.sh for 0:00:17 on vr5 with 1 procs.
   Job 736332: does extract_candidate_terms for 0:00:02 on ocular with 1 procs.
       Creates siddata2022/de_debug_False/mfhcsd2_onlyorig_minwords80/candidate_terms_tfidf.json
 Scheduled Jobs:

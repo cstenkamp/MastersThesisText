@@ -1,5 +1,6 @@
 % \newcommand*{\NoMarkdown}{}
 \newcommand*{\RemoveAll}{}
+% \newcommand*{\ForPrinting}{}
 
 
 %TODO: once the text is "finished": [see sublime note]
@@ -56,7 +57,7 @@
 
 % ====================== /parts from MastersDoctoralThesis.cls ======================
 
-
+\usepackage{multicol}
 \usepackage[T1]{fontenc}
 \usepackage{ textcomp }
 % \usepackage{mdframed}
@@ -138,7 +139,6 @@
 \usepackage{array}
 \usepackage{ragged2e}
 \newcolumntype{P}[1]{>{\RaggedRight\arraybackslash\hspace{0pt}}p{#1}}
-
 
 \usepackage[utf8]{inputenc}
  
@@ -837,7 +837,7 @@
 \setlength{\parskip}{0.8ex}
 \RedeclareSectionCommand[beforeskip=-2.5ex plus -1ex minus -.2ex,
 						 afterskip=3.3ex plus -.2ex]{chapter}
-\RedeclareSectionCommand[beforeskip=-2.5ex plus -1ex minus -.2ex,
+\RedeclareSectionCommand[beforeskip=-2ex plus -1ex minus -.2ex,
 						 afterskip=1ex plus -.2ex]{section}
 \RedeclareSectionCommand[beforeskip=-1.5ex plus -1ex minus -.2ex,
 						 afterskip=0.5ex plus -.2ex]{subsection}
@@ -920,6 +920,7 @@
 \makeatother
 
 \renewcommand{\baselinestretch}{1.15}
+\usepackage[final]{pdfpages} % very last thing, option clash with graphicx
 
 \begin{document}
 
@@ -963,10 +964,22 @@
 \end{titlepage}
 
 
-\chapter*{Declaration of Authorship}
-I hereby certify that the work presented here is, to the best of my knowledge and belief, original and the result of my own investigations, except as acknowledged, and has not been submitted, either in part or whole, for a degree at this or any other university.
+\ifdefined\ForPrinting
+	\newgeometry{a4paper,top=0mm,bottom=0mm,inner=0mm,outer=0mm}
+	\includegraphics[width=\textwidth]{declaration_pretty.pdf}
+	\restoregeometry
+	% don't effing ask why just having this as a chapter doesn't work in twopage.
+\else
+	\chapter*{Declaration of Authorship}
+	I hereby certify that the work presented here is, to the best of my knowledge and belief, original and the result of my own investigations, except as acknowledged, and has not been submitted, either in part or whole, for a degree at this or any other university.
 
-\namesigdate
+	\namesigdate
+\fi
+
+
+
+
+
 \pagenumbering{gobble}
 \pagebreak
 
@@ -1047,10 +1060,10 @@ I hereby certify that the work presented here is, to the best of my knowledge an
 % \printglossary[type=units,        title=Units,       toctitle=Units,      style=3colger]
 \vspace{0.5cm}
 \renewcommand*{\arraystretch}{1}
-\printglossary[type=symbols,      title=Symbols,     toctitle=List of Symbols, nogroupskip]
-\vspace{0.5cm}
+% \printglossary[type=symbols,      title=Symbols,     toctitle=List of Symbols, nogroupskip]
+% \vspace{0.5cm}
 % \printglossary[type=\acronymtype, title=Acronyms,    toctitle=List of Acronyms, style=2colacro, nonumberlist]
-\printglossary[type=\acronymtype, title=Acronyms,    toctitle=List of Acronyms, nogroupskip] 
+\printglossary[type=\acronymtype, title=Acronyms,    toctitle=List of Acronyms, style=long3colheaderMINE2] %TODO: If it becomes more, add `nogroupskip `'
 
 
 %----------------------------------------------------------------------------------------
