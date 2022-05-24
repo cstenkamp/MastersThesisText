@@ -172,7 +172,6 @@ Inspecting code in Notebooks requires a different handling of contexts, as there
 
 Additionally, many helper functions improve the ease of use for loading configurations from `.env`-files and configuration-YAMLS, help in recovering the environment-variables necessary to load a configuration using click, and much more. A sample call to load all configurations for a dataset looks like this:
 
-<!-- \vspace{-3ex} -->
 ```
 setup_logging()
 load_envfiles("siddata")
@@ -186,20 +185,22 @@ configs, print_cnf = getfiles_allconfigs("clusters", verbose=True)
 print_envvars(get_filename(configs[0], get_dependencies=False))
 >> MA_DATASET=siddata2022;MA_LANGUAGE=de;MA_DEBUG=False;MA_PP_COMPONENTS=mfauhcsd2 [...]
 ```
-<!-- \vspace{-3ex} -->
+
+\ifdefined\ForPrinting
+\else
+\clearpage
+\fi
 
 To for example get the interim result `featureaxes` of all configurations, you may use this:
-<!-- \vspace{-3ex} -->
+
 ```
 with WorkerPool(DEFAULT_N_CPUS-3, pgbar="Fetching featureaxes..") as pool:
     get_featureaxes = lambda conf: ((ctx := SnakeContext.loader_context(config=conf, silent=True)).get_important_settings(), ctx.load("featureaxes"))
     featureaxes_list, interrupted = pool.work(configs, get_featureaxes)
 ```
-<!-- \vspace{-3ex} -->
 
 The final sample shows how to find and inspect a best-performing parameter-combination according to a decision-tree, and then running functions on interim results as well as inspecting old outputs:
 
-<!-- \vspace{-3ex} -->
 ```
 setup_logging()
 load_envfiles("placetypes")
@@ -211,4 +212,3 @@ ctx.obj["filtered_dcm"].show_info(descriptions=ctx1.obj["pp_descriptions"])
 ctx.display_output("pp_descriptions")
 >> [...]
 ```
-<!-- \vspace{-3ex} -->
