@@ -1,4 +1,5 @@
 *.pdf
+!declaration_pretty.pdf
 pandoc_generated_latex
 *.bib
 !Masterarbeit.bib
