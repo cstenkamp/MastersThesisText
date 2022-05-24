@@ -37,9 +37,31 @@
 \chapter{Code Use-Cases in Praxis} % Main appendix title
 
 \label{AppendixA} 
+\newcommand{\passthrough}[1]{#1}
+\lstset{
+	numberblanklines=false
+	,basicstyle=\small\ttfamily%
+	,breaklines=true%
+    % ,breakatwhitespace=true%
+    ,breakautoindent=true%
+	,tabsize=1%
+	,showstringspaces=false%
+	% ,numbers=left%
+	% ,numbersep=\lstnumbersep%
+	% ,numberstyle=\tiny\lstnumberstyle%
+	,framesep=0pt%
+	% ,xleftmargin=\lstnumberwidth%
+	,framexleftmargin=\lsthorizontalpadding%
+	,xrightmargin=\lsthorizontalpadding%
+	,framexrightmargin=\lsthorizontalpadding%
+	,backgroundcolor=\color{evenmorelightgray2}%
+    ,linewidth=\textwidth%
+	% ,postbreak=\ding{229}\space%
+	,escapeinside={*(}{*)}
+	\linespread{1.0}
+}
 
-\vspace{-0.8cm}
-
+% \vspace{-0.8cm}
 
 
 \input{pandoc_generated_latex/6_0_usecases}

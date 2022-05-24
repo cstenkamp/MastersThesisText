@@ -12,7 +12,7 @@
 	\end{center}
 \end{figure}
 
-F
+
 \begin{figure}[h]
 	\begin{center}
 	  \includegraphics[width=\textwidth]{graphics/figures/scatter_mds_tsne_movies_Genres.pdf}
@@ -23,6 +23,28 @@ F
 
 % \todo
 Note that at \url{https://github.com/cstenkamp/MAAnalysisNotebooks/blob/main/analyze_results/derrarc2015/mds_derrac2015_moviesplaces_2d3d.ipynb} there are also interactive 3D-Versions of these plots. The one for the Siddata-dataset is at \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/visualise_embeddings.ipynb}, also 2D and interactive 3D. 
+
+
+
+\section{Dataset samples}
+
+\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{ll}
+	\textbf{Number} & \textbf{Course} \\
+	1.003                  & Spez. Soz. III: Wahlforschung (Politische Soziologie)               \\
+	1.003                  & Erziehung, Bildung und Sozialisation in der modernen Gesellschaft   \\
+	1.003                  & Infoveranstaltung Master Soziologie                                 \\
+	7.441202               & "Fremdheit" in der Kinder- und Jugendliteratur                      \\
+	7.441202               & „Mündlichkeit und Schriftlichkeit“                         
+	\end{tabular}%
+	}
+	\caption{Sample duplicates in the Siddata-dataset. }
+	\label{tab:sample_duplicates}
+\end{table}
+
+
 
 \clearpage
 \section{Results for Classifiers on placetypes}
@@ -170,6 +192,9 @@ All scores are reported with a train-test split of 70\% to 30\%. Note that the r
 Final columns are the results of this work. Column \textbf{Best-all} encodes a different for each row, specifically the one that yields the best result for the respective classification task, whereas column \textbf{Mean-Best} refers to the single configuration that achieved the best results on average. Last column is best when class weighting of per-class-classifiers is forbidden.
 \todoparagraph{Shortened a few column names, rename them in description}
 
+\vfill
+\clearpage
+
 \section{Comparison of different Cluster-Center-Algorithms}
 
 \todoparagraph{We compared reclassify and main on placetypes. For both of the techniques, we show the entitiy that scored highest}
@@ -199,7 +224,7 @@ Final columns are the results of this work. Column \textbf{Best-all} encodes a d
 	\textbf{joshuatreenationalpark}  & canyon              &                     \\
 	\textbf{clinker}                 & building            &                    
 	\end{tabular}
-	\caption[Highest-ranking descriptions per dimension for different algorithms.]{Highest-ranking descriptions per dimension for the reclassify-algorithm and the main-algorithm}
+	\caption[Highest-ranking descriptions per dimension for different algorithms.]{Highest-ranking descriptions per dimension for the reclassify-algorithm and the main-algorithm.}
 	\label{tab:text_per_dim}
 \end{table}
 
@@ -236,14 +261,15 @@ Final columns are the results of this work. Column \textbf{Best-all} encodes a d
 \end{table}
 
 
+\clearpage
 \section{Sample Classification}
 
 
 \begin{figure}[h]
 	\begin{center}
 	  \makebox[\textwidth][c]{
-		\includegraphics[width=1.1\textwidth]{graphics/dataset_new/boxes_rechtswis.png}
-		\slcaption{Sample classification of a level-2-decisiontree. visualise in 3D: \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/display_top3_SIDDATA.ipynb} \arrowback}
+		\includegraphics[width=\textwidth]{graphics/dataset_new/boxes_rechtswis.png}
+		\caption[Sample classification of a level-2 decision tree.]{Sample classification of a level-2 decision tree. Visualise in 3D: \url{https://github.com/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/display_top3_SIDDATA.ipynb} \arrowback}
 		\label{fig:boxes_rechtswis}
 		% möchte sagen: How does a decision look graphically, and how does it compare to the original 3D?
 		% TODO: add accuracy 
@@ -251,35 +277,20 @@ Final columns are the results of this work. Column \textbf{Best-all} encodes a d
 	\end{center}
 \end{figure}
 
+\vfill
 
-\section{Box-plots}
+% \vspace{-2ex}
+% \section{Classification Accuracy Box-plots}
 
-\begin{figure}[h]
-	\begin{center}
-	  \includegraphics[width=\textwidth]{graphics/dataset_new/accuracy_boxplots.pdf}
-	  \slcaption{Variability of faculty classification accuracy as box-plots.}
-	  \label{fig:faculty_boxplots}
-	\end{center}
-\end{figure}
+% \vspace{-2ex}
+% \begin{figure}[h]
+% 	\begin{center}
+% 	  \includegraphics[height=.12\textheight]{graphics/dataset_new/accuracy_boxplots.pdf}
+% 	  \caption{Variability of faculty classification accuracy as box-plots.}
+% 	  \label{fig:faculty_boxplots}
+% 	\end{center}
+% \end{figure}
 
-
-\section{Dataset samples}
-
-\begin{table}[H]
-	\centering
-	\resizebox{\textwidth}{!}{%
-	\begin{tabular}{ll}
-	\textbf{Number} & \textbf{Course} \\
-	1.003                  & Spez. Soz. III: Wahlforschung (Politische Soziologie)               \\
-	1.003                  & Erziehung, Bildung und Sozialisation in der modernen Gesellschaft   \\
-	1.003                  & Infoveranstaltung Master Soziologie                                 \\
-	7.441202               & "Fremdheit" in der Kinder- und Jugendliteratur                      \\
-	7.441202               & „Mündlichkeit und Schriftlichkeit“                         
-	\end{tabular}%
-D	}
-	\caption{Sample duplicates in the Siddata-dataset. }
-	\label{tab:sample_duplicates}
-\end{table}
 
 
 

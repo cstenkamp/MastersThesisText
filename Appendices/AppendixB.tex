@@ -25,24 +25,19 @@ This appendix goes into more detail for selected components of the algorithm.
 
 \section{Algorithm Implementation Details}
 
-\subsection*{Preprocessing}
-
-see \autoref{sec:algo_preproc}
+\subsection*{Preprocessing\arrowref{sec:algo_preproc}}
 
 \subsubsection*{Language-Detection and Translation}
 \label{ap:translating}
 
 To check the languages of the entities, the \codeother{langdetect}\footnote{\url{https://pypi.org/project/langdetect/}, \textcite{nakatani2010langdetect}} library is used, which is a direct port of a java library that claims to have 99.8\% accuracy on longer texts \cite{nakatani2010langdetect}. 
-\newline
 
 Depending on the translation-policy, it is possible to either take only those entities of the demanded language, ignore it and consider all entities in their original language, or enforce the demanded language by translating all entities from their original language to the demanded one. The accompaning code for this thesis contains extensive code to do that using the \emph{Google Cloud Translation API}\footnote{\url{https://cloud.google.com/translate}}. Many descriptions of the Siddata-dataset were translated using this technique\footnote{As, however, only 500.000 characters per google-account and month can be translated \href{https://cloud.google.com/translate/pricing}{free of charge}, the translation-process for the descriptions is still in progress.}. As of now, Google's Cloud Translation Service uses an embedding-based neural model of a hybrid architecture that has a transformer encoder, followed by an RNN decoder \cite{Chen2018}. All of the languages detected in the Siddata-dataset are supported by the system - translating between the languages German, English and Spanish, which make up more than 99 percent of the Siddata-descriptions, is what the system is particularly optimized for. 
 % \todoparagraph{write short about their percentage, bleu score etc}
 
 % \includeMD{pandoc_generated_latex/6_1_implementationdetails}
 
-\subsection*{Candidate Extraction}
-
-see \autoref{sec:extract_cands}
+\subsection*{Candidate Extraction\arrowref{sec:extract_cands}}
 
 \subsubsection*{KeyBERT}
 \label{ap:details_keybert}
@@ -66,7 +61,7 @@ In practice, though both variants extracted different phrases, the results for e
 
 \begin{figure}[H]
 	\begin{center}
-	  \includegraphics[width=\textwidth]{3dplot_hyperplane_and_orthogonal}
+	  \includegraphics[width=.9\textwidth]{3dplot_hyperplane_and_orthogonal}
 	  \caption[Visual representation of the hyperplane of an SVM splitting a dataset.]{ \label{fig:3d_hyperplane_ortho} Visual representation of the Hyperplane of a Support-Vector-Machine splitting a dataset, as well as it's orthogonal and the orthogonal projection of a set of samples onto the plane. For an interactive version of this plot, visit  {\small \url{https://nbviewer.org/github/cstenkamp/derive_conceptualspaces/blob/main/notebooks/text_referenced_plots/hyperplane_orthogonal_3d.ipynb?flush_cache}}}
 	\end{center}
 \end{figure}
@@ -104,10 +99,10 @@ In practice, though both variants extracted different phrases, the results for e
       \begin{tabular}[c]{@{}l@{}}10 bins. Positions by np.histogram\_bin\_edges \\ from min and max of all positive data\end{tabular}
     \end{tabular}%
     }
-    \slcaption{Different values of calculating Cohen's Kappa score. Dense means: if there are 14.900 zeros, the next is a 1
-    Min means: if there are 14.900 zeros, the next one is a 14.901
-    Max means: if there are 14.900 zeros, they all get the label 14.900
-    These scores are weighted}
+    \slcaption{Different values of calculating Cohen's Kappa score. Dense means: if there are 14.900 zeros, the next is a 1.
+    Min means: if there are 14.900 zeros, the next one is a 14.901.
+    Max means: if there are 14.900 zeros, they all get the label 14.900.
+    These scores are weighted.}
     \label{tab:kappa_measures}
 \end{table}
 
@@ -118,7 +113,7 @@ In practice, though both variants extracted different phrases, the results for e
 
 Lexical databases of semantic relations between words, the most famous of which being WordNet,\footnote{\url{https://wordnet.princeton.edu/}} link words in a graph that encodes explicit semantic relations like synonyms and hyponyms (subtypes/ \emph{is-a}-relationships). While neural %TODO: nicht neural, aber halt data-driven? naja das was word2vec undso sind... by-context-created/trained...?! similarity-based? -> DISTRIBUTIONAL MODELS (ones trained from the co-occurrence patterns of temrs)
 embeddings may encode similar information implicitly, when relying on dictionary-based word encodings they are an important tool when using classical linguistic techniques. For the developed algorithm, the information how many hyponyms of a candidate word for a semantic direction %TODO: did I explain the algorithm well enough before this to throw this much information at the reader?!
-occur in its corresponding text-corpus can be highly relevant. To do that, WordNet \cite{Miller1995} and it's German equivalent, GermaNet \cite{hamp-feldweg-1997-germanet,Henrich},\footnote{\url{(https://uni-tuebingen.de/fakultaeten/philosophische-fakultaet/fachbereiche/neuphilologie/seminar-fuer-sprachwissenschaft/arbeitsbereiche/allg-sprachwissenschaft-computerlinguistik/ressourcen/lexica/germanet-1/)}} are used in the respective step.
+occur in its corresponding text-corpus can be highly relevant. To do that, WordNet \cite{Miller1995} and it's German equivalent, GermaNet \cite{hamp-feldweg-1997-germanet,Henrich},\footnote{\url{https://uni-tuebingen.de/fakultaeten/philosophische-fakultaet/fachbereiche/neuphilologie/seminar-fuer-sprachwissenschaft/arbeitsbereiche/allg-sprachwissenschaft-computerlinguistik/ressourcen/lexica/germanet-1/}} are used in the respective step.
 
 
 \subsection{Faculty-Classifier}
@@ -132,13 +127,13 @@ Another purpose of the classifier is to check if it is anyhow possible to extrac
 
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
-\section{Used Software}
+% \section{Used Software}
 
 % \includeMD{pandoc_generated_latex/6_2_usedsoftware}
 
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
-\section{Configurations to run \mainalgos}
+\section{Configurations to run \cite{Derrac2015, Ager2018}}
 \label{ap:yamls_for_origalgos}
 
 % \vspace{-0.8cm}
@@ -146,10 +141,10 @@ Another purpose of the classifier is to check if it is anyhow possible to extrac
 % \lstinputlisting[language=, firstline=29]{codes/dqn.txt}
 
 \subsection{\textcite{Derrac2015}}
+\label{ap:yaml_for_derrac}
 
 \begin{lstlisting}[language=yaml, caption={YAML for \textcite{Derrac2015}}]
     pp_components:          mfautcsdp
-    translate_policy:       translate
     quantification_measure: ppmi
     dissim_measure:         norm_ang_dist
     embed_algo:             mds
@@ -158,7 +153,6 @@ Another purpose of the classifier is to check if it is anyhow possible to extrac
     max_ngram:              5                   
     dcm_quant_measure:      count
     classifier:             SVM
-    kappa_weights:          quadratic
     classifier_succmetric:  [kappa_count2rank_onlypos, kappa_rank2rank_onlypos_min] 
     prim_lambda:            0.5
     sec_lambda:             0.1
