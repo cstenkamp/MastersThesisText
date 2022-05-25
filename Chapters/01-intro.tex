@@ -50,9 +50,7 @@ To be able to work with such requests, the system would need some sort of \texti
 
 \label{sec:amazonalgo}
 
-For more than twenty years, the default approach for recommendation has been that of \emph{Collaborative Filtering}, summarised in the well-known phrase~ \q{\textit{Customers who bought items in your Shopping cart also bought: \dots}} \cite{Sarwar2000}. Traditionally, this algorithm represents every customer as a vector, whose components are the number of times this customer has bought an item for all items of the store. To suggest new products to the user, items from the vectors of customers whose purchase history is similar to this user, calculated, for example, by the \gls{cos}, are suggested \cite{Linden2003}. Because this is computationally very expensive, there are several alternatives, for example, algorithms that cluster users based on their similarity to other users before matching, or search-based algorithms. Even Amazon's recommendation system, one of the most world-defining algorithms in the world, uses the same base algorithm, coined~ \q{\textit{item-to-item collaborative filtering}}. It only differs from the traditional techniques in that it builds a similarity matrix based on the \gls{cos} for items instead of customers. Developed in 1997, this algorithm is not only still in use at Amazon today, but has also been adopted by Youtube and Netflix, amongst many others \cite{Smith2017}. Many improvements in efficiency, distance calculation techniques or time-dependency have been added since then, and the algorithm is likely more optimized than most others. Yet, the fact that it is a simple \textit{similarity-based reasoning technique} has remained ever since. 
-
-As will be explained in more detail in \autoref{sec:similaritybasedreasoning}, both in terms of classification algorithms and classic logical reasoning, the technique to classify a sample with the class of its most similar neighbors (\emph{k-Nearest-Neighbors}) is considered one of the most basic techniques.
+For more than twenty years, the default approach for recommendation has been that of \emph{Collaborative Filtering}, summarised in the well-known phrase~ \q{\textit{Customers who bought items in your Shopping cart also bought: \dots}} \cite{Sarwar2000}. Traditionally, this algorithm represents every customer as a vector, whose components are the number of times this customer has bought an item for all items of the store. To suggest new products to the user, items from the vectors of customers whose purchase history is similar to this user, calculated, for example, by the \gls{cos}, are suggested \cite{Linden2003}. Because this is computationally very expensive, there are several alternatives, for example, algorithms that cluster users based on their similarity to other users before matching, or search-based algorithms. Even Amazon's recommendation system, one of the most world-defining algorithms in the world, uses the same base algorithm, coined~ \q{\textit{item-to-item collaborative filtering}}. It only differs from the traditional techniques in that it builds a similarity matrix based on the \gls{cos} for items instead of customers. Developed in 1997, this algorithm is not only still in use at Amazon today, but has also been adopted by Youtube and Netflix, amongst many others \cite{Smith2017}. Many improvements in efficiency, distance calculation techniques or time-dependency have been added since then, and the algorithm is likely more optimized than most others. Yet, the fact that it is a simple \textit{similarity-based reasoning technique} has remained ever since. As will be explained in more detail in \autoref{sec:similaritybasedreasoning}, both in terms of classification algorithms and classic logical reasoning, the technique to classify a sample with the class of its most similar neighbors (\emph{k-Nearest-Neighbors}) is considered one of the most basic techniques.
 
 On a different note, \textit{feature directions} are not unknown in the field of Computational Linguistics. As famously demonstrated by \textcite{Mikolov:Regularities} in their 2013 paper \citetitle{Mikolov:Regularities}, modern neural language models that represent words as high-dimensional continuous-space vectors exhibit astonishing semantic regularities. Not only does the usage of such embeddings boost the performance of many classical \gls{nlp} tasks \cite{Mikolov2013a,Le2014, Devlin2019}, but there is also strong evidence that \glspl{vsm} capture the meaning of words on the basis of the \hyperref[sec:bow_hypothesis]{distributional hypothesis}. This best shows in the famous example that links simple vector arithmetic to word semantics:\footnote{Latter two examples adapted from \url{https://devmount.github.io/GermanWordEmbeddings/} \acc{03}{14}}
 
@@ -74,16 +72,17 @@ This would allow to rank objects according to how much they apply to each of a f
 
 In our search of literature with related goals, the approach of \cite{VISR12} stood out: In their paper, they create a structured knowledge base for the domain of movies and provide an interface that allows a user to select a movie based on a set of clear-defined semantic features. This interface is reprinted in \autoref{fig:movietuner}.
 
+While the result of their algorithm aligns very much with the desired goal of this work, their implementation relies on supervised learning that requires a hand-labelled dataset.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.66\textwidth]{graphics/stolenfigures/movietuner.png}
+    \includegraphics[width=0.55\textwidth]{graphics/stolenfigures/movietuner.png}
     \caption[The Movie Tuner Interface from \cite{VISR12}.]{
         The Movie Tuner Interface from \textcite{VISR12}. Figure reprinted from \cite[Fig.3]{Vig2010} (permission for non-commercial use granted). 
         \label{fig:movietuner}}
 \end{figure}
 
-While the result of their algorithm aligns very much with the desired goal of this work, their implementation relies on supervised learning that requires a hand-labelled dataset.
+
 
 \subsection{The algorithm of \textcite{Derrac2015}}
 
@@ -100,10 +99,7 @@ Given the widely accepted assumption that, algorithmically, recommendation is no
 
 Precise study of the pertinent literature has shown that there is a small but active community publishing improvements to this algorithm. However, most of these follow-up works include one of the authors of the primary paper, Steven Schockaert, as co-author \cite{Ager2018,Alshaikh2020}, indicating a small impact beyond this community. Furthermore, most of the considered literature use manually created datasets collected from multiple human reviews or tags, and given that the algorithm relies on the fact that relevant words occur more often in the text corpus, there is reason to assume that it may struggle when applied to the corpus given in this thesis. For these reasons, it seemed reasonable to thoroughly test the domain transfer of the algorithm.
 
-Unfortunately, the available open-source implementations that were found\footnote{\cite{Alshaikh2020}: \url{https://github.com/rana-alshaikh/Hierarchical_Linear_Disentanglement}\\ \indent \phantom{\textsuperscript{11}} \cite{Ager2018}: \url{https://github.com/ThomasAger/Autoencoder-Explanations} \acc{01}{24}} proved undocumented and obscure,\footnote{Relying for example on 70 unnamed command-line arguments: \url{https://github.com/ThomasAger/Autoencoder-Explanations/blob/master/src/_archive/lr_pipeline.py\#L1211-L1283} \acc{01}{24}}
- which is why it was decided that a complete re-implementation is the better idea and also less work. 
-
-This also resulted in a new goal, namely, to create a reliable architecture for the algorithm that adheres to modern standards of software quality, as specified in \textbf{ISO/IEC 9126} and its replacement \textbf{ISO/IEC 25010:2011}, in the hope of making future research just like this one - where the validity of the algorithm and its ability to transfer to new domains is tested - easier than it was for \me.
+Unfortunately, the available open-source implementations that were found\footnote{\cite{Alshaikh2020}: \url{https://github.com/rana-alshaikh/Hierarchical_Linear_Disentanglement}\\ \indent \phantom{\textsuperscript{11}} \cite{Ager2018}: \url{https://github.com/ThomasAger/Autoencoder-Explanations} \acc{01}{24}} proved undocumented and obscure,\footnote{Relying for example on 70 unnamed command-line arguments: \url{https://github.com/ThomasAger/Autoencoder-Explanations/blob/master/src/_archive/lr_pipeline.py\#L1211-L1283} \acc{01}{24}} which is why it was decided that a complete re-implementation is the better idea and also less work. This also resulted in a new goal, namely, to create a reliable architecture for the algorithm that adheres to modern standards of software quality, as specified in \textbf{ISO/IEC 9126} and its replacement \textbf{ISO/IEC 25010:2011}, hopint to make future research just like this one - where the validity of the algorithm and its ability to transfer to new domains is tested - easier than it was for \me.
 
 % \includeMD{pandoc_generated_latex/1_1_motivation}
 
@@ -122,7 +118,7 @@ So, this thesis shall not only replicate the results of \cite{Derrac2015} and tr
 
 \begin{enumerate}
     \item Implement and describe a qualitative, scalable and adaptable software architecture for the replicated algorithm that can be used to easily apply it to new domains.
-    \item Apply the methodology to the domain of educational resources to verify if the algorithm works and is useful to find regularities in the domain, allowing for explainable recommendation. In terms of original contributions, this includes finding differences in the structure of the given datasets and, where appropriate, providing additions to the algorithm such that it works not only on specifically curated datasets.
+    \item Apply the methodology to the domain of educational resources to verify if the algorithm works and is useful to find regularities in it, allowing for explainable recommendation. In terms of original contributions, this includes finding differences in the structure of the given datasets and, where appropriate, providing additions to the algorithm such that it works not only on specifically curated datasets.
 \end{enumerate}
 
 \subsection{Success conditions}
@@ -135,9 +131,9 @@ Exact evaluation metrics will be explained in detail later, but let us quickly d
 A successful architecture is given if 
 
 \begin{itemize}
-    \item The results of \cite{Derrac2015} and its follow-up works \cite{Ager2018,Alshaikh2020} can be replicated for at least one of their original datasets
-    \item The architecture successfully runs on the compute grid, indicating scalability and modularity.
-    \item The criteria for software quality as specified in \textbf{ISO 25010} and open science are fulfilled.
+    \item It successfully runs on the compute grid, indicating scalability and modularity.
+    \item The results of \cite{Derrac2015} and its follow-up works \cite{Ager2018,Alshaikh2020} can be replicated for at least one of their original datasets.
+    \item The criteria for software quality as specified in \textbf{ISO 25010} are fulfilled.
     \item The code is open-sourced, well-documented and understandable.
 \end{itemize}
 

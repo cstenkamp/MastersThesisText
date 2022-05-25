@@ -10,13 +10,13 @@ It is important to keep in mind that the algorithm is no rigid monolith but modu
 % The core idea of the algorithm is to unsupervisedly find a a set of features which can be modelled as directions for a vector-space representation of the respetive entities.
 The main goal of the algorithm is to unsupervisedly use text-corpora associated with the considered \glspl{entity}\footnote{From now on, the term \textit{\glspl{entity}} refers to the sample described by one text from the corpus (description, concatenated reviews, ...) from a certain domain. The corpus accordingly defines the domain: educational resources, movies, ...} to embed these into a vector-space where the axes correspond to human concepts/properties.\footnote{\textit{Concepts} and \textit{Properties} explicitly refer to what is defined in Criterions C and P, see \ref{sec:csdefinition}} This is referred to as \textit{feature-based} representation: A high-dimensional vector that numerically encodes the degree (\textit{protoypicality}) to which the entity corresponds to a number of appropriate dimensions. This is generally referred to as Conceptual Space and can be used as basis for explainable reasoning.
 
-The general idea to achieve that is as follows: First, the entities are embedded as fixed-dimensional vectors. To allow for the types of reasoning from \autoref{sec:cs_reasoning}, it is embedded into metric spaces where the concepts of direction and distance are well-defined. \gencite{Derrac2015} original algorithm uses MDS (see \ref{sec:mds}) for this matter, which enforces metric distances. \cite{Ager2018,Alshaikh2020} both soften this requirement and also use document embedding techniques such as \gls{doc2vec} and averaged GloVe \cite{pennington2014glove} embeddings.
-
-Additionally, words or phrases from the text are extracted as candidates for the names of the semantic dimensions. The underlying assumption is that \q{words describing semantically meaningful features can be identified by learning for each candidate word $w$ a linear classifier which separates the embeddings of entities that have $w$ in their description from the others} \cite[3574]{Alshaikh2020}: The better the performance of that classifier according to a chosen metric, the more evidence there is that $w$ describes a semantically meaningful feature. 
+The general idea to achieve that is as follows: First, the entities are embedded as fixed-dimensional vectors. To allow for the types of reasoning from \autoref{sec:cs_reasoning}, it is embedded into metric spaces where the concepts of direction and distance are well-defined. \gencite{Derrac2015} original algorithm uses MDS (see \ref{sec:mds}) for this matter, which enforces metric distances. \cite{Ager2018,Alshaikh2020} both soften this requirement and also use document embedding techniques such as \gls{doc2vec} and averaged GloVe \cite{pennington2014glove} embeddings. Additionally, words or phrases from the text are extracted as candidates for the names of the semantic dimensions. The underlying assumption is that \q{words describing semantically meaningful features can be identified by learning for each candidate word $w$ a linear classifier which separates the embeddings of entities that have $w$ in their description from the others} \cite[3574]{Alshaikh2020}: The better the performance of that classifier according to a chosen metric, the more evidence there is that $w$ describes a semantically meaningful feature. 
 % * from Alshaikh2020: "Their core assumption is that words describing semantically meaningful features can be identified by learning for each candi- date word w a linear classifier which separates the embeddings of entities that have w in their description from the others. The performance of the classifier for w then tells us to what extent w describes a semantically meaningful feature"
 In a final step, the candidate-words are clustered according to their similarity to find a fixed set of \emph{semantic directions}. A representative term for the directions is selected as dimension name, and the entities are re-embedded into a new space comprised of these dimensions, where the individual vector-components correspond to the ranking of an entity with respect to these dimensions.
 
 The rest of this section goes into further detail for each of the individual algorithm components. \removeMe{An overview of which of the considered literature supports each components is given in \autoref{tab:compared_algos}.} Further, configuration files to enable exactly the respective components of the papers \mainalgos for the codebase of this thesis are listed in \aref{ap:yamls_for_origalgos}.
+
+
 
 % \todoparagraph{but before that, ager and alshaikh}
 
@@ -224,9 +224,9 @@ The clustering should reduce the number of features and also ensure that the res
 The following steps describe the implementation of the original clustering method of \textcite{Derrac2015}, also used in our work:
 
 First, we consider the best \textit{basic features} as \textit{main directions}. For that, we select one of the scores calculated in the previous step and select all candidates that exceed a threshold (\cite{Derrac2015} suggest $\kappa \geq 0.5$).
-To get the directions, we follow the following algoritm:
+To get the directions, we follow the following algorithm:
 
-\vspace{-1.3ex}
+\vspace{-2ex}
 \begingroup
 \verbatimfont{\footnotesize}%
 \begin{verbatim}
@@ -240,7 +240,7 @@ To get the directions, we follow the following algoritm:
 		directions.append(compares.argmax)
 \end{verbatim}
 \endgroup
-\vspace{-1.2ex}
+\vspace{-2ex}
 
 This starts with the best candidate and then iteratively adds the one from the set of top-scoring candidates that most dissimilar to the set of final directions. The result is a set of $ndims*2$ main directions, which are henceforth considered the Cluster centers. Subsequently, all leftover terms from $T^{0.5}$ as well as all terms from $T^{0.5}$ are added to the respective cluster whose direction they are most similar to. 
 
@@ -269,13 +269,13 @@ An analysis of \cite{Carmel2009} showed that a statistical method to extract fea
 
 The best technique to find a cluster-name was not evaluated yet. All considered methods that formally evaluate the corresponding feature-directions work independently of the actual cluster name. This is unfortunate, because \textit{subjectively}, the name of the respective directions is very important for the usability of any recommendation engine based on this work. Especially this subjectivity indicates that the only way to evaluate the cluster-names is with a study of human subjects.
 
-\vspace{-0.5ex}
+\vspace{-1.5ex}
 \subsubsection{Postprocessing the Feature-Directions\arrowref{sec:algorithmsteps}}
 \label{sec:algo:postprocess}
 
 The main contribution of \textcite{Ager2018} is a postprocessing step that changes the final space such that the ranking of entities \wrt each feature direction more closely mimics the ranking of frequencies of that direction's cluster words. The reasoning behind this is that the original embeddings from which the feature directions are created are based on global similarity. This makes it very vulnerable to outliers which often take up extreme positions. If one now creates the feature directions from the space, these outliers are assumed to have certain properties. The space is optimized for that, which limits the quality of feature directions in the space. The problem here is again the global similarity: If one entity ranks high for a feature, it is very likely that another entity that is close to that will also rank high for this feature, even though it may be something completely different. So to get better feature directions one has to distort the space. The authors accordingly again use the BoW representation of the entites to fine-tune the positions of the embeddings in the final space: After the clusters are collected and the entities re-embedded, for each feature a new ranking is computed by the summed frequency of any of a cluster's words per feature and entity. Each entity is thus represented as Bag-of-Clusters and again scored with PPMI to generate a ranking for each cluser/direction. This ranking is then used as a target for a simple \gls{ann} that distorts the space representation. As has been shown that it increases the algorithm performance only slightly while adding a substantial amount of work, it was not implemented in the scope of this thesis. 
 
-\vspace{-0.5ex}
+\vspace{-1.5ex}
 \subsubsection{Re-Embedding the entities into the new space\arrowref{sec:algorithmsteps}}
 \label{sec:algo:reembed}
 

@@ -38,9 +38,7 @@ Replication fills this role by applying an existing algorithm to another domain.
 
 It is absolutely crucial in science to ensure that all claims that are made are reproducible and testable, ensuring ease of replication. Reproducibility is the pinnacle of \textit{Open Science}.\footnote{There is no single definition of open science. However reproducibility appears in most tries, such as \eg \url{https://www.talyarkoni.org/blog/2019/07/13/i-hate-open-science/} \acc{03}{25}} And \q{Open Science is just science done right}.\footnote{Quote from John Tennant, see \eg \urlx{https://soundcloud.com/tidningen-curie/jon-tennant-open-science-is-just-science-done-right} \acc{03}{25}.} 
 %Reproducibility refers to the Ability to reproduce - computationally or experimentally - the methods used to produce a given result, by virtue of being accessible and understandable. 
-Being a hot topic in psychology since the reproducibility crisis,\footnote{Baker M: 1,500 scientists lift the lid on reproducibility. Nature. 2016; 533(7604): 452-4. \url{https://www.nature.com/articles/533452a} \acc{03}{25}} the topic is just es relevant in computer science research.\footnote{Mesirov JP: Computer science. Accessible reproducible research. Science. 2010; 327(5964): 415-6. \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3878063/} \acc{03}{25}} In that realm, Reproducibility may be seen as sub-goal of (the more fundamental) Sustainability, as \eg by \textcite{Molder2021a}, who claim that \q{reproducibility alone is not enough to sustain the hours of work that scientists invest in crafting data analyses}.
-
-To ensure that the analysis performed in this thesis is sustainable and adheres to best scientific and software quality standards, let us look at ways to formally define them.
+Being a hot topic in psychology since the reproducibility crisis,\footnote{Baker M: 1,500 scientists lift the lid on reproducibility. Nature. 2016; 533(7604): 452-4. \url{https://www.nature.com/articles/533452a} \acc{03}{25}} the topic is just es relevant in computer science research.\footnote{Mesirov JP: Computer science. Accessible reproducible research. Science. 2010; 327(5964): 415-6. \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3878063/} \acc{03}{25}} In that realm, Reproducibility may be seen as sub-goal of (the more fundamental) Sustainability, as \eg by \textcite{Molder2021a}, who claim that \q{reproducibility alone is not enough to sustain the hours of work that scientists invest in crafting data analyses}. To ensure that the analysis performed in this thesis is sustainable and adheres to best scientific and software quality standards, let us find ways to formally define them.
 
 \subsection{Software Quality}
 \label{sec:reproducibility}
@@ -52,7 +50,7 @@ Only some of these goals are relevant to projects like this. However, many subgo
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\textwidth]{graphics/stolenfigures/snakemake_aspect_hierachy.png}
+	\includegraphics[width=0.67\textwidth, height=0.16\textwidth, keepaspectratio=false]{graphics/stolenfigures/snakemake_aspect_hierachy.png}
 	\slcaption{
 		Hierarchy of aspects to consider for sustainable data analysis. Reproduced from {\cite[Fig.1]{Molder2021a}} (Creative Commons Attribution License) \label{fig:snakemake_aspect_hierachy}
 	}
@@ -62,11 +60,11 @@ Important aspects to conduct proper computer science and data analysis that allo
 
 \begin{description}
     \item[Functional Suitability,] which means complete, correct and appropriate functionality.
-	\item[Reproducibility,] \ie allowing validation and regeneration of results on the original or even new data. This entails understandable and well documented code (also \textit{Changeability and Stability})
+	\item[Reproducibility,] \ie allowing validation and regeneration of results on the original or new data. Entails understandable and well documented code as well as \textit{Stability}.
 	\item[Maintainability and Adaptability,] \ie the ability to modify the analysis to answer extended or slightly different research questions by allowing modifications.
 	\item[Transparency,] \ie the ability for others to understand it well enough to judge if it's technically as well as methodologically valid - also ensuring Understandability, Appropriateness and Accessibility, Analyzability and Testability.
 	\item[Scalability,] \ie enabling the scalable execution of the algorithm and each involved step, including deployment on complex compute clusters, grids or clouds. This includes Performance Efficiency and efficient Resource Utilization.
-	\item[Modularity,] which means in one component have a minimal impact on others, allowing for easy exchange and extension.
+	\item[Modularity,] \ie changes in one component have minimal impact on others, allowing for easy exchange and extension. Also entails \textit{Changeability}.
 \end{description}
 
 
@@ -125,7 +123,7 @@ This section will introduce \glspl{cs} as tool of choice and introduces the repl
 
 \subsection*{Theory of Conceptual Spaces}
 
-The theory of Conceptual Spaces was first introduced by Peter Gärdenfors in his 2000 book \citetitle{Gardenfors2000a} \cite{Gardenfors2000a} both as a theoretical model of human concept formation and a format for knowledge representation in artificial systems \cite{Gardenfors2004}. 
+The theory of Conceptual Spaces was first introduced by Peter Gärdenfors in his 2000 book \citetitle{Gardenfors2000a} \cite{Gardenfors2000a, Gardenfors2004} both as a theoretical model of human concept formation and a format for knowledge representation in artificial systems.
 
 The recent years have seen a successively increase of the dichotomy between \textbf{symbolistic} and \textbf{connectionistic} approaches to knowledge representation. The former explicitly model knowledge representation and reasoning through \eg logical calculi, sets of rules or semantic knowledge bases. This allows for explicit and explainable re-creation of high-level, abstract human reasoning such as deduction (\textit{syllogisms}), but requires explicit manual creation of abstract knowledge bases such as ontologies, lexicons and sets of rules. The other side consists of modern \gls{ml} techniques such as \glspl{ann} and other data science algorithms. Many of these techniques can work with noisy, high-dimensional data, such as direct visual input. On real world datasets, they generally outperform classical algorithms with high margins whilst only requiring some \textit{target} label. However, they are \textit{black boxes}, meaning that their inner workings cannot be inspected or manually tweaked.\footnote{And also blindly replicate biases in the data, see \eg \urlx{https://hbr.org/2019/10/what-do-we-do-about-the-biases-in-ai} \acc{04}{05}}. \glspl{cs} can serve as a bridge between symbolistic and connectionistic approaches to knowledge representation. By having \glspl{cs} as a layer of reasoning and representation in between both, classical knowledge base \textit{symbols} would be grounded in noisy high-dimensional data, allowing for high-level syllogistic reasoning from real-world data.
 
@@ -229,9 +227,9 @@ Conceptual Spaces allow to model many forms of commonsense reasoning geometrical
 \label{sec:ontology_rcc}
 
 Logic-Based reasoning/inference can model many forms of reasonings, but it requires the knowledge to be encoded in logic in manual work and doesn't allow for fuzzyness.
-In formal logic/ontologies/lexical databases, semantic relations of concepts are explicitly modelled. The \gls{rcc} \cite{Cohn1997a} links these relations to their geometric interpretation, providing a bridge between these and Conceptual Spaces \cite{Gardenfors2001}, in which natural language terms are not modelled as points or vectors, but as convex regions Once the handled entities are embedded into a conceptual space, many ontological relations are implied through the relation of these regions. This allows to replace symbolic inference engines with geometric algorithm when using the richer structure of CS instead of ontologies. \autoref{tab:rcc_cs} displays these respective relations.
+In formal logic/ontologies/lexical databases, semantic relations of concepts are explicitly modelled. The \gls{rcc} \cite{Cohn1997a} links these relations to their geometric interpretation, providing a bridge between these and Conceptual Spaces \cite{Gardenfors2001}, in which natural language terms are not modelled as points or vectors, but as convex regions Once the handled entities are embedded into a conceptual space, many ontological relations are implied through the relation of these regions. This allows to replace symbolic inference engines with geometric algorithm when using the richer structure of CS instead of ontologies. \autoref{tab:rcc_cs} displays these respective relations. Apart from these however, a \gls{cs} encodes more than just a taxonomy of concepts, but allows for interpolation and extrapolation of knowledge. This allows for other human forms of resoning.
 
-\vspace{2ex}
+% \vspace{2ex}
 
 \begin{table}[h]
 \begin{tabularx}{1.05\textwidth}{P{0.16\textwidth}|P{0.25\textwidth}|P{0.25\textwidth}|X}
@@ -261,13 +259,11 @@ In formal logic/ontologies/lexical databases, semantic relations of concepts are
 
 % Also: characteristics of properties (transitivity, symmetry) (from intrinsic features of dimensions (time is linear because the dimension is linear))
 
-Apart from this, a \gls{cs} encodes more than just a taxonomy of concepts, but allows for interpolation and extrapolation of knowledge. This allows for other human forms of resoning.
-
 \subsubsection*{Similarity-based reasoning}
 
 \label{sec:similaritybasedreasoning}
 
-As discussed already in \autoref{sec:amazonalgo}, modern recommendation algorithms often rely on similarity-based reasoning by suggesting that users that liked and item may also like similar items (collaborative filtering). In terms of classification, this corresponds to the 1-Neirest-Neighbor approach, where an object is assigned the class of the most similar item:\footnote{1-NN: \textit{Y is of the same class as X because X closest to Y}}
+As discussed in \autoref{sec:amazonalgo}, modern recommendation algorithms often rely on similarity-based reasoning by suggesting that users that liked and item may also like similar items (collaborative filtering). In terms of classification, this corresponds to the 1-Neirest-Neighbor approach, where an object is assigned the class of the most similar item:%\footnote{1-NN: \textit{Y is of the same class as X because X closest to Y}}
 
 \noindent
 \begin{minipage}{.6\textwidth}
@@ -282,7 +278,7 @@ As discussed already in \autoref{sec:amazonalgo}, modern recommendation algorith
 
 \vspace{2ex}
 
-This is something that cannot be done by classical logic, which can not model degrees of something but only universal full truths. While modern recommendation engines require only labelled examples, these algorithm lack \textit{explainability}: The employed distance function does not encode \textit{in what respect} two items are similar. For human reasoning however, there is no such \textit{overall Similarity} - instead similarity is relative to a domain and only meaningful in context\cite[110]{Gardenfors2000a}. In a conceptual space, this can be modelled: The distance function can give weight for certain dimensions depending on context or objects of different concepts can be considered similar if they share enough properties. Most importantly however, in a CS a system for recommendation can ask users what dimensions of a given entity the user liked to suggest items that are similar in that regard.
+This cannot be done with classical logic, which can not model degrees of something but only universal full truths. While modern recommendation engines require only labelled examples, these algorithm lack \textit{explainability}: The employed distance function does not encode \textit{in what respect} two items are similar. For human reasoning however, there is no such \textit{overall Similarity} - instead similarity is relative to a domain and only meaningful in context\cite[110]{Gardenfors2000a}. In a conceptual space, this can be modelled: The distance function can give weight for certain dimensions depending on context or objects of different concepts can be considered similar if they share enough properties. Most importantly however, in a CS a system for recommendation can ask users what dimensions of a given entity the user liked to suggest items that are similar in that regard.
 % a system serving me a similar wine to the one I want that is not available can ask me what dimensions of that wine were important before suggesting new ones.
 
 \subsubsection*{Induction}
@@ -366,7 +362,7 @@ This thesis focuses on the aforementioned algorithm, primarily considering \cite
 
 By far the closest to what we do is the algorithm of \textcite{VISR12}, who generate a so-called tag genome for the domain of movies supervisedly based on keywords that users have assigned manually. Their algorithm takes these binary assignments and creates a dense representation that encodes a degree of relevance for each combination of movie and tag. Furthermore, they create a dedicated movie recommendation system on basis of this (interface reprinted in \autoref{fig:movietuner}). This system provides explainable recommendation based on these tags, allowing users to request recommendations for movies such as \textit{\q{I'd like something less violent than Reservoir Dogs}} \cite[3]{VISR12}. Not only is their application exactly what is being demanded here, but the algorithm itself also performed significantly better than the one of \textcite{Derrac2015} in a human study of the latter, in which they directly compared the techniques by asking subjects which of the respectively extracted keywords better describes the difference between two movies \cite[44]{Derrac2015}. Considering however that \gencite{VISR12} algorithm is supervised and requires data which does not exist for our domain, it cannot be applied in our case. On the contrary, the final results of their algorithm are preferred by users over the ones generated with the algorithm considered in this work, but structurally exactly equal. This provides clear evidence that the desired application of this work is possible, albeit of lower quality than what their work achieved.
 
-Generally, what is being done here corresponds to \textbf{Representation Learning}, whose aim is to discover the inherent semantic structure of a representation unsupervisedly \cite{Dayan1995}. More specifically \textbf{Disentangled Representation Learning}, where only salient attributes relevant to the task at hand should be extracted, which means finding latent embeddings whose dimensions are meaningful interpretable features. Generative Adversarial Networks \cite{Goodfellow2014} or Variational Autoencoders \cite{Kingma2013} are modern techniques that are good at finding latent information in images. Especially InfoGAN \cite{Chen2016} should be named, which can extract interpretable features such as pose, hairstyle, prensence of glasses and emotions from images unsupervisedly. 
+Generally, what is done here corresponds to \textbf{Representation Learning}, whose aim is to discover the inherent semantic structure of a representation unsupervisedly \cite{Dayan1995}. More specifically \textbf{Disentangled Representation Learning}, where only salient attributes relevant to the task at hand should be extracted, which means finding latent embeddings whose dimensions are meaningful interpretable features. Generative Adversarial Networks \cite{Goodfellow2014} or Variational Autoencoders \cite{Kingma2013} are modern techniques that are good at finding latent information in images. Especially InfoGAN \cite{Chen2016} should be named, which can extract interpretable features such as pose, hairstyle, prensence of glasses and emotions from images unsupervisedly. 
 
 \paragraph{LDA} 
 \label{sec:lda}
@@ -498,6 +494,8 @@ LSI explicitly represents both documents and terms in the same semantic space, s
 As consequence of the compression, some dimensions are combined and depend on more than one term - generally this merges embeddings of similar terms, mitigating synonymy. Also Polysemy is reduced, as only the components of polysemous words that have encode a similar meaning than the cluster are relevant for the combined direction of the vector. Another consequence is that terms that did not actually appear in a document may still end up close to the document, if that is consistent with the major patterns of association in the data: Terms that \textit{could} have been used as well.\q{if the tags \textit{love story} and \textit{hilarious} have been applied to an item, it is likely that the tag \textit{romantic comedy} is highly relevant\cite{VISR12}.}
 
 The algorithm to create the Tag Genome in \cite{VISR12} bases to a high degree on this algorithm: It creates a binary frequency matrix for all considered documents and a set of \textit{tags}, embeds documents and pseudo-documents generated from the tags and compresses it with LSI. The relevance of a tag for a documents \codefunc{tag-lsi-sim(t,i)} is then calculated by their embeddings' cosine similiarity. Also, the algorithm appears to be a good method to find clusters of similar terms for semantic direction, given that it considers these terms as directional vectors already. 
+
+\pagebreak
 
 \paragraph*{Multi-Dimensional Scaling}
 \label{sec:mds}

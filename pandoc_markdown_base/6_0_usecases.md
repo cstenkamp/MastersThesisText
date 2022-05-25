@@ -186,10 +186,7 @@ print_envvars(get_filename(configs[0], get_dependencies=False))
 >> MA_DATASET=siddata2022;MA_LANGUAGE=de;MA_DEBUG=False;MA_PP_COMPONENTS=mfauhcsd2 [...]
 ```
 
-\ifdefined\ForPrinting
-\else
 \clearpage
-\fi
 
 To for example get the interim result `featureaxes` of all configurations, you may use this:
 

@@ -1,6 +1,6 @@
 % \newcommand*{\NoMarkdown}{}
 \newcommand*{\RemoveAll}{}
-% \newcommand*{\ForPrinting}{}
+\newcommand*{\ForPrinting}{}
 
 
 %TODO: once the text is "finished": [see sublime note]
@@ -912,7 +912,6 @@
 	\addto\captionsbritish{\renewcommand{\tablename}{Table{\tiny \Acrobatmenu{GoBack}{\textsuperscript{\textuparrow}}}\hspace{-0.8ex}}}
 \fi
 
-
 % ====================================================================
 
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
@@ -932,6 +931,8 @@
 \cleardoublepage
 \pagestyle{plain} %for the headers & footers
 
+
+\newgeometry{bottom=15mm, top=30mm, inner=26mm, outer=26mm}
 
 \begin{titlepage}
 	\begin{flushleft}
@@ -959,11 +960,12 @@
 		                   & University of Osnabrück  \\\\
 		Second supervisor: & Johannes Schrumpf, M.Sc.         \\
 		                   & Institute of Cognitive Science \\
-		                   & Osnabrück
+		                   & University of Osnabrück
 	\end{tabular}
 
 \end{titlepage}
 
+\cleardoublepage
 
 \ifdefined\ForPrinting
 	\newgeometry{a4paper,top=0mm,bottom=0mm,inner=0mm,outer=0mm}
@@ -978,13 +980,10 @@
 \fi
 
 
-
-
-
 \pagenumbering{gobble}
-\pagebreak
 
 \begin{abstract}
+	\clearpage
 	\textbf{\LARGE{Abstract}}\\\\
 	The number of available educational resources keeps rising just as the liberty for students to create a custom curriculum, making recommendation in this sector ever more critical. There is the need for a methodology to structure these resources unsupervisedly to allow for explainable recommendations, where users can explicitly demand features such as the degree how mathematical a course should be. Conceptual Spaces allow to embed resources into a vector space whose quality dimensions correspond to salient semantic features, but generating them reliably is an open question. This thesis replicates a method to create these spaces data-driven from their descriptions and applies it to a given dataset of that domain to explore its applicability. Our preliminary results show that human categories such as the faculty a course belongs to are among the detected salient directions.	Further qualitative analysis also indicates that the embeddings capture essential features that can be used in interpretable classification and explainable recommendation. Additionally, a scalable and modular architecture for the algorithm is created. It is shown that it can be applied to diverse variations of dataset and algorithm components. A workflow is implemented and described to run the algorithm efficiently on compute clusters. The full implementation is open-sourced to make future research on related problems more accessible. 
 	% \includeMD{pandoc_generated_latex/0_0_abstract}
@@ -992,7 +991,7 @@
 
 
 
-\newgeometry{bottom=15mm, top=30mm, inner=28mm, outer=24mm}
+\newgeometry{bottom=15mm, top=30mm, inner=22mm, outer=30mm}
 
 \tableofcontents
 \listoffigures
@@ -1008,11 +1007,11 @@
 
 % #########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
+\restoregeometry
 
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - MAIN PART
 %----------------------------------------------------------------------------------------
-
 
 % INTRO
 	% Broad - "Initialkontextualisierung" - warum mach ich das, aus was für ner domain kommen die daten, was will ich damit machen (use rrecommendation, ich bau AI part, ..)

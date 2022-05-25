@@ -34,7 +34,7 @@ Let us first elaborate on the datasets used both in the works that are being rep
 
 \subsection*{Comparing dataset properties}
 
-This work applies the replicated algorithm to a new dataset, so it is important to check if the new dataset differs from the originally used ones. To ensure comparability in algorithm details, this implementation is also run on the \emph{placetypes}-dataset, and some of its statistics as well as that of the other two datasets made public by \cite{Derrac2015}.\footnote{\url{https://www.cs.cf.ac.uk/semanticspaces/}} Let us first compare some key statistics of them, before looking into two of them individually in the next section.
+This work applies the replicated algorithm to a new dataset, so it is important to check if the new dataset differs from the originally used ones. To ensure comparability in algorithm details, this implementation is also run on the \emph{placetypes}-dataset, and some of its statistics as well as that of the other two datasets made public by \cite{Derrac2015}, available at \url{https://www.cs.cf.ac.uk/semanticspaces/}. Let us first compare some key statistics of them, before looking into two of them individually in the next section.
 
 A very distinctive difference of the datasets is their size: the movies-dataset consists of 15.000 entities, placetypes of 1383, and wines of only 330. Just as important as the number of entities is however also the length of their associated text-corpora. Figures \ref{fig:sid_wordsperdesc} and \ref{fig:placetypes_dist_unique} show a histogram of the distribution of text lengths for the Siddata-dataset and placetypes-dataset respectively, and \autoref{tab:corpussizes} summarise corpus size and distribution of text lengths per entity for all handled datasets. Note that the Siddata-dataset is listed twice, once including all available entities and once after filtering out those whose description was shorter than 80 words.
 
@@ -49,7 +49,7 @@ A very distinctive difference of the datasets is their size: the movies-dataset 
 	\textbf{Siddata (all)}    		   & 26\,346 & 19     & 60     & 169   & 22    & 71      & 239         \\
 	\textbf{Siddata} ($\geq 80$ words) & 11\,601 & 63     & 99     & 211   & 83    & 124     & 323         
 	\end{tabular}
-	\slcaption{Sizes of the text-corpora of the Siddata-dataset and those of \cite{Derrac2015}. The columns \textit{Words per Entity} list thresholds for the 5\textsuperscript{th}, 50\textsuperscript{th}, and 95\textsuperscript{th} percentile respectively.}
+	\slcaption{Sizes of the text-corpora of the Siddata-dataset and those of \cite{Derrac2015}. The columns \textit{Words per Entity} list thresholds for the 5\textsuperscript{th}, 50\textsuperscript{th}, and 95\textsuperscript{th} percentile.}
 	\label{tab:corpussizes}
 \end{table}
 
@@ -76,10 +76,13 @@ A very distinctive difference of the datasets is their size: the movies-dataset 
 
 It is obvious that even though the number of Siddata-\glspl{entity} is comparable to the bigger of \cite{Derrac2015}'s datasets, the number of unique words in the individual texts associated with the entities are two orders of magnitude shorter than both. As the algorithm does not rely on deep learning, this does not mean that the dataset is unsuited for it, but let us explore how the distance in their lengths can be explained and what consequences this has.
 
-The works considered in this replication \mainalgos all use the movies- and the  placetypes-dataset to evaluate their methods. The former consists of the concatenation of all available reviews for 15.000 movies from IMDB,\footnote{\url{https://www.imdb.com/}} grouped by the movie the reviews are for. The placetypes-dataset is created from a collection of tags that belong to photos uploaded to the photo sharing platform Flickr\footnote{\url{https://www.flickr.com}} that co-occur with other tags that denote one of several placetypes. Other datasets considered in the works of \mainalgos include wine reviews, posts to certain newsgroups, and another dataset created from IMDB-reviews (see \tref{tab:all_datasets}). 
-% "their algorithm is tailored to concatenated-reviews or concatenated-bags-of-tags"
+The works considered in this replication \mainalgos all use the movies- and the  placetypes-dataset to evaluate their methods. The former consists of the concatenation of all available reviews for 15.000 movies from IMDB,\footnote{\url{https://www.imdb.com/}} grouped by the movie the reviews are for. The placetypes-dataset is created from a collection of tags that belong to photos uploaded to the photo sharing platform Flickr\footnote{\url{https://www.flickr.com}} that co-occur with other tags that denote one of several placetypes. 
 
 \input{include/dataset_table}
+
+Other datasets considered in the works of \mainalgos include wine reviews, posts to certain newsgroups, and another dataset created from IMDB-reviews (see \tref{tab:all_datasets}). 
+% "their algorithm is tailored to concatenated-reviews or concatenated-bags-of-tags"
+
 
 All of these datasets have in common that they are made up from a collection of independent texts or tags, created by different people. This means, that the more obvious or distinct a property of the respective entity is, the more often words describing that property will be used as tag or as part of the review. For example, a movie that is \emph{scary} to a lot of people will lead to many reviews mentioning that, which means that the word scary (or other words commonly co-occuring with it) will have a high count in the concatenation of all these reviews. The algorithm from \cite{Derrac2015} heavily leans on this property by using the (relative) frequency of certain words as signal for the importance of the concept they may refer to. 
 
@@ -88,7 +91,7 @@ The Siddata-dataset unfortunately does not share this property, as the texts tha
 
 \paragraph{Other considered datasets}
 
-One of the goals was to build an adaptable architecture, so we also want to check if it can quickly and easily be applied to other datasets. For that, a dataset of 1002 short stories from project guttenberg\footnote{\url{https://www.kaggle.com/datasets/shubchat/1002-short-stories-from-project-guttenberg?select=db_books.csv}} and one of 100\,000 coursera course reviews\footnote{Source: \url{https://www.kaggle.com/septa97/100k-courseras-course-reviews-dataset}, Exploratory Analysis: \url{https://www.kaggle.com/roshansharma/coursera-course-reviews}} were created. The former is similar to our dataset because it is also not made up as concatenation of multiple invididual texts. The latter is made up from reviews like the aformentioned ones, but from the educational domain. These were created primarily to test the architecture, and no results will reported or analysed for these datasets, as that would go far beyond its scope and intended length.
+One of the goals was to build an adaptable architecture, so we also want to check if it can quickly and easily be applied to other datasets. For that, a dataset of 1002 short stories from project guttenberg\footnote{\url{https://www.kaggle.com/datasets/shubchat/1002-short-stories-from-project-guttenberg}} and one of 100\,000 coursera course reviews\footnote{Source: \url{https://www.kaggle.com/septa97/100k-courseras-course-reviews-dataset}, Exploratory Analysis: \url{https://www.kaggle.com/roshansharma/coursera-course-reviews}} were created. The former is similar to our dataset because it is also not made up as concatenation of multiple invididual texts. The latter is made up from reviews like the aformentioned ones, but from the educational domain. These were created primarily to test the architecture, and no results will reported or analysed for these datasets, as that would go far beyond its scope and intended length.
 %TODO: I could try to merge it with this one https://www.kaggle.com/siddharthm1698/coursera-course-dataset or another one (see https://www.kaggle.com/mihirs16/coursera-course-data which links names to links, https://www.kaggle.com/search?q=coursera+in%3Adatasets for other places)
 
 
@@ -178,7 +181,7 @@ Considering that most of the data are Stud.IP courses, in the following only thi
 
 \paragraph{Duplicates}
 
-There are duplicates in the dataset: Often, the same course is offered over multiple years, which is mapped on to separate resources in the raw dataset. Unfortunately, there is no bijective mapping of course titles or event numbers, meaning that the same event number sometimes refers to the same course over the span of multiple years.\footnote{see \autoref{tab:sample_duplicates}} The name of courses also may change throughout the years it is offered. A very prominent characteristic is for example that courses cancelled due to the COVID-19-Pandemic prepended an information such as \textsc{!!Fällt aus!!} to its title, or that a few sentences explaining that the new iteration will be performed digitally. Some techniques have been used to merge possible duplicates based on their title, number and description, however not all duplicates could be eliminated. \footnote{Many such duplicates were mapped towards similar embeddings by the algorithm, see \autoref{sec:duplicate_maps}.} If the same title was connected to different descriptions in the dataset, the sentences of all duplicating samples were tokenised, concatenated and duplicates removed, such that the resulting description contained every sentence of the original description exactly once. This means that in cases where sentences were only slightly changed, both variants will be present. This is possible because the algorithm only relies on the Bag-of-n-grams representation for these texts (\autoref{sec:techniques:bow}), which is weighted and ignores word order.
+There are duplicates in the dataset: Often, the same course is offered over multiple years, which is mapped on to separate resources in the raw dataset. Unfortunately, there is no bijective mapping of course titles or event numbers, meaning that the same event number sometimes refers to the same course over the span of multiple years.\footnote{see \autoref{tab:sample_duplicates}} The name of courses also may change throughout the years it is offered. A~very prominent characteristic is for example that courses cancelled due to the COVID-19-Pandemic prepended an information such as \textsc{!!Fällt aus!!} to its title, or that a few sentences explaining that the new iteration will be performed digitally. Some techniques have been used to merge possible duplicates based on their title, number and description, however not all duplicates could be eliminated. \footnote{Many such duplicates were mapped towards similar embeddings by the algorithm, see \autoref{sec:duplicate_maps}.} If the same title was connected to different descriptions in the dataset, the sentences of all duplicating samples were tokenised, concatenated and duplicates removed, such that the resulting description contained every sentence of the original description exactly once. This means that in cases where sentences were only slightly changed, both variants will be present. This is possible because the algorithm only relies on the Bag-of-n-grams representation for these texts (\autoref{sec:techniques:bow}), which is weighted and ignores word order.
 
 
 \paragraph{Possible Classification Targets}
@@ -212,20 +215,19 @@ Unfortunately, the dataset contains many samples that have only very short and u
 \label{sec:dataset_placetypes}
 
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{graphics/figures/placetypes_dist_unique.pdf}
-	\caption{Distribution of unique words per entity for the placetypes dataset.}
-	\label{fig:placetypes_dist_unique}
-\end{figure}
-
-
-
-
 Because the Siddata-dataset differs in many regards from the datasets used in \mainalgos, %AS stated above (in siddta-section, in the first part of datasecs-section, in workflow-section, ...)
 it makes sense to compare the results of the given pipeline on that dataset to the results of \mainalgos. To be able to compare the results achieved here with theirs, one of the datasets used by all of their papers was considered as well. Comparing on an original dataset also has the benefit of allowing to sanity-check if the implementation is correct: If the performance achieved on this dataset is comparable to the performances of \mainalgos whereas the peformance for the Siddata-dataset is considerably worse, there is strong indication that the quality or quantity of the dataset is insufficient for acheiving high-quality representations. Conversely, if our algorithm applied to the dataset used in \mainalgos produces results that fall considerably short of those reported in literature, it is likely that there is a fault in our implementation.
 
 There are two datasets used by all three authors: placetypes and movie-reviews (see \autoref{tab:all_datasets}). Both of the datasets are available in preprocessed form\footnote{\url{https://www.cs.cf.ac.uk/semanticspaces/}} \cite{Derrac2015}. It was originally planned to use both of the datasets as basis for comparison, however unfortunately it is impossible to recover the form of it as originally used by \textcite{Derrac2015}: The original texts of the reviews are not available, but only their respective bag-of-1-grams (\gls{bow}) - even though the authors explicitly state that they worked with variable-length-n-grams. Even though the provided list of candidates contains \glspl{ngram}, it is impossible to recover which of the \glspl{entity} contained it. While the algorithm can still be run only for the 1-grams, the results are not comparable with the original ones anymore.\footnote{As all of the \mainalgos share an author, it is assumed that \cite{Alshaikh2020,Ager2018} had access to the full version of the dataset and did not share the stated problem.}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth, height=0.23\textheight, keepaspectratio=false]{graphics/figures/placetypes_dist_unique.pdf}
+	\caption{Distribution of unique words per entity for the placetypes dataset.}
+	\label{fig:placetypes_dist_unique}
+\end{figure}
+
 
 In this work, we will only compare the results \wrt the GeoNames\footnote{\url{http://www.GeoNames.org/export/codes.html}} and Foursquare taxonomies, because the level used for the openCYK taxonomy was not sufficiently described by \textcite{Derrac2015}. For the GeoNames taxonomy, 403 of the placetypes are split into 9 categories. These labels are annotated to a \gls{tsne} plot genreated from \gencite{Derrac2015} uploaded data in \autoref{fig:scatter_mds_placetypes} in the Appendix. In the case of Foursquare-labels, 391 placetypes are split among 9 (different) categories as well.
 
