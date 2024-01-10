@@ -1,4 +1,4 @@
-FROM texlive/texlive
+FROM texlive/texlive:TL2022-historic
 
 ARG uid
 ARG gid

@@ -26,8 +26,8 @@ jobs:
           export COMPOSE_GID=$(getent group docker | cut -d: -f3)
           echo $COMPOSE_GID
           docker-compose -f .devcontainer/docker-compose.yml run workspace bash /workspace/.devcontainer/create_pdf.sh
-          # docker-compose -f .devcontainer/docker-compose.yml run workspace latexmk -r /workspace/.latexmkrc -synctex=1 -interaction=nonstopmode -file-line-error -pdf -outdir=/workspace /workspace/thesis_nomarkdown.tex
-          # docker-compose -f .devcontainer/docker-compose.yml run workspace latexmk -r /workspace/.latexmkrc -synctex=1 -interaction=nonstopmode -file-line-error -pdf -outdir=/workspace /workspace/thesis_forprinting.tex
+          docker-compose -f .devcontainer/docker-compose.yml run workspace latexmk -r /workspace/.latexmkrc -synctex=1 -interaction=nonstopmode -file-line-error -pdf -outdir=/workspace /workspace/thesis_nomarkdown.tex
+          docker-compose -f .devcontainer/docker-compose.yml run workspace latexmk -r /workspace/.latexmkrc -synctex=1 -interaction=nonstopmode -file-line-error -pdf -outdir=/workspace /workspace/thesis_forprinting.tex
         env:
             COMPOSE_UID: 1001
       - name: Upload created pdf
