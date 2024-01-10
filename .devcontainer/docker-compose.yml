@@ -6,7 +6,7 @@ services:
       context: .
       args:
         - uid=${COMPOSE_UID:-1000}
-        - gid=${COMPOSE_GID:-995} #995 is my docker-group, and I ran `sudo chmod g+w /var/run/docker.sock`. Get docker group: `getent group docker | cut -d: -f3`
+        - gid=${COMPOSE_GID:-1000}
     security_opt: ['label:disable']
     volumes:
       - ../:/workspace:Z
@@ -20,7 +20,7 @@ services:
     command: sleep infinity
     environment:
       - PAR_GLOBAL_TEMP=/workspace/tmp
-    user: "${uid}:${gid}" 
+    user: "${COMPOSE_UID:-1000}:${COMPOSE_GID:-995}" #995 is my docker-group, and I ran `sudo chmod g+w /var/run/docker.sock`. Get docker group: `getent group docker | cut -d: -f3`
     privileged: true #such that I can call the other container from inside, see (https://forums.docker.com/t/execute-command-from-a-container-to-another-container/19492/5) (BAD IDEA!!)
 
   pandoc:

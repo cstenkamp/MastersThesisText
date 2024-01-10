@@ -23,13 +23,12 @@ jobs:
       - name: Create PDF inside container
         shell: bash
         run: |
-          getent group docker | cut -d: -f3
+          export COMPOSE_GID=$(getent group docker | cut -d: -f3)
           docker-compose -f .devcontainer/docker-compose.yml run workspace bash /workspace/.devcontainer/create_pdf.sh
           docker-compose -f .devcontainer/docker-compose.yml run workspace latexmk -r /workspace/.latexmkrc -synctex=1 -interaction=nonstopmode -file-line-error -pdf -outdir=/workspace /workspace/thesis_nomarkdown.tex
           docker-compose -f .devcontainer/docker-compose.yml run workspace latexmk -r /workspace/.latexmkrc -synctex=1 -interaction=nonstopmode -file-line-error -pdf -outdir=/workspace /workspace/thesis_forprinting.tex
         env:
             COMPOSE_UID: 1001
-            COMPOSE_GID: 121
       - name: Upload created pdf
         uses: actions/upload-artifact@v3
         with:
